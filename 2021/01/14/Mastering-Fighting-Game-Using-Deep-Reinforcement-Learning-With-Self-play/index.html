@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>Hello World | 潘其龙</title>
+  <title>Mastering Fighting Game Using Deep Reinforcement Learning With Self-play | 潘其龙</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="摘要​        在游戏AI的研究中，一对一的战斗游戏在棋盘游戏和实时模拟游戏之间起到了桥梁的作用，因为它需要中等水平的计算能力，具有中等大小的复杂性。 在本文中，我们提出了一种使用深度强化学习与self-play和蒙特卡罗树搜索(MCTS)创建战斗游戏AI代理的方法。 我们还分析了各种强化学习设置，如状态向量的变化，reward shaping，以及具有新性能度量的对手组合。 用该方法训练的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2021/01/06/hello-world/index.html">
+<meta property="og:title" content="Mastering Fighting Game Using Deep Reinforcement Learning With Self-play">
+<meta property="og:url" content="http://example.com/2021/01/14/Mastering-Fighting-Game-Using-Deep-Reinforcement-Learning-With-Self-play/index.html">
 <meta property="og:site_name" content="潘其龙">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="摘要​        在游戏AI的研究中，一对一的战斗游戏在棋盘游戏和实时模拟游戏之间起到了桥梁的作用，因为它需要中等水平的计算能力，具有中等大小的复杂性。 在本文中，我们提出了一种使用深度强化学习与self-play和蒙特卡罗树搜索(MCTS)创建战斗游戏AI代理的方法。 我们还分析了各种强化学习设置，如状态向量的变化，reward shaping，以及具有新性能度量的对手组合。 用该方法训练的">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-01-06T15:50:44.061Z">
-<meta property="article:modified_time" content="2021-01-06T15:50:44.061Z">
+<meta property="article:published_time" content="2021-01-14T12:21:44.000Z">
+<meta property="article:modified_time" content="2021-01-14T14:44:07.574Z">
 <meta property="article:author" content="QilongPan">
 <meta name="twitter:card" content="summary">
   
@@ -73,10 +73,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-Mastering-Fighting-Game-Using-Deep-Reinforcement-Learning-With-Self-play" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2021/01/06/hello-world/" class="article-date">
-  <time class="dt-published" datetime="2021-01-06T15:50:44.061Z" itemprop="datePublished">2021-01-06</time>
+    <a href="/2021/01/14/Mastering-Fighting-Game-Using-Deep-Reinforcement-Learning-With-Self-play/" class="article-date">
+  <time class="dt-published" datetime="2021-01-14T12:21:44.000Z" itemprop="datePublished">2021-01-14</time>
 </a>
     
   </div>
@@ -87,7 +87,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      Hello World
+      Mastering Fighting Game Using Deep Reinforcement Learning With Self-play
     </h1>
   
 
@@ -95,20 +95,14 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​        在游戏AI的研究中，一对一的战斗游戏在棋盘游戏和实时模拟游戏之间起到了桥梁的作用，因为它需要中等水平的计算能力，具有中等大小的复杂性。 在本文中，我们提出了一种使用深度强化学习与self-play和蒙特卡罗树搜索(MCTS)创建战斗游戏AI代理的方法。 我们还分析了各种强化学习设置，如状态向量的变化，reward shaping，以及具有新性能度量的对手组合。 用该方法训练的Agent对其他AI进行了评价。 评估结果表明，将MCTS和self-play混合在1：3的比例下，可以以94.4%的胜率压倒其他AI。 完全训练的代理理解游戏机制，使它等待直到接近敌人，并在最佳时机执行行动。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    FightingICE是一个1v1战斗游戏环境，其名称来源于Intelligent Computer Entertainment lab in Ritsumeikan </p>
+<p>university组织的战斗游戏平台。 一对一的战斗游戏对于研究不同的人工智能算法具有明显的特点。 首先，它是介于棋盘游戏和实时策略模拟游戏之间的中间步骤。 棋盘游戏AI，如深蓝[1]或阿尔法围棋[2]有足够的时间来考虑玩家在玩游戏时的未来行动。 然而，一对一的战斗游戏AI几乎没有时间，所以它必须实时反应。 这使得战斗游戏比棋盘游戏更困难。 同时，战斗游戏比星际争霸或DOTA2等实时模拟游戏具有更短的游戏时间和更少的动作复杂度。 它具有设计和评估AI算法的优点，计算量小</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/06/hello-world/" data-id="ckk45srdj00036cva2yd65y16" data-title="Hello World" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/14/Mastering-Fighting-Game-Using-Deep-Reinforcement-Learning-With-Self-play/" data-id="ckk45srct00006cvads2h0cpk" data-title="Mastering Fighting Game Using Deep Reinforcement Learning With Self-play" class="article-share-link">Share</a>
       
       
       
@@ -118,15 +112,20 @@
     
 <nav id="article-nav">
   
-    <a href="/2021/01/07/github-pages/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/01/15/Policy-Gradient-Methods-for-Reinforcement-Learning-with-Function-Approximation/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          github_pages
+          Policy Gradient Methods for Reinforcement Learning with Function Approximation
         
       </div>
     </a>
   
+  
+    <a href="/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Playing Atari with Deep Reinforcement Learning</div>
+    </a>
   
 </nav>
 
