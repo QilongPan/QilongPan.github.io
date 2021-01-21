@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning | 潘其龙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="paper 摘要​    强化学习实验的规模不断扩大，使得研究人员在训练复杂的电子游戏代理和在机器人的模拟到现实转移方面都取得了前所未有的成果。 通常，这种实验依赖于大型分布式系统，需要昂贵的硬件设置，限制了对这一令人兴奋的研究领域的更广泛访问。 在本工作中，我们旨在通过优化强化学习算法的效率和资源利用来解决这个问题，而不是依赖分布式计算。 我们提出了“Sample Factory”，这是一个为单">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning">
+<meta property="og:url" content="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/index.html">
+<meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="paper 摘要​    强化学习实验的规模不断扩大，使得研究人员在训练复杂的电子游戏代理和在机器人的模拟到现实转移方面都取得了前所未有的成果。 通常，这种实验依赖于大型分布式系统，需要昂贵的硬件设置，限制了对这一令人兴奋的研究领域的更广泛访问。 在本工作中，我们旨在通过优化强化学习算法的效率和资源利用来解决这个问题，而不是依赖分布式计算。 我们提出了“Sample Factory”，这是一个为单">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure1.png">
+<meta property="og:image" content="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure2.png">
+<meta property="article:published_time" content="2021-01-20T12:25:13.000Z">
+<meta property="article:modified_time" content="2021-01-21T14:12:19.918Z">
+<meta property="article:author" content="QilongPan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="潘其龙" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">潘其龙</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/" class="article-date">
+  <time class="dt-published" datetime="2021-01-20T12:25:13.000Z" itemprop="datePublished">2021-01-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2006.11751">paper</a></p>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    强化学习实验的规模不断扩大，使得研究人员在训练复杂的电子游戏代理和在机器人的模拟到现实转移方面都取得了前所未有的成果。 通常，这种实验依赖于大型分布式系统，需要昂贵的硬件设置，限制了对这一令人兴奋的研究领域的更广泛访问。 在本工作中，我们旨在通过优化强化学习算法的效率和资源利用来解决这个问题，而不是依赖分布式计算。 我们提出了“Sample Factory”，这是一个为单机情况下优化的高吞吐量训练系统。 我们的体系结构结合了一个高效的、异步的、基于GPU的采样器和off-policy校正技术，使我们能够在3D中实现高于$$10^{5}$$个环境帧/秒的吞吐量，而个环境帧/秒的吞吐量。 我们扩展了Sample Factory，以支持self-play和 population-based的训练，并应用这些技术来为多人第一人称射击游戏训练高能力的代理。</p>
+<p>[Github](<a target="_blank" rel="noopener" href="https://github.com/">https://github.com/</a> alex-petrenko/sample-factory )</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    模拟环境中的训练代理是当代强化学习研究的基石。 近年来，通过应用强化学习方法在这些快速和高效的环境中训练代理，无论是解决复杂的计算机游戏 (Dosovitskiy &amp; Koltun, 2017; Jaderberg et al., 2019; Vinyals et al., 2019) ，还是通过模拟到真实的转移来解决复杂的机器人控制问题 (Müller et al., 2018;Hwangbo et al., 2019; Molchanov et al., 2019; Andrychowicz et al., 2020)。</p>
+<p>​    尽管现代学习方法的采样效率有了很大的提高，但其中大多数仍然需要大量的数据。 在大多数情况下，近年来的结果水平已经上升，因为实验的规模增加，而不是学习的效率。 在复杂环境中进行的数十亿规模的实验现在相对普遍 (Horgan et al., 2018; Espeholt et al., 2018; Kapturowski et al., 2019)，最先进的成果在一次训练中消耗了数万亿次环境转变 (Berner et al., 2019)。</p>
+<p>​    为了尽量减少这些大规模实验的周转时间，常用的方法是使用由数百台单独机器组成的分布式超级计算系统 (Berner et al., 2019)。 在这里，我们表明，通过优化结构和提高强化学习算法的资源利用率，我们可以在数十亿个环境转变上训练代理，即使在单个计算节点上也是如此。 我们提出了“Sample Factory”，一个为单机场景优化的高吞吐量训练系统。 Sample Factory基于异步近端策略优化(APPO)算法，是一种强化学习架构，它允许我们在一个只有一个GPU的多核计算节点上积极地并行化经验收集并实现高达130000FPS（每秒环境帧）的吞吐量。 我们描述了理论和实践优化，使我们能够在广泛可用的商品硬件上实现极端帧速率。</p>
+<p>​    我们在一组具有挑战性的3D环境中评估我们的算法，并演示如何利用大量的模拟经验来训练达到高技能水平的代理。 然后，我们扩展了Sample Factory，以支持self-play和population-based训练，并应用这些技术来为一个完整的多人游戏的Doom培训高能力的代理 (Kempka et al., 2016)。</p>
+<h1 id="Sample-Factory"><a href="#Sample-Factory" class="headerlink" title="Sample Factory"></a>Sample Factory</h1><p>​    Sample factory是一种在单机上进行高吞吐量强化学习的体系结构。 在设计系统时，我们专注于使所有关键计算完全异步，以及最小化组件之间的延迟和通信成本，充分利用快速本地消息传递。</p>
+<p>​    一个典型的强化学习场景涉及三个主要的计算工作负载：环境模拟、模型推理和反向传播。 我们的主要动机是构建一个系统，其中最慢的三个工作负载从来不需要等待任何其他进程提供执行下一次计算所需的数据，因为算法的总体吞吐量最终由吞吐量最低的工作负载定义。 为了最小化进程等待的时间，我们需要保证输入的新部分总是可用的，即使在下一步的计算即将开始之前。 计算密集型工作负载从不闲置的系统可以达到最高的资源利用率，从而接近最佳性能。</p>
+<h2 id="High-level-design"><a href="#High-level-design" class="headerlink" title="High-level design"></a>High-level design</h2><p>​    最小化所有关键计算的空闲时间的愿望激发了系统的高级设计（图1）。 我们将每个计算工作负载与三种专用类型的组件之一相关联。 这些组件使用基于FIFO队列和共享内存的快速协议相互通信。 队列机制为连续和异步执行提供了基础，只要队列中有要处理的东西，就可以立即启动下一个计算步骤。 将每个工作负载分配给专用组件类型的决定也允许我们独立地并行化它们，从而实现优化的资源平衡。 这与以前的工作不同 (Mnih et al., 2016; Espeholt et al., 2018)，其中单个系统组件，如actor通常负有多重责任。 涉及的三种类型的组件是 rollout workers, policy workers, and learners。</p>
+<p><img src="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure1.png"></p>
+<p>Rollout workers单独负责环境模拟。 每个rollout worker托管$$k≥1$$个环境实例，并依次与这些环境交互，收集观察$$x_{t}$$并奖励$$r_{t}$$。 请注意，rollout worker没有自己的策略副本，这使得它们非常轻量级，允许我们在现代多核CPU上大规模并行化收集。</p>
+<p>然后将观察$$x_{t}$$和代理的隐藏状态$$h_{t}$$发送给policy worker，policy worker从多个rollout worker收集$$x_{t}$$、$$h_{t}$$的批次，并调用策略$$\pi$$，由神经网络参数化$$\theta <em>{\pi }$$以计算动作分布$$\mu \left ( a</em>{t}|x_{t},h_{t} \right )$$和更新的隐藏状态$$h_{t+1}$$。 然后从分布$$\mu$$中采样$$a_{t}$$的动作，并与$$h_{t+1}$$一起通信回相应的rollout worker。 这个rollout worker使用动作$$a_{t}$$推进模拟和收集下一个观察$$x_{t+1}$$和奖励$$r_{t+1}$$。</p>
+<p>Rollout workers保存每个环境转换到共享内存中的轨迹缓冲区。 一旦模拟了$$T$$环境步骤，观察、隐藏状态、动作和奖励的轨迹$$\tau = x_{1},h_{1},a_{1},r_{1},…,x_{T},h_{T},a_{T},r_{T}$$就可以提供给learner。 learner不断地处理批量的轨迹，并更新actor $$\theta _{\pi }$$和critic $$\theta _{V}$$的参数。 这些参数更新一旦可用就发送给policy worker，这减少了前一个版本模型收集的经验量，最小化了平均policy lag。 这就完成了一次训练迭代。</p>
+<p>Parallelism。如前所述，rollout worker不拥有该策略的副本，因此基本上是环境实例周围的薄包装。 这允许它们大规模并行化。 此外，Sample Factory还将policy worker并行化。 这可以实现，因为所有当前轨迹数据$$(x_{t},h_{t},a_{t},…)$$都存储在所有进程都可以访问的共享张量中。 这允许policy workers本身处于无状态，因此，他们中的任何一个都可以很容易地处理来自单个环境的连续轨迹步骤。 在实际场景中，2到4个policy worker实例很容易使rollout worker操作饱和，加上一个特殊的采样器设计（第3.2节），使我们能够消除这一潜在的瓶颈。</p>
+<p>Learner是我们运行单一副本的唯一组件，至少只要涉及单一策略训练（多策略训练在3.5节中讨论）。 然而，我们可以通过利用Learner上的多个加速器数据并行训练和Hogwild风格的参数更新(Recht et al., 2011)。 加上在复杂环境中稳定训练通常需要的大批处理大小，这使Learner有足够的吞吐量来匹配经验收集率，除非计算图是高度非平凡的。</p>
+<h2 id="Sampling"><a href="#Sampling" class="headerlink" title="Sampling"></a>Sampling</h2><p>​    Rollout workers和policy workers共同组成采样器。 采样子系统对RL算法的吞吐量影响最大，因为它往往是瓶颈。 我们提出了一种具体的实现采样器的方法，它允许通过最小化rollout workers的空闲时间来优化资源利用。</p>
+<p>​    首先，注意训练和经验收集是解耦的，因此可以在反向传播步骤中收集新的环境转换。 Rollout workers也没有参数更新，因为操作生成的工作是卸载给policy worker的。 然而，如果没有解决，这仍然使rollout workers等待policy workers产生的行动，并通过进程间通信转移回来。</p>
+<p>​    为了缓解这种低效率，我们使用 Double-Buffered Sampling（图2）。 与其只在rollout worker上存储单个环境，不如存储环境$$E_{1},…,E_{k}$$的向量，其中k甚至是为了简单起见。 我们将这个向量分成两组$$E_{1},…,E_{k/2}$$，$$E_{k/2+1},…,E_{k}$$，并在它们之间交替进行。 当第一组环境正在step，第二组的操作是根据policy worker计算的，反之亦然。 有了足够快的policy worker和$$k$$的正确调优值，我们可以完全屏蔽通信开销，并确保在采样期间充分利用CPU核心，如图2所示。 用于双缓冲器的最大性能采样我们希望$$k/2&gt; \left \lceil t_{inf}/t_{env} \right \rceil$$，其中$$t_{inf}$$和$$t_{env}$$分别是平均推理和模拟时间。</p>
+<p><img src="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure2.png"></p>
+<h2 id="Communication-between-components"><a href="#Communication-between-components" class="headerlink" title="Communication between components"></a>Communication between components</h2><p>​    解锁本地单机设置的全部潜力的关键是利用系统组件之间的快速通信机制。 如图1所示，信息流有四条主要途径：rollout和policy worker之间的双向沟通，rollout将完整的轨迹传递给learner，以及将参数更新从learner转移到policy worker。 对于前三种交互，我们使用基于PyTorch的共享内存张量机制 (Paszke et al., 2019)。 我们注意到，RL算法中使用的大多数数据结构可以表示为固定形状的张量，无论它们是轨迹、观测还是隐藏状态。 因此，我们在系统RAM中预先分配足够数量的张量。 每当组件需要通信时，我们都会将数据复制到共享张量中，并且只通过FIFO队列发送这些张量的索引，使得消息与传输的总体数据量相比很小。</p>
+<p>​    对于参数更新，我们使用GPU上的内存共享。 每当需要更新模型时，policy worker只需将权重从共享内存复制到模型的本地副本。</p>
+<p>​    与许多流行的异步和分布式实现不同，我们不执行任何类型的数据序列化作为通信协议的一部分。 在全节流阀下，SampleFactory每秒产生和消耗超过1GB的数据，即使是最快的序列化/去序列化机制也会严重阻碍吞吐量。</p>
+<h2 id="Policy-lag"><a href="#Policy-lag" class="headerlink" title="Policy lag"></a>Policy lag</h2><p>​    Policy lag是异步RL算法的固有特性，它是收集经验（行为策略）的策略与学习的目标策略之间的差异。 这种差异的存在为off-policy训练提供了条件。off-policy学习对于策略梯度方法来说是很困难的，其中模型参数通常按照$$\bigtriangledown log\mu (a_{s}|x_{s})q(x_{s},a_{s})$$的方向更新，其中$$q(x_{s},a_{s})$$是策略state-action值的估计。 策略滞后越大，就越难从行为策略中使用一组样本$$x_{s}$$正确估计这个梯度。 从经验上讲，这在学习涉及循环策略、高维观测和复杂行动空间的问题方面变得更加困难，在这些问题中，即使是非常相似的政策也不太可能在很长的轨迹上表现出相同的性能。</p>
+<p>​    异步RL方法中的策略滞后可能是通过使用旧策略在环境中的作用引起的，或者在一次迭代中从并行环境中收集更多的轨迹，而不是学习者在一个batch中摄入的轨迹，导致部分经验在处理时变得不符合策略。 我们处理第一个问题，一旦有了新的参数立即更新政策工作者的模型。 在Sample factory中，参数更新很便宜，因为模型存储在共享内存中。 一个典型的更新需要小于1ms，因此我们收集了与“master”不同的策略非常少的经验。</p>
+<p>​    然而，不一定能够消除第二个原因。 在RL中，并行收集来自许多环境实例的训练数据是有益的。 这不仅使经验相互关联，它还允许我们利用多核CPU，并且具有更大的$$k$$值（每个核心的环境），充分利用双缓冲采样器。 在一次经验收集的“迭代”中，n个rollout workers，每个运行k个环境，将产生总共$$N_{iter}=n\times k\times T$$个样本。 由于我们在学习者步骤之后立即更新策略工作者，可能在轨迹的中间，这导致轨迹中最早的样本平均滞后于$$N_{iter}/N_{batch}-1$$策略更新，而最新的样本没有滞后。</p>
+<p>​    可以通过减小$$T$$或增加最小批量大小$$N_{batch}$$来最小化策略滞后。 两者都对学习有影响。 我们通常想要更大的T，在$$2^5-2^7$$范围内，通过反向传播与时间循环策略，大的最小批量可能会降低样本效率。 最佳批次大小取决于特定的环境，更大的批次被证明适合于具有噪声梯度的复杂问题(McCandlish et al., 2018)。</p>
+<p>​    此外，还有两大类用于处理off-policy学习的技术。 第一个想法是应用信任区域方法 (Schulman et al., 2015; 2017)通过在学习期间保持接近行为策略，我们提高了使用该策略的样本获得的梯度估计的质量。 另一种方法是使用重要性采样来纠正目标价值函数$$V^\pi$$以改进目标政策下折扣奖励之和的近似 (Harutyunyan et al., 2016). </p>
+<p>IMPALA (Espeholt et al., 2018) 介绍了V-trace算法，该算法使用截断的重要性抽样权重来修正值目标。 这有助于提高off-policy学习的稳定性和样本效率。</p>
+<p>​    这两种方法都可以独立应用，因为V-trace纠正了我们的训练目标，信任区域防止破坏性参数更新。 因此，我们在Sample Factory实现了V-trace和PPO clipping。 是否使用这些方法可以被认为是特定实验的超参数选择。 我们发现PPO clipping和V-trace的结合在任务之间很好地工作，并产生稳定的训练，因此我们决定在本文报道的所有实验中使用这两种方法。</p>
+<h2 id="Multi-agent-learning-and-self-play"><a href="#Multi-agent-learning-and-self-play" class="headerlink" title="Multi-agent learning and self-play"></a><strong>Multi-agent learning and self-play</strong></h2><p>​    通过多智能体强化学习和self-play，在深度RL方面取得了一些最先进的最新成果 (Bansal et al., 2018; Berner et al., 2019)。 通过self-play训练的特工比在固定场景中训练的对手表现出更高的技能水平 (Jaderberg et al.,2019)。 随着策略在self-play过程中的改进，它们产生了一个逐渐增加复杂性的训练环境，自然为代理提供了一个课程，并允许他们逐步学习更复杂的技能。 复杂行为(例如合作和工具使用)已被证明出现在这些培训情景中 (Baker et al., 2020)。</p>
+<p>​    还有证据表明，在多智能体环境中一起训练的代理群体可以避免常规的自玩设置所经历的一些失败模式，例如早期收敛到局部最优或过度拟合。 不同的培训人群可以使代理人接触到更广泛的对抗性政策，并产生更强大的代理人，在复杂的任务中达到更高的技能水平(Vinyals et al., 2019; Jaderberg et al., 2019)。</p>
+<p>​    为了释放我们系统的全部潜力，我们增加了对多代理环境的支持，以及对代理的培训人群。Sample Factory自然扩展到多智能体和多策略学习。 由于rollout workers只是环境实例的包装器，他们完全不知道提供操作的策略。 因此，为了在培训过程中增加更多的政策，我们只是催生了更多的policy workers和更多的learners来支持他们。 在rollout workers中，对于每个多代理环境中的每个代理，我们在每一集开始时从族群中抽样一个随机的策略$$\pi_{i}$$。 然后使用一组FIFO队列将操作请求路由到相应的policy workers，每$$\pi_{i}$$一个队列。 我们在这项工作中使用的基于族群的设置在第4节中得到了更详细的解释。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/" data-id="ckk6y25xw0003agva2md4flbp" data-title="Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hybrid Reward Architecture for Reinforcement Learning</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/">Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/">Hybrid Reward Architecture for Reinforcement Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/15/Policy-Gradient-Methods-for-Reinforcement-Learning-with-Function-Approximation/">Policy Gradient Methods for Reinforcement Learning with Function Approximation</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/14/Mastering-Fighting-Game-Using-Deep-Reinforcement-Learning-With-Self-play/">Mastering Fighting Game Using Deep Reinforcement Learning With Self-play</a>
+          </li>
+        
+          <li>
+            <a href="/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/">Playing Atari with Deep Reinforcement Learning</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 QilongPan<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
