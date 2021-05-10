@@ -6,17 +6,26 @@
   
   <title>Reinforcement Study Notes | 潘其龙</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="论文下载sci-hub 根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载 https:&#x2F;&#x2F;www.douban.com&#x2F;group&#x2F;topic&#x2F;144179135&#x2F; https:&#x2F;&#x2F;gfsoso.99lb.net&#x2F;sci-hub.html">
+  <meta name="description" content="论文下载sci-hub 根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载 https:&#x2F;&#x2F;www.douban.com&#x2F;group&#x2F;topic&#x2F;144179135&#x2F; https:&#x2F;&#x2F;gfsoso.99lb.net&#x2F;sci-hub.html 李宏毅视频笔记视频地址 强化学习难点 Reward delay Agent’s acti">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Reinforcement Study Notes">
 <meta property="og:url" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/index.html">
 <meta property="og:site_name" content="潘其龙">
-<meta property="og:description" content="论文下载sci-hub 根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载 https:&#x2F;&#x2F;www.douban.com&#x2F;group&#x2F;topic&#x2F;144179135&#x2F; https:&#x2F;&#x2F;gfsoso.99lb.net&#x2F;sci-hub.html">
+<meta property="og:description" content="论文下载sci-hub 根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载 https:&#x2F;&#x2F;www.douban.com&#x2F;group&#x2F;topic&#x2F;144179135&#x2F; https:&#x2F;&#x2F;gfsoso.99lb.net&#x2F;sci-hub.html 李宏毅视频笔记视频地址 强化学习难点 Reward delay Agent’s acti">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic1.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic2.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic3.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic4.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic5.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic6.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic7.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/add_baseline.png">
 <meta property="article:published_time" content="2021-04-26T12:53:20.000Z">
-<meta property="article:modified_time" content="2021-04-26T13:08:29.571Z">
+<meta property="article:modified_time" content="2021-05-10T16:12:46.248Z">
 <meta property="article:author" content="QilongPan">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic1.png">
   
     <link rel="alternate" href="/atom.xml" title="潘其龙" type="application/atom+xml">
   
@@ -99,11 +108,90 @@
 <p>根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载</p>
 <p><a target="_blank" rel="noopener" href="https://www.douban.com/group/topic/144179135/">https://www.douban.com/group/topic/144179135/</a></p>
 <p><a target="_blank" rel="noopener" href="https://gfsoso.99lb.net/sci-hub.html">https://gfsoso.99lb.net/sci-hub.html</a></p>
+<h1 id="李宏毅视频笔记"><a href="#李宏毅视频笔记" class="headerlink" title="李宏毅视频笔记"></a>李宏毅视频笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1UE411G78S?from=search&seid=9027506742489609557">视频地址</a></p>
+<h2 id="强化学习难点"><a href="#强化学习难点" class="headerlink" title="强化学习难点"></a>强化学习难点</h2><ul>
+<li>Reward delay</li>
+<li>Agent’s actions affect the subsequent data it receives</li>
+</ul>
+<h2 id="强化学习方法"><a href="#强化学习方法" class="headerlink" title="强化学习方法"></a>强化学习方法</h2><p>policy-based :   Learning an Actor</p>
+<p>value-based:    Learning a Critic</p>
+<p>model-based</p>
+<p>Three Steps for Deep Learning</p>
+<ul>
+<li>Neural Network as Actor</li>
+</ul>
+<p>Input of neural network:the observation of machine represented as a vector or a matrix</p>
+<p>Output neural network:each action corresponds to a neuron in output layer</p>
+<ul>
+<li>goodness of function</li>
+</ul>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic1.png"></p>
+<p>Actor的好坏。通过actor玩游戏算reward期望</p>
+<p>An episode is considered as a trajectory </p>
+<p>$$\tau = \left { s_{1},a_{1},r_{1},s_{2},a_{2},r_{2},…,s_{T},a_{T},r_{T} \right }$$</p>
+<p>$$R_{\tau } = \sum_{n=1}^{N}r_{n}$$</p>
+<p>If you use an actor to play the game,each $$\tau$$ has a probability to be sampled. The probability depends on actor parameter $$\theta$$:$$P(\tau|\theta)$$</p>
+<p>Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left { \tau^{1},\tau^{2},…,\tau^{N} \right }$$ </p>
+<p>Sampling $$\tau$$ from $$ P(\tau|\theta) $$ N times.</p>
+<p>$$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$</p>
+<p>Gradient Ascent</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic2.png"></p>
+<p>Problem statement</p>
+<p>$$\theta ^{*} = argmax \bar{R_{\theta}}$$</p>
+<p>$$\bar{R_{\theta}}=\sum_{\tau}R(\tau)P(\tau|\theta)$$\</p>
+<p>Start with $$\theta^{0}$$</p>
+<p>$$\theta ^{1}\leftarrow \theta ^{0}+\eta \bigtriangledown \bar{R_{\theta ^{0}}}$$</p>
+<p>$$\theta ^{2}\leftarrow \theta ^{1}+\eta \bigtriangledown \bar{R_{\theta ^{1}}}$$</p>
+<p>$$…$$</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic3.png"></p>
+<p>$$\bigtriangledown \bar{R_{\theta }}=\sum_{\tau}R(\tau)\bigtriangledown P(\tau|\theta) =\sum_{\tau}R(\tau)P(\tau|\theta)\frac{\bigtriangledown P(\tau|\theta)}{P(\tau|\theta)} =\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta)$$</p>
+<p>$$\frac{dlog(f(x))}{dx}=\frac{1}{f(x)}\frac{df(x)}{dx}$$</p>
+<p>$$\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta) \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)$$,Because $$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$.</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic4.png"></p>
+<p>Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left { \tau^{1},\tau^{2},…,\tau^{N} \right }$$ </p>
+<p>$$R(\tau)$$ do not have to be differentiable It can even be a black box.</p>
+<p>$$P(\tau|\theta) = p(s_{1})p(a_{1}|s_{1},\theta)p(r_{1},s_{2}|s_{1},a_{1})p(a_{2}|s_{2},\theta)p(r_{2},s_{3}|s_{2},a_{2})… = p(s_{1})\prod_{t=1}^{T}p(a_{t}|s_{t},\theta)p(r_{t},s_{t+1}|s_{t},a_{t})$$ <img src="/2021/04/26/Reinforcement-Study-Notes/pic5.png"></p>
+<p>$$p(a_{1}|s_{1},\theta)$$取决于策略，$$p(r_{1},s_{2}|s_{1},a_{1})$$取决于游戏。$$p(s_{1})$$ and $$p(r_{t},s_{t+1}|s_{t},a_{t})$$ not releated to your actor</p>
+<p>$$logP(\tau|\theta) = logp(s_{1}) + \sum_{t=1}^{T}logp(a_{t}|s_{t},\theta) + logp(r_{t},s_{t+1}|s_{t},a_{t})$$</p>
+<p>Ignore the terms not related to $$\theta$$</p>
+<p>$$\bigtriangledown logP(\tau|\theta) = \sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta)$$</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic6.png"></p>
+<p>finally:</p>
+<p>$$\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)= \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) = \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) =\frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}R(\tau ^{n})\bigtriangledown logp(a_{t}|s_{t},\theta) $$</p>
+<p>$$\theta^{new}\leftarrow \theta^{old} + \eta \bigtriangledown \bar{R_{\theta ^{old}}}$$</p>
+<p>If in $$\tau^{n}$$ machine takes  $$a_{t}^{n}$$ when seeing $$s_{t}^{n}$$ in </p>
+<p>$$R(\tau^{n})$$ is positive  ——-&gt; Tuning  $$\theta$$ to increase  $$p(a_{t}^{n})|s_{t}^{n})$$</p>
+<p>$$R(\tau^{n})$$ is negative  ——-&gt; Tuning  $$\theta$$ to decrease $$p(a_{t}^{n})|s_{t}^{n})$$</p>
+<p>It is very important to consider the cumulative reward $$R(\tau^{n}) $$ of the whole trajectory $$\tau^{n}$$ instead of immediate reward $$r_{t}^{n}$$(是用整个trajectory的累加reward而不是用某一时刻的reward去乘)</p>
+<p>如果使用的是某一时刻的reward去乘，只会让那一个动作的概率增加，而不会让其它动作概率增加</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic7.png"></p>
+<p><strong>为什么要使用$$\bigtriangledown logP(\tau^{n}|\theta)$$,而不用$$\frac{\bigtriangledown P(a_{t}^{n}|s_{t}^{n},\theta)}{ P(a_{t}^{n}|s_{t}^{n},\theta)}$$</strong></p>
+<p>e.g. in the sampling data… s has been seen in $$\tau^{13},\tau^{15},\tau^{17},\tau^{33}$$</p>
+<p>In $$\tau^{13}$$ ,take action a $$R(\tau^{13})=2$$</p>
+<p>In $$\tau^{15}$$ ,take action b $$R(\tau^{15})=1$$</p>
+<p>In $$\tau^{17}$$ ,take action b $$R(\tau^{17})=1$$</p>
+<p>In $$\tau^{33}$$ ,take action b $$R(\tau^{33})=1$$</p>
+<p>因为求期望是rewad乘以概率的累加，所以因为b出现次数较多，所以会导致虽然b的单次reward不如b高，但是由于其出现次数多，会使b的概率大于a。所以需要divided by $$P(a_{t}^{n}|s_{t}^{n},\theta)$$,相当于进行normalize</p>
+<p><strong>Add a Baseline</strong></p>
+<p>It is possible that $$R(\tau^{n})$$ is always positive.</p>
+<p>假如有动作a没有被sample，其它动作$$R(\tau^{n})$$为正，所以概率会增加，相对的动作a的概率就是减小</p>
+<p>The probability of the actions not sampled will decrease.</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/add_baseline.png"></p>
+<p>$$\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}(R(\tau ^{n}) - b)\bigtriangledown logp(a_{t}|s_{t},\theta)$$</p>
+<p>大于baseline才增加概率，小于baseline减小概率</p>
+<p><strong>Critic</strong></p>
+<ul>
+<li>A critic does not determine the action.</li>
+<li>Given an actor,it evaluates the how good the actor is</li>
+</ul>
+<ul>
+<li>pick the best function  </li>
+</ul>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/26/Reinforcement-Study-Notes/" data-id="cknyska9c0004u4vaceb4ftku" data-title="Reinforcement Study Notes" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/04/26/Reinforcement-Study-Notes/" data-id="ckoit2fo70006rcva6oln33r0" data-title="Reinforcement Study Notes" class="article-share-link">Share</a>
       
       
       
@@ -150,7 +238,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
     </div>
   </div>
 
@@ -163,23 +251,23 @@
       <ul>
         
           <li>
+            <a href="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/">IMPALA:Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/">Asynchronous Methods for Deep Reinforcement Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/">Grandmaster level in StarCraftII using multi-agent reinforcement learning</a>
+          </li>
+        
+          <li>
             <a href="/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/">Genetic State-Grouping Algorithm for Deep Reinforcement Learning</a>
           </li>
         
           <li>
             <a href="/2021/04/26/Reinforcement-Study-Notes/">Reinforcement Study Notes</a>
-          </li>
-        
-          <li>
-            <a href="/2021/03/17/TLeague/">TLeague</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/">Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning</a>
-          </li>
-        
-          <li>
-            <a href="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/">Hybrid Reward Architecture for Reinforcement Learning</a>
           </li>
         
       </ul>
