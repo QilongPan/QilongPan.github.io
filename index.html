@@ -97,7 +97,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/" data-id="ckoit2fo40003rcvadd61amh4" data-title="IMPALA:Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/" data-id="ckok6o5n10003c4vagl0m8z4l" data-title="IMPALA:Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures" class="article-share-link">Share</a>
       
       
       
@@ -140,7 +140,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/" data-id="ckoit2fnt0000rcva1z34gg51" data-title="Asynchronous Methods for Deep Reinforcement Learning" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/" data-id="ckok6o5mi0000c4vabg94fmdx" data-title="Asynchronous Methods for Deep Reinforcement Learning" class="article-share-link">Share</a>
       
       
       
@@ -178,7 +178,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/" data-id="ckoit2fo30002rcva1smggc23" data-title="Grandmaster level in StarCraftII using multi-agent reinforcement learning" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/" data-id="ckok6o5n00002c4vahbi7gdy9" data-title="Grandmaster level in StarCraftII using multi-agent reinforcement learning" class="article-share-link">Share</a>
       
       
       
@@ -228,7 +228,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/" data-id="ckoit2fo00001rcva3bwhefiy" data-title="Genetic State-Grouping Algorithm for Deep Reinforcement Learning" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/" data-id="ckok6o5my0001c4va3pgy70ws" data-title="Genetic State-Grouping Algorithm for Deep Reinforcement Learning" class="article-share-link">Share</a>
       
       
       
@@ -267,11 +267,11 @@
 <p><a target="_blank" rel="noopener" href="https://www.douban.com/group/topic/144179135/">https://www.douban.com/group/topic/144179135/</a></p>
 <p><a target="_blank" rel="noopener" href="https://gfsoso.99lb.net/sci-hub.html">https://gfsoso.99lb.net/sci-hub.html</a></p>
 <h1 id="李宏毅视频笔记"><a href="#李宏毅视频笔记" class="headerlink" title="李宏毅视频笔记"></a>李宏毅视频笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1UE411G78S?from=search&seid=9027506742489609557">视频地址</a></p>
-<h2 id="强化学习难点"><a href="#强化学习难点" class="headerlink" title="强化学习难点"></a>强化学习难点</h2><ul>
+<h2 id="lesson1"><a href="#lesson1" class="headerlink" title="lesson1"></a>lesson1</h2><h3 id="强化学习难点"><a href="#强化学习难点" class="headerlink" title="强化学习难点"></a>强化学习难点</h3><ul>
 <li>Reward delay</li>
 <li>Agent’s actions affect the subsequent data it receives</li>
 </ul>
-<h2 id="强化学习方法"><a href="#强化学习方法" class="headerlink" title="强化学习方法"></a>强化学习方法</h2><p>policy-based :   Learning an Actor</p>
+<h3 id="强化学习方法"><a href="#强化学习方法" class="headerlink" title="强化学习方法"></a>强化学习方法</h3><p>policy-based :   Learning an Actor</p>
 <p>value-based:    Learning a Critic</p>
 <p>model-based</p>
 <p>Three Steps for Deep Learning</p>
@@ -339,17 +339,40 @@
 <p>大于baseline才增加概率，小于baseline减小概率</p>
 <p><strong>Critic</strong></p>
 <ul>
-<li>A critic does not determine the action.</li>
-<li>Given an actor,it evaluates the how good the actor is</li>
+<li><p>A critic does not determine the action.</p>
+</li>
+<li><p>Given an actor,it evaluates the how good the actor is</p>
+</li>
+<li><p>pick the best function  </p>
+</li>
 </ul>
-<ul>
-<li>pick the best function  </li>
-</ul>
+<h2 id="lesson2"><a href="#lesson2" class="headerlink" title="lesson2"></a>lesson2</h2><p>该部分通俗解释policy gradient的公式</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic8.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic9.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic10.png"></p>
+<p>$$R(\tau^{1})$$可以看成是增加其对应数据的样本</p>
+<h2 id="lesson3"><a href="#lesson3" class="headerlink" title="lesson3"></a>lesson3</h2><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic11.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic12.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic13.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic14.png"></p>
+<p>TD approach 不用等到游戏结束就可以train，只需要一段时间就可以。</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic15.png"></p>
+<p>dqn、dueling dqn、rainbow</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic16.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic17.png"></p>
+<p>每个actor复制global parameters，然后和环境进行交互，计算gradients，然后传回global network</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic18.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic19.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic20.png"></p>
+<p>很多情况下是不知道reward function的，所以需要根据专家的历史trajectory来推出reward function，然后可以进行强化学习。</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic21.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic22.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic23.png"></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/26/Reinforcement-Study-Notes/" data-id="ckoit2fo70006rcva6oln33r0" data-title="Reinforcement Study Notes" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/04/26/Reinforcement-Study-Notes/" data-id="ckok6o5n60007c4vaf5w1g92a" data-title="Reinforcement Study Notes" class="article-share-link">Share</a>
       
       
       
@@ -406,7 +429,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/03/17/TLeague/" data-id="ckoit2foa0009rcva4ql8h46q" data-title="TLeague" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/03/17/TLeague/" data-id="ckok6o5n80009c4vagvykhyrw" data-title="TLeague" class="article-share-link">Share</a>
       
       
       
@@ -477,7 +500,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/" data-id="ckoit2fo90008rcva5rpu94ga" data-title="Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/" data-id="ckok6o5n70008c4vagfrddi0m" data-title="Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning" class="article-share-link">Share</a>
       
       
       
@@ -592,7 +615,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/" data-id="ckoit2fog000drcva2vaja66o" data-title="Hybrid Reward Architecture for Reinforcement Learning" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/" data-id="ckok6o5nl000dc4va7b6dfakg" data-title="Hybrid Reward Architecture for Reinforcement Learning" class="article-share-link">Share</a>
       
       
       
@@ -630,7 +653,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/15/Policy-Gradient-Methods-for-Reinforcement-Learning-with-Function-Approximation/" data-id="ckoit2fo60005rcva62st1922" data-title="Policy Gradient Methods for Reinforcement Learning with Function Approximation" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/15/Policy-Gradient-Methods-for-Reinforcement-Learning-with-Function-Approximation/" data-id="ckok6o5n50006c4vad5340g7c" data-title="Policy Gradient Methods for Reinforcement Learning with Function Approximation" class="article-share-link">Share</a>
       
       
       
@@ -671,7 +694,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/14/Mastering-Fighting-Game-Using-Deep-Reinforcement-Learning-With-Self-play/" data-id="ckoit2fo80007rcva5vso10mx" data-title="Mastering Fighting Game Using Deep Reinforcement Learning With Self-play" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/14/Mastering-Fighting-Game-Using-Deep-Reinforcement-Learning-With-Self-play/" data-id="ckok6o5n20004c4va6diqazgn" data-title="Mastering Fighting Game Using Deep Reinforcement Learning With Self-play" class="article-share-link">Share</a>
       
       
       
