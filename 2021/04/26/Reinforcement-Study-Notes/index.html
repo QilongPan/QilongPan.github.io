@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Reinforcement Study Notes | 潘其龙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="论文下载sci-hub 根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载 https:&#x2F;&#x2F;www.douban.com&#x2F;group&#x2F;topic&#x2F;144179135&#x2F; https:&#x2F;&#x2F;gfsoso.99lb.net&#x2F;sci-hub.html 李宏毅视频笔记视频地址 lesson1强化学习难点 Reward delay Agent">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reinforcement Study Notes">
+<meta property="og:url" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/index.html">
+<meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="论文下载sci-hub 根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载 https:&#x2F;&#x2F;www.douban.com&#x2F;group&#x2F;topic&#x2F;144179135&#x2F; https:&#x2F;&#x2F;gfsoso.99lb.net&#x2F;sci-hub.html 李宏毅视频笔记视频地址 lesson1强化学习难点 Reward delay Agent">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic1.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic2.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic3.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic4.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic5.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic6.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic7.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/add_baseline.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic24.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic25.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic8.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic9.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic10.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic11.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic12.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic13.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic14.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic15.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic16.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic17.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic18.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic19.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic20.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic21.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic22.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic23.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic26.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic27.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic28.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic29.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic30.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic31.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic32.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic33.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic34.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic35.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic36.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic38.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic39.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic40.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic41.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic42.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic43.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic44.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic45.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic46.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic47.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic48.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic49.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic50.png">
+<meta property="og:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic51.png">
+<meta property="article:published_time" content="2021-04-26T12:53:20.000Z">
+<meta property="article:modified_time" content="2021-05-19T15:37:07.383Z">
+<meta property="article:author" content="QilongPan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/04/26/Reinforcement-Study-Notes/pic1.png">
+  
+    <link rel="alternate" href="/atom.xml" title="潘其龙" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">潘其龙</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Reinforcement-Study-Notes" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/26/Reinforcement-Study-Notes/" class="article-date">
+  <time class="dt-published" datetime="2021-04-26T12:53:20.000Z" itemprop="datePublished">2021-04-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Reinforcement Study Notes
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="论文下载"><a href="#论文下载" class="headerlink" title="论文下载"></a>论文下载</h1><p>sci-hub</p>
+<p>根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载</p>
+<p><a target="_blank" rel="noopener" href="https://www.douban.com/group/topic/144179135/">https://www.douban.com/group/topic/144179135/</a></p>
+<p><a target="_blank" rel="noopener" href="https://gfsoso.99lb.net/sci-hub.html">https://gfsoso.99lb.net/sci-hub.html</a></p>
+<h1 id="李宏毅视频笔记"><a href="#李宏毅视频笔记" class="headerlink" title="李宏毅视频笔记"></a>李宏毅视频笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1UE411G78S?from=search&seid=9027506742489609557">视频地址</a></p>
+<h2 id="lesson1"><a href="#lesson1" class="headerlink" title="lesson1"></a>lesson1</h2><h3 id="强化学习难点"><a href="#强化学习难点" class="headerlink" title="强化学习难点"></a>强化学习难点</h3><ul>
+<li>Reward delay</li>
+<li>Agent’s actions affect the subsequent data it receives</li>
+</ul>
+<h3 id="强化学习方法"><a href="#强化学习方法" class="headerlink" title="强化学习方法"></a>强化学习方法</h3><p>policy-based :   Learning an Actor</p>
+<p>value-based:    Learning a Critic</p>
+<p>model-based</p>
+<p>Three Steps for Deep Learning</p>
+<ul>
+<li>Neural Network as Actor</li>
+</ul>
+<p>Input of neural network:the observation of machine represented as a vector or a matrix</p>
+<p>Output neural network:each action corresponds to a neuron in output layer</p>
+<ul>
+<li>goodness of function</li>
+</ul>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic1.png"></p>
+<p>Actor的好坏。通过actor玩游戏算reward期望</p>
+<p>An episode is considered as a trajectory </p>
+<p>$\tau = \left { s_{1},a_{1},r_{1},s_{2},a_{2},r_{2},…,s_{T},a_{T},r_{T} \right }$</p>
+<p>$R_{\tau } = \sum_{n=1}^{N}r_{n}$</p>
+<p>If you use an actor to play the game,each $$\tau$$ has a probability to be sampled. The probability depends on actor parameter $$\theta$$:$P(\tau|\theta)$</p>
+<p>Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left { \tau^{1},\tau^{2},…,\tau^{N} \right }$$ </p>
+<p>Sampling $$\tau$$ from $$ P(\tau|\theta) $$ N times.</p>
+<p>$$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$</p>
+<p>Gradient Ascent</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic2.png"></p>
+<p>Problem statement</p>
+<p>$$\theta ^{*} = argmax \bar{R_{\theta}}$$</p>
+<p>$$\bar{R_{\theta}}=\sum_{\tau}R(\tau)P(\tau|\theta)$$\</p>
+<p>Start with $$\theta^{0}$$</p>
+<p>$$\theta ^{1}\leftarrow \theta ^{0}+\eta \bigtriangledown \bar{R_{\theta ^{0}}}$$</p>
+<p>$$\theta ^{2}\leftarrow \theta ^{1}+\eta \bigtriangledown \bar{R_{\theta ^{1}}}$$</p>
+<p>$$…$$</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic3.png"></p>
+<p>$$\bigtriangledown \bar{R_{\theta }}=\sum_{\tau}R(\tau)\bigtriangledown P(\tau|\theta) =\sum_{\tau}R(\tau)P(\tau|\theta)\frac{\bigtriangledown P(\tau|\theta)}{P(\tau|\theta)} =\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta)$$</p>
+<p>$$\frac{dlog(f(x))}{dx}=\frac{1}{f(x)}\frac{df(x)}{dx}$$</p>
+<p>$$\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta) \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)$$,Because $$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$.</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic4.png"></p>
+<p>Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left { \tau^{1},\tau^{2},…,\tau^{N} \right }$$ </p>
+<p>$$R(\tau)$$ do not have to be differentiable It can even be a black box.</p>
+<p>$$P(\tau|\theta) = p(s_{1})p(a_{1}|s_{1},\theta)p(r_{1},s_{2}|s_{1},a_{1})p(a_{2}|s_{2},\theta)p(r_{2},s_{3}|s_{2},a_{2})… = p(s_{1})\prod_{t=1}^{T}p(a_{t}|s_{t},\theta)p(r_{t},s_{t+1}|s_{t},a_{t})$$ <img src="/2021/04/26/Reinforcement-Study-Notes/pic5.png"></p>
+<p>$$p(a_{1}|s_{1},\theta)$$取决于策略，$$p(r_{1},s_{2}|s_{1},a_{1})$$取决于游戏。$$p(s_{1})$$ and $$p(r_{t},s_{t+1}|s_{t},a_{t})$$ not releated to your actor</p>
+<p>$$logP(\tau|\theta) = logp(s_{1}) + \sum_{t=1}^{T}logp(a_{t}|s_{t},\theta) + logp(r_{t},s_{t+1}|s_{t},a_{t})$$</p>
+<p>Ignore the terms not related to $$\theta$$</p>
+<p>$$\bigtriangledown logP(\tau|\theta) = \sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta)$$</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic6.png"></p>
+<p>finally:</p>
+<p>$$\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)= \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) = \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) =\frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}R(\tau ^{n})\bigtriangledown logp(a_{t}|s_{t},\theta) $$</p>
+<p>$$\theta^{new}\leftarrow \theta^{old} + \eta \bigtriangledown \bar{R_{\theta ^{old}}}$$</p>
+<p>If in $$\tau^{n}$$ machine takes  $$a_{t}^{n}$$ when seeing $$s_{t}^{n}$$ in </p>
+<p>$$R(\tau^{n})$$ is positive  ——-&gt; Tuning  $$\theta$$ to increase  $$p(a_{t}^{n})|s_{t}^{n})$$</p>
+<p>$$R(\tau^{n})$$ is negative  ——-&gt; Tuning  $$\theta$$ to decrease $$p(a_{t}^{n})|s_{t}^{n})$$</p>
+<p>It is very important to consider the cumulative reward $$R(\tau^{n}) $$ of the whole trajectory $$\tau^{n}$$ instead of immediate reward $$r_{t}^{n}$$(是用整个trajectory的累加reward而不是用某一时刻的reward去乘)</p>
+<p>如果使用的是某一时刻的reward去乘，只会让那一个动作的概率增加，而不会让其它动作概率增加</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic7.png"></p>
+<p><strong>为什么要使用$$\bigtriangledown logP(\tau^{n}|\theta)$$,而不用$$\frac{\bigtriangledown P(a_{t}^{n}|s_{t}^{n},\theta)}{ P(a_{t}^{n}|s_{t}^{n},\theta)}$$</strong></p>
+<p>e.g. in the sampling data… s has been seen in $$\tau^{13},\tau^{15},\tau^{17},\tau^{33}$$</p>
+<p>In $$\tau^{13}$$ ,take action a $$R(\tau^{13})=2$$</p>
+<p>In $$\tau^{15}$$ ,take action b $$R(\tau^{15})=1$$</p>
+<p>In $$\tau^{17}$$ ,take action b $$R(\tau^{17})=1$$</p>
+<p>In $$\tau^{33}$$ ,take action b $$R(\tau^{33})=1$$</p>
+<p>因为求期望是rewad乘以概率的累加，所以因为b出现次数较多，所以会导致虽然b的单次reward不如a高，但是由于其出现次数多，会使b的概率大于a。所以需要divided by $$P(a_{t}^{n}|s_{t}^{n},\theta)$$,相当于进行normalize</p>
+<p><strong>Add a Baseline</strong></p>
+<p>It is possible that $$R(\tau^{n})$$ is always positive.</p>
+<p>假如有动作a没有被sample，其它动作$$R(\tau^{n})$$为正，所以概率会增加，相对的动作a的概率就是减小</p>
+<p>The probability of the actions not sampled will decrease.</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/add_baseline.png"></p>
+<p>$$\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}(R(\tau ^{n}) - b)\bigtriangledown logp(a_{t}|s_{t},\theta)$$</p>
+<p>大于baseline才增加概率，小于baseline减小概率</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic24.png"></p>
+<p>假设游戏只有三步，从图中可以看出第一个episode得了3分，但是每个action的贡献都不一样，$$a_{1}$$贡献了5分，$$a_{3}$$贡献了-3分，但是训练的时候反而会增加$$a_{3}$$的概率。如果sample的episode够多，能够得到一个期望分数，或许能够忽略这个问题，比如第二个episode的情况下，$$a_{3}$$的reward为负的。为了解决这个问题，可以讲公式中的$$R(\tau^{n})$$(整个episode的reward和)换成只从当前action开始的reward和，因为之前的reward和当前action无关，公式如图所示。</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic25.png"></p>
+<p>由于未来的reward不确定性大，所以在计算reward和时会加入衰减，公式如图所示。</p>
+<p>$$R(\tau^{n}) - b$$是状态独立的，为Advantage Function,表示该状态采取该动作有多好，这个是相对的。Advantage Function有多种形式，这里只是其中一种。</p>
+<p><strong>Critic</strong></p>
+<ul>
+<li><p>A critic does not determine the action.</p>
+</li>
+<li><p>Given an actor,it evaluates the how good the actor is</p>
+</li>
+<li><p>pick the best function  </p>
+</li>
+</ul>
+<h2 id="lesson2"><a href="#lesson2" class="headerlink" title="lesson2"></a>lesson2</h2><p>该部分通俗解释policy gradient的公式</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic8.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic9.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic10.png"></p>
+<p>$$R(\tau^{1})$$可以看成是增加其对应数据的样本</p>
+<h2 id="lesson3"><a href="#lesson3" class="headerlink" title="lesson3"></a>lesson3</h2><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic11.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic12.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic13.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic14.png"></p>
+<p>TD approach 不用等到游戏结束就可以train，只需要一段时间就可以。</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic15.png"></p>
+<p>dqn、dueling dqn、rainbow</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic16.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic17.png"></p>
+<p>每个actor复制global parameters，然后和环境进行交互，计算gradients，然后传回global network</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic18.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic19.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic20.png"></p>
+<p>很多情况下是不知道reward function的，所以需要根据专家的历史trajectory来推出reward function，然后可以进行强化学习。</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic21.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic22.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic23.png"></p>
+<h2 id="lesson4"><a href="#lesson4" class="headerlink" title="lesson4"></a>lesson4</h2><h3 id="Proximal-Policy-Optimization-PPO"><a href="#Proximal-Policy-Optimization-PPO" class="headerlink" title="Proximal Policy Optimization(PPO)"></a>Proximal Policy Optimization(PPO)</h3><p><strong>From on-policy to off-policy</strong></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic26.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic27.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic28.png">如如果$$p(x)$$与$$q(x)$$相差太大，会导致方差大</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic29.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic30.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic31.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic32.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic33.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic34.png"></p>
+<h2 id="lesson5"><a href="#lesson5" class="headerlink" title="lesson5"></a>lesson5</h2><h3 id="Q-Learning"><a href="#Q-Learning" class="headerlink" title="Q-Learning"></a>Q-Learning</h3><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic35.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic36.png"></p>
+<p>这种方法每次需要计算cumulated reward，需要游戏结束</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic38.png"></p>
+<p>不是预测$$V^{\pi}$$,而是预测$$V^{\pi}(s_{t})-V^{\pi}(s_{t+1})=r_{t}$$</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic39.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic40.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic41.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic42.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic43.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic44.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic45.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic46.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic47.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic48.png"></p>
+<h2 id="lesson6"><a href="#lesson6" class="headerlink" title="lesson6"></a>lesson6</h2><h3 id="Tips-of-Q-Learning"><a href="#Tips-of-Q-Learning" class="headerlink" title="Tips of Q-Learning"></a>Tips of Q-Learning</h3><ul>
+<li>Double DQN</li>
+</ul>
+<p>Q value is usually over-estimated</p>
+<ul>
+<li>Dueling DQN</li>
+</ul>
+<p>修改network架构</p>
+<ul>
+<li>Prioritized Reply</li>
+<li>Multi-step</li>
+</ul>
+<p>Balance between MC and TD</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic49.png"></p>
+<ul>
+<li><p>Noisy Net</p>
+</li>
+<li><p>Distributional Q-function</p>
+</li>
+<li><p>Rainbow</p>
+</li>
+</ul>
+<h2 id="lesson7"><a href="#lesson7" class="headerlink" title="lesson7"></a>lesson7</h2><h3 id="Q-Learning-for-Continuous-Actions"><a href="#Q-Learning-for-Continuous-Actions" class="headerlink" title="Q-Learning for Continuous Actions"></a>Q-Learning for Continuous Actions</h3><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic50.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic51.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/26/Reinforcement-Study-Notes/" data-id="ckovmp4wi00002kva67gx2rzp" data-title="Reinforcement Study Notes" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Genetic State-Grouping Algorithm for Deep Reinforcement Learning
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/03/17/TLeague/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">TLeague</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/05/17/graph-network-study/">graph_network_study</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/12/docker-study/">docker study</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/">IMPALA:Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/">Asynchronous Methods for Deep Reinforcement Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/">Grandmaster level in StarCraftII using multi-agent reinforcement learning</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 QilongPan<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
