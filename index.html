@@ -71,6 +71,94 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Continuous-Control-With-Deep-Reinforcement-Learning" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/05/20/Continuous-Control-With-Deep-Reinforcement-Learning/" class="article-date">
+  <time class="dt-published" datetime="2021-05-20T14:21:20.000Z" itemprop="datePublished">2021-05-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/05/20/Continuous-Control-With-Deep-Reinforcement-Learning/">Continuous Control With Deep Reinforcement Learning</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="CONTINUOUS-CONTROL-WITH-DEEP-REINFORCEMENT-LEARNING"><a href="#CONTINUOUS-CONTROL-WITH-DEEP-REINFORCEMENT-LEARNING" class="headerlink" title="CONTINUOUS CONTROL WITH DEEP REINFORCEMENT LEARNING"></a>CONTINUOUS CONTROL WITH DEEP REINFORCEMENT LEARNING</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>我们将Deep Q-Learning成功的背后思想应用到连续的行动领域。我们提出了一个actor-critic,model-free基于确定性策略梯度的算法，可以在连续动作空间上运行。使用相同的学习算法、网络架构和超参数，我们的算法稳健地解决了20多个模拟物理任务，包括卡杆摆动、灵巧操作、腿运动和汽车驾驶等经典问题。我们的算法能够找到性能与完全访问动态系统的规划算法及其衍生物相当的策略。我们进一步证明，对于许多任务，该算法可以直接通过输入原始像素学习“end-to-end”策略。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    人工智能领域的主要目标之一是从未处理的、高维的、感官的输入中解决复杂的任务。最近，通过将深度学习中的感官处理与强化学习相结合，取得了重大进展，从而形成了DQN算法 。该算法能够在许多Atari电子游戏中，使用未经处理的像素作为输入，达到了人类水平的性能。 为此，使用了深度神经网络函数逼近器来估算动作值函数。</p>
+<p>​    但是，尽管DQN解决了高维观测空间的问题，但它只能处理离散和低维动作空间。 许多有趣的任务，尤其是物理控制任务，具有连续的（实际值）和高维度的动作空间。 DQN不能直接应用于连续域，因为它依赖于找到可以最大程度地提高动作值函数，在连续值情况下，每个步骤都需要迭代优化过程。</p>
+<p>​    使诸如DQN之类的深度强化学习方法适应连续领域的一种明显方法是简单地离散动作空间。但是，这有很多局限性，最显着的是维度灾难：动作的数量随自由度的增加而呈指数增长。例如，对于每个关节具有最粗糙的离散$$a_{i}\in\left { -k,0,k \right }$$的,关节数量为7的系统（如在人类手臂中）会导致具有以下维度的动作空间：$$3^7=2187$$ 。对于需要对动作进行精细控制的任务，情况甚至更糟，因为它们需要相应地更精细的离散化，从而导致离散动作数量激增。 如此大的动作空间很难有效地探索，因此在这种情况下成功地训练类似DQN的网络可能很棘手。 此外，动作空间的单纯离散化会不必要地丢弃有关动作域结构的信息，这对于解决许多问题可能是必不可少的。</p>
+<p>​    在这项工作中，我们提出了一种使用深度函数逼近器的model-free，off-policy的actor-critic算法，该算法可以学习高维，连续动作空间中的策略。我们的工作基于确定性策略梯度（DPG）算法（其自身类似于NFQCA，并且可以找到类似的想法）。 然而，正如我们在下面显示的那样，这种针对行为者的方法与神经函数近似器的单纯应用对于具有挑战性的问题是不稳定的。</p>
+<p>​    在这里，我们结合了行动者批评方法和最近从Deep Q Network（DQN）成功获得的见解。 在DQN之前，通常认为使用大型非线性函数逼近器学习价值函数既困难又不稳定。 由于以下两项创新，DQN能够使用此类函数逼近器以稳定且健壮的方式学习价值函数：1.通过从重播缓冲区中抽取样本，对网络进行off-policy训练，以最大程度地减少样本之间的相关性； 2.用目标Q网络训练网络，以在时间差备份期间给出一致的目标。 在这项工作中，我们利用了相同的思想以及批处理规范化，这是深度学习的最新进展。</p>
+<p>​    为了评估我们的方法，我们构造了各种具有挑战性的物理控制问题涉及复杂的多关节运动，不稳定和丰富的接触动力学以及步态行为。其中包括经典的问题，例如cartpole swing-up问题以及许多新领域。 机器人控制的长期挑战是直接从原始的感官输入（例如视频）中学习动作策略。 因此，我们将固定的视点相机放置在模拟器中，并尝试使用低维观测（例如，关节角度）以及直接从像素中进行所有任务。</p>
+<p>​    我们的无模型方法，我们称为深度DPG(DDPG)，可以使用低维观测(笛卡尔坐标或关节角)来学习我们所有任务的竞争策略。使用相同的超参数和网络结构。在许多情况下，我们还能够直接从像素中学习好的策略，再次保持超参数和网络结构不变。</p>
+<p>​    该方法的一个关键特征是它的简单性：它只需要简单的actor-critic体系结构和学习算法，而很少有“运动部件”，因此易于实现和扩展更困难的问题和更大的网络。 对于物理控制问题，我们将我们的结果与规划器计算的基线进行比较，该规划器可以完全访问基础模拟动力学及其派生函数（请参阅补充信息）。 有趣的是，在某些情况下，即使从像素中学习时，DDPG有时也会找到超出规划器性能的策略（规划器始终在底层的低维状态空间上进行规划）。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>​    我们考虑一个标准的强化学习设置，该设置由一个在离散的时间步中与一个环境$$E$$交互的代理组成。 代理在每个时间步长$$t$$收到观察值$$x_{t}$$，采取行动，并收到标量奖励$$r_{t}$$。 在这里考虑的所有环境中，这些动作的实值均为$$a_{t}\in \mathbb{R}^{N}$$。 通常，可能会部分观察环境，因此可能需要观察的整个历史记录，动作对$$s_{t}=(x_{1},a_{1},…,a_{t-1},x_{t})$$来描述状态。 在这里，我们假设环境是完全观察到的，因此$$s_{t}=x_{t}$$。</p>
+<p>​    代理的行为由策略$$\pi$$定义，该策略将状态映射到行为$$ \pi $$的概率分布：$$S\rightarrow P(A)$$。环境$$E$$也可能是随机的。 我们将其建模为马尔可夫模型状态空间为$$S$$的决策过程，动作空间$$A=\mathbb{R}^{N}$$，初始状态分布为$$p(s_{1})$$，转移概率$$p(s_{t+1}|s_{t},a_{t})$$和奖励函数$$r(s_{t},a_{t})$$。</p>
+<p>​    从状态的收益被定义为具有折扣因子$$\gamma \in [0,1]$$的折扣未来奖励的总和$$R_{t}=\sum_{i=t}^{T}\gamma ^{(i-t)}r(s_{i},a_{i})$$。 请注意，返回值取决于选择的操作，因此在策略$$ \pi $$上，并且可能是随机的。 强化学习的目标是学习一种策略，该策略将从初始分布最大化的预期回报。 我们表示策略$$ \pi $$的折扣状态访问分布为$$ \rho ^{\pi }$$。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/05/20/Continuous-Control-With-Deep-Reinforcement-Learning/" data-id="ckox3cfeg0001agva04si999w" data-title="Continuous Control With Deep Reinforcement Learning" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Soft-Actor-Critic" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/05/20/Soft-Actor-Critic/" class="article-date">
+  <time class="dt-published" datetime="2021-05-20T13:14:17.000Z" itemprop="datePublished">2021-05-20</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/05/20/Soft-Actor-Critic/">Soft Actor-Critic</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/05/20/Soft-Actor-Critic/" data-id="ckox3cff00009agvadkxp110e" data-title="Soft Actor-Critic" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-graph-network-study" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2021/05/17/graph-network-study/" class="article-date">
@@ -97,7 +185,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/17/graph-network-study/" data-id="ckovmqzsv000c50vacym74jqz" data-title="graph_network_study" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/17/graph-network-study/" data-id="ckox3cff8000dagvaa3nthh36" data-title="graph_network_study" class="article-share-link">Share</a>
       
       
       
@@ -138,7 +226,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/12/docker-study/" data-id="ckovmqzst000a50vacxhj1x2n" data-title="docker study" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/12/docker-study/" data-id="ckox3cff5000bagva5bc6bpxn" data-title="docker study" class="article-share-link">Share</a>
       
       
       
@@ -176,7 +264,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/" data-id="ckovmqzsj000350va882q8k4i" data-title="IMPALA:Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/" data-id="ckox3cfev0004agva7yy3fcr1" data-title="IMPALA:Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures" class="article-share-link">Share</a>
       
       
       
@@ -219,7 +307,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/" data-id="ckovmqzs8000050vaddc9ckfj" data-title="Asynchronous Methods for Deep Reinforcement Learning" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/" data-id="ckox3cfcz0000agvagh1ccd4i" data-title="Asynchronous Methods for Deep Reinforcement Learning" class="article-share-link">Share</a>
       
       
       
@@ -257,7 +345,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/" data-id="ckovmqzsi000250va2nl816fz" data-title="Grandmaster level in StarCraftII using multi-agent reinforcement learning" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/" data-id="ckox3cfem0002agva0exh7kou" data-title="Grandmaster level in StarCraftII using multi-agent reinforcement learning" class="article-share-link">Share</a>
       
       
       
@@ -307,205 +395,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/" data-id="ckovmqzsf000150va62tnhfcs" data-title="Genetic State-Grouping Algorithm for Deep Reinforcement Learning" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Reinforcement-Study-Notes" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/04/26/Reinforcement-Study-Notes/" class="article-date">
-  <time class="dt-published" datetime="2021-04-26T12:53:20.000Z" itemprop="datePublished">2021-04-26</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/04/26/Reinforcement-Study-Notes/">Reinforcement Study Notes</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="论文下载"><a href="#论文下载" class="headerlink" title="论文下载"></a>论文下载</h1><p>sci-hub</p>
-<p>根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载</p>
-<p><a target="_blank" rel="noopener" href="https://www.douban.com/group/topic/144179135/">https://www.douban.com/group/topic/144179135/</a></p>
-<p><a target="_blank" rel="noopener" href="https://gfsoso.99lb.net/sci-hub.html">https://gfsoso.99lb.net/sci-hub.html</a></p>
-<h1 id="李宏毅视频笔记"><a href="#李宏毅视频笔记" class="headerlink" title="李宏毅视频笔记"></a>李宏毅视频笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1UE411G78S?from=search&seid=9027506742489609557">视频地址</a></p>
-<h2 id="lesson1"><a href="#lesson1" class="headerlink" title="lesson1"></a>lesson1</h2><h3 id="强化学习难点"><a href="#强化学习难点" class="headerlink" title="强化学习难点"></a>强化学习难点</h3><ul>
-<li>Reward delay</li>
-<li>Agent’s actions affect the subsequent data it receives</li>
-</ul>
-<h3 id="强化学习方法"><a href="#强化学习方法" class="headerlink" title="强化学习方法"></a>强化学习方法</h3><p>policy-based :   Learning an Actor</p>
-<p>value-based:    Learning a Critic</p>
-<p>model-based</p>
-<p>Three Steps for Deep Learning</p>
-<ul>
-<li>Neural Network as Actor</li>
-</ul>
-<p>Input of neural network:the observation of machine represented as a vector or a matrix</p>
-<p>Output neural network:each action corresponds to a neuron in output layer</p>
-<ul>
-<li>goodness of function</li>
-</ul>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic1.png"></p>
-<p>Actor的好坏。通过actor玩游戏算reward期望</p>
-<p>An episode is considered as a trajectory </p>
-<p>$\tau = \left { s_{1},a_{1},r_{1},s_{2},a_{2},r_{2},…,s_{T},a_{T},r_{T} \right }$</p>
-<p>$R_{\tau } = \sum_{n=1}^{N}r_{n}$</p>
-<p>If you use an actor to play the game,each $$\tau$$ has a probability to be sampled. The probability depends on actor parameter $$\theta$$:$P(\tau|\theta)$</p>
-<p>Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left { \tau^{1},\tau^{2},…,\tau^{N} \right }$$ </p>
-<p>Sampling $$\tau$$ from $$ P(\tau|\theta) $$ N times.</p>
-<p>$$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$</p>
-<p>Gradient Ascent</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic2.png"></p>
-<p>Problem statement</p>
-<p>$$\theta ^{*} = argmax \bar{R_{\theta}}$$</p>
-<p>$$\bar{R_{\theta}}=\sum_{\tau}R(\tau)P(\tau|\theta)$$\</p>
-<p>Start with $$\theta^{0}$$</p>
-<p>$$\theta ^{1}\leftarrow \theta ^{0}+\eta \bigtriangledown \bar{R_{\theta ^{0}}}$$</p>
-<p>$$\theta ^{2}\leftarrow \theta ^{1}+\eta \bigtriangledown \bar{R_{\theta ^{1}}}$$</p>
-<p>$$…$$</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic3.png"></p>
-<p>$$\bigtriangledown \bar{R_{\theta }}=\sum_{\tau}R(\tau)\bigtriangledown P(\tau|\theta) =\sum_{\tau}R(\tau)P(\tau|\theta)\frac{\bigtriangledown P(\tau|\theta)}{P(\tau|\theta)} =\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta)$$</p>
-<p>$$\frac{dlog(f(x))}{dx}=\frac{1}{f(x)}\frac{df(x)}{dx}$$</p>
-<p>$$\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta) \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)$$,Because $$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$.</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic4.png"></p>
-<p>Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left { \tau^{1},\tau^{2},…,\tau^{N} \right }$$ </p>
-<p>$$R(\tau)$$ do not have to be differentiable It can even be a black box.</p>
-<p>$$P(\tau|\theta) = p(s_{1})p(a_{1}|s_{1},\theta)p(r_{1},s_{2}|s_{1},a_{1})p(a_{2}|s_{2},\theta)p(r_{2},s_{3}|s_{2},a_{2})… = p(s_{1})\prod_{t=1}^{T}p(a_{t}|s_{t},\theta)p(r_{t},s_{t+1}|s_{t},a_{t})$$ <img src="/2021/04/26/Reinforcement-Study-Notes/pic5.png"></p>
-<p>$$p(a_{1}|s_{1},\theta)$$取决于策略，$$p(r_{1},s_{2}|s_{1},a_{1})$$取决于游戏。$$p(s_{1})$$ and $$p(r_{t},s_{t+1}|s_{t},a_{t})$$ not releated to your actor</p>
-<p>$$logP(\tau|\theta) = logp(s_{1}) + \sum_{t=1}^{T}logp(a_{t}|s_{t},\theta) + logp(r_{t},s_{t+1}|s_{t},a_{t})$$</p>
-<p>Ignore the terms not related to $$\theta$$</p>
-<p>$$\bigtriangledown logP(\tau|\theta) = \sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta)$$</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic6.png"></p>
-<p>finally:</p>
-<p>$$\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)= \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) = \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) =\frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}R(\tau ^{n})\bigtriangledown logp(a_{t}|s_{t},\theta) $$</p>
-<p>$$\theta^{new}\leftarrow \theta^{old} + \eta \bigtriangledown \bar{R_{\theta ^{old}}}$$</p>
-<p>If in $$\tau^{n}$$ machine takes  $$a_{t}^{n}$$ when seeing $$s_{t}^{n}$$ in </p>
-<p>$$R(\tau^{n})$$ is positive  ——-&gt; Tuning  $$\theta$$ to increase  $$p(a_{t}^{n})|s_{t}^{n})$$</p>
-<p>$$R(\tau^{n})$$ is negative  ——-&gt; Tuning  $$\theta$$ to decrease $$p(a_{t}^{n})|s_{t}^{n})$$</p>
-<p>It is very important to consider the cumulative reward $$R(\tau^{n}) $$ of the whole trajectory $$\tau^{n}$$ instead of immediate reward $$r_{t}^{n}$$(是用整个trajectory的累加reward而不是用某一时刻的reward去乘)</p>
-<p>如果使用的是某一时刻的reward去乘，只会让那一个动作的概率增加，而不会让其它动作概率增加</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic7.png"></p>
-<p><strong>为什么要使用$$\bigtriangledown logP(\tau^{n}|\theta)$$,而不用$$\frac{\bigtriangledown P(a_{t}^{n}|s_{t}^{n},\theta)}{ P(a_{t}^{n}|s_{t}^{n},\theta)}$$</strong></p>
-<p>e.g. in the sampling data… s has been seen in $$\tau^{13},\tau^{15},\tau^{17},\tau^{33}$$</p>
-<p>In $$\tau^{13}$$ ,take action a $$R(\tau^{13})=2$$</p>
-<p>In $$\tau^{15}$$ ,take action b $$R(\tau^{15})=1$$</p>
-<p>In $$\tau^{17}$$ ,take action b $$R(\tau^{17})=1$$</p>
-<p>In $$\tau^{33}$$ ,take action b $$R(\tau^{33})=1$$</p>
-<p>因为求期望是rewad乘以概率的累加，所以因为b出现次数较多，所以会导致虽然b的单次reward不如a高，但是由于其出现次数多，会使b的概率大于a。所以需要divided by $$P(a_{t}^{n}|s_{t}^{n},\theta)$$,相当于进行normalize</p>
-<p><strong>Add a Baseline</strong></p>
-<p>It is possible that $$R(\tau^{n})$$ is always positive.</p>
-<p>假如有动作a没有被sample，其它动作$$R(\tau^{n})$$为正，所以概率会增加，相对的动作a的概率就是减小</p>
-<p>The probability of the actions not sampled will decrease.</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/add_baseline.png"></p>
-<p>$$\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}(R(\tau ^{n}) - b)\bigtriangledown logp(a_{t}|s_{t},\theta)$$</p>
-<p>大于baseline才增加概率，小于baseline减小概率</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic24.png"></p>
-<p>假设游戏只有三步，从图中可以看出第一个episode得了3分，但是每个action的贡献都不一样，$$a_{1}$$贡献了5分，$$a_{3}$$贡献了-3分，但是训练的时候反而会增加$$a_{3}$$的概率。如果sample的episode够多，能够得到一个期望分数，或许能够忽略这个问题，比如第二个episode的情况下，$$a_{3}$$的reward为负的。为了解决这个问题，可以讲公式中的$$R(\tau^{n})$$(整个episode的reward和)换成只从当前action开始的reward和，因为之前的reward和当前action无关，公式如图所示。</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic25.png"></p>
-<p>由于未来的reward不确定性大，所以在计算reward和时会加入衰减，公式如图所示。</p>
-<p>$$R(\tau^{n}) - b$$是状态独立的，为Advantage Function,表示该状态采取该动作有多好，这个是相对的。Advantage Function有多种形式，这里只是其中一种。</p>
-<p><strong>Critic</strong></p>
-<ul>
-<li><p>A critic does not determine the action.</p>
-</li>
-<li><p>Given an actor,it evaluates the how good the actor is</p>
-</li>
-<li><p>pick the best function  </p>
-</li>
-</ul>
-<h2 id="lesson2"><a href="#lesson2" class="headerlink" title="lesson2"></a>lesson2</h2><p>该部分通俗解释policy gradient的公式</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic8.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic9.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic10.png"></p>
-<p>$$R(\tau^{1})$$可以看成是增加其对应数据的样本</p>
-<h2 id="lesson3"><a href="#lesson3" class="headerlink" title="lesson3"></a>lesson3</h2><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic11.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic12.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic13.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic14.png"></p>
-<p>TD approach 不用等到游戏结束就可以train，只需要一段时间就可以。</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic15.png"></p>
-<p>dqn、dueling dqn、rainbow</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic16.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic17.png"></p>
-<p>每个actor复制global parameters，然后和环境进行交互，计算gradients，然后传回global network</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic18.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic19.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic20.png"></p>
-<p>很多情况下是不知道reward function的，所以需要根据专家的历史trajectory来推出reward function，然后可以进行强化学习。</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic21.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic22.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic23.png"></p>
-<h2 id="lesson4"><a href="#lesson4" class="headerlink" title="lesson4"></a>lesson4</h2><h3 id="Proximal-Policy-Optimization-PPO"><a href="#Proximal-Policy-Optimization-PPO" class="headerlink" title="Proximal Policy Optimization(PPO)"></a>Proximal Policy Optimization(PPO)</h3><p><strong>From on-policy to off-policy</strong></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic26.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic27.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic28.png">如如果$$p(x)$$与$$q(x)$$相差太大，会导致方差大</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic29.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic30.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic31.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic32.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic33.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic34.png"></p>
-<h2 id="lesson5"><a href="#lesson5" class="headerlink" title="lesson5"></a>lesson5</h2><h3 id="Q-Learning"><a href="#Q-Learning" class="headerlink" title="Q-Learning"></a>Q-Learning</h3><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic35.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic36.png"></p>
-<p>这种方法每次需要计算cumulated reward，需要游戏结束</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic38.png"></p>
-<p>不是预测$$V^{\pi}$$,而是预测$$V^{\pi}(s_{t})-V^{\pi}(s_{t+1})=r_{t}$$</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic39.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic40.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic41.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic42.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic43.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic44.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic45.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic46.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic47.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic48.png"></p>
-<h2 id="lesson6"><a href="#lesson6" class="headerlink" title="lesson6"></a>lesson6</h2><h3 id="Tips-of-Q-Learning"><a href="#Tips-of-Q-Learning" class="headerlink" title="Tips of Q-Learning"></a>Tips of Q-Learning</h3><ul>
-<li>Double DQN</li>
-</ul>
-<p>Q value is usually over-estimated</p>
-<ul>
-<li>Dueling DQN</li>
-</ul>
-<p>修改network架构</p>
-<ul>
-<li>Prioritized Reply</li>
-<li>Multi-step</li>
-</ul>
-<p>Balance between MC and TD</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic49.png"></p>
-<ul>
-<li><p>Noisy Net</p>
-</li>
-<li><p>Distributional Q-function</p>
-</li>
-<li><p>Rainbow</p>
-</li>
-</ul>
-<h2 id="lesson7"><a href="#lesson7" class="headerlink" title="lesson7"></a>lesson7</h2><h3 id="Q-Learning-for-Continuous-Actions"><a href="#Q-Learning-for-Continuous-Actions" class="headerlink" title="Q-Learning for Continuous Actions"></a>Q-Learning for Continuous Actions</h3><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic50.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic51.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/26/Reinforcement-Study-Notes/" data-id="ckovmqzsp000750vah8u77u9v" data-title="Reinforcement Study Notes" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/" data-id="ckox3cfet0003agva6mmu2cgi" data-title="Genetic State-Grouping Algorithm for Deep Reinforcement Learning" class="article-share-link">Share</a>
       
       
       
@@ -562,7 +452,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/03/17/TLeague/" data-id="ckovmqzss000950va5bbtdgh4" data-title="TLeague" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/03/17/TLeague/" data-id="ckox3cff4000aagvahmqfeko9" data-title="TLeague" class="article-share-link">Share</a>
       
       
       
@@ -633,122 +523,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/" data-id="ckovmqzsq000850vagtsacisc" data-title="Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Hybrid-Reward-Architecture-for-Reinforcement-Learning" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/" class="article-date">
-  <time class="dt-published" datetime="2021-01-19T12:54:56.000Z" itemprop="datePublished">2021-01-19</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/">Hybrid Reward Architecture for Reinforcement Learning</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    强化学习(RL)的主要挑战之一是泛化。 在典型的深度RL方法中，这是通过使用深度网络用低维表示逼近最优值函数来实现的。 虽然这种方法在许多领域很好地工作，但在最优值函数不能很容易地简化为低维表示的领域，学习可能非常缓慢和不稳定。 本文通过提出一种新的方法——混合奖励体系结构(Hybrid Reward Architecture)，为解决这些具有挑战性的领域做出了贡献。 HRA以分解的奖励函数作为输入，学习每个组件奖励函数的单独值函数。 由于每个组件通常只依赖于所有特征的子集，因此相应的值函数可以更容易地通过低维表示来逼近，从而实现更有效的学习。 我们在a toy-problem(an agent has to eat 5 randomly located fruits)和Atari game Ms.Pac-Man上演示了HRA，在HRA达到了超越人类的表现。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    在强化学习(RL)中，目标是找到一种行为策略，以数据驱动的方式最大限度地提高回报-随着时间的推移获得的折扣奖励之和。 RL的主要挑战之一是对方法进行缩放，使它们能够应用于大型的现实世界问题。 由于这些问题的状态空间通常是巨大的，因此需要强有力的泛化才能有效地学习好的政策。</p>
-<p>​    Mnih等人在这方面取得了重大突破：通过将标准RL技术与深度神经网络相结合，他们通过从像素中学习策略，在大量Atari2600游戏中取得了人类以上的表现。 通过逼近最优值函数，得到了深度Q网络(DQN)方法的泛化特性。 值函数在RL中起着重要的作用，因为它预测期望的回报，条件是状态或状态-动作对。 一旦知道了最优值函数，就可以通过对其贪婪地行事来导出最优策略。 通过用深度神经网络对最优值函数的当前估计进行建模，DQN对值函数进行了很强的泛化，从而对策略进行了推广。</p>
-<p>​    通过对最优值函数模型的正则化，实现了DQN的泛化行为。 然而，如果最优值函数非常复杂，那么学习精确的低维表示可能是具有挑战性的，甚至是不可能的。 因此，当最优值函数不能很容易地简化为低维表示时，我们认为在目标侧应用一种互补的正则化形式。 具体来说，我们建议用一种更容易学习的替代价值函数来代替最优价值函数作为训练目标，但当对它贪婪地采取行动时，它仍然会产生一个合理但通常不是最优的政策。</p>
-<p>​    目标函数正则化背后的关键观察是，当代理对它们贪婪地行为时，两个非常不同的值函数可能导致相同的策略。 同时，一些价值函数比其他函数更容易学习。 Intrinsic motivation (Stout et al., 2005; Schmidhuber, 2010)利用这一观察来改善稀疏回报领域的学习，方法是在来自环境的奖励中添加特定于领域的内在奖励信号。 当内在奖励函数是基于潜力的，则保持由此产生的政策的最优性。 在我们的例子中，我们的目标是更简单的值函数，它们更容易用低维表示来表示。</p>
-<p>​    我们构建易学价值函数的主要策略是将环境的奖励函数分解为n个不同的奖励函数。 他们每个人都被分配一个单独的强化学习代理。 类似于 Horde architecture (Sutton et al., 2011)，所有这些代理都可以通过使用off-policy学习在相同的样本序列上并行学习。 每个代理将当前状态的动作值提供给聚合器，聚合器将它们组合成每个动作的单个值。 当前操作是根据这些聚合值选择的。</p>
-<p>​    我们在两个领域测试我们的方法：一个玩具问题，代理必须吃5个随机定位的水果，和 Ms. Pac-Man, one of the hard games from the ALE benchmark set。</p>
-<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><p>​    我们的HRA方法建立在 Horde architecture (Sutton et al., 2011)的基础上。 Horde体系结构由大的“demons”组成，通过off-policy学习并行学习。 每个demon根据自己的策略和伪奖励函数训练一个单独的一般价值函数(GVF)。 伪奖励可以是编码有用信息的任何基于特征的信号。 Horde 体系结构的重点是建立关于世界的一般知识，通过大量的GVF编码。 HRA专注于训练环境奖励功能的独立组件，以便更有效地学习控制策略。UVFA (Schaul et al., 2015)也建立在Horde的基础上，但沿着不同的方向扩展。 UVFA可以在不同的任务/目标之间进行泛化。 它不涉及如何解决一个单一的、复杂的任务，这是HRA的重点。</p>
-<p>​    关于多重奖励函数的学习也是多目标学习的一个主题(Roijers et al., 2013)。 因此，HRA可以被看作是应用多目标学习，以便更有效地学习单个奖励函数的策略。</p>
-<p>​    Russell &amp; Zimdar (2003) and Sprague &amp; Ballard (2003)等人对奖励函数分解进行了研究。 这一早期的工作集中在实现最佳行为的策略上。 我们的工作旨在通过使用更简单的价值函数和放松最优性要求来提高学习效率。</p>
-<p>​    HRA和UNREAL(Jaderberg et al., 2017)也有相似之处。 值得注意的是，两者都解决了多个较小的问题，以解决一个难题。 然而，这两种体系结构在其工作方式上以及它们所解决的挑战类型上是不同的。 UNREAL是一种在困难场景中增强表示学习的技术。 它通过使用辅助任务来帮助训练深层神经网络的lower-level层来实现。 这种具有挑战性的表示学习场景的一个例子是学习在3D迷宫领域中导航。 在Atari游戏中，所报道的UNREAL的性能增益是最小的，这表明标准的深度RL体系结构足够强大，可以提取相关的表示。 相比之下，HRA体系结构将任务分解为更小的部分。 HRA的多个较小的任务不是无监督的；它们是与主要任务直接相关的任务。 此外，虽然UNREAL本质上是一种深度RL技术，但HRA与所使用的函数近似类型无关。 可与深度神经网络结合，但它也适用于精确的表格表示。 HRA对于具有高级表示不足以有效地解决任务的领域是有用的。</p>
-<p>​    Diuk的面向对象方法(Diuk et al., 2008) 是第一批在电子游戏中展示高效学习的方法之一。 该方法利用与过渡动态相关的领域知识来有效地学习紧凑的过渡模型，然后利用动态编程技术找到解决方案。 这种固有的基于模型的方法的缺点是，虽然它有效地学习了一个非常紧凑的过渡动力学模型，但它不会减少问题的状态空间。 因此，它没有解决 Ms. Pac-Man的主要挑战：它的巨大状态空间，甚至对于DP方法来说也是棘手的(Diuk将他的方法应用于一个只有6个对象的Atari游戏，而Pac-Man女士有150多个对象)。</p>
-<p>​    最后，HRA涉及选项 (Sutton et al., 1999; Bacon et al., 2017)，以及更普遍的hierarchical learning (Barto &amp; Mahadevan, 2003; Kulkarni et al., 2016)。 选项是临时扩展的动作，就像HRA的头一样，可以根据自己的（内在的）奖励功能并行训练。 然而，一旦一个选项被训练，其内在奖励功能的作用就结束了。 使用选项的高级代理将其视为另一个操作，并使用自己的奖励函数对其进行评估。 这可以在学习中产生很大的加速，并有助于更好的探索，但它们并不直接使高级代理的价值功能变得不那么复杂。 HRA的负责人代表价值观，用环境奖励的组成部分来训练。 即使经过训练，这些值也保持相关性，因为聚合器使用它们来选择它的操作。</p>
-<h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>​    考虑一个马尔可夫决策过程$$ \left \langle S,A,P,R_{env},\gamma \right \rangle$$，它在离散时间步长$$t$$上模拟与环境交互的代理。它有状态集$$S$$、动作集$$A$$、环境奖励函数$$R_{env}:S\times A \times S\rightarrow \mathbb{R}$$，以及转移概率函数$$P:S\times A\times S\rightarrow \left [ 0,1 \right ]$$。 在时间步$$t$$，代理观察状态$$s_{t}\in S$$，并在$$a_{t}\in A$$处采取行动。 代理观察下一个状态$$s_{t+1}$$，从过渡概率分布$$P\left ( s_{t},a_{t} \right )$$和奖励$$r_{t}= R_{env}\left ( s_{t},a_{t},s_{t+1} \right )$$中提取。 行为由策略$$\pi$$定义：$$S\times A\rightarrow \left [ 0,1 \right ]$$，它表示相对于动作的选择概率。 代理的目标是找到一种最大限度地提高回报期望的策略，即折扣奖励之和：$$G_{t}:=\sum_{i=0}^{\infty }\gamma ^{i}r_{t+i}$$，其中折扣因素$$\gamma \in \left [ 0,1 \right ]$$控制即时奖励与未来奖励的重要性。 每个策略$$ \pi $$都有一个相应的动作-价值函数，当根据该策略行事时，它给出以状态和动作为条件的预期回报：<br>$$<br>Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}<br>$$<br>​    通过迭代改进最优动作值函数$$Q^{*}\left ( s,a \right ):=max_{\pi }Q^{\pi }(s,a)$$的估计，可以找到最优策略$$\pi ^{\ast }$$。 一旦$$Q ^{\ast }$$是足够精确的近似，对它采取贪婪的行动就会产生最优策略。</p>
-<h2 id="Hybrid-Reward-Architecture"><a href="#Hybrid-Reward-Architecture" class="headerlink" title="Hybrid Reward Architecture"></a><strong>Hybrid Reward Architecture</strong></h2><p>​    Q值函数通常用权重向量$$\theta :Q(s,a;\theta )$$的函数逼近器来估计。 DQN使用深度神经网络作为函数逼近器，通过最小化损失函数序列来迭代地改进的$$Q ^{\ast }$$估计：</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/loss_function.png"></p>
-<p>​    来自上一次迭代的权重向量$$\theta _{i-1}$$，使用单独的目标网络进行编码(nature dqn)。</p>
-<p>​    我们指的是最小损失函数作为训练目标的Q值函数。 如果对训练目标贪婪地采取行动导致在环境的奖励函数下最优的政策，我们将称之为一致(consistent)的训练目标；如果对训练目标贪婪地采取行动导致在环境的奖励函数下的良好策略，但不是最优策略-，我们将称之为半一致(semi-consistent)的训练目标。 对于（2）训练目标是$$Q_{env}^{*}$$，是$$R_{env}$$下的最优动作-值函数，是默认的一致训练目标。</p>
-<p>​    一个训练目标是一致的，这并不意味着学习这个目标有多容易。 例如如果$$R_{env}$$是稀疏的，那么默认的学习目标可能很难学习。 在这种情况下，添加一个基于潜在的额外奖励信号到$$R_{env}$$可以产生一个替代的一致学习目标，更容易学习。 但是稀疏的环境奖励并不是一个培训目标难以学习的唯一原因。 我们的目标是为默认训练目标$$Q_{env}^{*}$$很难学习的领域找到一个替代的训练目标，因为函数是高维的，很难概括。 我们的方法是基于奖励函数的分解。</p>
-<p>​    我们建议将奖励函数$$R_{env}$$分解为n个奖励函数：并就这些奖励功能中的每一个培训一个单独的强化学习代理。 一个奖励函数可能有无穷多个不同的分解，但要实现易于学习的价值函数，分解应该是每个奖励函数主要受少量状态变量的影响。</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/reward_functions.png"></p>
-<p>​    因为每个代理$$k$$都有自己的奖励函数，所以也有自己的$$Q$$值函数$$Q_{k}$$。 一般来说，不同的代理可以共享深度Q网络的多个low-level层。 因此，我们将使用一个向量$$\theta $$来描述代理的组合权重。 我们将表示所有$$Q$$值函数的组合网络称为混合奖励体系结构(HRA),参加图1。 HRA的操作选择是基于代理的Q值函数之和，我们称之为$$Q_{HRA}$$：</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_hra.png"></p>
-<p>​    <img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure1.png"></p>
-<p>代理的集合可以被看作是具有多个头的单个代理，每个头在不同的奖励函数下产生当前状态的动作值。</p>
-<p>​    与HRA相关的损失函数序列为：</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_hra_loss.png"></p>
-<p>​    通过将这些损失函数最小化，HRA的不同头部在不同的奖励函数下近似最优动作值函数:$$Q_{1}^{<em>},…,Q_{n}^{</em>}$$。 此外，$$Q_{HRA}$$近似于$$Q_{HRA}^{*}$$，定义为：</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_hrak.png"></p>
-<p>​    注意，$$Q_{HRA}^{<em>}$$与$$Q_{env}^{</em>}$$不同，一般不一致。</p>
-<p>​    另一个培训目标是评估每个组件奖励函数下的统一随机策略$$v$$的结果：$$Q_{HRA}^{v}:=\sum_{k=1}^{n}Q_{k}^{v}(s,a)$$。 $$Q_{HRA}^{v}$$等于$$Q_{env}^{v}$$。在$$R_{env}$$下的随机策略的$$Q$$值，如下所示：</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_env.png"></p>
-<p>可以使用预期的Sarsa更新规则 (van Seijen et al., 2009),来学习这个培训目标，方法是将（7）替换为</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/gongsi_8.png"></p>
-<p>​    对于随机策略的$$Q$$值，贪婪地行事可能会产生一个比随机略好的策略，但令人惊讶的是，我们发现，对于许多基于导航的域$$Q_{HRA}^{v}$$充当半一致的训练目标。</p>
-<h2 id="通过使用高级领域知识进一步提高性能"><a href="#通过使用高级领域知识进一步提高性能" class="headerlink" title="通过使用高级领域知识进一步提高性能"></a>通过使用高级领域知识进一步提高性能</h2><p>​    在其基本设置中，应用于HRA的唯一领域知识是以分解的奖励函数的形式。 然而，HRA的优势之一是它可以很容易地利用更多的领域知识，如果可用的话。 领域知识可以通过以下方式之一加以利用：</p>
-<ul>
-<li>删除不相关的特征。 不以任何方式（直接或间接）影响所获得奖励的特征只会给学习过程增加噪音，并且可以被移除。</li>
-<li>识别终端状态。 终端状态是不能收到进一步奖励的状态；它们的定义是值为0。 利用这些知识，HRA可以避免用值网络逼近这个值，这样权重就可以完全用来表示非终端状态。</li>
-<li>使用伪奖励函数。 与其使用环境奖励的组件更新HRA的头部，还可以使用伪奖励来更新。 在这个场景中，一组GVFS使用伪奖励并行训练。</li>
-</ul>
-<p>虽然这些方法并不特定于HRA，但HRA可以在很大程度上利用领域知识，因为它可以将这些方法单独应用于每个头。 我们在4.1节中经验性地展示了这一点。</p>
-<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><h2 id="水果收集任务"><a href="#水果收集任务" class="headerlink" title="水果收集任务"></a>水果收集任务</h2><p>​    在我们的第一个领域，我们考虑一个代理，必须尽快收集水果在10×10网格。这里有10个可能的水果位置，分布在整个网格上。 每一轮，一个水果被随机放置在这10个地点中的5个。 代理从一个随机位置开始。 如果水果被吃掉，奖励为1，否则为0。 当所有5个水果被吃掉或者达到300步，一轮结束。</p>
-<p>​    我们比较了使用相同网络的DQN和HRA的性能。 对于HRA，我们将奖励功能分解为10个不同的奖励功能，每个可能的水果位置一个。 该网络由长度为110的二进制输入层组成，编码代理的位置和每个位置是否存在水果。接下来是长度为250的完全连接的隐藏层。 该层连接到10个头，每个头由4个线性节点组成，表示4个动作在不同奖励函数下的动作值。 最后，使用最后的长度为4的线性层来计算所有节点跨头的平均值，该层连接每个头中相应节点的输出。 该层具有值1的固定权重（即实现公式5）。 与DQN的区别在于，DQN使用损失函数（2）从第四层更新网络，而HRA使用损失函数（6）从第三层更新网络。</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure2.png"></p>
-<p>​    除了完整的网络之外，我们还使用不同层次的领域知识进行测试，如第3.2节所述：1)删除每个头部的无关特征（只提供代理的位置相应的水果特征)；2)上述加识别终端状态；3）上述加使用伪奖励来学习GVFs到10个位置中的每个位置（而不是在每个位置学习与水果相关的值函数）。 优点是，即使在一个地点没有水果，这些GVFs也可以被训练。 一个特定位置的头复制相应GVF的Q值，如果该位置当前包含一个水果，或者输出0。 我们将这些分别称为$$HRA+1$$、$$HRA+2$$和$$HRA+3$$。 对于DQN，我们还测试了应用于与$$HRA+1$$相同网络的版本；我们将此版本称为$$DQN+1$$。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Maluuba/hra">代码位置</a></p>
-<p>​    训练样本是由随机策略生成的；训练过程是通过在每一轮之后对学习价值函数的贪婪策略进行评估来跟踪的。 对于HRA，我们以Q∗HRA作为训练目标（使用方程7），以及QυHRA（使用方程8)进行了实验）。 同样，对于DQN，我们使用了默认的培训目标$$Q_{HRA}^{*}$$以及$$Q_{HRA}^{v}$$。 我们分别优化了每个方法的步长和折扣因子。</p>
-<p>​    每个方法的最佳设置结果如图3所示。 对于DQN，使用$$Q_{env}^{*}$$作为训练目标会产生最好的性能，而对于HRA，使用$$Q_{HRA}^{v}$$会产生最好的性能。 总的来说，HRA显示了DQN的明显性能提升，尽管网络是相同的。 此外，添加不同形式的领域知识会导致进一步的大改进。 虽然使用由领域知识增强的网络结构可以提高HRA的性能，但使用同一网络进行DQN会导致性能下降。 大的当终端状态被识别时，性能的提高是由于表示成为一个单一的热向量。 因此，我们删除了隐藏层，并直接将这个单热矢量输入到不同的头部。 由于头部是线性的，这种表示简化为精确的表格表示。 对于表格表示，我们使用了与深度网络版本的最佳步长相同的步长。</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure3.png"></p>
-<h2 id="ATARI-game-Ms-Pac-Man"><a href="#ATARI-game-Ms-Pac-Man" class="headerlink" title="ATARI game: Ms. Pac-Man"></a>ATARI game: Ms. Pac-Man</h2><p>​    我们的第二个领域是Atari2600游戏Ms. Pac-Man（见图4）。 点是通过吃颗粒获得的，同时避免鬼魂(与一个人接触会导致Ms. Pac-Man失去生命)。 吃一种特殊的能量颗粒会使鬼魂在很短的时间内变成蓝色，从而使它们被吃掉以获得额外的分数。 额外的水果可以吃进一步的积分，每级两次。 当所有的球团都被吃掉时，一个新的水平就开始了。 一共有4个不同的地图和7个不同的水果类型，每个都有不同的点值。 我们在补充材料中提供了有关领域的全部细节。</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/pac_game.png"></p>
-<ul>
-<li> Baselines。虽然我们的Ms. Pac-Man的版本与文献中使用的版本相同，但我们使用不同的预处理。 因此，为了测试我们的预处理效果，我们实现了A3C方法 (Mnih et al., 2016)，并在我们的预处理中运行它。 我们将预处理的版本称为‘A3C（channels）’，标准预处理的版本‘A3C（pixels）’，以及文献‘A3C（reported）’中报告的A3C评分。</li>
-<li> Preprocessing。来自ALE的每个帧是210×160像素。 我们切割底部部分和顶部部分160×160像素。 由此，我们提取不同对象的位置，并为每个对象创建一个单独的输入通道，对其位置进行编码，精度为4像素。 这导致11个大小为40×40的二进制通道。 具体来说，Ms. Pac-Man有一个通道，四个鬼魂中的每一个，四个蓝色鬼魂中的每一个（这些都被视为不同的物体)，水果加上一个通道，所有的颗粒(包括动力颗粒）。 对于A3C，我们将鬼魂的4个通道组合成一个单一的通道，使其能够更好地跨越鬼魂。 我们对蓝鬼的4个频道也是如此。 我们没有给出文献中最后4帧的历史，而是给出了Ms. Pac-Man作为长度为4的1-热向量（代表4个指南针方向)的方向）。</li>
-<li> HRA architecture。环境奖励信号与游戏中得分相对应。 在分解奖励函数之前，我们通过添加与鬼魂接触的负面奖励-1000来执行奖励整形(这会导致Ms. Pac-Man失去生命)。 在此之后，奖励被分解成游戏中的每个对象（球团/水果/鬼/蓝鬼）都有自己的奖励功能。 因此，有一个单独的RL代理与游戏中的每个对象相关联，它估计其相应奖励函数的Q值函数。</li>
-</ul>
-<p>为了估计每个组件奖励函数，我们使用3.2节中讨论的三种形式的领域知识。 HRA使用学习伪Q值（值在[0,1]范围内）的GVFs来到达地图上的特定位置(四张地图中的每一张都学习单独的GVFs)。 与水果收集任务（第4.1节）相比，HRA在训练过程中学习了它的部分表示：它从0GVF和0头开始，用于球团。 通过在迷宫周围徘徊，它发现了它可以到达的新地图位置，从而创建了新的GVF。 每当代理在一个新的位置发现一个球团时，它就会创建一个与球团对应的新头。</p>
-<p>对象的Q值（球团/水果/鬼魂/蓝色幽灵）被设置为与对象的位置相对应的GVF的伪Q值(即移动对象每次使用不同的GVF)，乘以一个权重，该权重被设置为等于对象被吃掉时收到的奖励。 如果一个对象不在屏幕上，它的所有Q值都是0。</p>
-<p>我们测试两种聚合器类型。 第一个是一个线性的，它求和所有头部的Q值（见方程5）。 对于第二个，我们取所有产生点的头的总和，并正常化得到的Q值；然后，我们添加规则鬼头的Q值之和，乘以一个权重向量。</p>
-<p>对于探索，我们测试两种互补类型的探索。 每种类型都为体系结构增加一个额外的探索头。 第一种类型，我们称为多样化，产生随机Q值，从均匀分布在[0,20]。 我们发现，只有在前50个步骤中，才能确保随机开始每轮。 第二种类型，我们称之为基于计数的，为状态-动作对增加了一个额外的奖励，这些奖励还没有被探索过很多。 它受到上置信度的启发(Auer et al., 2002)。 详细情况见补充材料。</p>
-<p>在我们的最后一个实验中，我们实现了一个特殊的头部激励通过<em>executive-memory</em> literature (Fuster, 2003; Gluck et al., 2013).。 当一个人类游戏玩家达到他的认知和身体能力的最大值时，他开始寻找有利的情况，甚至是故障，并记住它们。 这种认知过程确实是记忆一系列动作（也叫习惯），不一定是最优的。 我们的执行记忆主管记录了每一系列的行动，导致通过一个级别，没有任何杀戮。 然后，当面对相同的水平时，头部给记录的动作一个很高的值，以便强制聚合器的选择。 请注意，我们的执行内存的简化版本没有概括。</p>
-<ul>
-<li>Evaluation metrics。有两种不同的评价方法在不同的文献中使用，导致非常不同的分数。 由于ALE最终是一个确定性的环境（它使用随机数生成器实现伪随机性，该生成器总是以相同的种子开始），这两个评估度量的目的是在评估中创建随机性，以便对具有更泛化行为的方法进行更高的评级。 第一个度量引入了一种温和的随机性形式，在将控制交给学习算法之前，采取随机数量的no-op操作。 然而，在Ms. Pac-Man的情况下，游戏从一个特定的非活动期开始，超过了最大的无操作步骤，最终导致游戏有一个固定的开始。 第二个度量沿着人类轨迹选择随机起点，并导致更强的随机性，并确实导致预期的随机开始评估。 我们将这些度量称为“固定开始”和“随机开始’。</li>
-<li>Results。图5为训练曲线；表1为训练后的最终得分。 报告的最佳固定开始分数来自STRAW(Vezhnevets等人，2016年)；报告的最佳随机开始评分来自 Dueling network architecture (Wang et al., 2016)。 人类固定的起始分数来自Mnih et al. (2015)；人类随机开始分数来自Nair et al. (2015)。 我们训练A3C8亿帧。 因为HRA学得很快，所以我们只训练了5000轮，对应大约1.5亿帧（注意，更好的策略会导致每集更多的帧）。 我们尝试了HRA的几个不同的设置：带/不正常化和带/不带每种类型的探索。 为HRA显示的分数使用了最好的组合：与正常化和两种勘探类型。 所有的组合在训练中都达到了10，000点以上，除了没有任何探索的组合，这一点也不奇怪，它的表现非常糟糕。 有了最好的组合，HRA不仅在这两个指标上的表现都超过了最先进的水平，而且还显著地超过了人类的得分，令人信服地证明了HRA的实力。</li>
-</ul>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/table1.png"></p>
-<p>​    <img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure5.png"></p>
-<p>比较表1中的A3C（pixels）和A3C（channels）显示了一个令人惊讶的结果：虽然我们通过将屏幕图像分离到相关的对象通道来使用高级预处理，但这并没有显著改变A3C的性能。</p>
-<p>​    在我们的最后一个实验中，我们测试了HRA的性能，如果它利用了固定启动评估度量的弱点，使用了执行内存的简化版本。 使用这个版本，我们不仅超过了266330分的人类高分，我们在不到3000轮的情况下达到了999，990分的最大可能分数。 曲线在第一阶段是缓慢的，因为模型必须被训练，但即使进一步的水平变得越来越困难，加速，利用已经知道的地图。 获得更多的分数是不可能的，不是因为游戏结束，而是因为当达到百万分时，分数溢出到0。</p>
-<h1 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h1><p>​    HRA的优点之一是它可以比单头方法更好地利用领域知识。 水果收集任务清楚地表明了这一点：虽然删除不相关的特征提高了HRA的性能，但当提供相同的网络体系结构时，DQN的性能下降。 此外，将像素图像分离成多个二进制通道只会使A3C的性能在直接从像素学习上有很小的提高。 这表明，现代深层RL与Ms. Pac-Man斗争的原因与从像素学习无关；根本问题是Ms. Pac-Man的最优值函数不能很容易地映射到低维表示。</p>
-<p>​    HRA通过学习近1800个一般值函数来解决Ms. Pac-Man的问题。 这导致了问题大小的指数分解：而与二进制通道对应的输入状态空间的顺序是1077，每个GVF有一个状态空间的顺序是103个状态，小到可以在没有任何函数近似的情况下表示。 虽然我们可以使用一个深网络来表示每个GVF，但使用一个深网络来处理这样的小问题比它所能做的更痛苦，正如在水果收集领域的实验所证明的那样。</p>
-<p>​    我们认为，许多现实世界的任务允许奖励分解。 即使奖励函数只能分解成两个或三个分量，这已经可以帮助很多，因为分解可能导致的问题大小的指数下降。</p>
-<h1 id="个人总结"><a href="#个人总结" class="headerlink" title="个人总结"></a>个人总结</h1><ul>
-<li>HRA是将单个价值函数拆分为多个简单的价值函数分别学习，并不一定能得到最优值，降低了最优的标准。</li>
-<li>识别终端状态。 终端状态是不能收到进一步奖励的状态；它们的定义是值为0。 利用这些知识，HRA可以避免用值网络逼近这个值，这样权重就可以完全用来表示非终端状态。</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/" data-id="ckovmqzt7000f50vahdjrdd5k" data-title="Hybrid Reward Architecture for Reinforcement Learning" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/" data-id="ckox3cfez0008agva90tabluw" data-title="Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning" class="article-share-link">Share</a>
       
       
       
@@ -796,6 +571,14 @@
       <ul>
         
           <li>
+            <a href="/2021/05/20/Continuous-Control-With-Deep-Reinforcement-Learning/">Continuous Control With Deep Reinforcement Learning</a>
+          </li>
+        
+          <li>
+            <a href="/2021/05/20/Soft-Actor-Critic/">Soft Actor-Critic</a>
+          </li>
+        
+          <li>
             <a href="/2021/05/17/graph-network-study/">graph_network_study</a>
           </li>
         
@@ -805,14 +588,6 @@
         
           <li>
             <a href="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/">IMPALA:Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures</a>
-          </li>
-        
-          <li>
-            <a href="/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/">Asynchronous Methods for Deep Reinforcement Learning</a>
-          </li>
-        
-          <li>
-            <a href="/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/">Grandmaster level in StarCraftII using multi-agent reinforcement learning</a>
           </li>
         
       </ul>
