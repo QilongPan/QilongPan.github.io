@@ -1,235 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  
-  <title>Deterministic Policy Gradient Algorithms | 潘其龙</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="摘要​    在本文中，我们考虑了确定性策略梯度算法，用于连续动作的强化学习。 确定性策略梯度具有特别吸引人的形式：它是动作值函数的期望梯度。 这种简单的形式意味着可以比通常的随机策略梯度更有效地估计确定性策略梯度。 为了确保进行充分的探索，我们引入了一种off-policy的行为者批评算法，该算法从探索行为策略中学习确定性目标策略。 我们证明，确定性策略梯度算法在高维操作空间中可以明显胜过其随机">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Deterministic Policy Gradient Algorithms">
-<meta property="og:url" content="http://example.com/2021/05/21/Deterministic-Policy-Gradient-Algorithms/index.html">
-<meta property="og:site_name" content="潘其龙">
-<meta property="og:description" content="摘要​    在本文中，我们考虑了确定性策略梯度算法，用于连续动作的强化学习。 确定性策略梯度具有特别吸引人的形式：它是动作值函数的期望梯度。 这种简单的形式意味着可以比通常的随机策略梯度更有效地估计确定性策略梯度。 为了确保进行充分的探索，我们引入了一种off-policy的行为者批评算法，该算法从探索行为策略中学习确定性目标策略。 我们证明，确定性策略梯度算法在高维操作空间中可以明显胜过其随机">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-05-21T11:31:21.000Z">
-<meta property="article:modified_time" content="2021-05-22T03:36:08.644Z">
-<meta property="article:author" content="QilongPan">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="潘其龙" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
-
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
-
-  
-<meta name="generator" content="Hexo 5.3.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">潘其龙</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <div class="outer">
-        <section id="main"><article id="post-Deterministic-Policy-Gradient-Algorithms" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/05/21/Deterministic-Policy-Gradient-Algorithms/" class="article-date">
-  <time class="dt-published" datetime="2021-05-21T11:31:21.000Z" itemprop="datePublished">2021-05-21</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="p-name article-title" itemprop="headline name">
-      Deterministic Policy Gradient Algorithms
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在本文中，我们考虑了确定性策略梯度算法，用于连续动作的强化学习。 确定性策略梯度具有特别吸引人的形式：它是动作值函数的期望梯度。 这种简单的形式意味着可以比通常的随机策略梯度更有效地估计确定性策略梯度。 为了确保进行充分的探索，我们引入了一种off-policy的行为者批评算法，该算法从探索行为策略中学习确定性目标策略。 我们证明，确定性策略梯度算法在高维操作空间中可以明显胜过其随机对应算法。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    策略梯度算法广泛应用于连续动作空间的强化学习问题。基本思想是用参数化的概率分布$$\pi _{\theta }(a|s)=\mathbb{P}\left [ a|s;\theta  \right ]$$，根据参数向量$$\theta$$随机选择状态中的动作a来表示策略。策略梯度算法通常通过对这个随机策略进行采样，并调整策略参数，以获得更大的累积奖励。</p>
-<p>​    在本文中，我们将考虑确定性策略$$a=\mu _{\theta }\left ( s \right )$$。很自然会想，是否可以与随机策略遵循同样的方法：按照策略梯度的方向调整策略参数。以前认为确定性策略梯度不存在，或者只能在使用模型时获得。然而，我们证明了确定性策略梯度确实存在，而且它有一个简单的model-free形式，简单地遵循action-value函数的梯度。另外我们表明，由于策略方差趋于零，因此确定性策略梯度是随机策略梯度的极限情况。</p>
-<p>​    从实际的角度来看，随机策略梯度和确定性策略梯度之间有一个关键的区别。在随机情况下，策略梯度同时在状态空间和动作空间上集成，而在确定性情况下，它只在状态空间上集成。因此，计算随机策略梯度可能需要更多的样本，特别是当动作空间有很多维数时。</p>
-<p>​    为了探索完整的状态和动作空间，通常需要一个随机策略。为了确保我们的确定性策略梯度算法继续令人满意地探索，我们引入了一种off-policy学习算法。基本思想是根据随机行为策略选择行动（确保充分的探索)，但了解确定性目标策略(利用确定性策略梯度的效率）。我们使用确定性策略梯度推导出一个off-policy actor-critic算法，该算法使用可微函数近似器估计动作值函数，然后沿近似action-value梯度的方向更新策略参数。我们还引入了一个确定性策略梯度的compatiable function近似的概念，以确保该近似不会对策略梯度造成偏差。</p>
-<p>我们将确定性行动者批评算法应用于以下几个基准问题：高维bandit； 低维动作空间的几个标准基准强化学习任务； 和控制章鱼手臂的高维任务。 我们的结果表明，相对于随机策略梯度，使用确定性策略梯度具有明显的性能优势，特别是在高维任务中。 此外，我们的算法比以前的方法不需要更多的计算：每次更新的计算成本在操作维度和策略参数数量上都是线性的。 最后，在许多应用程序中（例如在机器人技术中）提供了可微分的控制策略，但没有将噪声注入控制器的功能。 在这些情况下，随机策略梯度是不适用的，而我们的方法可能仍然有用。</p>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/21/Deterministic-Policy-Gradient-Algorithms/" data-id="ckpe8q36e00027ovacfsc7xxd" data-title="Deterministic Policy Gradient Algorithms" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2021/06/01/Reinforcement-Learning-with-Deep-Energy-Based-Policies/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Reinforcement Learning with Deep Energy-Based Policies
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2021/05/20/Continuous-Control-With-Deep-Reinforcement-Learning/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Continuous Control With Deep Reinforcement Learning</div>
-    </a>
-  
-</nav>
-
-  
-</article>
+{% extends '_layout.swig' %}
+{% import '_macro/post.swig' as post_template %}
+{% import '_macro/sidebar.swig' as sidebar_template %}
 
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-  
-    
+{% block page_class %}page-post-detail{% endblock %}
 
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li></ul>
+
+{% block content %}
+
+  <div id="posts" class="posts-expand">
+    {{ post_template.render(page) }}
+
+    <div class="post-spread">
+      {% if theme.jiathis %}
+        {% include '_partials/share/jiathis.swig' %}
+      {% elseif theme.baidushare %}
+        {% include '_partials/share/baidushare.swig' %}
+      {% elseif theme.add_this_id %}
+        {% include '_partials/share/add-this.swig' %}
+      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
+        {% include '_partials/share/duoshuo_share.swig' %}
+      {% endif %}
     </div>
   </div>
 
+{% endblock %}
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2021/06/01/deep-learning-tutorial/">deep_learning_tutorial</a>
-          </li>
-        
-          <li>
-            <a href="/2021/06/01/Reinforcement-Learning-with-Deep-Energy-Based-Policies/">Reinforcement Learning with Deep Energy-Based Policies</a>
-          </li>
-        
-          <li>
-            <a href="/2021/05/21/Deterministic-Policy-Gradient-Algorithms/">Deterministic Policy Gradient Algorithms</a>
-          </li>
-        
-          <li>
-            <a href="/2021/05/20/Continuous-Control-With-Deep-Reinforcement-Learning/">Continuous Control With Deep Reinforcement Learning</a>
-          </li>
-        
-          <li>
-            <a href="/2021/05/20/Soft-Actor-Critic/">Soft Actor-Critic</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
+{% block sidebar %}
+  {{ sidebar_template.render(true) }}
+{% endblock %}
 
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2021 QilongPan<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.4.1.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-</body>
-</html>
+{% block script_extra %}
+  {% include '_scripts/pages/post-details.swig' %}
+{% endblock %}
