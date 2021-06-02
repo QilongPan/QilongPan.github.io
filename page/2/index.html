@@ -194,13 +194,13 @@
 <p>关键词：强化学习，遗传算法，混合方法，蒙特卡罗技术</p>
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    强化学习方法(RL)击败了世界上最好的人类围棋玩家之一，引起了专家们的认真关注。它的基于试验和错误的迭代而不是大量的预定义数据集进行培训的性质在全世界引起了热烈的讨论和兴趣。然而，除了强化学习的所有成就外，它还暴露了许多技术困难，如学习不稳定和进入局部最优。具体地说，很难定义一个找到复杂问题中的全局解的奖励函数，它比其他类型的机器学习需要更多的计算资源和初始学习时间。之前的研究提出了各种解决这些缺点的解决方案，有些是利用实时视频游戏环境与现实世界相似，表明它们适合RL对内存和时间的苛刻需求。然而，这些研究的主要贡献仅限于只有几个分支因素的问题，因为提高它们的数量会呈指数级地增加所需的计算资源数量。</p>
 <p>​    本文介绍了通过深度强化学习增强的Genetic State-Grouping Algorithm (GSGA)。它是遗传算法和State Grouping的集成，我们真正的方法，以追求提高深度强化学习在时间和资源效率方面的学习效率。我们展示了它在FightingICE中的表现，这是一个实时战斗视频游戏，由IEEE CoG完成。我们认为它是一个适当的试验场来验证我们提出的结构的有效性，因为它包含了各种类似于现实世界的环境因素。</p>
-<p>​    FightingICE由 Intelligent Computer Entertainment Lab in Ritsumeikan University, Japan开发。因为它是一个为构建通用战斗游戏ai而设计的环境，所以在属性和风格方面，它是一种相当典型的类型。在每一轮中，两个玩家代理在二维空间中相互战斗，他们之间实例化一个物理距离。游戏向每个代理提供多达56个可执行操作。此外，根据交战规则，每个玩家被允许一次只使用一个线程，以复制真实世界的问题条件，这需要大量使用计算资源。总的来说,FightingICE玩家只利用单个线程在16.67ms的每个时间帧内必须考虑多达3136个动作状态。游戏中的物理空间由$$960\times 640$$像素组成，分为5像素大小的房间，每个代理都可以放置在里面。因此，每个代理总共有$$192\times128$$的状态空间来重新定位。</p>
+<p>​    FightingICE由 Intelligent Computer Entertainment Lab in Ritsumeikan University, Japan开发。因为它是一个为构建通用战斗游戏ai而设计的环境，所以在属性和风格方面，它是一种相当典型的类型。在每一轮中，两个玩家代理在二维空间中相互战斗，他们之间实例化一个物理距离。游戏向每个代理提供多达56个可执行操作。此外，根据交战规则，每个玩家被允许一次只使用一个线程，以复制真实世界的问题条件，这需要大量使用计算资源。总的来说,FightingICE玩家只利用单个线程在16.67ms的每个时间帧内必须考虑多达3136个动作状态。游戏中的物理空间由<script type="math/tex">960\times 640</script>像素组成，分为5像素大小的房间，每个代理都可以放置在里面。因此，每个代理总共有<script type="math/tex">192\times128</script>的状态空间来重新定位。</p>
 <p>​    本文的排列格式如下：第二章我们介绍了一些与本文主要思想有关的研究。在第三章中，我们介绍了我们的技术的核心理论，以及关于电子游戏环境的细节。第4章介绍了我们的模型及其竞争对手的过程和实验结果，第五章提供了我们对模型整体性能的评论和关注。</p>
 <h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>​    在强化学习过程中，人们多次尝试减少长初始学习时间，稳定整体学习的过程。Justesen等人提出一种强化学习代理，有效解决实时问题的时间划分和对抗环境，Langford提出一种有效的探索方法。一些研究选择通过增强学习稳定性来降低结构复杂性，尽管他们的方法对涉及多个分支因素的问题缺乏足够的适用性，但在这些问题中，环境高度复杂，或者为代理提供了大量的操作选择。此外，(Justesen等人，2016)提出了一个解决在线进化的巨大分支因素的解决方案，尽管它几乎不适用于实时视频游戏。在具有多变量的实时问题中，大量的分支因素特别吓人，其中分支的数量增长得非常快。尽管RL具有探索和经验学习的性质，适合于开发实时自适应AI，但在现实世界中常见的多分支因子问题中，RL的学习效率会大大降低。</p>
 <p>​    其他几项研究采用蒙特卡罗树搜索（MCTS），结合进化算法，作为强化学习的补充在开发视频游戏AI时，证明了其在足够时间内找到最佳解决方案的能力。尽管如此，在大多数方面强化学习需要大量计算资源和时间的本质仍然是不可妥协的。</p>
-<h2 id="提出的方法"><a href="#提出的方法" class="headerlink" title="提出的方法"></a>提出的方法</h2><p>​    强化学习是一种机器学习技术，它在代理与未知环境交互时为他们找到最佳的学习策略。这种过程通常被形式化为马尔可夫决策过程(MDPs)，它可以由4个元素$$(S,A,P,R)$$来定义。在每个时间戳$$t$$，agent观察一组状态$$s_{t}\in S$$，并采取一组操作$$a_{t}\in A$$。与转换函数$$P$$相关联，所有状态都为马尔可夫的环境，决定奖励$$r_{t}\sim R(s_{t},a_{t})$$和后续或以下状态$$s_{t+1}\sim P(s_{t},a_{t})$$。我们将根据一阶马尔可夫假设来解释所提出的方法。</p>
+<h2 id="提出的方法"><a href="#提出的方法" class="headerlink" title="提出的方法"></a>提出的方法</h2><p>​    强化学习是一种机器学习技术，它在代理与未知环境交互时为他们找到最佳的学习策略。这种过程通常被形式化为马尔可夫决策过程(MDPs)，它可以由4个元素<script type="math/tex">(S,A,P,R)</script>来定义。在每个时间戳<script type="math/tex">t</script>，agent观察一组状态<script type="math/tex">s_{t}\in S</script>，并采取一组操作<script type="math/tex">a_{t}\in A</script>。与转换函数<script type="math/tex">P</script>相关联，所有状态都为马尔可夫的环境，决定奖励<script type="math/tex">r_{t}\sim R(s_{t},a_{t})</script>和后续或以下状态<script type="math/tex">s_{t+1}\sim P(s_{t},a_{t})</script>。我们将根据一阶马尔可夫假设来解释所提出的方法。</p>
 <p>​    图1从概念上表示了我们提议的GSGA的总体结构。它由三个主体组成：1）state grouping，2） genetic optimizer，和3) deep Q network。其详细的程序描述如下。</p>
-<p><img src="/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/figure1.png"></p>
+<p><img src="/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/figure1.png" alt></p>
 <p>​        State Grouping(SG)是一种技术，通过将相似的状态结合在一起，压缩状态线的大小，包括物理距离。</p>
 
       
@@ -270,7 +270,7 @@
 <p>根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载</p>
 <p><a target="_blank" rel="noopener" href="https://www.douban.com/group/topic/144179135/">https://www.douban.com/group/topic/144179135/</a></p>
 <p><a target="_blank" rel="noopener" href="https://gfsoso.99lb.net/sci-hub.html">https://gfsoso.99lb.net/sci-hub.html</a></p>
-<h1 id="李宏毅视频笔记"><a href="#李宏毅视频笔记" class="headerlink" title="李宏毅视频笔记"></a>李宏毅视频笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1UE411G78S?from=search&seid=9027506742489609557">视频地址</a></p>
+<h1 id="李宏毅视频笔记"><a href="#李宏毅视频笔记" class="headerlink" title="李宏毅视频笔记"></a>李宏毅视频笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1UE411G78S?from=search&amp;seid=9027506742489609557">视频地址</a></p>
 <h2 id="lesson1"><a href="#lesson1" class="headerlink" title="lesson1"></a>lesson1</h2><h3 id="强化学习难点"><a href="#强化学习难点" class="headerlink" title="强化学习难点"></a>强化学习难点</h3><ul>
 <li>Reward delay</li>
 <li>Agent’s actions affect the subsequent data it receives</li>
@@ -287,121 +287,157 @@
 <ul>
 <li>goodness of function</li>
 </ul>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic1.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic1.png" alt></p>
 <p>Actor的好坏。通过actor玩游戏算reward期望</p>
 <p>An episode is considered as a trajectory </p>
-<p>$\tau = \left { s_{1},a_{1},r_{1},s_{2},a_{2},r_{2},…,s_{T},a_{T},r_{T} \right }$</p>
-<p>$R_{\tau } = \sum_{n=1}^{N}r_{n}$</p>
-<p>If you use an actor to play the game,each $$\tau$$ has a probability to be sampled. The probability depends on actor parameter $$\theta$$:$P(\tau|\theta)$</p>
-<p>Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left { \tau^{1},\tau^{2},…,\tau^{N} \right }$$ </p>
-<p>Sampling $$\tau$$ from $$ P(\tau|\theta) $$ N times.</p>
-<p>$$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$</p>
-<p>Gradient Ascent</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic2.png"></p>
+<p>$\tau = \left { s<em>{1},a</em>{1},r<em>{1},s</em>{2},a<em>{2},r</em>{2},…,s<em>{T},a</em>{T},r_{T} \right }$</p>
+<p>$R<em>{\tau } = \sum</em>{n=1}^{N}r_{n}$</p>
+<p>If you use an actor to play the game,each <script type="math/tex">\tau</script> has a probability to be sampled. The probability depends on actor parameter <script type="math/tex">\theta</script>:$P(\tau|\theta)$</p>
+<p>Use <script type="math/tex">\pi_{\theta}</script> to play the game N times,obtain <script type="math/tex">\left \{ \tau^{1},\tau^{2},...,\tau^{N} \right \}</script> </p>
+<p>Sampling <script type="math/tex">\tau</script> from <script type="math/tex">P(\tau|\theta)</script> N times.</p>
+<script type="math/tex; mode=display">\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})</script><p>Gradient Ascent</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic2.png" alt></p>
 <p>Problem statement</p>
-<p>$$\theta ^{*} = argmax \bar{R_{\theta}}$$</p>
-<p>$$\bar{R_{\theta}}=\sum_{\tau}R(\tau)P(\tau|\theta)$$\</p>
-<p>Start with $$\theta^{0}$$</p>
-<p>$$\theta ^{1}\leftarrow \theta ^{0}+\eta \bigtriangledown \bar{R_{\theta ^{0}}}$$</p>
-<p>$$\theta ^{2}\leftarrow \theta ^{1}+\eta \bigtriangledown \bar{R_{\theta ^{1}}}$$</p>
-<p>$$…$$</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic3.png"></p>
-<p>$$\bigtriangledown \bar{R_{\theta }}=\sum_{\tau}R(\tau)\bigtriangledown P(\tau|\theta) =\sum_{\tau}R(\tau)P(\tau|\theta)\frac{\bigtriangledown P(\tau|\theta)}{P(\tau|\theta)} =\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta)$$</p>
-<p>$$\frac{dlog(f(x))}{dx}=\frac{1}{f(x)}\frac{df(x)}{dx}$$</p>
-<p>$$\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta) \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)$$,Because $$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$.</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic4.png"></p>
-<p>Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left { \tau^{1},\tau^{2},…,\tau^{N} \right }$$ </p>
-<p>$$R(\tau)$$ do not have to be differentiable It can even be a black box.</p>
-<p>$$P(\tau|\theta) = p(s_{1})p(a_{1}|s_{1},\theta)p(r_{1},s_{2}|s_{1},a_{1})p(a_{2}|s_{2},\theta)p(r_{2},s_{3}|s_{2},a_{2})… = p(s_{1})\prod_{t=1}^{T}p(a_{t}|s_{t},\theta)p(r_{t},s_{t+1}|s_{t},a_{t})$$ <img src="/2021/04/26/Reinforcement-Study-Notes/pic5.png"></p>
-<p>$$p(a_{1}|s_{1},\theta)$$取决于策略，$$p(r_{1},s_{2}|s_{1},a_{1})$$取决于游戏。$$p(s_{1})$$ and $$p(r_{t},s_{t+1}|s_{t},a_{t})$$ not releated to your actor</p>
-<p>$$logP(\tau|\theta) = logp(s_{1}) + \sum_{t=1}^{T}logp(a_{t}|s_{t},\theta) + logp(r_{t},s_{t+1}|s_{t},a_{t})$$</p>
-<p>Ignore the terms not related to $$\theta$$</p>
-<p>$$\bigtriangledown logP(\tau|\theta) = \sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta)$$</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic6.png"></p>
+<script type="math/tex; mode=display">\theta ^{*} = argmax \bar{R_{\theta}}</script><script type="math/tex; mode=display">\bar{R_{\theta}}=\sum_{\tau}R(\tau)P(\tau|\theta)$$\
+
+Start with $$\theta^{0}</script><script type="math/tex; mode=display">\theta ^{1}\leftarrow \theta ^{0}+\eta \bigtriangledown \bar{R_{\theta ^{0}}}</script><script type="math/tex; mode=display">\theta ^{2}\leftarrow \theta ^{1}+\eta \bigtriangledown \bar{R_{\theta ^{1}}}</script><script type="math/tex; mode=display">...</script><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic3.png" alt></p>
+<script type="math/tex; mode=display">\bigtriangledown \bar{R_{\theta }}=\sum_{\tau}R(\tau)\bigtriangledown P(\tau|\theta) =\sum_{\tau}R(\tau)P(\tau|\theta)\frac{\bigtriangledown P(\tau|\theta)}{P(\tau|\theta)} =\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta)</script><script type="math/tex; mode=display">\frac{dlog(f(x))}{dx}=\frac{1}{f(x)}\frac{df(x)}{dx}</script><script type="math/tex; mode=display">\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta) \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)$$,Because $$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$.
+
+![](./Reinforcement-Study-Notes/pic4.png)
+
+Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left \{ \tau^{1},\tau^{2},...,\tau^{N} \right \}</script><script type="math/tex; mode=display">R(\tau)$$ do not have to be differentiable It can even be a black box.
+
+$$P(\tau|\theta) = p(s_{1})p(a_{1}|s_{1},\theta)p(r_{1},s_{2}|s_{1},a_{1})p(a_{2}|s_{2},\theta)p(r_{2},s_{3}|s_{2},a_{2})... = p(s_{1})\prod_{t=1}^{T}p(a_{t}|s_{t},\theta)p(r_{t},s_{t+1}|s_{t},a_{t})$$ ![](./Reinforcement-Study-Notes/pic5.png)
+
+$$p(a_{1}|s_{1},\theta)$$取决于策略，$$p(r_{1},s_{2}|s_{1},a_{1})$$取决于游戏。$$p(s_{1})$$ and $$p(r_{t},s_{t+1}|s_{t},a_{t})$$ not releated to your actor
+
+$$logP(\tau|\theta) = logp(s_{1}) + \sum_{t=1}^{T}logp(a_{t}|s_{t},\theta) + logp(r_{t},s_{t+1}|s_{t},a_{t})</script><p>Ignore the terms not related to <script type="math/tex">\theta</script></p>
+<script type="math/tex; mode=display">\bigtriangledown logP(\tau|\theta) = \sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta)</script><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic6.png" alt></p>
 <p>finally:</p>
-<p>$$\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)= \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) = \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) =\frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}R(\tau ^{n})\bigtriangledown logp(a_{t}|s_{t},\theta) $$</p>
-<p>$$\theta^{new}\leftarrow \theta^{old} + \eta \bigtriangledown \bar{R_{\theta ^{old}}}$$</p>
-<p>If in $$\tau^{n}$$ machine takes  $$a_{t}^{n}$$ when seeing $$s_{t}^{n}$$ in </p>
-<p>$$R(\tau^{n})$$ is positive  ——-&gt; Tuning  $$\theta$$ to increase  $$p(a_{t}^{n})|s_{t}^{n})$$</p>
-<p>$$R(\tau^{n})$$ is negative  ——-&gt; Tuning  $$\theta$$ to decrease $$p(a_{t}^{n})|s_{t}^{n})$$</p>
-<p>It is very important to consider the cumulative reward $$R(\tau^{n}) $$ of the whole trajectory $$\tau^{n}$$ instead of immediate reward $$r_{t}^{n}$$(是用整个trajectory的累加reward而不是用某一时刻的reward去乘)</p>
+<script type="math/tex; mode=display">\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)= \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) = \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) =\frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}R(\tau ^{n})\bigtriangledown logp(a_{t}|s_{t},\theta)</script><script type="math/tex; mode=display">\theta^{new}\leftarrow \theta^{old} + \eta \bigtriangledown \bar{R_{\theta ^{old}}}</script><p>If in <script type="math/tex">\tau^{n}</script> machine takes  <script type="math/tex">a_{t}^{n}</script> when seeing <script type="math/tex">s_{t}^{n}</script> in </p>
+<script type="math/tex; mode=display">R(\tau^{n})$$ is positive  -------> Tuning  $$\theta$$ to increase  $$p(a_{t}^{n})|s_{t}^{n})</script><script type="math/tex; mode=display">R(\tau^{n})$$ is negative  -------> Tuning  $$\theta$$ to decrease $$p(a_{t}^{n})|s_{t}^{n})</script><p>It is very important to consider the cumulative reward <script type="math/tex">R(\tau^{n})</script> of the whole trajectory <script type="math/tex">\tau^{n}</script> instead of immediate reward <script type="math/tex">r_{t}^{n}</script>(是用整个trajectory的累加reward而不是用某一时刻的reward去乘)</p>
 <p>如果使用的是某一时刻的reward去乘，只会让那一个动作的概率增加，而不会让其它动作概率增加</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic7.png"></p>
-<p><strong>为什么要使用$$\bigtriangledown logP(\tau^{n}|\theta)$$,而不用$$\frac{\bigtriangledown P(a_{t}^{n}|s_{t}^{n},\theta)}{ P(a_{t}^{n}|s_{t}^{n},\theta)}$$</strong></p>
-<p>e.g. in the sampling data… s has been seen in $$\tau^{13},\tau^{15},\tau^{17},\tau^{33}$$</p>
-<p>In $$\tau^{13}$$ ,take action a $$R(\tau^{13})=2$$</p>
-<p>In $$\tau^{15}$$ ,take action b $$R(\tau^{15})=1$$</p>
-<p>In $$\tau^{17}$$ ,take action b $$R(\tau^{17})=1$$</p>
-<p>In $$\tau^{33}$$ ,take action b $$R(\tau^{33})=1$$</p>
-<p>因为求期望是rewad乘以概率的累加，所以因为b出现次数较多，所以会导致虽然b的单次reward不如a高，但是由于其出现次数多，会使b的概率大于a。所以需要divided by $$P(a_{t}^{n}|s_{t}^{n},\theta)$$,相当于进行normalize</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic7.png" alt></p>
+<p><strong>为什么要使用<script type="math/tex">\bigtriangledown logP(\tau^{n}|\theta)</script>,而不用<script type="math/tex">\frac{\bigtriangledown P(a_{t}^{n}|s_{t}^{n},\theta)}{ P(a_{t}^{n}|s_{t}^{n},\theta)}</script></strong></p>
+<p>e.g. in the sampling data… s has been seen in <script type="math/tex">\tau^{13},\tau^{15},\tau^{17},\tau^{33}</script></p>
+<p>In <script type="math/tex">\tau^{13}</script> ,take action a <script type="math/tex">R(\tau^{13})=2</script></p>
+<p>In <script type="math/tex">\tau^{15}</script> ,take action b <script type="math/tex">R(\tau^{15})=1</script></p>
+<p>In <script type="math/tex">\tau^{17}</script> ,take action b <script type="math/tex">R(\tau^{17})=1</script></p>
+<p>In <script type="math/tex">\tau^{33}</script> ,take action b <script type="math/tex">R(\tau^{33})=1</script></p>
+<p>因为求期望是rewad乘以概率的累加，所以因为b出现次数较多，所以会导致虽然b的单次reward不如a高，但是由于其出现次数多，会使b的概率大于a。所以需要divided by <script type="math/tex">P(a_{t}^{n}|s_{t}^{n},\theta)</script>,相当于进行normalize</p>
 <p><strong>Add a Baseline</strong></p>
-<p>It is possible that $$R(\tau^{n})$$ is always positive.</p>
-<p>假如有动作a没有被sample，其它动作$$R(\tau^{n})$$为正，所以概率会增加，相对的动作a的概率就是减小</p>
+<p>It is possible that <script type="math/tex">R(\tau^{n})</script> is always positive.</p>
+<p>假如有动作a没有被sample，其它动作<script type="math/tex">R(\tau^{n})</script>为正，所以概率会增加，相对的动作a的概率就是减小</p>
 <p>The probability of the actions not sampled will decrease.</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/add_baseline.png"></p>
-<p>$$\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}(R(\tau ^{n}) - b)\bigtriangledown logp(a_{t}|s_{t},\theta)$$</p>
-<p>大于baseline才增加概率，小于baseline减小概率</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic24.png"></p>
-<p>假设游戏只有三步，从图中可以看出第一个episode得了3分，但是每个action的贡献都不一样，$$a_{1}$$贡献了5分，$$a_{3}$$贡献了-3分，但是训练的时候反而会增加$$a_{3}$$的概率。如果sample的episode够多，能够得到一个期望分数，或许能够忽略这个问题，比如第二个episode的情况下，$$a_{3}$$的reward为负的。为了解决这个问题，可以讲公式中的$$R(\tau^{n})$$(整个episode的reward和)换成只从当前action开始的reward和，因为之前的reward和当前action无关，公式如图所示。</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic25.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/add_baseline.png" alt></p>
+<script type="math/tex; mode=display">\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}(R(\tau ^{n}) - b)\bigtriangledown logp(a_{t}|s_{t},\theta)</script><p>大于baseline才增加概率，小于baseline减小概率</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic24.png" alt></p>
+<p>假设游戏只有三步，从图中可以看出第一个episode得了3分，但是每个action的贡献都不一样，<script type="math/tex">a_{1}</script>贡献了5分，<script type="math/tex">a_{3}</script>贡献了-3分，但是训练的时候反而会增加<script type="math/tex">a_{3}</script>的概率。如果sample的episode够多，能够得到一个期望分数，或许能够忽略这个问题，比如第二个episode的情况下，<script type="math/tex">a_{3}</script>的reward为负的。为了解决这个问题，可以讲公式中的<script type="math/tex">R(\tau^{n})</script>(整个episode的reward和)换成只从当前action开始的reward和，因为之前的reward和当前action无关，公式如图所示。</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic25.png" alt></p>
 <p>由于未来的reward不确定性大，所以在计算reward和时会加入衰减，公式如图所示。</p>
-<p>$$R(\tau^{n}) - b$$是状态独立的，为Advantage Function,表示该状态采取该动作有多好，这个是相对的。Advantage Function有多种形式，这里只是其中一种。</p>
-<p><strong>Critic</strong></p>
-<ul>
-<li><p>A critic does not determine the action.</p>
-</li>
-<li><p>Given an actor,it evaluates the how good the actor is</p>
-</li>
-<li><p>pick the best function  </p>
-</li>
-</ul>
-<h2 id="lesson2"><a href="#lesson2" class="headerlink" title="lesson2"></a>lesson2</h2><p>该部分通俗解释policy gradient的公式</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic8.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic9.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic10.png"></p>
-<p>$$R(\tau^{1})$$可以看成是增加其对应数据的样本</p>
-<h2 id="lesson3"><a href="#lesson3" class="headerlink" title="lesson3"></a>lesson3</h2><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic11.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic12.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic13.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic14.png"></p>
-<p>TD approach 不用等到游戏结束就可以train，只需要一段时间就可以。</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic15.png"></p>
-<p>dqn、dueling dqn、rainbow</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic16.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic17.png"></p>
-<p>每个actor复制global parameters，然后和环境进行交互，计算gradients，然后传回global network</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic18.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic19.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic20.png"></p>
-<p>很多情况下是不知道reward function的，所以需要根据专家的历史trajectory来推出reward function，然后可以进行强化学习。</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic21.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic22.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic23.png"></p>
-<h2 id="lesson4"><a href="#lesson4" class="headerlink" title="lesson4"></a>lesson4</h2><h3 id="Proximal-Policy-Optimization-PPO"><a href="#Proximal-Policy-Optimization-PPO" class="headerlink" title="Proximal Policy Optimization(PPO)"></a>Proximal Policy Optimization(PPO)</h3><p><strong>From on-policy to off-policy</strong></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic26.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic27.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic28.png">如如果$$p(x)$$与$$q(x)$$相差太大，会导致方差大</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic29.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic30.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic31.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic32.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic33.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic34.png"></p>
-<h2 id="lesson5"><a href="#lesson5" class="headerlink" title="lesson5"></a>lesson5</h2><h3 id="Q-Learning"><a href="#Q-Learning" class="headerlink" title="Q-Learning"></a>Q-Learning</h3><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic35.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic36.png"></p>
-<p>这种方法每次需要计算cumulated reward，需要游戏结束</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic38.png"></p>
-<p>不是预测$$V^{\pi}$$,而是预测$$V^{\pi}(s_{t})-V^{\pi}(s_{t+1})=r_{t}$$</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic39.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic40.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic41.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic42.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic43.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic44.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic45.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic46.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic47.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic48.png"></p>
+<script type="math/tex; mode=display">R(\tau^{n}) - b$$是状态独立的，为Advantage Function,表示该状态采取该动作有多好，这个是相对的。Advantage Function有多种形式，这里只是其中一种。
+
+**Critic**
+
+- A critic does not determine the action.
+- Given an actor,it evaluates the how good the actor is
+
+- pick the best function  
+
+## lesson2
+
+该部分通俗解释policy gradient的公式
+
+![](./Reinforcement-Study-Notes/pic8.png)
+
+![](./Reinforcement-Study-Notes/pic9.png)
+
+![](./Reinforcement-Study-Notes/pic10.png)
+
+$$R(\tau^{1})$$可以看成是增加其对应数据的样本
+
+## lesson3
+
+![](./Reinforcement-Study-Notes/pic11.png)
+
+![](./Reinforcement-Study-Notes/pic12.png)
+
+![](./Reinforcement-Study-Notes/pic13.png)
+
+![](./Reinforcement-Study-Notes/pic14.png)
+
+TD approach 不用等到游戏结束就可以train，只需要一段时间就可以。
+
+![](./Reinforcement-Study-Notes/pic15.png)
+
+dqn、dueling dqn、rainbow
+
+![](./Reinforcement-Study-Notes/pic16.png)
+
+![](./Reinforcement-Study-Notes/pic17.png)
+
+每个actor复制global parameters，然后和环境进行交互，计算gradients，然后传回global network
+
+![](./Reinforcement-Study-Notes/pic18.png)
+
+![](./Reinforcement-Study-Notes/pic19.png)
+
+![](./Reinforcement-Study-Notes/pic20.png)
+
+很多情况下是不知道reward function的，所以需要根据专家的历史trajectory来推出reward function，然后可以进行强化学习。
+
+![](./Reinforcement-Study-Notes/pic21.png)
+
+![](./Reinforcement-Study-Notes/pic22.png)
+
+![](./Reinforcement-Study-Notes/pic23.png)
+
+## lesson4
+
+### Proximal Policy Optimization(PPO)
+
+**From on-policy to off-policy**
+
+![](./Reinforcement-Study-Notes/pic26.png)
+
+![](./Reinforcement-Study-Notes/pic27.png)
+
+![](./Reinforcement-Study-Notes/pic28.png)如如果$$p(x)$$与$$q(x)$$相差太大，会导致方差大
+
+![](./Reinforcement-Study-Notes/pic29.png)
+
+![](./Reinforcement-Study-Notes/pic30.png)
+
+![](./Reinforcement-Study-Notes/pic31.png)
+
+![](./Reinforcement-Study-Notes/pic32.png)
+
+![](./Reinforcement-Study-Notes/pic33.png)
+
+![](./Reinforcement-Study-Notes/pic34.png)
+
+## lesson5
+
+### Q-Learning
+
+![](./Reinforcement-Study-Notes/pic35.png)
+
+![](./Reinforcement-Study-Notes/pic36.png)
+
+这种方法每次需要计算cumulated reward，需要游戏结束
+
+![](./Reinforcement-Study-Notes/pic38.png)
+
+不是预测$$V^{\pi}$$,而是预测$$V^{\pi}(s_{t})-V^{\pi}(s_{t+1})=r_{t}</script><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic39.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic40.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic41.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic42.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic43.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic44.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic45.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic46.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic47.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic48.png" alt></p>
 <h2 id="lesson6"><a href="#lesson6" class="headerlink" title="lesson6"></a>lesson6</h2><h3 id="Tips-of-Q-Learning"><a href="#Tips-of-Q-Learning" class="headerlink" title="Tips of Q-Learning"></a>Tips of Q-Learning</h3><ul>
 <li><p>Nature DQN</p>
 <p>Nature DQN做了一个改进，就是增加Target Q网络。也就是我们在计算目标Q值时使用专门的一个目标Q网络来计算，而不是直接使用预更新的Q网络。这样做的目的是为了减少目标计算与当前值的相关性。  原来NIPS版本的DQN目标Q网络是动态变化的，跟着Q网络的更新而变化，这样不利于计算目标Q值，导致目标Q值和当前的Q值相关性较大。因此提出单独使用一个目标Q网络。那么目标Q网络的参数如何来呢？还是从Q网络中来，只不过是延迟更新。也就是每次等训练了一段时间再将当前Q网络的参数值复制给目标Q网络。 </p>
@@ -419,7 +455,7 @@
 <li>Multi-step</li>
 </ul>
 <p>Balance between MC and TD</p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic49.png"></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic49.png" alt></p>
 <ul>
 <li><p>Noisy Net</p>
 </li>
@@ -428,8 +464,8 @@
 <li><p>Rainbow</p>
 </li>
 </ul>
-<h2 id="lesson7"><a href="#lesson7" class="headerlink" title="lesson7"></a>lesson7</h2><h3 id="Q-Learning-for-Continuous-Actions"><a href="#Q-Learning-for-Continuous-Actions" class="headerlink" title="Q-Learning for Continuous Actions"></a>Q-Learning for Continuous Actions</h3><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic50.png"></p>
-<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic51.png"></p>
+<h2 id="lesson7"><a href="#lesson7" class="headerlink" title="lesson7"></a>lesson7</h2><h3 id="Q-Learning-for-Continuous-Actions"><a href="#Q-Learning-for-Continuous-Actions" class="headerlink" title="Q-Learning for Continuous Actions"></a>Q-Learning for Continuous Actions</h3><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic50.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic51.png" alt></p>
 
       
     </div>
@@ -496,7 +532,7 @@
       
           <h1 id="Tleague-A-Framework-for-Competitive-Self-Play-based-Distributed-Multi-Agent-Reinforcement-Learning"><a href="#Tleague-A-Framework-for-Competitive-Self-Play-based-Distributed-Multi-Agent-Reinforcement-Learning" class="headerlink" title="Tleague:A Framework for Competitive Self-Play based Distributed Multi-Agent Reinforcement Learning"></a>Tleague:A Framework for Competitive Self-Play based Distributed Multi-Agent Reinforcement Learning</h1><p>多智能体强化学习需要大量的数据，为了解决这个问题实现了TLeague框架。TLeague的目标是实现大规模训练以及主流的Competitive Self-Play (CSP)算法。训练可以在单机和多机。在 StarCraft II, ViZDoom and Pommerman中展示了它的效率和有效性。<a target="_blank" rel="noopener" href="https://github.com/tencent-ailab/tleague_projpage">code</a></p>
 <p>该框架用于多智能体竞争self-play的学习。框架如下图所示</p>
-<p><img src="/2021/03/17/TLeague/framework.png"></p>
+<p><img src="/2021/03/17/TLeague/framework.png" alt></p>
 <ul>
 <li>Learner</li>
 </ul>
@@ -578,8 +614,8 @@
 
       
           <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2006.11751">paper</a></p>
-<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    强化学习实验的规模不断扩大，使得研究人员在训练复杂的电子游戏代理和在机器人的模拟到现实转移方面都取得了前所未有的成果。 通常，这种实验依赖于大型分布式系统，需要昂贵的硬件设置，限制了对这一令人兴奋的研究领域的更广泛访问。 在本工作中，我们旨在通过优化强化学习算法的效率和资源利用来解决这个问题，而不是依赖分布式计算。 我们提出了“Sample Factory”，这是一个为单机情况下优化的高吞吐量训练系统。 我们的体系结构结合了一个高效的、异步的、基于GPU的采样器和off-policy校正技术，使我们能够在3D中实现高于$$10^{5}$$个环境帧/秒的吞吐量，而个环境帧/秒的吞吐量。 我们扩展了Sample Factory，以支持self-play和 population-based的训练，并应用这些技术来为多人第一人称射击游戏训练高能力的代理。</p>
-<p>[Github](<a target="_blank" rel="noopener" href="https://github.com/">https://github.com/</a> alex-petrenko/sample-factory )</p>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    强化学习实验的规模不断扩大，使得研究人员在训练复杂的电子游戏代理和在机器人的模拟到现实转移方面都取得了前所未有的成果。 通常，这种实验依赖于大型分布式系统，需要昂贵的硬件设置，限制了对这一令人兴奋的研究领域的更广泛访问。 在本工作中，我们旨在通过优化强化学习算法的效率和资源利用来解决这个问题，而不是依赖分布式计算。 我们提出了“Sample Factory”，这是一个为单机情况下优化的高吞吐量训练系统。 我们的体系结构结合了一个高效的、异步的、基于GPU的采样器和off-policy校正技术，使我们能够在3D中实现高于<script type="math/tex">10^{5}</script>个环境帧/秒的吞吐量，而个环境帧/秒的吞吐量。 我们扩展了Sample Factory，以支持self-play和 population-based的训练，并应用这些技术来为多人第一人称射击游戏训练高能力的代理。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ alex-petrenko/sample-factory">Github</a></p>
 <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    模拟环境中的训练代理是当代强化学习研究的基石。 近年来，通过应用强化学习方法在这些快速和高效的环境中训练代理，无论是解决复杂的计算机游戏 (Dosovitskiy &amp; Koltun, 2017; Jaderberg et al., 2019; Vinyals et al., 2019) ，还是通过模拟到真实的转移来解决复杂的机器人控制问题 (Müller et al., 2018;Hwangbo et al., 2019; Molchanov et al., 2019; Andrychowicz et al., 2020)。</p>
 <p>​    尽管现代学习方法的采样效率有了很大的提高，但其中大多数仍然需要大量的数据。 在大多数情况下，近年来的结果水平已经上升，因为实验的规模增加，而不是学习的效率。 在复杂环境中进行的数十亿规模的实验现在相对普遍 (Horgan et al., 2018; Espeholt et al., 2018; Kapturowski et al., 2019)，最先进的成果在一次训练中消耗了数万亿次环境转变 (Berner et al., 2019)。</p>
 <p>​    为了尽量减少这些大规模实验的周转时间，常用的方法是使用由数百台单独机器组成的分布式超级计算系统 (Berner et al., 2019)。 在这里，我们表明，通过优化结构和提高强化学习算法的资源利用率，我们可以在数十亿个环境转变上训练代理，即使在单个计算节点上也是如此。 我们提出了“Sample Factory”，一个为单机场景优化的高吞吐量训练系统。 Sample Factory基于异步近端策略优化(APPO)算法，是一种强化学习架构，它允许我们在一个只有一个GPU的多核计算节点上积极地并行化经验收集并实现高达130000FPS（每秒环境帧）的吞吐量。 我们描述了理论和实践优化，使我们能够在广泛可用的商品硬件上实现极端帧速率。</p>
@@ -587,29 +623,29 @@
 <h1 id="Sample-Factory"><a href="#Sample-Factory" class="headerlink" title="Sample Factory"></a>Sample Factory</h1><p>​    Sample factory是一种在单机上进行高吞吐量强化学习的体系结构。 在设计系统时，我们专注于使所有关键计算完全异步，以及最小化组件之间的延迟和通信成本，充分利用快速本地消息传递。</p>
 <p>​    一个典型的强化学习场景涉及三个主要的计算工作负载：环境模拟、模型推理和反向传播。 我们的主要动机是构建一个系统，其中最慢的三个工作负载从来不需要等待任何其他进程提供执行下一次计算所需的数据，因为算法的总体吞吐量最终由吞吐量最低的工作负载定义。 为了最小化进程等待的时间，我们需要保证输入的新部分总是可用的，即使在下一步的计算即将开始之前。 计算密集型工作负载从不闲置的系统可以达到最高的资源利用率，从而接近最佳性能。</p>
 <h2 id="High-level-design"><a href="#High-level-design" class="headerlink" title="High-level design"></a>High-level design</h2><p>​    最小化所有关键计算的空闲时间的愿望激发了系统的高级设计（图1）。 我们将每个计算工作负载与三种专用类型的组件之一相关联。 这些组件使用基于FIFO队列和共享内存的快速协议相互通信。 队列机制为连续和异步执行提供了基础，只要队列中有要处理的东西，就可以立即启动下一个计算步骤。 将每个工作负载分配给专用组件类型的决定也允许我们独立地并行化它们，从而实现优化的资源平衡。 这与以前的工作不同 (Mnih et al., 2016; Espeholt et al., 2018)，其中单个系统组件，如actor通常负有多重责任。 涉及的三种类型的组件是 rollout workers, policy workers, and learners。</p>
-<p><img src="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure1.png"></p>
-<p>Rollout workers单独负责环境模拟。 每个rollout worker托管$$k≥1$$个环境实例，并依次与这些环境交互，收集观察$$x_{t}$$并奖励$$r_{t}$$。 请注意，rollout worker没有自己的策略副本，这使得它们非常轻量级，允许我们在现代多核CPU上大规模并行化收集。</p>
-<p>然后将观察$$x_{t}$$和代理的隐藏状态$$h_{t}$$发送给policy worker，policy worker从多个rollout worker收集$$x_{t}$$、$$h_{t}$$的批次，并调用策略$$\pi$$，由神经网络参数化$$\theta <em>{\pi }$$以计算动作分布$$\mu \left ( a</em>{t}|x_{t},h_{t} \right )$$和更新的隐藏状态$$h_{t+1}$$。 然后从分布$$\mu$$中采样$$a_{t}$$的动作，并与$$h_{t+1}$$一起通信回相应的rollout worker。 这个rollout worker使用动作$$a_{t}$$推进模拟和收集下一个观察$$x_{t+1}$$和奖励$$r_{t+1}$$。</p>
-<p>Rollout workers保存每个环境转换到共享内存中的轨迹缓冲区。 一旦模拟了$$T$$环境步骤，观察、隐藏状态、动作和奖励的轨迹$$\tau = x_{1},h_{1},a_{1},r_{1},…,x_{T},h_{T},a_{T},r_{T}$$就可以提供给learner。 learner不断地处理批量的轨迹，并更新actor $$\theta _{\pi }$$和critic $$\theta _{V}$$的参数。 这些参数更新一旦可用就发送给policy worker，这减少了前一个版本模型收集的经验量，最小化了平均policy lag。 这就完成了一次训练迭代。</p>
-<p>Parallelism。如前所述，rollout worker不拥有该策略的副本，因此基本上是环境实例周围的薄包装。 这允许它们大规模并行化。 此外，Sample Factory还将policy worker并行化。 这可以实现，因为所有当前轨迹数据$$(x_{t},h_{t},a_{t},…)$$都存储在所有进程都可以访问的共享张量中。 这允许policy workers本身处于无状态，因此，他们中的任何一个都可以很容易地处理来自单个环境的连续轨迹步骤。 在实际场景中，2到4个policy worker实例很容易使rollout worker操作饱和，加上一个特殊的采样器设计（第3.2节），使我们能够消除这一潜在的瓶颈。</p>
+<p><img src="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure1.png" alt></p>
+<p>Rollout workers单独负责环境模拟。 每个rollout worker托管<script type="math/tex">k≥1</script>个环境实例，并依次与这些环境交互，收集观察<script type="math/tex">x_{t}</script>并奖励<script type="math/tex">r_{t}</script>。 请注意，rollout worker没有自己的策略副本，这使得它们非常轻量级，允许我们在现代多核CPU上大规模并行化收集。</p>
+<p>然后将观察<script type="math/tex">x_{t}</script>和代理的隐藏状态<script type="math/tex">h_{t}</script>发送给policy worker，policy worker从多个rollout worker收集<script type="math/tex">x_{t}</script>、<script type="math/tex">h_{t}</script>的批次，并调用策略<script type="math/tex">\pi</script>，由神经网络参数化<script type="math/tex">\theta _{\pi }</script>以计算动作分布<script type="math/tex">\mu \left ( a_{t}|x_{t},h_{t} \right )</script>和更新的隐藏状态<script type="math/tex">h_{t+1}</script>。 然后从分布<script type="math/tex">\mu</script>中采样<script type="math/tex">a_{t}</script>的动作，并与<script type="math/tex">h_{t+1}</script>一起通信回相应的rollout worker。 这个rollout worker使用动作<script type="math/tex">a_{t}</script>推进模拟和收集下一个观察<script type="math/tex">x_{t+1}</script>和奖励<script type="math/tex">r_{t+1}</script>。</p>
+<p>Rollout workers保存每个环境转换到共享内存中的轨迹缓冲区。 一旦模拟了<script type="math/tex">T</script>环境步骤，观察、隐藏状态、动作和奖励的轨迹<script type="math/tex">\tau = x_{1},h_{1},a_{1},r_{1},...,x_{T},h_{T},a_{T},r_{T}</script>就可以提供给learner。 learner不断地处理批量的轨迹，并更新actor <script type="math/tex">\theta _{\pi }</script>和critic <script type="math/tex">\theta _{V}</script>的参数。 这些参数更新一旦可用就发送给policy worker，这减少了前一个版本模型收集的经验量，最小化了平均policy lag。 这就完成了一次训练迭代。</p>
+<p>Parallelism。如前所述，rollout worker不拥有该策略的副本，因此基本上是环境实例周围的薄包装。 这允许它们大规模并行化。 此外，Sample Factory还将policy worker并行化。 这可以实现，因为所有当前轨迹数据<script type="math/tex">(x_{t},h_{t},a_{t},...)</script>都存储在所有进程都可以访问的共享张量中。 这允许policy workers本身处于无状态，因此，他们中的任何一个都可以很容易地处理来自单个环境的连续轨迹步骤。 在实际场景中，2到4个policy worker实例很容易使rollout worker操作饱和，加上一个特殊的采样器设计（第3.2节），使我们能够消除这一潜在的瓶颈。</p>
 <p>Learner是我们运行单一副本的唯一组件，至少只要涉及单一策略训练（多策略训练在3.5节中讨论）。 然而，我们可以通过利用Learner上的多个加速器数据并行训练和Hogwild风格的参数更新(Recht et al., 2011)。 加上在复杂环境中稳定训练通常需要的大批处理大小，这使Learner有足够的吞吐量来匹配经验收集率，除非计算图是高度非平凡的。</p>
 <h2 id="Sampling"><a href="#Sampling" class="headerlink" title="Sampling"></a>Sampling</h2><p>​    Rollout workers和policy workers共同组成采样器。 采样子系统对RL算法的吞吐量影响最大，因为它往往是瓶颈。 我们提出了一种具体的实现采样器的方法，它允许通过最小化rollout workers的空闲时间来优化资源利用。</p>
 <p>​    首先，注意训练和经验收集是解耦的，因此可以在反向传播步骤中收集新的环境转换。 Rollout workers也没有参数更新，因为操作生成的工作是卸载给policy worker的。 然而，如果没有解决，这仍然使rollout workers等待policy workers产生的行动，并通过进程间通信转移回来。</p>
-<p>​    为了缓解这种低效率，我们使用 Double-Buffered Sampling（图2）。 与其只在rollout worker上存储单个环境，不如存储环境$$E_{1},…,E_{k}$$的向量，其中k甚至是为了简单起见。 我们将这个向量分成两组$$E_{1},…,E_{k/2}$$，$$E_{k/2+1},…,E_{k}$$，并在它们之间交替进行。 当第一组环境正在step，第二组的操作是根据policy worker计算的，反之亦然。 有了足够快的policy worker和$$k$$的正确调优值，我们可以完全屏蔽通信开销，并确保在采样期间充分利用CPU核心，如图2所示。 用于双缓冲器的最大性能采样我们希望$$k/2&gt; \left \lceil t_{inf}/t_{env} \right \rceil$$，其中$$t_{inf}$$和$$t_{env}$$分别是平均推理和模拟时间。</p>
-<p><img src="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure2.png"></p>
+<p>​    为了缓解这种低效率，我们使用 Double-Buffered Sampling（图2）。 与其只在rollout worker上存储单个环境，不如存储环境<script type="math/tex">E_{1},...,E_{k}</script>的向量，其中k甚至是为了简单起见。 我们将这个向量分成两组<script type="math/tex">E_{1},...,E_{k/2}</script>，<script type="math/tex">E_{k/2+1},...,E_{k}</script>，并在它们之间交替进行。 当第一组环境正在step，第二组的操作是根据policy worker计算的，反之亦然。 有了足够快的policy worker和<script type="math/tex">k</script>的正确调优值，我们可以完全屏蔽通信开销，并确保在采样期间充分利用CPU核心，如图2所示。 用于双缓冲器的最大性能采样我们希望<script type="math/tex">k/2> \left \lceil t_{inf}/t_{env} \right \rceil</script>，其中<script type="math/tex">t_{inf}</script>和<script type="math/tex">t_{env}</script>分别是平均推理和模拟时间。</p>
+<p><img src="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure2.png" alt></p>
 <h2 id="Communication-between-components"><a href="#Communication-between-components" class="headerlink" title="Communication between components"></a>Communication between components</h2><p>​    解锁本地单机设置的全部潜力的关键是利用系统组件之间的快速通信机制。 如图1所示，信息流有四条主要途径：rollout和policy worker之间的双向沟通，rollout将完整的轨迹传递给learner，以及将参数更新从learner转移到policy worker。 对于前三种交互，我们使用基于PyTorch的共享内存张量机制 (Paszke et al., 2019)。 我们注意到，RL算法中使用的大多数数据结构可以表示为固定形状的张量，无论它们是轨迹、观测还是隐藏状态。 因此，我们在系统RAM中预先分配足够数量的张量。 每当组件需要通信时，我们都会将数据复制到共享张量中，并且只通过FIFO队列发送这些张量的索引，使得消息与传输的总体数据量相比很小。</p>
 <p>​    对于参数更新，我们使用GPU上的内存共享。 每当需要更新模型时，policy worker只需将权重从共享内存复制到模型的本地副本。</p>
 <p>​    与许多流行的异步和分布式实现不同，我们不执行任何类型的数据序列化作为通信协议的一部分。 在全节流阀下，SampleFactory每秒产生和消耗超过1GB的数据，即使是最快的序列化/去序列化机制也会严重阻碍吞吐量。</p>
-<h2 id="Policy-lag"><a href="#Policy-lag" class="headerlink" title="Policy lag"></a>Policy lag</h2><p>​    Policy lag是异步RL算法的固有特性，它是收集经验（行为策略）的策略与学习的目标策略之间的差异。 这种差异的存在为off-policy训练提供了条件。off-policy学习对于策略梯度方法来说是很困难的，其中模型参数通常按照$$\bigtriangledown log\mu (a_{s}|x_{s})q(x_{s},a_{s})$$的方向更新，其中$$q(x_{s},a_{s})$$是策略state-action值的估计。 策略滞后越大，就越难从行为策略中使用一组样本$$x_{s}$$正确估计这个梯度。 从经验上讲，这在学习涉及循环策略、高维观测和复杂行动空间的问题方面变得更加困难，在这些问题中，即使是非常相似的政策也不太可能在很长的轨迹上表现出相同的性能。</p>
+<h2 id="Policy-lag"><a href="#Policy-lag" class="headerlink" title="Policy lag"></a>Policy lag</h2><p>​    Policy lag是异步RL算法的固有特性，它是收集经验（行为策略）的策略与学习的目标策略之间的差异。 这种差异的存在为off-policy训练提供了条件。off-policy学习对于策略梯度方法来说是很困难的，其中模型参数通常按照<script type="math/tex">\bigtriangledown log\mu (a_{s}|x_{s})q(x_{s},a_{s})</script>的方向更新，其中<script type="math/tex">q(x_{s},a_{s})</script>是策略state-action值的估计。 策略滞后越大，就越难从行为策略中使用一组样本<script type="math/tex">x_{s}</script>正确估计这个梯度。 从经验上讲，这在学习涉及循环策略、高维观测和复杂行动空间的问题方面变得更加困难，在这些问题中，即使是非常相似的政策也不太可能在很长的轨迹上表现出相同的性能。</p>
 <p>​    异步RL方法中的策略滞后可能是通过使用旧策略在环境中的作用引起的，或者在一次迭代中从并行环境中收集更多的轨迹，而不是学习者在一个batch中摄入的轨迹，导致部分经验在处理时变得不符合策略。 我们处理第一个问题，一旦有了新的参数立即更新政策工作者的模型。 在Sample factory中，参数更新很便宜，因为模型存储在共享内存中。 一个典型的更新需要小于1ms，因此我们收集了与“master”不同的策略非常少的经验。</p>
-<p>​    然而，不一定能够消除第二个原因。 在RL中，并行收集来自许多环境实例的训练数据是有益的。 这不仅使经验相互关联，它还允许我们利用多核CPU，并且具有更大的$$k$$值（每个核心的环境），充分利用双缓冲采样器。 在一次经验收集的“迭代”中，n个rollout workers，每个运行k个环境，将产生总共$$N_{iter}=n\times k\times T$$个样本。 由于我们在学习者步骤之后立即更新策略工作者，可能在轨迹的中间，这导致轨迹中最早的样本平均滞后于$$N_{iter}/N_{batch}-1$$策略更新，而最新的样本没有滞后。</p>
-<p>​    可以通过减小$$T$$或增加最小批量大小$$N_{batch}$$来最小化策略滞后。 两者都对学习有影响。 我们通常想要更大的T，在$$2^5-2^7$$范围内，通过反向传播与时间循环策略，大的最小批量可能会降低样本效率。 最佳批次大小取决于特定的环境，更大的批次被证明适合于具有噪声梯度的复杂问题(McCandlish et al., 2018)。</p>
-<p>​    此外，还有两大类用于处理off-policy学习的技术。 第一个想法是应用信任区域方法 (Schulman et al., 2015; 2017)通过在学习期间保持接近行为策略，我们提高了使用该策略的样本获得的梯度估计的质量。 另一种方法是使用重要性采样来纠正目标价值函数$$V^\pi$$以改进目标政策下折扣奖励之和的近似 (Harutyunyan et al., 2016). </p>
+<p>​    然而，不一定能够消除第二个原因。 在RL中，并行收集来自许多环境实例的训练数据是有益的。 这不仅使经验相互关联，它还允许我们利用多核CPU，并且具有更大的<script type="math/tex">k</script>值（每个核心的环境），充分利用双缓冲采样器。 在一次经验收集的“迭代”中，n个rollout workers，每个运行k个环境，将产生总共<script type="math/tex">N_{iter}=n\times k\times T</script>个样本。 由于我们在学习者步骤之后立即更新策略工作者，可能在轨迹的中间，这导致轨迹中最早的样本平均滞后于<script type="math/tex">N_{iter}/N_{batch}-1</script>策略更新，而最新的样本没有滞后。</p>
+<p>​    可以通过减小<script type="math/tex">T</script>或增加最小批量大小<script type="math/tex">N_{batch}</script>来最小化策略滞后。 两者都对学习有影响。 我们通常想要更大的T，在<script type="math/tex">2^5-2^7</script>范围内，通过反向传播与时间循环策略，大的最小批量可能会降低样本效率。 最佳批次大小取决于特定的环境，更大的批次被证明适合于具有噪声梯度的复杂问题(McCandlish et al., 2018)。</p>
+<p>​    此外，还有两大类用于处理off-policy学习的技术。 第一个想法是应用信任区域方法 (Schulman et al., 2015; 2017)通过在学习期间保持接近行为策略，我们提高了使用该策略的样本获得的梯度估计的质量。 另一种方法是使用重要性采样来纠正目标价值函数<script type="math/tex">V^\pi</script>以改进目标政策下折扣奖励之和的近似 (Harutyunyan et al., 2016). </p>
 <p>IMPALA (Espeholt et al., 2018) 介绍了V-trace算法，该算法使用截断的重要性抽样权重来修正值目标。 这有助于提高off-policy学习的稳定性和样本效率。</p>
 <p>​    这两种方法都可以独立应用，因为V-trace纠正了我们的训练目标，信任区域防止破坏性参数更新。 因此，我们在Sample Factory实现了V-trace和PPO clipping。 是否使用这些方法可以被认为是特定实验的超参数选择。 我们发现PPO clipping和V-trace的结合在任务之间很好地工作，并产生稳定的训练，因此我们决定在本文报道的所有实验中使用这两种方法。</p>
 <h2 id="Multi-agent-learning-and-self-play"><a href="#Multi-agent-learning-and-self-play" class="headerlink" title="Multi-agent learning and self-play"></a><strong>Multi-agent learning and self-play</strong></h2><p>​    通过多智能体强化学习和self-play，在深度RL方面取得了一些最先进的最新成果 (Bansal et al., 2018; Berner et al., 2019)。 通过self-play训练的特工比在固定场景中训练的对手表现出更高的技能水平 (Jaderberg et al.,2019)。 随着策略在self-play过程中的改进，它们产生了一个逐渐增加复杂性的训练环境，自然为代理提供了一个课程，并允许他们逐步学习更复杂的技能。 复杂行为(例如合作和工具使用)已被证明出现在这些培训情景中 (Baker et al., 2020)。</p>
 <p>​    还有证据表明，在多智能体环境中一起训练的代理群体可以避免常规的自玩设置所经历的一些失败模式，例如早期收敛到局部最优或过度拟合。 不同的培训人群可以使代理人接触到更广泛的对抗性政策，并产生更强大的代理人，在复杂的任务中达到更高的技能水平(Vinyals et al., 2019; Jaderberg et al., 2019)。</p>
-<p>​    为了释放我们系统的全部潜力，我们增加了对多代理环境的支持，以及对代理的培训人群。Sample Factory自然扩展到多智能体和多策略学习。 由于rollout workers只是环境实例的包装器，他们完全不知道提供操作的策略。 因此，为了在培训过程中增加更多的政策，我们只是催生了更多的policy workers和更多的learners来支持他们。 在rollout workers中，对于每个多代理环境中的每个代理，我们在每一集开始时从族群中抽样一个随机的策略$$\pi_{i}$$。 然后使用一组FIFO队列将操作请求路由到相应的policy workers，每$$\pi_{i}$$一个队列。 我们在这项工作中使用的基于族群的设置在第4节中得到了更详细的解释。</p>
+<p>​    为了释放我们系统的全部潜力，我们增加了对多代理环境的支持，以及对代理的培训人群。Sample Factory自然扩展到多智能体和多策略学习。 由于rollout workers只是环境实例的包装器，他们完全不知道提供操作的策略。 因此，为了在培训过程中增加更多的政策，我们只是催生了更多的policy workers和更多的learners来支持他们。 在rollout workers中，对于每个多代理环境中的每个代理，我们在每一集开始时从族群中抽样一个随机的策略<script type="math/tex">\pi_{i}</script>。 然后使用一组FIFO队列将操作请求路由到相应的policy workers，每<script type="math/tex">\pi_{i}</script>一个队列。 我们在这项工作中使用的基于族群的设置在第4节中得到了更详细的解释。</p>
 
       
     </div>
@@ -681,28 +717,30 @@
 <p>​    HRA和UNREAL(Jaderberg et al., 2017)也有相似之处。 值得注意的是，两者都解决了多个较小的问题，以解决一个难题。 然而，这两种体系结构在其工作方式上以及它们所解决的挑战类型上是不同的。 UNREAL是一种在困难场景中增强表示学习的技术。 它通过使用辅助任务来帮助训练深层神经网络的lower-level层来实现。 这种具有挑战性的表示学习场景的一个例子是学习在3D迷宫领域中导航。 在Atari游戏中，所报道的UNREAL的性能增益是最小的，这表明标准的深度RL体系结构足够强大，可以提取相关的表示。 相比之下，HRA体系结构将任务分解为更小的部分。 HRA的多个较小的任务不是无监督的；它们是与主要任务直接相关的任务。 此外，虽然UNREAL本质上是一种深度RL技术，但HRA与所使用的函数近似类型无关。 可与深度神经网络结合，但它也适用于精确的表格表示。 HRA对于具有高级表示不足以有效地解决任务的领域是有用的。</p>
 <p>​    Diuk的面向对象方法(Diuk et al., 2008) 是第一批在电子游戏中展示高效学习的方法之一。 该方法利用与过渡动态相关的领域知识来有效地学习紧凑的过渡模型，然后利用动态编程技术找到解决方案。 这种固有的基于模型的方法的缺点是，虽然它有效地学习了一个非常紧凑的过渡动力学模型，但它不会减少问题的状态空间。 因此，它没有解决 Ms. Pac-Man的主要挑战：它的巨大状态空间，甚至对于DP方法来说也是棘手的(Diuk将他的方法应用于一个只有6个对象的Atari游戏，而Pac-Man女士有150多个对象)。</p>
 <p>​    最后，HRA涉及选项 (Sutton et al., 1999; Bacon et al., 2017)，以及更普遍的hierarchical learning (Barto &amp; Mahadevan, 2003; Kulkarni et al., 2016)。 选项是临时扩展的动作，就像HRA的头一样，可以根据自己的（内在的）奖励功能并行训练。 然而，一旦一个选项被训练，其内在奖励功能的作用就结束了。 使用选项的高级代理将其视为另一个操作，并使用自己的奖励函数对其进行评估。 这可以在学习中产生很大的加速，并有助于更好的探索，但它们并不直接使高级代理的价值功能变得不那么复杂。 HRA的负责人代表价值观，用环境奖励的组成部分来训练。 即使经过训练，这些值也保持相关性，因为聚合器使用它们来选择它的操作。</p>
-<h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>​    考虑一个马尔可夫决策过程$$ \left \langle S,A,P,R_{env},\gamma \right \rangle$$，它在离散时间步长$$t$$上模拟与环境交互的代理。它有状态集$$S$$、动作集$$A$$、环境奖励函数$$R_{env}:S\times A \times S\rightarrow \mathbb{R}$$，以及转移概率函数$$P:S\times A\times S\rightarrow \left [ 0,1 \right ]$$。 在时间步$$t$$，代理观察状态$$s_{t}\in S$$，并在$$a_{t}\in A$$处采取行动。 代理观察下一个状态$$s_{t+1}$$，从过渡概率分布$$P\left ( s_{t},a_{t} \right )$$和奖励$$r_{t}= R_{env}\left ( s_{t},a_{t},s_{t+1} \right )$$中提取。 行为由策略$$\pi$$定义：$$S\times A\rightarrow \left [ 0,1 \right ]$$，它表示相对于动作的选择概率。 代理的目标是找到一种最大限度地提高回报期望的策略，即折扣奖励之和：$$G_{t}:=\sum_{i=0}^{\infty }\gamma ^{i}r_{t+i}$$，其中折扣因素$$\gamma \in \left [ 0,1 \right ]$$控制即时奖励与未来奖励的重要性。 每个策略$$ \pi $$都有一个相应的动作-价值函数，当根据该策略行事时，它给出以状态和动作为条件的预期回报：<br>$$<br>Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}<br>$$<br>​    通过迭代改进最优动作值函数$$Q^{*}\left ( s,a \right ):=max_{\pi }Q^{\pi }(s,a)$$的估计，可以找到最优策略$$\pi ^{\ast }$$。 一旦$$Q ^{\ast }$$是足够精确的近似，对它采取贪婪的行动就会产生最优策略。</p>
-<h2 id="Hybrid-Reward-Architecture"><a href="#Hybrid-Reward-Architecture" class="headerlink" title="Hybrid Reward Architecture"></a><strong>Hybrid Reward Architecture</strong></h2><p>​    Q值函数通常用权重向量$$\theta :Q(s,a;\theta )$$的函数逼近器来估计。 DQN使用深度神经网络作为函数逼近器，通过最小化损失函数序列来迭代地改进的$$Q ^{\ast }$$估计：</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/loss_function.png"></p>
-<p>​    来自上一次迭代的权重向量$$\theta _{i-1}$$，使用单独的目标网络进行编码(nature dqn)。</p>
-<p>​    我们指的是最小损失函数作为训练目标的Q值函数。 如果对训练目标贪婪地采取行动导致在环境的奖励函数下最优的政策，我们将称之为一致(consistent)的训练目标；如果对训练目标贪婪地采取行动导致在环境的奖励函数下的良好策略，但不是最优策略-，我们将称之为半一致(semi-consistent)的训练目标。 对于（2）训练目标是$$Q_{env}^{*}$$，是$$R_{env}$$下的最优动作-值函数，是默认的一致训练目标。</p>
-<p>​    一个训练目标是一致的，这并不意味着学习这个目标有多容易。 例如如果$$R_{env}$$是稀疏的，那么默认的学习目标可能很难学习。 在这种情况下，添加一个基于潜在的额外奖励信号到$$R_{env}$$可以产生一个替代的一致学习目标，更容易学习。 但是稀疏的环境奖励并不是一个培训目标难以学习的唯一原因。 我们的目标是为默认训练目标$$Q_{env}^{*}$$很难学习的领域找到一个替代的训练目标，因为函数是高维的，很难概括。 我们的方法是基于奖励函数的分解。</p>
-<p>​    我们建议将奖励函数$$R_{env}$$分解为n个奖励函数：并就这些奖励功能中的每一个培训一个单独的强化学习代理。 一个奖励函数可能有无穷多个不同的分解，但要实现易于学习的价值函数，分解应该是每个奖励函数主要受少量状态变量的影响。</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/reward_functions.png"></p>
-<p>​    因为每个代理$$k$$都有自己的奖励函数，所以也有自己的$$Q$$值函数$$Q_{k}$$。 一般来说，不同的代理可以共享深度Q网络的多个low-level层。 因此，我们将使用一个向量$$\theta $$来描述代理的组合权重。 我们将表示所有$$Q$$值函数的组合网络称为混合奖励体系结构(HRA),参加图1。 HRA的操作选择是基于代理的Q值函数之和，我们称之为$$Q_{HRA}$$：</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_hra.png"></p>
-<p>​    <img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure1.png"></p>
+<h1 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h1><p>​    考虑一个马尔可夫决策过程<script type="math/tex">\left \langle S,A,P,R_{env},\gamma \right \rangle</script>，它在离散时间步长<script type="math/tex">t</script>上模拟与环境交互的代理。它有状态集<script type="math/tex">S</script>、动作集<script type="math/tex">A</script>、环境奖励函数<script type="math/tex">R_{env}:S\times A \times S\rightarrow \mathbb{R}</script>，以及转移概率函数<script type="math/tex">P:S\times A\times S\rightarrow \left [ 0,1 \right ]</script>。 在时间步<script type="math/tex">t</script>，代理观察状态<script type="math/tex">s_{t}\in S</script>，并在<script type="math/tex">a_{t}\in A</script>处采取行动。 代理观察下一个状态<script type="math/tex">s_{t+1}</script>，从过渡概率分布<script type="math/tex">P\left ( s_{t},a_{t} \right )</script>和奖励<script type="math/tex">r_{t}= R_{env}\left ( s_{t},a_{t},s_{t+1} \right )</script>中提取。 行为由策略<script type="math/tex">\pi</script>定义：<script type="math/tex">S\times A\rightarrow \left [ 0,1 \right ]</script>，它表示相对于动作的选择概率。 代理的目标是找到一种最大限度地提高回报期望的策略，即折扣奖励之和：<script type="math/tex">G_{t}:=\sum_{i=0}^{\infty }\gamma ^{i}r_{t+i}</script>，其中折扣因素<script type="math/tex">\gamma \in \left [ 0,1 \right ]</script>控制即时奖励与未来奖励的重要性。 每个策略<script type="math/tex">\pi</script>都有一个相应的动作-价值函数，当根据该策略行事时，它给出以状态和动作为条件的预期回报：</p>
+<script type="math/tex; mode=display">
+Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}</script><p>​    通过迭代改进最优动作值函数<script type="math/tex">Q^{*}\left ( s,a \right ):=max_{\pi }Q^{\pi }(s,a)</script>的估计，可以找到最优策略<script type="math/tex">\pi ^{\ast }</script>。 一旦<script type="math/tex">Q ^{\ast }</script>是足够精确的近似，对它采取贪婪的行动就会产生最优策略。</p>
+<h2 id="Hybrid-Reward-Architecture"><a href="#Hybrid-Reward-Architecture" class="headerlink" title="Hybrid Reward Architecture"></a><strong>Hybrid Reward Architecture</strong></h2><p>​    Q值函数通常用权重向量<script type="math/tex">\theta :Q(s,a;\theta )</script>的函数逼近器来估计。 DQN使用深度神经网络作为函数逼近器，通过最小化损失函数序列来迭代地改进的<script type="math/tex">Q ^{\ast }</script>估计：</p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/loss_function.png" alt></p>
+<p>​    来自上一次迭代的权重向量<script type="math/tex">\theta _{i-1}</script>，使用单独的目标网络进行编码(nature dqn)。</p>
+<p>​    我们指的是最小损失函数作为训练目标的Q值函数。 如果对训练目标贪婪地采取行动导致在环境的奖励函数下最优的政策，我们将称之为一致(consistent)的训练目标；如果对训练目标贪婪地采取行动导致在环境的奖励函数下的良好策略，但不是最优策略-，我们将称之为半一致(semi-consistent)的训练目标。 对于（2）训练目标是<script type="math/tex">Q_{env}^{*}</script>，是<script type="math/tex">R_{env}</script>下的最优动作-值函数，是默认的一致训练目标。</p>
+<p>​    一个训练目标是一致的，这并不意味着学习这个目标有多容易。 例如如果<script type="math/tex">R_{env}</script>是稀疏的，那么默认的学习目标可能很难学习。 在这种情况下，添加一个基于潜在的额外奖励信号到<script type="math/tex">R_{env}</script>可以产生一个替代的一致学习目标，更容易学习。 但是稀疏的环境奖励并不是一个培训目标难以学习的唯一原因。 我们的目标是为默认训练目标<script type="math/tex">Q_{env}^{*}</script>很难学习的领域找到一个替代的训练目标，因为函数是高维的，很难概括。 我们的方法是基于奖励函数的分解。</p>
+<p>​    我们建议将奖励函数<script type="math/tex">R_{env}</script>分解为n个奖励函数：并就这些奖励功能中的每一个培训一个单独的强化学习代理。 一个奖励函数可能有无穷多个不同的分解，但要实现易于学习的价值函数，分解应该是每个奖励函数主要受少量状态变量的影响。</p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/reward_functions.png" alt></p>
+<p>​    因为每个代理<script type="math/tex">k</script>都有自己的奖励函数，所以也有自己的<script type="math/tex">Q</script>值函数<script type="math/tex">Q_{k}</script>。 一般来说，不同的代理可以共享深度Q网络的多个low-level层。 因此，我们将使用一个向量<script type="math/tex">\theta</script>来描述代理的组合权重。 我们将表示所有<script type="math/tex">Q</script>值函数的组合网络称为混合奖励体系结构(HRA),参加图1。 HRA的操作选择是基于代理的Q值函数之和，我们称之为<script type="math/tex">Q_{HRA}</script>：</p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_hra.png" alt></p>
+<p>​    <img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure1.png" alt></p>
 <p>代理的集合可以被看作是具有多个头的单个代理，每个头在不同的奖励函数下产生当前状态的动作值。</p>
 <p>​    与HRA相关的损失函数序列为：</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_hra_loss.png"></p>
-<p>​    通过将这些损失函数最小化，HRA的不同头部在不同的奖励函数下近似最优动作值函数:$$Q_{1}^{<em>},…,Q_{n}^{</em>}$$。 此外，$$Q_{HRA}$$近似于$$Q_{HRA}^{*}$$，定义为：</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_hrak.png"></p>
-<p>​    注意，$$Q_{HRA}^{<em>}$$与$$Q_{env}^{</em>}$$不同，一般不一致。</p>
-<p>​    另一个培训目标是评估每个组件奖励函数下的统一随机策略$$v$$的结果：$$Q_{HRA}^{v}:=\sum_{k=1}^{n}Q_{k}^{v}(s,a)$$。 $$Q_{HRA}^{v}$$等于$$Q_{env}^{v}$$。在$$R_{env}$$下的随机策略的$$Q$$值，如下所示：</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_env.png"></p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_hra_loss.png" alt></p>
+<p>​    通过将这些损失函数最小化，HRA的不同头部在不同的奖励函数下近似最优动作值函数:<script type="math/tex">Q_{1}^{*},...,Q_{n}^{*}</script>。 此外，<script type="math/tex">Q_{HRA}</script>近似于<script type="math/tex">Q_{HRA}^{*}</script>，定义为：</p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_hrak.png" alt></p>
+<p>​    注意，<script type="math/tex">Q_{HRA}^{*}</script>与<script type="math/tex">Q_{env}^{*}</script>不同，一般不一致。</p>
+<p>​    另一个培训目标是评估每个组件奖励函数下的统一随机策略<script type="math/tex">v</script>的结果：<script type="math/tex">Q_{HRA}^{v}:=\sum_{k=1}^{n}Q_{k}^{v}(s,a)</script>。 <script type="math/tex">Q_{HRA}^{v}</script>等于<script type="math/tex">Q_{env}^{v}</script>。在<script type="math/tex">R_{env}</script>下的随机策略的<script type="math/tex">Q</script>值，如下所示：</p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/q_env.png" alt></p>
 <p>可以使用预期的Sarsa更新规则 (van Seijen et al., 2009),来学习这个培训目标，方法是将（7）替换为</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/gongsi_8.png"></p>
-<p>​    对于随机策略的$$Q$$值，贪婪地行事可能会产生一个比随机略好的策略，但令人惊讶的是，我们发现，对于许多基于导航的域$$Q_{HRA}^{v}$$充当半一致的训练目标。</p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/gongsi_8.png" alt></p>
+<p>​    对于随机策略的<script type="math/tex">Q</script>值，贪婪地行事可能会产生一个比随机略好的策略，但令人惊讶的是，我们发现，对于许多基于导航的域<script type="math/tex">Q_{HRA}^{v}</script>充当半一致的训练目标。</p>
 <h2 id="通过使用高级领域知识进一步提高性能"><a href="#通过使用高级领域知识进一步提高性能" class="headerlink" title="通过使用高级领域知识进一步提高性能"></a>通过使用高级领域知识进一步提高性能</h2><p>​    在其基本设置中，应用于HRA的唯一领域知识是以分解的奖励函数的形式。 然而，HRA的优势之一是它可以很容易地利用更多的领域知识，如果可用的话。 领域知识可以通过以下方式之一加以利用：</p>
 <ul>
 <li>删除不相关的特征。 不以任何方式（直接或间接）影响所获得奖励的特征只会给学习过程增加噪音，并且可以被移除。</li>
@@ -712,18 +750,18 @@
 <p>虽然这些方法并不特定于HRA，但HRA可以在很大程度上利用领域知识，因为它可以将这些方法单独应用于每个头。 我们在4.1节中经验性地展示了这一点。</p>
 <h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><h2 id="水果收集任务"><a href="#水果收集任务" class="headerlink" title="水果收集任务"></a>水果收集任务</h2><p>​    在我们的第一个领域，我们考虑一个代理，必须尽快收集水果在10×10网格。这里有10个可能的水果位置，分布在整个网格上。 每一轮，一个水果被随机放置在这10个地点中的5个。 代理从一个随机位置开始。 如果水果被吃掉，奖励为1，否则为0。 当所有5个水果被吃掉或者达到300步，一轮结束。</p>
 <p>​    我们比较了使用相同网络的DQN和HRA的性能。 对于HRA，我们将奖励功能分解为10个不同的奖励功能，每个可能的水果位置一个。 该网络由长度为110的二进制输入层组成，编码代理的位置和每个位置是否存在水果。接下来是长度为250的完全连接的隐藏层。 该层连接到10个头，每个头由4个线性节点组成，表示4个动作在不同奖励函数下的动作值。 最后，使用最后的长度为4的线性层来计算所有节点跨头的平均值，该层连接每个头中相应节点的输出。 该层具有值1的固定权重（即实现公式5）。 与DQN的区别在于，DQN使用损失函数（2）从第四层更新网络，而HRA使用损失函数（6）从第三层更新网络。</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure2.png"></p>
-<p>​    除了完整的网络之外，我们还使用不同层次的领域知识进行测试，如第3.2节所述：1)删除每个头部的无关特征（只提供代理的位置相应的水果特征)；2)上述加识别终端状态；3）上述加使用伪奖励来学习GVFs到10个位置中的每个位置（而不是在每个位置学习与水果相关的值函数）。 优点是，即使在一个地点没有水果，这些GVFs也可以被训练。 一个特定位置的头复制相应GVF的Q值，如果该位置当前包含一个水果，或者输出0。 我们将这些分别称为$$HRA+1$$、$$HRA+2$$和$$HRA+3$$。 对于DQN，我们还测试了应用于与$$HRA+1$$相同网络的版本；我们将此版本称为$$DQN+1$$。</p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure2.png" alt></p>
+<p>​    除了完整的网络之外，我们还使用不同层次的领域知识进行测试，如第3.2节所述：1)删除每个头部的无关特征（只提供代理的位置相应的水果特征)；2)上述加识别终端状态；3）上述加使用伪奖励来学习GVFs到10个位置中的每个位置（而不是在每个位置学习与水果相关的值函数）。 优点是，即使在一个地点没有水果，这些GVFs也可以被训练。 一个特定位置的头复制相应GVF的Q值，如果该位置当前包含一个水果，或者输出0。 我们将这些分别称为<script type="math/tex">HRA+1</script>、<script type="math/tex">HRA+2</script>和<script type="math/tex">HRA+3</script>。 对于DQN，我们还测试了应用于与<script type="math/tex">HRA+1</script>相同网络的版本；我们将此版本称为<script type="math/tex">DQN+1</script>。</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/Maluuba/hra">代码位置</a></p>
-<p>​    训练样本是由随机策略生成的；训练过程是通过在每一轮之后对学习价值函数的贪婪策略进行评估来跟踪的。 对于HRA，我们以Q∗HRA作为训练目标（使用方程7），以及QυHRA（使用方程8)进行了实验）。 同样，对于DQN，我们使用了默认的培训目标$$Q_{HRA}^{*}$$以及$$Q_{HRA}^{v}$$。 我们分别优化了每个方法的步长和折扣因子。</p>
-<p>​    每个方法的最佳设置结果如图3所示。 对于DQN，使用$$Q_{env}^{*}$$作为训练目标会产生最好的性能，而对于HRA，使用$$Q_{HRA}^{v}$$会产生最好的性能。 总的来说，HRA显示了DQN的明显性能提升，尽管网络是相同的。 此外，添加不同形式的领域知识会导致进一步的大改进。 虽然使用由领域知识增强的网络结构可以提高HRA的性能，但使用同一网络进行DQN会导致性能下降。 大的当终端状态被识别时，性能的提高是由于表示成为一个单一的热向量。 因此，我们删除了隐藏层，并直接将这个单热矢量输入到不同的头部。 由于头部是线性的，这种表示简化为精确的表格表示。 对于表格表示，我们使用了与深度网络版本的最佳步长相同的步长。</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure3.png"></p>
+<p>​    训练样本是由随机策略生成的；训练过程是通过在每一轮之后对学习价值函数的贪婪策略进行评估来跟踪的。 对于HRA，我们以Q∗HRA作为训练目标（使用方程7），以及QυHRA（使用方程8)进行了实验）。 同样，对于DQN，我们使用了默认的培训目标<script type="math/tex">Q_{HRA}^{*}</script>以及<script type="math/tex">Q_{HRA}^{v}</script>。 我们分别优化了每个方法的步长和折扣因子。</p>
+<p>​    每个方法的最佳设置结果如图3所示。 对于DQN，使用<script type="math/tex">Q_{env}^{*}</script>作为训练目标会产生最好的性能，而对于HRA，使用<script type="math/tex">Q_{HRA}^{v}</script>会产生最好的性能。 总的来说，HRA显示了DQN的明显性能提升，尽管网络是相同的。 此外，添加不同形式的领域知识会导致进一步的大改进。 虽然使用由领域知识增强的网络结构可以提高HRA的性能，但使用同一网络进行DQN会导致性能下降。 大的当终端状态被识别时，性能的提高是由于表示成为一个单一的热向量。 因此，我们删除了隐藏层，并直接将这个单热矢量输入到不同的头部。 由于头部是线性的，这种表示简化为精确的表格表示。 对于表格表示，我们使用了与深度网络版本的最佳步长相同的步长。</p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure3.png" alt></p>
 <h2 id="ATARI-game-Ms-Pac-Man"><a href="#ATARI-game-Ms-Pac-Man" class="headerlink" title="ATARI game: Ms. Pac-Man"></a>ATARI game: Ms. Pac-Man</h2><p>​    我们的第二个领域是Atari2600游戏Ms. Pac-Man（见图4）。 点是通过吃颗粒获得的，同时避免鬼魂(与一个人接触会导致Ms. Pac-Man失去生命)。 吃一种特殊的能量颗粒会使鬼魂在很短的时间内变成蓝色，从而使它们被吃掉以获得额外的分数。 额外的水果可以吃进一步的积分，每级两次。 当所有的球团都被吃掉时，一个新的水平就开始了。 一共有4个不同的地图和7个不同的水果类型，每个都有不同的点值。 我们在补充材料中提供了有关领域的全部细节。</p>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/pac_game.png"></p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/pac_game.png" alt></p>
 <ul>
-<li> Baselines。虽然我们的Ms. Pac-Man的版本与文献中使用的版本相同，但我们使用不同的预处理。 因此，为了测试我们的预处理效果，我们实现了A3C方法 (Mnih et al., 2016)，并在我们的预处理中运行它。 我们将预处理的版本称为‘A3C（channels）’，标准预处理的版本‘A3C（pixels）’，以及文献‘A3C（reported）’中报告的A3C评分。</li>
-<li> Preprocessing。来自ALE的每个帧是210×160像素。 我们切割底部部分和顶部部分160×160像素。 由此，我们提取不同对象的位置，并为每个对象创建一个单独的输入通道，对其位置进行编码，精度为4像素。 这导致11个大小为40×40的二进制通道。 具体来说，Ms. Pac-Man有一个通道，四个鬼魂中的每一个，四个蓝色鬼魂中的每一个（这些都被视为不同的物体)，水果加上一个通道，所有的颗粒(包括动力颗粒）。 对于A3C，我们将鬼魂的4个通道组合成一个单一的通道，使其能够更好地跨越鬼魂。 我们对蓝鬼的4个频道也是如此。 我们没有给出文献中最后4帧的历史，而是给出了Ms. Pac-Man作为长度为4的1-热向量（代表4个指南针方向)的方向）。</li>
-<li> HRA architecture。环境奖励信号与游戏中得分相对应。 在分解奖励函数之前，我们通过添加与鬼魂接触的负面奖励-1000来执行奖励整形(这会导致Ms. Pac-Man失去生命)。 在此之后，奖励被分解成游戏中的每个对象（球团/水果/鬼/蓝鬼）都有自己的奖励功能。 因此，有一个单独的RL代理与游戏中的每个对象相关联，它估计其相应奖励函数的Q值函数。</li>
+<li>Baselines。虽然我们的Ms. Pac-Man的版本与文献中使用的版本相同，但我们使用不同的预处理。 因此，为了测试我们的预处理效果，我们实现了A3C方法 (Mnih et al., 2016)，并在我们的预处理中运行它。 我们将预处理的版本称为‘A3C（channels）’，标准预处理的版本‘A3C（pixels）’，以及文献‘A3C（reported）’中报告的A3C评分。</li>
+<li>Preprocessing。来自ALE的每个帧是210×160像素。 我们切割底部部分和顶部部分160×160像素。 由此，我们提取不同对象的位置，并为每个对象创建一个单独的输入通道，对其位置进行编码，精度为4像素。 这导致11个大小为40×40的二进制通道。 具体来说，Ms. Pac-Man有一个通道，四个鬼魂中的每一个，四个蓝色鬼魂中的每一个（这些都被视为不同的物体)，水果加上一个通道，所有的颗粒(包括动力颗粒）。 对于A3C，我们将鬼魂的4个通道组合成一个单一的通道，使其能够更好地跨越鬼魂。 我们对蓝鬼的4个频道也是如此。 我们没有给出文献中最后4帧的历史，而是给出了Ms. Pac-Man作为长度为4的1-热向量（代表4个指南针方向)的方向）。</li>
+<li>HRA architecture。环境奖励信号与游戏中得分相对应。 在分解奖励函数之前，我们通过添加与鬼魂接触的负面奖励-1000来执行奖励整形(这会导致Ms. Pac-Man失去生命)。 在此之后，奖励被分解成游戏中的每个对象（球团/水果/鬼/蓝鬼）都有自己的奖励功能。 因此，有一个单独的RL代理与游戏中的每个对象相关联，它估计其相应奖励函数的Q值函数。</li>
 </ul>
 <p>为了估计每个组件奖励函数，我们使用3.2节中讨论的三种形式的领域知识。 HRA使用学习伪Q值（值在[0,1]范围内）的GVFs来到达地图上的特定位置(四张地图中的每一张都学习单独的GVFs)。 与水果收集任务（第4.1节）相比，HRA在训练过程中学习了它的部分表示：它从0GVF和0头开始，用于球团。 通过在迷宫周围徘徊，它发现了它可以到达的新地图位置，从而创建了新的GVF。 每当代理在一个新的位置发现一个球团时，它就会创建一个与球团对应的新头。</p>
 <p>对象的Q值（球团/水果/鬼魂/蓝色幽灵）被设置为与对象的位置相对应的GVF的伪Q值(即移动对象每次使用不同的GVF)，乘以一个权重，该权重被设置为等于对象被吃掉时收到的奖励。 如果一个对象不在屏幕上，它的所有Q值都是0。</p>
@@ -734,8 +772,8 @@
 <li>Evaluation metrics。有两种不同的评价方法在不同的文献中使用，导致非常不同的分数。 由于ALE最终是一个确定性的环境（它使用随机数生成器实现伪随机性，该生成器总是以相同的种子开始），这两个评估度量的目的是在评估中创建随机性，以便对具有更泛化行为的方法进行更高的评级。 第一个度量引入了一种温和的随机性形式，在将控制交给学习算法之前，采取随机数量的no-op操作。 然而，在Ms. Pac-Man的情况下，游戏从一个特定的非活动期开始，超过了最大的无操作步骤，最终导致游戏有一个固定的开始。 第二个度量沿着人类轨迹选择随机起点，并导致更强的随机性，并确实导致预期的随机开始评估。 我们将这些度量称为“固定开始”和“随机开始’。</li>
 <li>Results。图5为训练曲线；表1为训练后的最终得分。 报告的最佳固定开始分数来自STRAW(Vezhnevets等人，2016年)；报告的最佳随机开始评分来自 Dueling network architecture (Wang et al., 2016)。 人类固定的起始分数来自Mnih et al. (2015)；人类随机开始分数来自Nair et al. (2015)。 我们训练A3C8亿帧。 因为HRA学得很快，所以我们只训练了5000轮，对应大约1.5亿帧（注意，更好的策略会导致每集更多的帧）。 我们尝试了HRA的几个不同的设置：带/不正常化和带/不带每种类型的探索。 为HRA显示的分数使用了最好的组合：与正常化和两种勘探类型。 所有的组合在训练中都达到了10，000点以上，除了没有任何探索的组合，这一点也不奇怪，它的表现非常糟糕。 有了最好的组合，HRA不仅在这两个指标上的表现都超过了最先进的水平，而且还显著地超过了人类的得分，令人信服地证明了HRA的实力。</li>
 </ul>
-<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/table1.png"></p>
-<p>​    <img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure5.png"></p>
+<p><img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/table1.png" alt></p>
+<p>​    <img src="/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/figure5.png" alt></p>
 <p>比较表1中的A3C（pixels）和A3C（channels）显示了一个令人惊讶的结果：虽然我们通过将屏幕图像分离到相关的对象通道来使用高级预处理，但这并没有显著改变A3C的性能。</p>
 <p>​    在我们的最后一个实验中，我们测试了HRA的性能，如果它利用了固定启动评估度量的弱点，使用了执行内存的简化版本。 使用这个版本，我们不仅超过了266330分的人类高分，我们在不到3000轮的情况下达到了999，990分的最大可能分数。 曲线在第一阶段是缓慢的，因为模型必须被训练，但即使进一步的水平变得越来越困难，加速，利用已经知道的地图。 获得更多的分数是不可能的，不是因为游戏结束，而是因为当达到百万分时，分数溢出到0。</p>
 <h1 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h1><p>​    HRA的优点之一是它可以比单头方法更好地利用领域知识。 水果收集任务清楚地表明了这一点：虽然删除不相关的特征提高了HRA的性能，但当提供相同的网络体系结构时，DQN的性能下降。 此外，将像素图像分离成多个二进制通道只会使A3C的性能在直接从像素学习上有很小的提高。 这表明，现代深层RL与Ms. Pac-Man斗争的原因与从像素学习无关；根本问题是Ms. Pac-Man的最优值函数不能很容易地映射到低维表示。</p>
@@ -933,10 +971,10 @@
 <p>​        然而，强化学习从深度学习的角度提出了几个挑战。 首先，迄今为止最成功的深度学习应用程序需要大量的手工标记训练数据。 另一方面，RL算法必须能够从频繁稀疏、噪声和延迟的标量奖励信号中学习。 与监督学习中发现的投入和目标之间的直接联系相比，行动和结果奖励之间的延迟（可能是数千个时间步长）似乎特别令人望而生畏。 另一个问题是，大多数深度学习算法假设数据样本是独立的，而在强化学习中，通常会遇到高度相关状态的序列。 此外，在RL中数据分布随着算法学习新行为而变化，这对于假设固定底层分布的深度学习方法来说可能是有问题的。</p>
 <p>​        本文证明了卷积神经网络可以克服这些挑战，从复杂的RL环境中的原始视频数据中学习成功的控制策略。 采用Q-learning算法的变体对网络进行训练，采用随机梯度下降来更新权值。 为了缓解相关数据和非平稳分布的问题，我们使用了一种经验重放机制它随机采样以前的转换，从而平滑训练分布在许多过去的行为。</p>
 <p>​        我们将我们的方法应用于一系列Atari2600游戏，在Arcade学习环境(ALE)中实现。 Atari2600是一个具有挑战性的RL测试集，它提供了高维视觉输入(210×160RGB video at 60Hz)和一组多样化有趣的任务，这些任务被设计成对人类玩家来说是困难的。 我们的目标是创建一个单一的神经网络代理，能够成功地学习尽可能多的游戏。 该网络没有提供任何特定于游戏的信息或手工设计的视觉特征，也没有与模拟器的内部状态相关；它从视频输入、奖励和终端信号以及一组可能的操作中学习到，就像人类玩家一样。 此外，网络体系结构和所有用于训练的超参数在整个游戏中保持不变。 到目前为止，在我们尝试过的七场比赛的六场比赛中，网络的水平已经超过了所有以前的RL算法，并在其中三场比赛中超过了一名职业玩家。 图1提供了用于训练的五个游戏的示例截图。</p>
-<p><img src="/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/screen_shoot.png"></p>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>​        我们考虑代理与环境$$\varepsilon $$交互的任务，在这种情况下，Atari模拟器，按照一系列的actions、observations和rewards。 在每个时间步骤中，代理从一组合法游戏操作中选择一个动作，A={1，…，K}。 动作传递给仿真器，并修改其内部状态和游戏得分。通常可能是随机的。 模拟器的内部状态不被代理观察到；相反，它从模拟器中观察到一个图像$$x_{t}\in  \mathbb{R}^{d}$$，它是表示当前屏幕的原始像素值的向量。 此外，它还收到一个奖励$$r_{t}$$，代表游戏分数的变化。 请注意，通常游戏分数可能取决于整个先前的动作和观察顺序；关于一个行动的反馈只有在几千个时间步骤过去之后才能收到。</p>
-<p>​    由于代理只观察当前屏幕的图像，任务被部分观察到，许多模拟器状态被感知混叠。即不可能仅从当前屏幕$$x_{t}$$中完全理解当前的情况。因此，我们考虑动作和观察序列$$s_{t}=x_{1},a_{1},x_{2},…,a_{t-1},x_{t}$$,并依赖这些序列学习游戏策略。假设模拟器中的所有序列都在有限数量的时间步长中终止。这种形式产生了一个大的但有限的马尔可夫决策过程(MDP)，其中每个序列都是一个不同的状态。因此，我们可以应用标准的强化学习方法，简单地使用完整的序列$$s_{t}$$作为时间$$t$$时的状态表示。</p>
-<p>​    代理的目标是通过选择动作，以最大化未来回报的方式来与模拟器交互。我们做了标准的假设，未来奖励每个时间步通过$$\gamma $$折现，并将时间$$t$$的未来折扣回报定义为$$R_{t} = \sum <em>{t^{‘}=t}^{T}\gamma^{t^{‘}-t}r</em>{t^{‘}}$$，其中T是游戏结束的时间步长。我们将最优动作值函数$$Q^{<em>}(s,a)$$定义为遵循任何策略在看到一些序列后，然后采取一些动作$$a$$，$$Q^{</em>}(s,a)=max_{\pi }E[R_{t}|s_{t}=s,a_{t}=a,\pi ]$$，其中$$\pi$$是一个策略映射序列到动作（或动作的分布）。</p>
+<p><img src="/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/screen_shoot.png" alt></p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>​        我们考虑代理与环境<script type="math/tex">\varepsilon</script>交互的任务，在这种情况下，Atari模拟器，按照一系列的actions、observations和rewards。 在每个时间步骤中，代理从一组合法游戏操作中选择一个动作，A={1，…，K}。 动作传递给仿真器，并修改其内部状态和游戏得分。通常可能是随机的。 模拟器的内部状态不被代理观察到；相反，它从模拟器中观察到一个图像<script type="math/tex">x_{t}\in  \mathbb{R}^{d}</script>，它是表示当前屏幕的原始像素值的向量。 此外，它还收到一个奖励<script type="math/tex">r_{t}</script>，代表游戏分数的变化。 请注意，通常游戏分数可能取决于整个先前的动作和观察顺序；关于一个行动的反馈只有在几千个时间步骤过去之后才能收到。</p>
+<p>​    由于代理只观察当前屏幕的图像，任务被部分观察到，许多模拟器状态被感知混叠。即不可能仅从当前屏幕<script type="math/tex">x_{t}</script>中完全理解当前的情况。因此，我们考虑动作和观察序列<script type="math/tex">s_{t}=x_{1},a_{1},x_{2},...,a_{t-1},x_{t}</script>,并依赖这些序列学习游戏策略。假设模拟器中的所有序列都在有限数量的时间步长中终止。这种形式产生了一个大的但有限的马尔可夫决策过程(MDP)，其中每个序列都是一个不同的状态。因此，我们可以应用标准的强化学习方法，简单地使用完整的序列<script type="math/tex">s_{t}</script>作为时间<script type="math/tex">t</script>时的状态表示。</p>
+<p>​    代理的目标是通过选择动作，以最大化未来回报的方式来与模拟器交互。我们做了标准的假设，未来奖励每个时间步通过<script type="math/tex">\gamma</script>折现，并将时间<script type="math/tex">t</script>的未来折扣回报定义为<script type="math/tex">R_{t} = \sum _{t^{'}=t}^{T}\gamma^{t^{'}-t}r_{t^{'}}</script>，其中T是游戏结束的时间步长。我们将最优动作值函数<script type="math/tex">Q^{*}(s,a)</script>定义为遵循任何策略在看到一些序列后，然后采取一些动作<script type="math/tex">a</script>，<script type="math/tex">Q^{*}(s,a)=max_{\pi }E[R_{t}|s_{t}=s,a_{t}=a,\pi ]</script>，其中<script type="math/tex">\pi</script>是一个策略映射序列到动作（或动作的分布）。</p>
 <h1 id="阅读总结"><a href="#阅读总结" class="headerlink" title="阅读总结"></a>阅读总结</h1><ul>
 <li>缓解相关性数据和非平稳分布的问题，采用经验重复。</li>
 <li>该方法在尝试过的七场比赛的六场比赛中，网络的性能已经超过了所有以前的RL算法，并在其中三场比赛中超过了一名专家人类球员</li>
@@ -1011,10 +1049,10 @@
 <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    强化学习(RL)正在将其边界扩展到各种游戏类型。在PVE（玩家与环境）环境中，例如在Atari2600游戏中发现的环境，使用各种方法，RL代理已经超过了人类水平的性能。 同样在PVP（玩家对玩家）环境中，神经网络与基于搜索的方法相结合在两个玩家的回合游戏中击败了最好的人类玩家，比如围棋和国际象棋。最近，游戏中的RL研究已经转移到更复杂的PVP电子游戏中，例如StarCraft2 ，Quake3 和Dota2。</p>
 <p>​    战斗游戏作为最具代表性的复杂PVP游戏之一，一直是在这一领域取得进展的多项研究的重点。例如，基于MCTS的方法已应用于游戏平台“FightingICE”,这是一个为战斗游戏AI竞争而制作的游戏平台。然而当应用于巨大的现代游戏引擎时，查询时间较长，很难满足实时条件。此外，在Little Fighter 2(LF2)中一种深度强化学习基础代理通过一个基于规则的固定对手训练。 然而由于对手的决定是未知的，通过基于规则训练的AI不能泛化到看不见的对手。我们的方法在很大程度上类似于self-play RL方法被应用在“Super Smash Bros. Melee (SSBM)”。然而与我们具有复杂游戏规则的3D环境相比，状态和动作空间的复杂性受到了显著的限制。 我们通过新颖的基于self-play  RL，为实时战斗游戏““Blade &amp; Soul (B&amp;S)  Arena Battle”创建了专业水平的人工智能代理。</p>
 <p>​    B&amp;S是一款商业化的大型多人在线角色扮演游戏，它支持两名玩家之间的决斗，称为“B&amp;S Arena Battles (BABs)”。如表1所示，与其他作品中考虑的游戏相比，BAB是一种更现代的战斗游戏；因此，它具有更复杂的游戏动力学和更大的游戏引擎。此外，大量的人玩BAB和它有更活跃的专业场景比其他战斗游戏。与专门为研究目的而设计的FightingICE相比，BAB有更多的活跃专业场景。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/tabel1.png"></p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/tabel1.png" alt></p>
 <p>​    图1显示了一个来自BAB的场景。 BAB是一个两人零和游戏。 在BAB中，两名玩家互相对抗，以在三分钟内将对手的HP（血量）降低到零。 要掌握BAB，代理必须能够应对多种挑战。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/figure1.png"></p>
-<p>​    首先，代理必须管理巨大的动作和状态空间。代理必须同时进行技能、移动和目标决策，从而产生许多可能的组合。 粗略估计，每个时间步有144个潜在动作：8(avg. # of avail. skills)$$ * $$9（8 directional + no  move)$$*$$2(facing opponent or moving direction）。 由于平均游戏长度为1200个时间步长(120s)，许多场景是可能的,而不是考虑对手的动作。</p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/figure1.png" alt></p>
+<p>​    首先，代理必须管理巨大的动作和状态空间。代理必须同时进行技能、移动和目标决策，从而产生许多可能的组合。 粗略估计，每个时间步有144个潜在动作：8(avg. # of avail. skills)<script type="math/tex">*</script>9（8 directional + no  move)<script type="math/tex">*</script>2(facing opponent or moving direction）。 由于平均游戏长度为1200个时间步长(120s)，许多场景是可能的,而不是考虑对手的动作。</p>
 <p>​    此外，代理必须考虑技能之间的依赖关系：例如在使用另一种技能之后，一种技能只能在短时间内可用。 因此，在总共45种技能中（including “no-op”），技能随着时间不断的变化。 代理还必须考虑每种技能的特性，因为它们具有不同的冷却时间（重用技能所需的间隔）和SP（技能点）消耗，并服务于五种不同的功能中的一种或多种： 攻击，群体控制(功能使对手无能力；缩写CC)，抵抗(功能使玩家免疫或抵抗CC技能)，逃跑和冲刺。</p>
 <p>​    最后，代理必须处理不完善的信息设置。 因为BAB是一个实时游戏，两个玩家同时做出决定。 这表明代理人必须在不知道对手的决定或策略的情况下作出决定。 因此，BAB可以被认为是一系列石头剪刀游戏。例如当玩家使用抵抗技能，而对手同时使用群体控制技能时，玩家比对手获得优势。 因此，问题的本质是逼近纳什均衡策略，使代理能够对任何相反的策略作出适当的反应。为了应对这些挑战，我们通过多样化对手池对普通的self-play算法进行了改进和通过数据跳过技术来促进探索。 这项工作的主要贡献如下：</p>
 <ul>
@@ -1023,27 +1061,27 @@
 <li>我们引入了数据跳过技术来增强在广阔空间中的探索。 这些通常可以应用于任何两人实时战斗游戏。</li>
 <li>我们通过在2018年B&amp;S World Championship  Blind Match中与专业球员对位来评估我们的代理。 我们的人工智能代理赢得了七场比赛中的三场，而其中一个好斗的代理在现场比赛和预试中击败了所有专业玩家。</li>
 </ul>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h3><h3 id="实时两人游戏"><a href="#实时两人游戏" class="headerlink" title="实时两人游戏"></a>实时两人游戏</h3><p>​    在一个实时的两个玩家游戏中，有两个玩家，即代理和对手。 两者同时向环境发送一个动作。 让我们把代理人的策略表示为$$\pi ^{ag}$$，把对手的策略表示为$$\pi ^{op}$$。 每一步都从自己的策略中采样一个动作。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/sample_action.png"></p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h3><h3 id="实时两人游戏"><a href="#实时两人游戏" class="headerlink" title="实时两人游戏"></a>实时两人游戏</h3><p>​    在一个实时的两个玩家游戏中，有两个玩家，即代理和对手。 两者同时向环境发送一个动作。 让我们把代理人的策略表示为<script type="math/tex">\pi ^{ag}</script>，把对手的策略表示为<script type="math/tex">\pi ^{op}</script>。 每一步都从自己的策略中采样一个动作。</p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/sample_action.png" alt></p>
 <p>​    然后，环境通过联合考虑这两个动作来进行状态转换。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/state_trans.png"></p>
-<p>​    在这里，MDP可以表示为{S,$$A ^{ag}$$,$$A ^{op}$$,P,R,$$\gamma$$}。 如果$$\pi ^{op}$$是固定的，那么我们可以通过边缘化对手的策略来将对手视为环境的一部分。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/fix_policy.png"></p>
-<p>​    然后，MDP表达式变成一个更简单的形式{S,$$A ^{ag}$$,$$P^{‘}$$,$$R^{‘}$$,$$\gamma$$}。 这个表达式与一个玩家MDP是一致的。 因此，原始MDP的任何方法也在这种形式下工作。 然而$$\pi ^{op}$$在一般情况下是不固定的，我们的代理人不知道它将面临哪些$$\pi ^{op}$$。 我们在下面的章节中提出了一种具有多样化$$\pi ^{op}$$池的self play curriculum。</p>
-<h3 id="作为MDP的BAB"><a href="#作为MDP的BAB" class="headerlink" title="作为MDP的BAB"></a>作为MDP的BAB</h3><p>​    如果我们假设$$\pi ^{op}$$或$$\pi ^{op}$$池是固定的，则BAB可以表示为MDP。图2说明了BAB中的代理-环境框架。基于LSTM的代理与作为环境的BAB模拟器交互。对于每一个具有0.1秒间隔的时间步长，状态$$s_{t}$$是从观测历史$$H_{t}=$${$$o_{1},o_{2},…,o_{t}$$}构造的。 具体来说，$$s_{t}$$是由人类在游戏中可以访问的任何信息组成的，如HP、SP、与对手的距离、与竞技场墙的距离、当前位置、剩余的游戏时间、所有44种技能的剩余冷却时间、代理的状态信息(半空、眩晕、下跪等等。 然后，代理决定每一个时间步骤的动作$$a_{t}=\left ( a_{t}^{skill},a_{t}^{move,target} \right )$$。 请注意，目标动作空间最初是连续的。 我们将它离散为两个（面对对手或当前移动方向），并与移动的决定一起考虑它。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/agent-environment.png"></p>
-<p>​    在此之后，该操作将被发送到环境中，并相应地发生状态转换。 在这里，确切的奖励也应该确定。 奖励与BAB的高性能密切相关。 我们提供了$$r_{t}^{WIN}$$，这是赢得一场比赛的奖励和$$r_{t}^{HP}$$是血量变化的奖励。 这些奖励是基于这样的假设设计出来的，一个玩家赢的越多，剩下的血量越多，玩家的表现就越好。$$r_{t}^{WIN}$$在每轮的最后一步给出，胜利为10，失败为-10。 $$r_{t}^{HP}$$可能发生在每一个时间步骤时，代理人对对手造成损害，反之亦然。 由于HP被归一化为[0,10]，$$r_{t}^{WIN}$$和 $$r_{t}^{HP}$$具有相同的规模。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/reward.png"></p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/state_trans.png" alt></p>
+<p>​    在这里，MDP可以表示为{S,<script type="math/tex">A ^{ag}</script>,<script type="math/tex">A ^{op}</script>,P,R,<script type="math/tex">\gamma</script>}。 如果<script type="math/tex">\pi ^{op}</script>是固定的，那么我们可以通过边缘化对手的策略来将对手视为环境的一部分。</p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/fix_policy.png" alt></p>
+<p>​    然后，MDP表达式变成一个更简单的形式{S,<script type="math/tex">A ^{ag}</script>,<script type="math/tex">P^{'}</script>,<script type="math/tex">R^{'}</script>,<script type="math/tex">\gamma</script>}。 这个表达式与一个玩家MDP是一致的。 因此，原始MDP的任何方法也在这种形式下工作。 然而<script type="math/tex">\pi ^{op}</script>在一般情况下是不固定的，我们的代理人不知道它将面临哪些<script type="math/tex">\pi ^{op}</script>。 我们在下面的章节中提出了一种具有多样化<script type="math/tex">\pi ^{op}</script>池的self play curriculum。</p>
+<h3 id="作为MDP的BAB"><a href="#作为MDP的BAB" class="headerlink" title="作为MDP的BAB"></a>作为MDP的BAB</h3><p>​    如果我们假设<script type="math/tex">\pi ^{op}</script>或<script type="math/tex">\pi ^{op}</script>池是固定的，则BAB可以表示为MDP。图2说明了BAB中的代理-环境框架。基于LSTM的代理与作为环境的BAB模拟器交互。对于每一个具有0.1秒间隔的时间步长，状态<script type="math/tex">s_{t}</script>是从观测历史<script type="math/tex">H_{t}=</script>{<script type="math/tex">o_{1},o_{2},...,o_{t}</script>}构造的。 具体来说，<script type="math/tex">s_{t}</script>是由人类在游戏中可以访问的任何信息组成的，如HP、SP、与对手的距离、与竞技场墙的距离、当前位置、剩余的游戏时间、所有44种技能的剩余冷却时间、代理的状态信息(半空、眩晕、下跪等等。 然后，代理决定每一个时间步骤的动作<script type="math/tex">a_{t}=\left ( a_{t}^{skill},a_{t}^{move,target} \right )</script>。 请注意，目标动作空间最初是连续的。 我们将它离散为两个（面对对手或当前移动方向），并与移动的决定一起考虑它。</p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/agent-environment.png" alt></p>
+<p>​    在此之后，该操作将被发送到环境中，并相应地发生状态转换。 在这里，确切的奖励也应该确定。 奖励与BAB的高性能密切相关。 我们提供了<script type="math/tex">r_{t}^{WIN}</script>，这是赢得一场比赛的奖励和<script type="math/tex">r_{t}^{HP}</script>是血量变化的奖励。 这些奖励是基于这样的假设设计出来的，一个玩家赢的越多，剩下的血量越多，玩家的表现就越好。<script type="math/tex">r_{t}^{WIN}</script>在每轮的最后一步给出，胜利为10，失败为-10。 <script type="math/tex">r_{t}^{HP}</script>可能发生在每一个时间步骤时，代理人对对手造成损害，反之亦然。 由于HP被归一化为[0,10]，<script type="math/tex">r_{t}^{WIN}</script>和 <script type="math/tex">r_{t}^{HP}</script>具有相同的规模。</p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/reward.png" alt></p>
 <p>​    这些是基本的奖励，指导战斗风格的额外奖励将在下一节中描述。 γ的值设为0.995，接近1.0，因为BAB中的所有事件都在1800个时间步（=3分钟)后被迫终止）。</p>
 <h2 id="多风格Self-Play-Curriculum"><a href="#多风格Self-Play-Curriculum" class="headerlink" title="多风格Self-Play Curriculum"></a>多风格Self-Play Curriculum</h2><p>​    现有的自我游戏方法 通常使用对手池进行训练。 在训练期间，网络的参数定期存储，以创建一个过去的自我池。 然后从这个池中取样对手。</p>
 <p>​    虽然RL的自我游戏方法提供了一种学习纳什均衡策略的方法，但策略空间的高覆盖率对于有效地找到策略空间是必不可少的。 普通的自我游戏本身并不能保证足够的覆盖范围对于有大问题空间的游戏。 为了解决这个问题，Alphastar通过模仿不同的人类策略，引入三种不同匹配方案的代理，使对手池多样化。 扑克AI，Pluribus在基本蓝图策略之上手工调整了三种不同的策略。 这三种策略分别偏向于加注、跟进和弃牌。</p>
 <p>​    同时，我们设计了一种新颖的自我游戏课程。 我们通过引入一系列不同的战斗风格来加强代理策略的多样性，并使不同风格的代理相互竞争。</p>
-<h3 id="通过奖励塑造指导战斗风格"><a href="#通过奖励塑造指导战斗风格" class="headerlink" title="通过奖励塑造指导战斗风格"></a>通过奖励塑造指导战斗风格</h3><p>​    最值得注意的战斗风格之一是侵略性的程度。 我们使用奖励的三个维度来控制攻击性的程度。 第一个维度是“时间惩罚”。 侵略性的代理每一步都会受到更大的惩罚，这促使它在更短的时间内完成比赛。 第二个维度是代理的HP对对手的HP的相对重要性。 侵略性的代理会试图减少对手的HP，而不是保持自己的HP，而防守w玩家往往采取相反的方式。 最后一个维度是“距离惩罚”。 防守型玩家倾向于确保与对手的一定距离，以适当地应对攻击，而攻击性玩家则倾向于接近对手并无情地攻击。 为了实现这些特性，与自身与其对手之间的距离相比，攻击性代理受到了更大的惩罚。每个样式使用的具体奖励权重如表2所示。 请注意，这三个维度中的每一个都可以取连续值。 这意味着有可能创建一系列不同的战斗风格。然而，为了有效地证明这种方法的可行性，我们限制了这种方法战斗风格的数量为三种。 通过使用任何类型的附加奖励信号以及$$r_{t}^{WIN}$$和$$r_{t}^{HP}$$，该方法可以应用于一般的其他战斗游戏，以创建具有不同战斗风格的代理。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/reward_weight.png"></p>
+<h3 id="通过奖励塑造指导战斗风格"><a href="#通过奖励塑造指导战斗风格" class="headerlink" title="通过奖励塑造指导战斗风格"></a>通过奖励塑造指导战斗风格</h3><p>​    最值得注意的战斗风格之一是侵略性的程度。 我们使用奖励的三个维度来控制攻击性的程度。 第一个维度是“时间惩罚”。 侵略性的代理每一步都会受到更大的惩罚，这促使它在更短的时间内完成比赛。 第二个维度是代理的HP对对手的HP的相对重要性。 侵略性的代理会试图减少对手的HP，而不是保持自己的HP，而防守w玩家往往采取相反的方式。 最后一个维度是“距离惩罚”。 防守型玩家倾向于确保与对手的一定距离，以适当地应对攻击，而攻击性玩家则倾向于接近对手并无情地攻击。 为了实现这些特性，与自身与其对手之间的距离相比，攻击性代理受到了更大的惩罚。每个样式使用的具体奖励权重如表2所示。 请注意，这三个维度中的每一个都可以取连续值。 这意味着有可能创建一系列不同的战斗风格。然而，为了有效地证明这种方法的可行性，我们限制了这种方法战斗风格的数量为三种。 通过使用任何类型的附加奖励信号以及<script type="math/tex">r_{t}^{WIN}</script>和<script type="math/tex">r_{t}^{HP}</script>，该方法可以应用于一般的其他战斗游戏，以创建具有不同战斗风格的代理。</p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/reward_weight.png" alt></p>
 <h3 id="Our-Self-Play-Curriculum"><a href="#Our-Self-Play-Curriculum" class="headerlink" title="Our Self-Play Curriculum"></a>Our Self-Play Curriculum</h3><p>​    图3显示了三种不同类型代理的自我游戏课程的概述。 每种类型的代理都有自己的学习过程，所有三种代理类型都是以并发的方式进行训练。</p>
 <p>​    每个学习过程由一个学习者和多个模拟器组成。 学习者和模拟器异步工作。 在模拟器中，代理不断地与来自共享池的随机抽样对手进行对弈。 每种样式的最近k个模型被均匀地选择，总概率质量为p，而其他模型被均匀地选择概率1-p。随着训练的进行，p从0.8到0.1线性退火。 较高的p有助于快速适应最新的对手，而较低的p通过减轻灾难性遗忘来稳定学习过程。 每个模拟器在每次匹配结束时向学习者发送匹配日志，并使用从学习者收到的最新参数更新其代理。 同样的程序继续通过后续游戏使用。</p>
 <p>​    学习者使用从多个模拟器收集的日志以off-policy的方式训练其代理，并根据请求将最新的网络参数发送给模拟器。 此外，学习者将其网络参数发送到共享池的每一个C步(例如C=10,000)更新。 因此，池子具有不同的策略，这些策略来自不同风格的不同学习过程。 这些模型参数作为每个学习过程的对手提供。通过共享一个池，每个学习代理在训练中遇到每种风格的对手，并学习如何处理他们。 因此，通过我们的自我游戏课程培训的代理最终可以学习如何面对不同战斗风格的对手，同时保持自己的战斗风格。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/selfplay.png"></p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/selfplay.png" alt></p>
 <h2 id="数据跳过技术"><a href="#数据跳过技术" class="headerlink" title="数据跳过技术"></a>数据跳过技术</h2><p>​    在本节中，我们详细介绍了数据跳过技术，它是指在训练和评估过程中丢弃某些数据的过程。</p>
 <h3 id="丢弃没合法动作的数据"><a href="#丢弃没合法动作的数据" class="headerlink" title="丢弃没合法动作的数据"></a>丢弃没合法动作的数据</h3><p>​    “no-op”表示不做任何行动。</p>
 <p>​    在战斗游戏中，使用技能通常消耗资源，如SP和冷却时间。 因此，如果玩家过度使用某一技能，它将无法在实际需要的时候使用。 因此，玩家应该战略性地使用和保留他们的技能，以确保他们在需要时的可用性。 为了考虑到这一点，我们将“no-op”操作连接到策略网络的输出，允许代理选择“no-op”，并在必要时在一定时期内不做任何事情。 这意味着我们的行动空间有44种技能，加上额外的“no-op”行动。 这一点很重要，因为BAB的人类游戏日志表明，“no-op”动作占人类玩家技能使用的最大比例。</p>
@@ -1051,21 +1089,21 @@
 <p>​    我们从训练和评估阶段丢弃了被动的“no-op”数据，因为被动的“no-op”不是由代理故意使用的。 此外，该方法使LSTM能够反映较长时间层的表示，因为数据没有提供给网络。 我们在实验部分表明，跳过被动“no-op”大大提高了学习效率。 请注意，这种方法通常适用于其他领域，其中可用的技能不断变化，“no-op”操作是一个有效的选择。</p>
 <h3 id="保持移动行动"><a href="#保持移动行动" class="headerlink" title="保持移动行动"></a>保持移动行动</h3><p>​    虽然单个技能决策可以对后续状态产生实质性影响，但单个移动决策的效果相对有限。 原因是一个角色在一个时间步长(0.1s)中移动的距离很短，考虑到它的速度。 为了使任何移动决策产生有意义的效果，代理应该做出相同连续移动的决定。 这允许代理从字面上“move”，并导致后续状态和奖励的变化。 因此，很难从初始策略中训练具有随机移动决策的移动策略。 由于一项随机政策连续作出相同决定的机会很低，探索是极其有限的。 因此我们建议维持固定时间步骤的移动决定。</p>
 <p>​    图4显示了该方法如何与示例一起工作。 如果代理选择移动操作，则会跳过以下n-1时间步骤的移动决策。 这意味着代理总共对n个步骤保持相同的移动决策。 请注意，我们的方法与帧跳过技术有不同的目的(在Atari领域。 为了提高模拟器的效率，引入了跳帧技术。 然而，我们不能仅仅跳过框架，因为技能决策仍然必须进行。 虽然我们不能享受模拟器的效率优势，但保持移动仍然有利于训练，这仅仅是因为保持移动决策会增加单个移动决策的影响，正如我们将通过实验证实的那样。 从这个意义上说，保持移动可以被看作是“放大优势”。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/move_decisions.png"></p>
-<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><p>​    该网络由基于LSTM的体系结构组成，该体系结构有四个头部，具有共享状态表示层。 每个头由$$\pi_{skill}$$，$$Q_{skill}$$，$$\pi_{move,target}$$和$$Q_{move,target}$$组成。 $$Q_{skill}$$和$$Q_{move,target}$$分别用于$$\pi_{skill}$$和$$\pi_{move,target}$$的梯度更新。 在网络输出进入Softmax层之前，一个布尔向量表示技能是否可用，使不可用技能的输出变为负无穷大。</p>
-<h4 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h4><p>​    我们使用了actor-critic 离线策略学习算法。 它使我们能够通过截断重要性抽样处理模拟器和学习器之间的policy lag。此外，我们还可以利用随机策略的优点，它由于平稳的策略更新而更稳定地响应环境的变化，并且在诸如石头剪刀布这样的游戏领域中工作得很好，因为确定性策略很容易被找到漏洞。 对于这种特定的算法，无论是$$\pi_{skill}$$的还是$$\pi_{move,target}$$都是以以下梯度交替更新的：</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/update_gradient.png"></p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/move_decisions.png" alt></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><p>​    该网络由基于LSTM的体系结构组成，该体系结构有四个头部，具有共享状态表示层。 每个头由<script type="math/tex">\pi_{skill}</script>，<script type="math/tex">Q_{skill}</script>，<script type="math/tex">\pi_{move,target}</script>和<script type="math/tex">Q_{move,target}</script>组成。 <script type="math/tex">Q_{skill}</script>和<script type="math/tex">Q_{move,target}</script>分别用于<script type="math/tex">\pi_{skill}</script>和<script type="math/tex">\pi_{move,target}</script>的梯度更新。 在网络输出进入Softmax层之前，一个布尔向量表示技能是否可用，使不可用技能的输出变为负无穷大。</p>
+<h4 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h4><p>​    我们使用了actor-critic 离线策略学习算法。 它使我们能够通过截断重要性抽样处理模拟器和学习器之间的policy lag。此外，我们还可以利用随机策略的优点，它由于平稳的策略更新而更稳定地响应环境的变化，并且在诸如石头剪刀布这样的游戏领域中工作得很好，因为确定性策略很容易被找到漏洞。 对于这种特定的算法，无论是<script type="math/tex">\pi_{skill}</script>的还是<script type="math/tex">\pi_{move,target}</script>都是以以下梯度交替更新的：</p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/update_gradient.png" alt></p>
 <h4 id="学习系统"><a href="#学习系统" class="headerlink" title="学习系统"></a>学习系统</h4><p>​    总共有三个学习过程，每个学习过程由一个学习者和100个模拟器组成。 每个学习过程在很大程度上类似于Horgan等人提出的学习过程。(Horgan <em>et al</em>. (2018). ）。 最后的代理训练两周，相当于四年的游戏。</p>
 <h3 id="三种风格的Self-Play-Curriculum的效果"><a href="#三种风格的Self-Play-Curriculum的效果" class="headerlink" title="三种风格的Self-Play Curriculum的效果"></a>三种风格的Self-Play Curriculum的效果</h3><p>​    为了证明所提出的自我游戏课程的效果，我们训练了有和没有self-play curriculum的代理。 一个基线代理使用普通的self-play训练，没有任何风格相关的奖励（只包括win reward和HP reward），并使用了一个过去的自我池。 同时利用我们提出的共享池，对三个不同风格的代理进行了Self-Play Curriculum的训练。 我们的侵略性，平衡和防御的代理分别和基线代理打了1000场比赛，以衡量表现。 如表3所示，证明我们的self-play curriculum的代理的表现优于基线代理。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/table3.png"></p>
-<p>​    接下来，我们进行了一项消融研究（类似于控制变量法），以观察共享池如何帮助泛化。 我们想确认一个代理是否能够对付没有见过的风格的对手，当他在训练中只经历了有限范围的对手。 因此，我们创建了三种风格的代理，以完全相同的方式训练，除了他们有自己的独立对手池。 我们表示使用共享池作为$$\pi_{sh}^{agg}$$,$$\pi_{sh}^{bal}$$,$$\pi_{sh}^{def}$$的三种类型的代理，以及使用独立池作为$$\pi_{ind}^{agg}$$,$$\pi_{ind}^{bal}$$,$$\pi_{ind}^{def}$$的三种类型的代理。 所有6个代理都接受了5M步的训练(相当于6天）。</p>
-<p>​    我们的假设是使用共享池训练的代理在面对从未遇到的对手时更健壮。 因此，我们比较了$$\pi_{sh}^{agg}$$和{$$\pi_{ind}^{bal}$$,$$\pi_{ind}^{def}$$}的胜率与$$\pi_{ind}^{agg}$$和{$$\pi_{ind}^{bal}$$,$$\pi_{ind}^{def}$$}的胜率。 这个实验设置是基于三个关键的想法。 首先，$$\pi_{sh}^{agg}$$和$$\pi_{ind}^{agg}$$有相同的训练设置，除了共享池。 第二，$$\pi_{sh}^{agg}$$和$$\pi_{ind}^{agg}$$是针对相同的对手进行评价的。 最后，虽然$$\pi_{sh}^{agg}$$从其池中遇到了其他样式，但它没有遇到{$$\pi_{ind}^{bal}$$,$$\pi_{ind}^{def}$$}，因为它们是使用独立的对手池进行训练的。 如果我们的假设是正确的，$$\pi_{sh}^{agg}$$应该有更高的获胜率。 值得注意的是，$$\pi_{ind}^{bal}$$和$$\pi_{ind}^{def}$$不是一个单一的模型，而是10个模型，每个模型从它们的池中以相同的固定间隔采样。 然后，我们对其余两种样式进行了相同的实验；结果如表4所示。 如表所示，使用共享池培训的代理的性能优于同行。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/tabel4.png"></p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/table3.png" alt></p>
+<p>​    接下来，我们进行了一项消融研究（类似于控制变量法），以观察共享池如何帮助泛化。 我们想确认一个代理是否能够对付没有见过的风格的对手，当他在训练中只经历了有限范围的对手。 因此，我们创建了三种风格的代理，以完全相同的方式训练，除了他们有自己的独立对手池。 我们表示使用共享池作为<script type="math/tex">\pi_{sh}^{agg}</script>,<script type="math/tex">\pi_{sh}^{bal}</script>,<script type="math/tex">\pi_{sh}^{def}</script>的三种类型的代理，以及使用独立池作为<script type="math/tex">\pi_{ind}^{agg}</script>,<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>的三种类型的代理。 所有6个代理都接受了5M步的训练(相当于6天）。</p>
+<p>​    我们的假设是使用共享池训练的代理在面对从未遇到的对手时更健壮。 因此，我们比较了<script type="math/tex">\pi_{sh}^{agg}</script>和{<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>}的胜率与<script type="math/tex">\pi_{ind}^{agg}</script>和{<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>}的胜率。 这个实验设置是基于三个关键的想法。 首先，<script type="math/tex">\pi_{sh}^{agg}</script>和<script type="math/tex">\pi_{ind}^{agg}</script>有相同的训练设置，除了共享池。 第二，<script type="math/tex">\pi_{sh}^{agg}</script>和<script type="math/tex">\pi_{ind}^{agg}</script>是针对相同的对手进行评价的。 最后，虽然<script type="math/tex">\pi_{sh}^{agg}</script>从其池中遇到了其他样式，但它没有遇到{<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>}，因为它们是使用独立的对手池进行训练的。 如果我们的假设是正确的，<script type="math/tex">\pi_{sh}^{agg}</script>应该有更高的获胜率。 值得注意的是，<script type="math/tex">\pi_{ind}^{bal}</script>和<script type="math/tex">\pi_{ind}^{def}</script>不是一个单一的模型，而是10个模型，每个模型从它们的池中以相同的固定间隔采样。 然后，我们对其余两种样式进行了相同的实验；结果如表4所示。 如表所示，使用共享池培训的代理的性能优于同行。</p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/tabel4.png" alt></p>
 <p>​    根据表4中的数据，在侵略性代理的情况下，使用共享池的效果是很小的。 它表明，无论是否提供不同的对手，进行训练的策略空间是相似的。 这与战斗游戏的性质有关，如果另一方接近并发起一场战斗，其中一方应该反击。 因此，在一个攻击性的代理人的情况下，攻击始终如一，有一点不同的经验，无论对手的战斗风格的多样性。</p>
 <h3 id="丢弃没合法动作的数据的效果"><a href="#丢弃没合法动作的数据的效果" class="headerlink" title="丢弃没合法动作的数据的效果"></a>丢弃没合法动作的数据的效果</h3><p>​    正如上一节所讨论的那样，“no-op”决定可以是主动的，也可以是被动的。 我们进行了一个实验，以研究从学习中丢弃这种被动的“no-op”数据的效果。 实验的训练伙伴是内置的BAB AI，其水平与前20%的玩家相当。 我们测量了代理学会击败它的速度，结果如图5(a)所示)。 如果从学习数据中丢弃“no-op”，则在70k步后，获胜率达到80%，而当包含“no-op”数据时，则需要170k步。 当跳过被动的“no-op”数据时，达到90%赢率所需的时间步长减少到一半。本实验证实，通过从学习数据中丢弃被动“no-op”，提高了训练性能。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/no_op_test.png"></p>
-<h3 id="保持移动的效果"><a href="#保持移动的效果" class="headerlink" title="保持移动的效果"></a>保持移动的效果</h3><p>​    为了研究保持移动的效果，我们开发了两个学习过程，这两个过程都涉及到self-play学习。 一个进程在每个时间步骤中做出移动决策，而另一个进程做出移动决策，并连续发送相同的决策9次。 我们测量了移动策略的熵来观察效果。 给定状态$$s_{t}$$的移动策略的熵如下。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/move_policy_entropy.png"></p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/no_op_test.png" alt></p>
+<h3 id="保持移动的效果"><a href="#保持移动的效果" class="headerlink" title="保持移动的效果"></a>保持移动的效果</h3><p>​    为了研究保持移动的效果，我们开发了两个学习过程，这两个过程都涉及到self-play学习。 一个进程在每个时间步骤中做出移动决策，而另一个进程做出移动决策，并连续发送相同的决策9次。 我们测量了移动策略的熵来观察效果。 给定状态<script type="math/tex">s_{t}</script>的移动策略的熵如下。</p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/move_policy_entropy.png" alt></p>
 <p>​    一般来说，随着学习的进展，熵逐渐减少。 图5(B)显示，如果应用该技术，熵下降得更快。 在所学的运动质量方面也有明显的差异。 在应用该技术之前，该代理没有从随机运动中得到任何改进，但它学会了使用data skip来接近和后退。</p>
 <p>​    决策被重复的时间越长，代理的反应就越不那么直接，但代理的行动更一致。 在这种情况下，我们测试了1，3，5，10保持时间。 10（相当于1秒）的性能最好。</p>
 <h2 id="玩家评估"><a href="#玩家评估" class="headerlink" title="玩家评估"></a>玩家评估</h2><p>​    本节将讨论预赛和盲赛的结果，以及确保人类选手公平的条件。</p>
@@ -1075,7 +1113,7 @@
 <p>Shingyeom Kim (GC Busan, Winner of 2015 and 2016 B&amp;S  World Championship)，在盲赛前测试我们的代理。 请注意，每个样式所玩的游戏总数是不同的，因为测试人员可以为每个样式玩尽可能多的游戏。 经过预赛，我们参加了2018年世界锦标赛的盲赛。 我们的代理与三名职业玩家进行了比赛： Nicholas Parkinson  </p>
 <p>(EU), Shen Haoran (CHN), and Sungjin Choi (KOR).。 游戏精彩片段的录像可以在<a target="_blank" rel="noopener" href="https://goo.gl/7VUTzV">录像链接</a>找到。</p>
 <p>​    预测和盲赛的结果见表5。 从表格中可以看出，攻击性的代理主导了游戏，而其他两种类型的代理则有相当激烈的游戏。 根据预赛后的采访，我们发现这部分是因为人类玩家之间经常需要一些休息，但攻击代理不允许人类在战斗之间休息；相反，攻击是持续的。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/final_test.png"></p>
+<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/final_test.png" alt></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    利用深度强化学习，我们创建了AI代理，在3D实时战斗游戏中与专业玩家战斗。 为了实现这一点，我们提出了一个用奖励塑造来指导战斗风格的方法。 采用三种代理风格，引入了一种新的自我游戏课程，以提高泛化性能。 我们还提出了数据跳过技术，以提高数据效率，并使有效的探索。 因此，我们的代理能够与世界上最好的BAB玩家竞争。 提出的训练方法一般适用于其他格斗游戏。</p>
 <h2 id="阅读总结"><a href="#阅读总结" class="headerlink" title="阅读总结"></a>阅读总结</h2><ul>
 <li>本文提出了一种实用的强化学习方法，包括一种新的self-play curriculum和data  skipping技术。通过curriculum，通过奖励塑造创造了三种不同风格的代理，并相互训练。</li>
@@ -1164,7 +1202,7 @@
 <li>git将ssh密钥拷贝到github setting中</li>
 <li>将myBlog中_config.yml更改为如下方式,<strong>注意QilongPan应该改为自己的github账号用户名</strong></li>
 </ul>
-<p><img src="/2021/01/07/github-pages/img1.png"></p>
+<p><img src="/2021/01/07/github-pages/img1.png" alt></p>
 <ul>
 <li>部署到github</li>
 </ul>
