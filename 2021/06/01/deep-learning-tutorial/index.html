@@ -27,29 +27,29 @@
 <meta property="og:site_name" content="潘其龙">
 <meta property="og:description" content="深度学习笔记转载至深度学习系列教程 感知器(神经元)神经元和感知器本质上是一样的，只不过我们说感知器的时候，它的激活函数是阶跃函数；而当我们说神经元时，激活函数往往选择为sigmoid函数或者tanh函数等。 阶跃函数：$$f(z)&#x3D;\left{\begin{matrix}1 &amp;z&gt;0 \0 &amp; otherwise\end{matrix}\right.$$神经网络示意图：">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/神经网络示意图.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/感知器.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/梯度下降示例图.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/sigmoid神经元.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/sigmoid.jpg">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/神经网络图2.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/神经网络过程图.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/深层神经网络.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/反向传播.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/神经网络过程图.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/卷积神经网络案例图.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/卷积神经网络案例.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/卷积过程.png">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/sigmoid.jpg">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/tanh.jpg">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/relu.jpg">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/PRelu.jpg">
-<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/elu.jpg">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E6%84%9F%E7%9F%A5%E5%99%A8.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%A4%BA%E4%BE%8B%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/sigmoid%E7%A5%9E%E7%BB%8F%E5%85%83.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/sigmoid.jpg">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9B%BE2.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%BF%87%E7%A8%8B%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%BF%87%E7%A8%8B%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A1%88%E4%BE%8B%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A1%88%E4%BE%8B.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E5%8D%B7%E7%A7%AF%E8%BF%87%E7%A8%8B.png">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/sigmoid.jpg">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/tanh.jpg">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/relu.jpg">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/PRelu.jpg">
+<meta property="og:image" content="http://example.com/2021/06/01/deep-learning-tutorial/elu.jpg">
 <meta property="article:published_time" content="2021-06-01T15:02:57.000Z">
-<meta property="article:modified_time" content="2021-06-01T15:29:06.746Z">
+<meta property="article:modified_time" content="2021-06-02T15:58:10.531Z">
 <meta property="article:author" content="QilongPan">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/神经网络示意图.png">
+<meta name="twitter:image" content="http://example.com/2021/06/01/deep-learning-tutorial/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
 
 <link rel="canonical" href="http://example.com/2021/06/01/deep-learning-tutorial/">
 
@@ -191,10 +191,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-06-01 23:02:57 / Modified: 23:29:06" itemprop="dateCreated datePublished" datetime="2021-06-01T23:02:57+08:00">2021-06-01</time>
+              <time title="Created: 2021-06-01 23:02:57" itemprop="dateCreated datePublished" datetime="2021-06-01T23:02:57+08:00">2021-06-01</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-02 23:58:10" itemprop="dateModified" datetime="2021-06-02T23:58:10+08:00">2021-06-02</time>
+              </span>
 
           
 
@@ -210,12 +216,12 @@
         <h1 id="深度学习笔记"><a href="#深度学习笔记" class="headerlink" title="深度学习笔记"></a>深度学习笔记</h1><p><a target="_blank" rel="noopener" href="https://www.zybuluo.com/hanbingtao/note/433855">转载至深度学习系列教程</a></p>
 <h2 id="感知器-神经元"><a href="#感知器-神经元" class="headerlink" title="感知器(神经元)"></a>感知器(神经元)</h2><p>神经元和感知器本质上是一样的，只不过我们说感知器的时候，它的激活函数是阶跃函数；而当我们说神经元时，激活函数往往选择为sigmoid函数或者tanh函数等。</p>
 <p>阶跃函数：<br>$$<br>f(z)=\left{\begin{matrix}<br>1 &amp;z&gt;0 \<br>0 &amp; otherwise<br>\end{matrix}\right.<br>$$<br>神经网络示意图：</p>
-<p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/神经网络示意图.png"></p>
+<p><img src="/2021/06/01/deep-learning-tutorial/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%A4%BA%E6%84%8F%E5%9B%BE.png"></p>
 <p>上图中每个圆圈都是一个神经元，每条线表示神经元之间的连接。我们可以看到，上面的神经元被分成了多层，层与层之间的神经元有连接，而层内之间的神经元没有连接。最左边的层叫做<strong>输入层</strong>，这层负责接收输入数据；最右边的层叫<strong>输出层</strong>，我们可以从这层获取神经网络输出数据。输入层和输出层之间的层叫做<strong>隐藏层</strong>。</p>
 <p>隐藏层比较多（大于2）的神经网络叫做深度神经网络。而深度学习，就是使用深层架构（比如，深度神经网络）的机器学习方法。</p>
 <p>那么深层网络和浅层网络相比有什么优势呢？简单来说深层网络能够表达力更强。事实上，一个仅有一个隐藏层的神经网络就能拟合任何一个函数，但是它需要很多很多的神经元。而深层网络用少得多的神经元就能拟合同样的函数。也就是为了拟合一个函数，要么使用一个浅而宽的网络，要么使用一个深而窄的网络。而后者往往更节约资源。</p>
 <p>深层网络也有劣势，就是它不太容易训练。简单的说，你需要大量的数据，很多的技巧才能训练好一个深层网络。这是个手艺活。</p>
-<h3 id="感知器定义"><a href="#感知器定义" class="headerlink" title="感知器定义"></a>感知器定义</h3><p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/感知器.png"></p>
+<h3 id="感知器定义"><a href="#感知器定义" class="headerlink" title="感知器定义"></a>感知器定义</h3><p><img src="/2021/06/01/deep-learning-tutorial/%E6%84%9F%E7%9F%A5%E5%99%A8.png"></p>
 <p>感知器组成部分：</p>
 <ul>
 <li><strong>输入权值</strong> ：一个感知器可以接收多个输入{x<sub>1</sub>,x<sub>2</sub>,…,x<sub>n</sub>|x<sub>i</sub>∈R}，每个输入上有一个<strong>权值</strong>w<sub>i</sub>∈R，此外还有一个<strong>偏置项</strong>b∈R，就是上图中的w<sub>0</sub>；</li>
@@ -225,18 +231,18 @@
 <p>$$<br>y=f(w*x+b)<br>$$</p>
 <h3 id="感知器训练"><a href="#感知器训练" class="headerlink" title="感知器训练"></a>感知器训练</h3><p>假设损失函数为均方差函数(MSE Mean Square Error)<br>$$<br>J(w,b)=\frac{1}{2m}\sum_{i=1}^{m}(a_{i}-y_{i})^{2}\<br>J(w,b)=\frac{1}{2m}\sum_{i=1}^{m}(w_{0}x_{0}+w_{1}x_{1}+…+w_{n}x_{n}-y_{i})^{2}<br>$$<br>a<sub>i</sub>为预测值，y<sub>i</sub>为实际值。设m=1(训练样本为1条)时<br>$$<br>\frac{\partial J(w,b)}{\partial w_{1}}=x_{1}(w_{0}x_{0}+w_{1}x_{1}+…+w_{n}x_{n}-y_{i})<br>$$<br>其余参数导数求法相同。</p>
 <p>使用梯度下降更新：<br>$$<br>w_{i}=w_{i}-\alpha \frac{\partial J(w_{i},b)}{\partial w_{i}}<br>$$<br>其中α为学习率。如果损失函数内为y<sub>i</sub>-a<sub>i</sub> ，则上面的梯度下降更新负号应为正号。</p>
-<h2 id="梯度下降优化算法"><a href="#梯度下降优化算法" class="headerlink" title="梯度下降优化算法"></a>梯度下降优化算法</h2><p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/梯度下降示例图.png"></p>
+<h2 id="梯度下降优化算法"><a href="#梯度下降优化算法" class="headerlink" title="梯度下降优化算法"></a>梯度下降优化算法</h2><p><img src="/2021/06/01/deep-learning-tutorial/%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E7%A4%BA%E4%BE%8B%E5%9B%BE.png"></p>
 <p>函数y=f(x)的极值点就是它的导数f<sup>‘</sup>(x)=0的那个点。因此我们可以通过解方程f<sup>‘</sup>(x)=0,求得函数的极值点。</p>
 <p>对于计算机来说，随便选择一个点开始，比如上图的点x<sub>0</sub>。接下来，每次迭代修改的为x<sub>1</sub>,<sub>2</sub>,…，经过数次迭代后最终达到函数最小值点。</p>
 <p>你可能要问了，为啥每次修改的值，都能往函数最小值那个方向前进呢？这里的奥秘在于，我们每次都是向函数y=f(x)的<strong>梯度</strong>的<strong>相反方向</strong>来修改。什么是<strong>梯度</strong>呢？翻开大学高数课的课本，我们会发现<strong>梯度</strong>是一个向量，它指向<strong>函数值上升最快</strong>的方向。显然，梯度的反方向当然就是函数值下降最快的方向了。我们每次沿着梯度相反方向去修改的值，当然就能走到函数的最小值附近。之所以是最小值附近而不是最小值那个点，是因为我们每次移动的步长不会那么恰到好处，有可能最后一次迭代走远了越过了最小值那个点。步长的选择是门手艺，如果选择小了，那么就会迭代很多轮才能走到最小值附近；如果选择大了，那可能就会越过最小值很远，收敛不到一个好的点上。</p>
 <p>梯度下降算法的公式<br>$$<br>X_{new}=X_{old}-\alpha \bigtriangledown f(x)<br>$$<br>α为学习率（步长）</p>
 <h2 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h2><h3 id="神经元"><a href="#神经元" class="headerlink" title="神经元"></a>神经元</h3><p>神经元和感知器本质上是一样的，只不过我们说感知器的时候，它的激活函数是<strong>阶跃函数</strong>；而当我们说神经元时，激活函数往往选择为sigmoid函数或tanh函数。如下图所示：</p>
-<p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/sigmoid神经元.png"></p>
+<p><img src="/2021/06/01/deep-learning-tutorial/sigmoid%E7%A5%9E%E7%BB%8F%E5%85%83.png"></p>
 <p>计算一个神经元的输出的方法和计算一个感知器的输出是一样的。假设神经元的输入是向量$$\overrightarrow{x}$$</p>
 <p> ，权重向量是$$\overrightarrow{w}$$(偏置项是w<sub>0</sub>)，激活函数是sigmoid函数，则其输出y：<br>$$<br>y=sigmoid(\vec{w}^{T}*\vec{x})\tag1<br>$$<br>sigmoid函数定义如下：<br>$$<br>sigmoid(x)=\frac{1}{1+e^{-x}}<br>$$<br>将其带入前面的式子，得到<br>$$<br>y=\frac{1}{1+e^{-\vec{w}^{T}\cdot \vec{x}}}<br>$$<br>sigmoid函数是非线性函数，值域是(0,1)。函数图像如下图所示</p>
-<p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/sigmoid.jpg"></p>
+<p><img src="/2021/06/01/deep-learning-tutorial/sigmoid.jpg"></p>
 <p>sigmoid函数的导数是：<br>$$<br>令y=sigmoid(x)\<br>y=\frac{1}{1+e^{-x}} \<br>u(x)=1+e^{-x} \<br>g(x)=e^{-x}\<br>k(x)=-x\<br>\frac{\mathrm{d} y}{\mathrm{d} x} = \frac{\mathrm{d} y}{\mathrm{d} u}\cdot \frac{\mathrm{d} u}{\mathrm{d} g}\cdot \frac{\mathrm{d} g}{\mathrm{d} k}\cdot \frac{\mathrm{d} k}{\mathrm{d} x}=-1\cdot u^{-2}\cdot 1\cdot e^{-x}\cdot -1=u^{-2}\cdot e^{-x}=\frac{e^{-x}}{(1+e^{-x})^{2}}=\frac{1}{1+e^{-x}}-\frac{1}{(1+e^{-x})^{2}}=y(1-y)\<br>则y^{‘}=y(1-y)<br>$$<br>可以看到，sigmoid函数的导数非常有趣，它可以用sigmoid函数自身来表示。这样，一旦计算出sigmoid函数的值，计算它的导数的值就非常方便。</p>
-<h3 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h3><p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/神经网络图2.png"></p>
+<h3 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h3><p><img src="/2021/06/01/deep-learning-tutorial/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9B%BE2.png"></p>
 <p>神经网络其实就是按照<strong>一定规则</strong>连接起来的多个<strong>神经元</strong>。上图展示了一个**全连接(full connected, FC)**神经网络，通过观察上面的图，我们可以发现它的规则包括：</p>
 <ul>
 <li>神经元按照层来布局。最左边的层叫做<strong>输入层</strong>，负责接收输入数据；最右边的层叫<strong>输出层</strong>，我们可以从这层获取神经网络输出数据。输入层和输出层之间的层叫做<strong>隐藏层</strong>，因为它们对于外部来说是不可见的。</li>
@@ -247,7 +253,7 @@
 <p>上面这些规则定义了全连接神经网络的结构。事实上还存在很多其它结构的神经网络，比如卷积神经网络(CNN)、循环神经网络(RNN)，他们都具有不同的连接规则。</p>
 <h3 id="计算神经网络输出"><a href="#计算神经网络输出" class="headerlink" title="计算神经网络输出"></a>计算神经网络输出</h3><p>神经网络实际上就是一个输入向量$$\vec{x}$$到输出向量$$\vec{y}$$的函数，即：<br>$$<br>\vec{y}=f_{network}(\vec{x})<br>$$<br>根据输入计算神经网络的输出，需要首先将输入向量$$\vec{x}$$的每个元素$$x_{i}$$的值赋给神经网络的输入层的对应神经元，然后根据<strong>式1</strong>依次向前计算每一层的每个神经元的值，直到最后一层输出层的所有神经元的值计算完毕。最后，将输出层每个神经元的值串在一起就得到了输出向量$$\vec{y}$$。</p>
 <p>接下来举一个例子来说明这个过程，我们先给神经网络的每个单元写上编号。</p>
-<p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/神经网络过程图.png"></p>
+<p><img src="/2021/06/01/deep-learning-tutorial/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%BF%87%E7%A8%8B%E5%9B%BE.png"></p>
 <p>如上图，输入层有三个节点，我们将其依次编号为1、2、3；隐藏层的4个节点，编号依次为4、5、6、7；最后输出层的两个节点编号为8、9。因为我们这个神经网络是<strong>全连接</strong>网络，所以可以看到每个节点都和<strong>上一层的所有节点</strong>有连接。比如，我们可以看到隐藏层的节点4，它和输入层的三个节点1、2、3之间都有连接，其连接上的权重分别为$$w_{41},w_{42},w_{43}$$。那么，我们怎样计算节点4的输出值$$a_{4}$$呢？</p>
 <p>为了计算节点4的输出值，我们必须先得到其所有上游节点（也就是节点1、2、3）的输出值。节点1、2、3是<strong>输入层</strong>的节点，所以，他们的输出值就是输入向量本身。按照上图画出的对应关系，可以看到节点1、2、3的输出值分别是$$x_{1},x_{2},x_{3}$$。我们要求<strong>输入向量的维度和输入层神经元个数相同</strong>，而输入向量的某个元素对应到哪个输入节点是可以自由决定的，你偏非要把赋值给节点2也是完全没有问题的，但这样除了把自己弄晕之外，并没有什么价值。</p>
 <p>一旦我们有了节点1、2、3的输出值，我们就可以根据<strong>式1</strong>计算节点4的输出值$$a_{4}$$：<br>$$<br>a_{4}=sigmoid(w_{41}x_{1}+w_{42}x_{2}+w_{43}x_{3}+w_{4b})<br>$$<br>上式的$$w_{4b}$$是节点4的<strong>偏置项</strong>，图中没有画出来。而分别为节点1、2、3到节点4连接的权重，在给权重$$w_{ji}$$编号时，我们把目标节点$$j$$的编号放在前面，把源节点$$i$$的编号放在后面。</p>
@@ -255,18 +261,18 @@
 <h3 id="神经网络的矩阵表示"><a href="#神经网络的矩阵表示" class="headerlink" title="神经网络的矩阵表示"></a>神经网络的矩阵表示</h3><p>神经网络的计算如果用矩阵来表示会很方便（当然逼格也更高），我们先来看看隐藏层的矩阵表示。</p>
 <p>首先我们把隐藏层4个节点的计算依次排列出来：<br>$$<br>a_{4}=sigmoid(w_{41}x_{1}+w_{42}x_{2}+w_{43}x_{3}+w_{4b})\<br>a_{5}=sigmoid(w_{51}x_{1}+w_{52}x_{2}+w_{53}x_{3}+w_{5b})\<br>a_{6}=sigmoid(w_{61}x_{1}+w_{62}x_{2}+w_{63}x_{3}+w_{6b})\<br>a_{7}=sigmoid(w_{71}x_{1}+w_{72}x_{2}+w_{73}x_{3}+w_{7b})<br>$$<br>接着，定义网络的输入向量$$\vec{x}$$和隐藏层每个节点的权重向量$$\vec{w_{j}}$$。令<br>$$<br>\vec{x}=\begin{bmatrix}<br>x_{1}\<br>x_{2}\<br>x_{3}<br>\end{bmatrix}\<br>\vec{w_{4}}=\begin{bmatrix}<br>w_{41}, &amp;w_{42},  &amp; w_{43}, &amp; w_{4b}<br>\end{bmatrix}\<br>\vec{w_{5}}=\begin{bmatrix}<br>w_{51}, &amp;w_{52},  &amp; w_{53}, &amp; w_{5b}<br>\end{bmatrix}\<br>\vec{w_{6}}=\begin{bmatrix}<br>w_{61}, &amp;w_{62},  &amp; w_{63}, &amp; w_{6b}<br>\end{bmatrix}\<br>\vec{w_{7}}=\begin{bmatrix}<br>w_{71}, &amp;w_{72},  &amp; w_{73}, &amp; w_{7b}<br>\end{bmatrix}\<br>f=sigmoid<br>$$<br>代入到前面的一组式子，得到：<br>$$<br>a_{4}=f(\vec{w_{4}}\cdot \vec{x})\<br>a_{5}=f(\vec{w_{5}}\cdot \vec{x})\<br>a_{6}=f(\vec{w_{6}}\cdot \vec{x})\<br>a_{7}=f(\vec{w_{7}}\cdot \vec{x})\<br>$$<br>现在，我们把上述计算$$a_{4},a_{5},a_{6},a_{7}$$的四个式子写到一个矩阵里面，每个式子作为矩阵的一行，就可以利用矩阵来表示它们的计算了。令<br>$$<br>\vec{a}=\begin{bmatrix}<br>a_{4}\<br>a_{5}\<br>a_{6}\<br>a_{7}<br>\end{bmatrix}\<br>W=\begin{bmatrix}<br>\vec{w_{4}}\<br>\vec{w_{5}}\<br>\vec{w_{6}}\<br>\vec{w_{7}}<br>\end{bmatrix}=\begin{bmatrix}<br>w_{41} &amp;w_{42}  &amp; w_{43} &amp;w_{4b} \<br>w_{51} &amp;w_{52}  &amp; w_{53} &amp;w_{5b} \<br>w_{61} &amp;w_{62}  &amp; w_{63} &amp;w_{6b} \<br>w_{71} &amp;w_{72}  &amp; w_{73} &amp;w_{7b}<br>\end{bmatrix}\<br>f(\begin{bmatrix}<br>x_{1}\<br>x_{2}\<br>x_{3}\<br>.\<br>.\<br>.<br>\end{bmatrix})=\begin{bmatrix}<br>f(x_{1})\<br>f(x_{2})\<br>f(x_{3})\<br>.\<br>.\<br>.<br>\end{bmatrix}<br>$$<br>带入前面的一组式子，得到<br>$$<br>\vec{a}=f(W\cdot\vec{x}) \tag2<br>$$<br>在<strong>式2</strong>中，是激活函数，在本例中是sigmoid函数；W是某一层的权重矩阵；$$\vec{x}$$是某层的输入向量；$$\vec{a}$$是某层的输出向量。<strong>式2</strong>说明神经网络的每一层的作用实际上就是先将输入向量<strong>左乘</strong>一个数组进行线性变换，得到一个新的向量，然后再对这个向量<strong>逐元素</strong>应用一个激活函数。</p>
 <p>每一层的算法都是一样的。比如，对于包含一个输入层，一个输出层和三个隐藏层的神经网络，我们假设其权重矩阵分别为$$W_{1},W_{2},W_{3},W_{4}$$，每个隐藏层的输出分别是$$\vec{a_{1}},\vec{a_{2}},\vec{a_{3}}$$，神经网络的输入为$$\vec{x}$$，神经网络的输出为$$\vec{y}$$，如下图所示：</p>
-<p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/深层神经网络.png"></p>
+<p><img src="/2021/06/01/deep-learning-tutorial/%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.png"></p>
 <p>则每一层的输出向量的计算可以表示为：<br>$$<br>\vec{a_{1}}=f(W_{1}\cdot \vec{x})\<br>\vec{a_{2}}=f(W_{2}\cdot \vec{a_{1}})\<br>\vec{a_{3}}=f(W_{3}\cdot \vec{a_{2}})\<br>\vec{y}=f(W_{4}\cdot \vec{a_{3}})<br>$$<br>这就是神经网络输出值的计算方法。</p>
 <h3 id="神经网络的训练"><a href="#神经网络的训练" class="headerlink" title="神经网络的训练"></a>神经网络的训练</h3><p>现在，我们需要知道一个神经网络的每个连接上的权值是如何得到的。我们可以说神经网络是一个<strong>模型</strong>，那么这些权值就是模型的<strong>参数</strong>，也就是模型要学习的东西。然而，一个神经网络的连接方式、网络的层数、每层的节点数这些参数，则不是学习出来的，而是人为事先设置的。对于这些人为设置的参数，我们称之为**超参数(Hyper-Parameters)**。</p>
 <p>接下来，我们将要介绍神经网络的训练算法：反向传播算法。</p>
 <h3 id="反向传播算法"><a href="#反向传播算法" class="headerlink" title="反向传播算法"></a>反向传播算法</h3><p>我们首先直观的介绍反向传播算法，最后再来介绍这个算法的推导。当然读者也可以完全跳过推导部分，因为即使不知道如何推导，也不影响你写出来一个神经网络的训练代码。事实上，现在神经网络成熟的开源实现多如牛毛，除了练手之外，你可能都没有机会需要去写一个神经网络。</p>
 <p>我们设神经元的激活函数f为函数sigmoid函数。</p>
 <p>我们假设每个训练样本为$$(\vec{x},\vec{t})$$，其中向量$$\vec{x}$$是训练样本的特征，而$$\vec{t}$$是样本的目标值。</p>
-<p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/反向传播.png"></p>
+<p><img src="/2021/06/01/deep-learning-tutorial/%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD.png"></p>
 <p>首先，我们根据上一节介绍的算法，用样本的特征$$\vec{x}$$，计算出神经网络中每个隐藏层节点的输出$$a_{i}$$，以及输出层每个节点的输出$$y_{i}$$。</p>
 <p>我们取网络所有输出层节点的误差平方和作为目标函数：<br>$$<br>E_{d}=\frac{1}{2}\sum_{i=1}^{m}(t_{i}-y_{i})^{2}<br>$$<br>其中$$m$$表示输出节点数目，$$E_{d}$$表示样本d的误差。</p>
 <p>然后，我们用<strong>随机梯度下降</strong>算法对目标函数进行优化：<br>$$<br>w_{ji}\leftarrow w_{ji}-\eta\frac{\partial E_{d}}{\partial w_{ji}}<br>$$<br>随机梯度下降算法也就是需要求出误差对于每个权重的偏导数（也就是梯度），怎么求呢？</p>
-<p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/神经网络过程图.png"></p>
+<p><img src="/2021/06/01/deep-learning-tutorial/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E8%BF%87%E7%A8%8B%E5%9B%BE.png"></p>
 <p>观察上图，我们发现权重$$w_{ji}$$仅能通过影响节点$$j$$的输入值影响网络的其它部分，设$$net_{j}$$是节点$$j$$的<strong>加权输入</strong>，即<br>$$<br>net_{j}=\vec{w_{j}}\cdot \vec{x_{j}}=\sum_{i=1}^{n}w_{ji}x_{ji}<br>$$<br>$$E_{d}$$是$$net_{j}$$的函数，而$$net_{j}$$是$$w_{ji}$$的函数。根据链式求导法则，可以得到：<br>$$<br>\frac{\partial E_{d}}{\partial w_{ji}}=\frac{\partial E_{d}}{\partial net_{j}}\frac{\partial net_{j}}{\partial w_{ji}}=\frac{\partial E_{d}}{\partial net_{j}}\frac{\partial \sum <em>{i}w</em>{ji}x_{ji}}{\partial w_{ji}}=\frac{\partial E_{d}}{\partial net_{j}}x_{ji}<br>$$<br>上式中，$$x_{ji}$$是节点$$i$$传递给节点$$j$$的输入值，也就是节点$$i$$的输出值。</p>
 <p>对于$$\frac{\partial E_{d}}{\partial net_{j}}$$的推导，需要区分<strong>输出层</strong>和<strong>隐藏层</strong>两种情况。</p>
 <h4 id="输出层权值训练"><a href="#输出层权值训练" class="headerlink" title="输出层权值训练"></a>输出层权值训练</h4><p>对于<strong>输出层</strong>来说，$$net_{j}$$仅能通过节点$$j$$的输出值$$y_{j}$$来影响网络其它部分，也就是说$$E_{d}$$是$$y_{j}$$的函数，而$$y_{j}$$是$$net_{j}$$的函数，其中$$y_{j}=sigmoid(net_{j})$$。所以我们可以再次使用链式求导法则：<br>$$<br>\frac{\partial E_{d}}{\partial net_{j}}=\frac{\partial E_{d}}{\partial y_{j}}\frac{\partial y_{j}}{\partial net_{j}}<br>$$<br>考虑上式第一项:<br>$$<br>\frac{\partial E_{d}}{\partial y_{j}}=\frac{\partial \frac{1}{2}\sum (t_{j}-y_{j})^{2}}{\partial y_{j}}=-(t_{j}-y_{j})<br>$$<br>考虑上式第二项：<br>$$<br>\frac{\partial y_{j}}{\partial net_{j}}=\frac{\partial sigmoid(net_{j})}{\partial net_{j}}=y_{j}(1-y_{j})<br>$$<br>将第一项和第二项带入，得到：<br>$$<br>\frac{\partial E_{d}}{\partial net_{j}}=-(t_{j}-y_{j})y_{j}(1-y_{j})<br>$$<br>如果令$$\delta <em>{j}=-\frac{\partial E</em>{d}}{\partial net_{j}}$$，也就是一个节点的误差项是网络误差$$\delta$$对这个节点输入的偏导数的相反数。带入上式，得到：<br>$$<br>\delta <em>{j}=(t</em>{j}-y_{j})y_{j}(1-y_{j})<br>$$<br>将上述推导带入随机梯度下降公式，得到：<br>$$<br>w_{ji}\leftarrow w_{ji}-\eta \frac{\partial E_{d}}{\partial w_{ji}}=w_{ji}-\eta \frac{\partial E_{d}}{\partial net_{ji}}\frac{\partial net_{ji}}{\partial w_{ji}}=w_{ji}+\eta (t_{j}-y_{j})y_{j}(1-y_{j})(1-y_{j})x_{ji}=w_{ji}+\eta \delta <em>{j}x</em>{ji}<br>$$</p>
@@ -285,7 +291,7 @@
 <li><strong>下采样</strong> 可以使用Pooling来减少每层的样本数，进一步减少参数数量，同时还可以提升模型的鲁棒性。</li>
 </ul>
 <p>对于图像识别任务来说，卷积神经网络通过尽可能保留重要的参数，去掉大量不重要的参数，来达到更好的学习效果。</p>
-<h3 id="卷积神经网络结构"><a href="#卷积神经网络结构" class="headerlink" title="卷积神经网络结构"></a>卷积神经网络结构</h3><p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/卷积神经网络案例图.png"></p>
+<h3 id="卷积神经网络结构"><a href="#卷积神经网络结构" class="headerlink" title="卷积神经网络结构"></a>卷积神经网络结构</h3><p><img src="/2021/06/01/deep-learning-tutorial/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A1%88%E4%BE%8B%E5%9B%BE.png"></p>
 <p>三维的层结构</p>
 <p>从<strong>图中</strong>我们可以发现<strong>卷积神经网络</strong>的层结构和<strong>全连接神经网络</strong>的层结构有很大不同。<strong>全连接神经网络</strong>每层的神经元是按照<strong>一维</strong>排列的，也就是排成一条线的样子；而<strong>卷积神经网络</strong>每层的神经元是按照<strong>三维</strong>排列的，也就是排成一个长方体的样子，有<strong>宽度</strong>、<strong>高度</strong>和<strong>深度</strong>。</p>
 <p>对于<strong>图中</strong>展示的神经网络，我们看到输入层的宽度和高度对应于输入图像的宽度和高度，而它的深度为1。接着，第一个卷积层对这幅图像进行了卷积操作(后面我们会讲如何计算卷积)，得到了三个Feature Map。这里的”3”可能是让很多初学者迷惑的地方，实际上，就是这个卷积层包含三个Filter，也就是三套参数，每个Filter都可以把原始输入图像卷积得到一个Feature Map，三个Filter就可以得到三个Feature Map。至于一个卷积层可以有多少个Filter，那是可以自由设定的。也就是说，卷积层的Filter个数也是一个<strong>超参数</strong>。我们可以把Feature Map可以看做是通过卷积变换提取到的图像特征，三个Filter就对原始图像提取出三组不同的特征，也就是得到了三个Feature Map，也称做三个**通道(channel)**。</p>
@@ -294,9 +300,9 @@
 <p>至此，我们对<strong>卷积神经网络</strong>有了最基本的感性认识。接下来，我们将介绍<strong>卷积神经网络</strong>中各种层的计算和训练。</p>
 <h3 id="卷积神经网络输出值的计算"><a href="#卷积神经网络输出值的计算" class="headerlink" title="卷积神经网络输出值的计算"></a>卷积神经网络输出值的计算</h3><h4 id="卷积层输出值的计算"><a href="#卷积层输出值的计算" class="headerlink" title="卷积层输出值的计算"></a>卷积层输出值的计算</h4><p>我们用一个简单的例子来讲述如何计算<strong>卷积</strong>，然后，我们抽象出<strong>卷积层</strong>的一些重要概念和计算方法。</p>
 <p>假设有一个5<em>5的图像，使用一个3</em>3的filter进行卷积，想得到一个3*3的Feature Map，如下所示：</p>
-<p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/卷积神经网络案例.png"></p>
+<p><img src="/2021/06/01/deep-learning-tutorial/%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E6%A1%88%E4%BE%8B.png"></p>
 <p>为了清楚的描述<strong>卷积</strong>计算过程，我们首先对图像的每个像素进行编号，用$$x_{i,j}$$表示图像的第行第列元素；对filter的每个权重进行编号，用$$w_{m,n}$$表示第$$m$$行第$$n$$列权重，用$$w_{b}$$表示filter的<strong>偏置项</strong>；对Feature Map的每个元素进行编号，用$$a_{i,j}$$表示Feature Map的第$$i$$行第$$j$$列元素；用$$f$$表示<strong>激活函数</strong>(这个例子选择<strong>relu函数</strong>作为激活函数)。然后，使用下列公式计算卷积：<br>$$<br>a_{i,j}=f(\sum_{m=0}^{2}\sum_{n=0}^{2}w_{m,n}x_{i+m,j+n}+w_{b})<br>$$<br>例如，对于Feature Map左上角元素来说，其卷积计算方法为：<br>$$<br>a_{0,0}=f(\sum_{m=0}^{2}\sum_{n=0}^{2}w_{m,n}x_{m+0,n+0}+w_{b})\<br>=relu(w_{0,0}x_{0,0}+w_{0,1}x_{0,1}+w_{0,2}x_{0,2}+w_{1,0}x_{1,0}+w_{1,1}x_{1,1}+w_{1,2}x_{1,2}+w_{2,0}x_{2,0}+w_{2,1}x_{2,1}+w_{2})\<br>=relu(1+0+1+0+1+0+0+0+1+0)=relu(4)=4<br>$$<br>计算结果如下图所示：</p>
-<p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/卷积过程.png"></p>
+<p><img src="/2021/06/01/deep-learning-tutorial/%E5%8D%B7%E7%A7%AF%E8%BF%87%E7%A8%8B.png"></p>
 <h3 id="权值共享"><a href="#权值共享" class="headerlink" title="权值共享"></a>权值共享</h3><p>神经元的偏置部分也是同一种滤波器共享的。 比如卷积核是三层，每一层使用的偏置项都是相等的。</p>
 <h2 id="对抗生成网络-GAN"><a href="#对抗生成网络-GAN" class="headerlink" title="对抗生成网络(GAN)"></a>对抗生成网络(GAN)</h2><h2 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h2><h3 id="Batch-Gradient-Descent-BGD，批量梯度下降"><a href="#Batch-Gradient-Descent-BGD，批量梯度下降" class="headerlink" title="Batch Gradient Descent(BGD，批量梯度下降)"></a>Batch Gradient Descent(BGD，批量梯度下降)</h3><p>BGD训练过程中每次迭代使用所有样本来进行梯度的更新。</p>
 <h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ul>
@@ -364,7 +370,7 @@
 <p>参数更新公式为：<br>$$<br>V_{dw}=\beta <em>{1} V</em>{dw}+(1-\beta <em>{1} )dW\<br>V</em>{db}=\beta <em>{1} V</em>{db}+(1-\beta <em>{1} )db\<br>S</em>{dw}=\beta_{2} S_{dw}+(1-\beta_{2} )dW^{2}\<br>S_{db}=\beta_{2} S_{db}+(1-\beta_{2} )db^{2}\<br>V_{dW}^{corrected}=\frac{V_{dW}}{1-\beta <em>{1}^{t}}\<br>V</em>{db}^{corrected}=\frac{V_{db}}{1-\beta <em>{1}^{t}}\<br>S</em>{dW}^{corrected}=\frac{S_{dW}}{1-\beta <em>{2}^{t}}\<br>S</em>{db}^{corrected}=\frac{S_{db}}{1-\beta <em>{2}^{t}}\<br>W:=W-\alpha \frac{V</em>{dW}}{\sqrt{S_{dW}^{corrected}}}\<br>b:=b-\alpha \frac{V_{db}}{\sqrt{S_{db}^{corrected}}}<br>$$<br>beta1一般为0.9，beta2一般为0.9999。在实际应用中，Adam方法效果良好。与其他自适应学习率算法相比，其收敛速度更快，学习效果更为有效，而且可以纠正其他优化技术中存在的问题，如学习率消失、收敛过慢或是高方差的参数更新导致损失函数波动较大等问题。</p>
 <h2 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/22142013">激活函数详解</a></p>
 <p>激活函数一般用于神经网络的层与层之间，将上一层的输出转换之后输入到下一层。如果没有激活函数引入的额非线性特性，那么神经网络就只相当于原始感知机的矩阵相乘。  </p>
-<h3 id="Sigmoid"><a href="#Sigmoid" class="headerlink" title="Sigmoid"></a>Sigmoid</h3><p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/sigmoid.jpg"></p>
+<h3 id="Sigmoid"><a href="#Sigmoid" class="headerlink" title="Sigmoid"></a>Sigmoid</h3><p><img src="/2021/06/01/deep-learning-tutorial/sigmoid.jpg"></p>
 <p>sigmoid在定义域内处处可导，且两侧导数逐渐趋近于0。</p>
 <h4 id="缺点-3"><a href="#缺点-3" class="headerlink" title="缺点"></a>缺点</h4><ul>
 <li>激活函数计算量大，反向传播求误差梯度时，求导涉及除法；</li>
@@ -372,8 +378,8 @@
 <li>Sigmoids函数饱和且kill掉梯度；</li>
 <li>Sigmoids函数收敛缓慢。</li>
 </ul>
-<h3 id="tanh"><a href="#tanh" class="headerlink" title="tanh"></a>tanh</h3><p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/tanh.jpg"></p>
-<h3 id="Relu"><a href="#Relu" class="headerlink" title="Relu"></a>Relu</h3><p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/relu.jpg"></p>
+<h3 id="tanh"><a href="#tanh" class="headerlink" title="tanh"></a>tanh</h3><p><img src="/2021/06/01/deep-learning-tutorial/tanh.jpg"></p>
+<h3 id="Relu"><a href="#Relu" class="headerlink" title="Relu"></a>Relu</h3><p><img src="/2021/06/01/deep-learning-tutorial/relu.jpg"></p>
 <h4 id="优点-4"><a href="#优点-4" class="headerlink" title="优点"></a>优点</h4><ul>
 <li><strong>速度快</strong> 和sigmoid函数需要计算指数和倒数相比，relu函数其实就是一个max(0,x)，计算代价小很多。</li>
 <li><strong>减轻梯度消失问题</strong> relu函数的导数是1，不会导致梯度变小。当然，激活函数仅仅是导致梯度减小的一个因素，但无论如何在这方面relu的表现强于sigmoid。使用relu激活函数可以让你训练更深的网络。</li>
@@ -382,8 +388,8 @@
 <h3 id="缺点-4"><a href="#缺点-4" class="headerlink" title="缺点"></a>缺点</h3><ul>
 <li>训练的时候很”脆弱”，很容易就”die”了。</li>
 </ul>
-<h3 id="PRelu"><a href="#PRelu" class="headerlink" title="PRelu"></a>PRelu</h3><p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/PRelu.jpg"></p>
-<h3 id="RReLU"><a href="#RReLU" class="headerlink" title="RReLU"></a>RReLU</h3><h3 id="Maxout"><a href="#Maxout" class="headerlink" title="Maxout"></a>Maxout</h3><h3 id="ELU"><a href="#ELU" class="headerlink" title="ELU"></a>ELU</h3><p><img src="/2021/06/01/deep-learning-tutorial/nodejs/myBlog/source/_posts/deep-learning-tutorial/elu.jpg"></p>
+<h3 id="PRelu"><a href="#PRelu" class="headerlink" title="PRelu"></a>PRelu</h3><p><img src="/2021/06/01/deep-learning-tutorial/PRelu.jpg"></p>
+<h3 id="RReLU"><a href="#RReLU" class="headerlink" title="RReLU"></a>RReLU</h3><h3 id="Maxout"><a href="#Maxout" class="headerlink" title="Maxout"></a>Maxout</h3><h3 id="ELU"><a href="#ELU" class="headerlink" title="ELU"></a>ELU</h3><p><img src="/2021/06/01/deep-learning-tutorial/elu.jpg"></p>
 <h2 id="问题及解决方法"><a href="#问题及解决方法" class="headerlink" title="问题及解决方法"></a>问题及解决方法</h2><h3 id="梯度爆炸与梯度消失"><a href="#梯度爆炸与梯度消失" class="headerlink" title="梯度爆炸与梯度消失"></a>梯度爆炸与梯度消失</h3><p>深度神经网络训练过程中，使用了反向传播的方式更新参数，该方式基于的是链式求导。计算每层梯度的时候回设计一些连乘操作，如果网络过深，当连乘的因子大部分小于1时，最后的乘积结果可能趋于0，会导致后面的网络层参数不发生变化，不能继续进行学习（梯度消失）。当连乘的因子大部分大于1，最后的乘积结果可能趋于无穷，会导致后面的网络层参数变化过大，导致Loss值出现震荡，收敛不到最低值的情况（梯度爆炸）。</p>
 <h4 id="梯度爆炸解决办法"><a href="#梯度爆炸解决办法" class="headerlink" title="梯度爆炸解决办法"></a>梯度爆炸解决办法</h4><ul>
 <li><p>降低学习率</p>
