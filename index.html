@@ -366,7 +366,7 @@ w_{ji}\leftarrow w_{ji}-\eta\frac{\partial E_{d}}{\partial w_{ji}}</script><p>�
 <p><img src="/2021/06/01/deep-learning-tutorial/神经网络过程图.png" alt></p>
 <p>观察上图，我们发现权重<script type="math/tex">w_{ji}</script>仅能通过影响节点<script type="math/tex">j</script>的输入值影响网络的其它部分，设<script type="math/tex">net_{j}</script>是节点<script type="math/tex">j</script>的<strong>加权输入</strong>，即</p>
 <script type="math/tex; mode=display">
-net_{j}=\vec{w_{j}}\cdot \vec{x_{j}}=\sum_{i=1}^{n}w_{ji}x_{ji}</script><script type="math/tex; mode=display">E_{d}$$是$$net_{j}$$的函数，而$$net_{j}$$是$$w_{ji}$$的函数。根据链式求导法则，可以得到：</script><p>\frac{\partial E<em>{d}}{\partial w</em>{ji}}=\frac{\partial E<em>{d}}{\partial net</em>{j}}\frac{\partial net<em>{j}}{\partial w</em>{ji}}=\frac{\partial E<em>{d}}{\partial net</em>{j}}\frac{\partial \sum <em>{i}w</em>{ji}x<em>{ji}}{\partial w</em>{ji}}=\frac{\partial E<em>{d}}{\partial net</em>{j}}x_{ji}</p>
+net_{j}=\vec{w_{j}}\cdot \vec{x_{j}}=\sum_{i=1}^{n}w_{ji}x_{ji}</script><script type="math/tex; mode=display">E_{d}$$是$$net_{j}$$的函数，而$$net_{j}$$是$$w_{ji}$$的函数。根据链式求导法则，可以得到：</script><p>\frac{\partial E_{d}}{\partial w_{ji}}=\frac{\partial E_{d}}{\partial net_{j}}\frac{\partial net_{j}}{\partial w_{ji}}=\frac{\partial E_{d}}{\partial net_{j}}\frac{\partial \sum _{i}w_{ji}x_{ji}}{\partial w_{ji}}=\frac{\partial E_{d}}{\partial net_{j}}x_{ji}</p>
 <script type="math/tex; mode=display">
 上式中，$$x_{ji}$$是节点$$i$$传递给节点$$j$$的输入值，也就是节点$$i$$的输出值。
 
@@ -374,26 +374,26 @@ net_{j}=\vec{w_{j}}\cdot \vec{x_{j}}=\sum_{i=1}^{n}w_{ji}x_{ji}</script><script 
 
 #### 输出层权值训练
 
-对于**输出层**来说，$$net_{j}$$仅能通过节点$$j$$的输出值$$y_{j}$$来影响网络其它部分，也就是说$$E_{d}$$是$$y_{j}$$的函数，而$$y_{j}$$是$$net_{j}$$的函数，其中$$y_{j}=sigmoid(net_{j})$$。所以我们可以再次使用链式求导法则：</script><p>\frac{\partial E<em>{d}}{\partial net</em>{j}}=\frac{\partial E<em>{d}}{\partial y</em>{j}}\frac{\partial y<em>{j}}{\partial net</em>{j}}</p>
+对于**输出层**来说，$$net_{j}$$仅能通过节点$$j$$的输出值$$y_{j}$$来影响网络其它部分，也就是说$$E_{d}$$是$$y_{j}$$的函数，而$$y_{j}$$是$$net_{j}$$的函数，其中$$y_{j}=sigmoid(net_{j})$$。所以我们可以再次使用链式求导法则：</script><p>\frac{\partial E_{d}}{\partial net_{j}}=\frac{\partial E_{d}}{\partial y_{j}}\frac{\partial y_{j}}{\partial net_{j}}</p>
 <script type="math/tex; mode=display">
-考虑上式第一项:</script><p>\frac{\partial E<em>{d}}{\partial y</em>{j}}=\frac{\partial \frac{1}{2}\sum (t<em>{j}-y</em>{j})^{2}}{\partial y<em>{j}}=-(t</em>{j}-y_{j})</p>
+考虑上式第一项:</script><p>\frac{\partial E_{d}}{\partial y_{j}}=\frac{\partial \frac{1}{2}\sum (t_{j}-y_{j})^{2}}{\partial y_{j}}=-(t_{j}-y_{j})</p>
 <script type="math/tex; mode=display">
-考虑上式第二项：</script><p>\frac{\partial y<em>{j}}{\partial net</em>{j}}=\frac{\partial sigmoid(net<em>{j})}{\partial net</em>{j}}=y<em>{j}(1-y</em>{j})</p>
+考虑上式第二项：</script><p>\frac{\partial y_{j}}{\partial net_{j}}=\frac{\partial sigmoid(net_{j})}{\partial net_{j}}=y_{j}(1-y_{j})</p>
 <script type="math/tex; mode=display">
-将第一项和第二项带入，得到：</script><p>\frac{\partial E<em>{d}}{\partial net</em>{j}}=-(t<em>{j}-y</em>{j})y<em>{j}(1-y</em>{j})</p>
+将第一项和第二项带入，得到：</script><p>\frac{\partial E_{d}}{\partial net_{j}}=-(t_{j}-y_{j})y_{j}(1-y_{j})</p>
 <script type="math/tex; mode=display">
-如果令$$\delta _{j}=-\frac{\partial E_{d}}{\partial net_{j}}$$，也就是一个节点的误差项是网络误差$$\delta$$对这个节点输入的偏导数的相反数。带入上式，得到：</script><p>\delta <em>{j}=(t</em>{j}-y<em>{j})y</em>{j}(1-y_{j})</p>
+如果令$$\delta _{j}=-\frac{\partial E_{d}}{\partial net_{j}}$$，也就是一个节点的误差项是网络误差$$\delta$$对这个节点输入的偏导数的相反数。带入上式，得到：</script><p>\delta _{j}=(t_{j}-y_{j})y_{j}(1-y_{j})</p>
 <script type="math/tex; mode=display">
-将上述推导带入随机梯度下降公式，得到：</script><p>w<em>{ji}\leftarrow w</em>{ji}-\eta \frac{\partial E<em>{d}}{\partial w</em>{ji}}=w<em>{ji}-\eta \frac{\partial E</em>{d}}{\partial net<em>{ji}}\frac{\partial net</em>{ji}}{\partial w<em>{ji}}=w</em>{ji}+\eta (t<em>{j}-y</em>{j})y<em>{j}(1-y</em>{j})(1-y<em>{j})x</em>{ji}=w<em>{ji}+\eta \delta </em>{j}x_{ji}</p>
+将上述推导带入随机梯度下降公式，得到：</script><p>w_{ji}\leftarrow w_{ji}-\eta \frac{\partial E_{d}}{\partial w_{ji}}=w_{ji}-\eta \frac{\partial E_{d}}{\partial net_{ji}}\frac{\partial net_{ji}}{\partial w_{ji}}=w_{ji}+\eta (t_{j}-y_{j})y_{j}(1-y_{j})(1-y_{j})x_{ji}=w_{ji}+\eta \delta _{j}x_{ji}</p>
 <script type="math/tex; mode=display">
 
 #### 隐藏层权值训练
 
 现在我们要推导出隐藏层的$$\frac{\partial E_{d}}{\partial net_{j}}$$。
 
-首先，我们需要定义节点$$j$$的所有直接下游节点的集合$$Downstream(j)$$。例如，对于节点4来说，它的直接下游节点是节点8、节点9。可以看到$$net_{j}$$只能通过影响$$Downstream(j)$$再影响$$E_{d}$$。设$$net_{k}$$是节点$$j$$的下游节点的输入，则$$E_{d}$$是$$net_{k}$$的函数，而$$net_{k}$$是$$net_{j}$$的函数。因为$$net_{k}$$有多个，我们应用全导数公式，可以做出如下推导：</script><p>\frac{\partial E<em>{d}}{\partial net</em>{j}}\<br>=\sum<em>{k\in Downstream(j)}\frac{\partial E</em>{d}}{\partial net<em>{k}}\frac{\partial net</em>{k}}{\partial net<em>{j}}\<br>=\sum</em>{k\in Downstream(j)}-\delta <em>{k}\frac{\partial net</em>{k}}{\partial net<em>{j}}\<br>=\sum</em>{k\in Downstream(j)}-\delta <em>{k}\frac{\partial net</em>{k}}{\partial a<em>{j}}\frac{\partial a</em>{j}}{\partial net<em>{j}}\<br>=\sum</em>{k\in Downstream(j)}-\delta <em>{k}w</em>{kj}\frac{\partial a<em>{j}}{\partial net</em>{j}}\<br>=\sum<em>{k\in Downstream(j)}-\delta </em>{k}w<em>{kj}a</em>{j}(1-a<em>{j})\<br>=-a</em>{j}(1-a<em>{j})\sum</em>{k\in Downstream(j)}\delta <em>{k}w</em>{kj}</p>
+首先，我们需要定义节点$$j$$的所有直接下游节点的集合$$Downstream(j)$$。例如，对于节点4来说，它的直接下游节点是节点8、节点9。可以看到$$net_{j}$$只能通过影响$$Downstream(j)$$再影响$$E_{d}$$。设$$net_{k}$$是节点$$j$$的下游节点的输入，则$$E_{d}$$是$$net_{k}$$的函数，而$$net_{k}$$是$$net_{j}$$的函数。因为$$net_{k}$$有多个，我们应用全导数公式，可以做出如下推导：</script><p>\frac{\partial E_{d}}{\partial net_{j}}\\<br>=\sum_{k\in Downstream(j)}\frac{\partial E_{d}}{\partial net_{k}}\frac{\partial net_{k}}{\partial net_{j}}\\<br>=\sum_{k\in Downstream(j)}-\delta _{k}\frac{\partial net_{k}}{\partial net_{j}}\\<br>=\sum_{k\in Downstream(j)}-\delta _{k}\frac{\partial net_{k}}{\partial a_{j}}\frac{\partial a_{j}}{\partial net_{j}}\\<br>=\sum_{k\in Downstream(j)}-\delta _{k}w_{kj}\frac{\partial a_{j}}{\partial net_{j}}\\<br>=\sum_{k\in Downstream(j)}-\delta _{k}w_{kj}a_{j}(1-a_{j})\\<br>=-a_{j}(1-a_{j})\sum_{k\in Downstream(j)}\delta _{k}w_{kj}</p>
 <script type="math/tex; mode=display">
-因为$$\delta _{j}=-\frac{\partial E_{d}}{\partial net_{j}}$$带入上式得到：</script><p>\delta <em>{j}=a</em>{j}(1-a<em>{j})\sum</em>{k\in Downstream(j)}\delta <em>{k}w</em>{kj}</p>
+因为$$\delta _{j}=-\frac{\partial E_{d}}{\partial net_{j}}$$带入上式得到：</script><p>\delta _{j}=a_{j}(1-a_{j})\sum_{k\in Downstream(j)}\delta _{k}w_{kj}</p>
 <script type="math/tex; mode=display">
 其中$$a_{j}$$为激活函数。
 
@@ -441,9 +441,9 @@ net_{j}=\vec{w_{j}}\cdot \vec{x_{j}}=\sum_{i=1}^{n}w_{ji}x_{ji}</script><script 
 
 ![](./deep-learning-tutorial/卷积神经网络案例.png)
 
-为了清楚的描述**卷积**计算过程，我们首先对图像的每个像素进行编号，用$$x_{i,j}$$表示图像的第行第列元素；对filter的每个权重进行编号，用$$w_{m,n}$$表示第$$m$$行第$$n$$列权重，用$$w_{b}$$表示filter的**偏置项**；对Feature Map的每个元素进行编号，用$$a_{i,j}$$表示Feature Map的第$$i$$行第$$j$$列元素；用$$f$$表示**激活函数**(这个例子选择**relu函数**作为激活函数)。然后，使用下列公式计算卷积：</script><p>a<em>{i,j}=f(\sum</em>{m=0}^{2}\sum<em>{n=0}^{2}w</em>{m,n}x<em>{i+m,j+n}+w</em>{b})</p>
+为了清楚的描述**卷积**计算过程，我们首先对图像的每个像素进行编号，用$$x_{i,j}$$表示图像的第行第列元素；对filter的每个权重进行编号，用$$w_{m,n}$$表示第$$m$$行第$$n$$列权重，用$$w_{b}$$表示filter的**偏置项**；对Feature Map的每个元素进行编号，用$$a_{i,j}$$表示Feature Map的第$$i$$行第$$j$$列元素；用$$f$$表示**激活函数**(这个例子选择**relu函数**作为激活函数)。然后，使用下列公式计算卷积：</script><p>a_{i,j}=f(\sum_{m=0}^{2}\sum_{n=0}^{2}w_{m,n}x_{i+m,j+n}+w_{b})</p>
 <script type="math/tex; mode=display">
-例如，对于Feature Map左上角元素来说，其卷积计算方法为：</script><p>a<em>{0,0}=f(\sum</em>{m=0}^{2}\sum<em>{n=0}^{2}w</em>{m,n}x<em>{m+0,n+0}+w</em>{b})\<br>=relu(w<em>{0,0}x</em>{0,0}+w<em>{0,1}x</em>{0,1}+w<em>{0,2}x</em>{0,2}+w<em>{1,0}x</em>{1,0}+w<em>{1,1}x</em>{1,1}+w<em>{1,2}x</em>{1,2}+w<em>{2,0}x</em>{2,0}+w<em>{2,1}x</em>{2,1}+w_{2})\<br>=relu(1+0+1+0+1+0+0+0+1+0)=relu(4)=4</p>
+例如，对于Feature Map左上角元素来说，其卷积计算方法为：</script><p>a_{0,0}=f(\sum_{m=0}^{2}\sum_{n=0}^{2}w_{m,n}x_{m+0,n+0}+w_{b})\\<br>=relu(w_{0,0}x_{0,0}+w_{0,1}x_{0,1}+w_{0,2}x_{0,2}+w_{1,0}x_{1,0}+w_{1,1}x_{1,1}+w_{1,2}x_{1,2}+w_{2,0}x_{2,0}+w_{2,1}x_{2,1}+w_{2})\\<br>=relu(1+0+1+0+1+0+0+0+1+0)=relu(4)=4</p>
 <script type="math/tex; mode=display">
 计算结果如下图所示：
 
@@ -522,13 +522,13 @@ MBGD训练过程中每次迭代使用**batch size**个样本来对参数进行�
 
 []: https://blog.csdn.net/willduan1/article/details/78070086
 
-SGD参数更新公式为：</script><p>W:=W-\alpha d<em>{w}\<br>b:=b-\alpha d</em>{b}</p>
+SGD参数更新公式为：</script><p>W:=W-\alpha d_{w}\\<br>b:=b-\alpha d_{b}</p>
 <script type="math/tex; mode=display">
 它的梯度更新路线上下波动很大，收敛速度很慢。因此根据这些原因，有人提出了Momentum优化算法，这个是基于SGD的，简单理解就是为了防止波动，它主要是基于梯度的移动指数加权平均来更新参数。引进超参数beta(一般取0.9)。
 
-在讲这个算法之前说一下移动指数加权平均。移动指数加权平均法加权就是根据同一个移动段内不同时间的数据对预测值的影响程度，分别给予不同的权数，然后再进行平均移动以预测未来值。假定给定一系列数据值$$x_{1}, x_{2},x_{3},……x_{n}$$。那么，我们根据这些数据来拟合一条曲线，所得的值$$v_{1}, v_{2}…..$$就是如下的公式：</script><p>v<em>{0} = 0\<br>v</em>{1} = \beta v<em>{0}+(1-\beta )x</em>{0} \<br>v<em>{2} = \beta v</em>{1}+(1-\beta )x_{1} \</p>
+在讲这个算法之前说一下移动指数加权平均。移动指数加权平均法加权就是根据同一个移动段内不同时间的数据对预测值的影响程度，分别给予不同的权数，然后再进行平均移动以预测未来值。假定给定一系列数据值$$x_{1}, x_{2},x_{3},……x_{n}$$。那么，我们根据这些数据来拟合一条曲线，所得的值$$v_{1}, v_{2}…..$$就是如下的公式：</script><p>v_{0} = 0\\<br>v_{1} = \beta v_{0}+(1-\beta )x_{0} \\<br>v_{2} = \beta v_{1}+(1-\beta )x_{1} \\</p>
 <script type="math/tex; mode=display">
-参数更新公式为：</script><p>V<em>{dw}=\beta V</em>{dw}+(1-\beta )dW\<br>V<em>{db}=\beta V</em>{db}+(1-\beta )db\<br>W:=W-\alpha {V<em>{dw}}\<br>b:=b-\alpha {V</em>{db}}</p>
+参数更新公式为：</script><p>V_{dw}=\beta V_{dw}+(1-\beta )dW\\<br>V_{db}=\beta V_{db}+(1-\beta )db\\<br>W:=W-\alpha {V_{dw}}\\<br>b:=b-\alpha {V_{db}}</p>
 <script type="math/tex; mode=display">
 
 ### Nesterov Momentum
@@ -539,7 +539,7 @@ Nesterov Momentum是对Momentum的改进，可以理解为nesterov动量在标�
 
 RMSProp思想与Momentum相似，也用到权重超参数beta（一般取0.999）。
 
-参数更新公式为：</script><p>S<em>{dw}=\beta S</em>{dw}+(1-\beta )dW^{2}\<br>S<em>{db}=\beta S</em>{db}+(1-\beta )db^{2}\<br>W:=W-\alpha \frac{dW}{\sqrt{S<em>{dw}}}\<br>b:=b-\alpha \frac{db}{\sqrt{S</em>{db}}}</p>
+参数更新公式为：</script><p>S_{dw}=\beta S_{dw}+(1-\beta )dW^{2}\\<br>S_{db}=\beta S_{db}+(1-\beta )db^{2}\\<br>W:=W-\alpha \frac{dW}{\sqrt{S_{dw}}}\\<br>b:=b-\alpha \frac{db}{\sqrt{S_{db}}}</p>
 <script type="math/tex; mode=display">
 为了防止分母为0，在分数下加上个特别小的值epsilon，通常选取10^-8。
 
@@ -547,11 +547,11 @@ RMSProp思想与Momentum相似，也用到权重超参数beta（一般取0.999�
 
 大多数优化器训练参数更新过程中都使用了相同的学习率α。Adagrad能够在训练中自动的对learning rate进行调整，对于出现频率较低的参数采用较大的α更新，相反，对于出现频率较高的参数采用较小的α更新。因此，**Adagrad非常适合处理稀疏数据**。
 
-如果是普通的SGD，那么每一时刻梯度的更新公式为：</script><p>\Theta <em>{t+1}=\Theta </em>{t,i}-\alpha *g_{t,i}</p>
+如果是普通的SGD，那么每一时刻梯度的更新公式为：</script><p>\Theta _{t+1}=\Theta _{t,i}-\alpha *g_{t,i}</p>
 <script type="math/tex; mode=display">
 g<sub>t,i</sub>为第t轮第i个参数的梯度。θ<sub>t,i</sub> 为参数值
 
-Adagrad在每轮训练中对每个参数θ<sub>i</sub> 进行更新，参数更新公式为：</script><p>\Theta <em>{t+1,i}=\Theta </em>{t,i}-\frac{\alpha }{\sqrt{G<em>{t,ii}+\varepsilon }}*g</em>{t,i}</p>
+Adagrad在每轮训练中对每个参数θ<sub>i</sub> 进行更新，参数更新公式为：</script><p>\Theta _{t+1,i}=\Theta _{t,i}-\frac{\alpha }{\sqrt{G_{t,ii}+\varepsilon }}*g_{t,i}</p>
 <script type="math/tex; mode=display">
 G<sub>t</sub>为对角矩阵，大小为D*D。每个对角线位置i,i为对应参数θ<sub>i</sub> 从第一轮到第t轮梯度的平方和。varepsilon 是平滑项，用于避免分母为0，一般取值为10^-8。Adagrad的缺点是在训练的中后期，分母上梯度平方的累加会越来越大，从而梯度趋近于0，使得训练提前结束。
 
@@ -571,7 +571,7 @@ Adadelta 是 Adagrad 的一个具有更强鲁棒性的的扩展版本，它不�
 
 该优化器相当于RMSprop+Momentum。
 
-参数更新公式为：</script><p>V<em>{dw}=\beta </em>{1} V<em>{dw}+(1-\beta </em>{1} )dW\<br>V<em>{db}=\beta </em>{1} V<em>{db}+(1-\beta </em>{1} )db\<br>S<em>{dw}=\beta</em>{2} S<em>{dw}+(1-\beta</em>{2} )dW^{2}\<br>S<em>{db}=\beta</em>{2} S<em>{db}+(1-\beta</em>{2} )db^{2}\<br>V<em>{dW}^{corrected}=\frac{V</em>{dW}}{1-\beta <em>{1}^{t}}\<br>V</em>{db}^{corrected}=\frac{V<em>{db}}{1-\beta </em>{1}^{t}}\<br>S<em>{dW}^{corrected}=\frac{S</em>{dW}}{1-\beta <em>{2}^{t}}\<br>S</em>{db}^{corrected}=\frac{S<em>{db}}{1-\beta </em>{2}^{t}}\<br>W:=W-\alpha \frac{V<em>{dW}}{\sqrt{S</em>{dW}^{corrected}}}\<br>b:=b-\alpha \frac{V<em>{db}}{\sqrt{S</em>{db}^{corrected}}}</p>
+参数更新公式为：</script><p>V_{dw}=\beta _{1} V_{dw}+(1-\beta _{1} )dW\\<br>V_{db}=\beta _{1} V_{db}+(1-\beta _{1} )db\\<br>S_{dw}=\beta_{2} S_{dw}+(1-\beta_{2} )dW^{2}\\<br>S_{db}=\beta_{2} S_{db}+(1-\beta_{2} )db^{2}\\<br>V_{dW}^{corrected}=\frac{V_{dW}}{1-\beta _{1}^{t}}\\<br>V_{db}^{corrected}=\frac{V_{db}}{1-\beta _{1}^{t}}\\<br>S_{dW}^{corrected}=\frac{S_{dW}}{1-\beta _{2}^{t}}\\<br>S_{db}^{corrected}=\frac{S_{db}}{1-\beta _{2}^{t}}\\<br>W:=W-\alpha \frac{V_{dW}}{\sqrt{S_{dW}^{corrected}}}\\<br>b:=b-\alpha \frac{V_{db}}{\sqrt{S_{db}^{corrected}}}</p>
 <script type="math/tex; mode=display">
 beta1一般为0.9，beta2一般为0.9999。在实际应用中，Adam方法效果良好。与其他自适应学习率算法相比，其收敛速度更快，学习效果更为有效，而且可以纠正其他优化技术中存在的问题，如学习率消失、收敛过慢或是高方差的参数更新导致损失函数波动较大等问题。
 

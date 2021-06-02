@@ -240,8 +240,8 @@
 <p><img src="/2021/04/26/Reinforcement-Study-Notes/pic1.png" alt></p>
 <p>Actor的好坏。通过actor玩游戏算reward期望</p>
 <p>An episode is considered as a trajectory </p>
-<p>$\tau = \left { s<em>{1},a</em>{1},r<em>{1},s</em>{2},a<em>{2},r</em>{2},…,s<em>{T},a</em>{T},r_{T} \right }$</p>
-<p>$R<em>{\tau } = \sum</em>{n=1}^{N}r_{n}$</p>
+<p>$\tau = \left \{ s_{1},a_{1},r_{1},s_{2},a_{2},r_{2},…,s_{T},a_{T},r_{T} \right \}$</p>
+<p>$R_{\tau } = \sum_{n=1}^{N}r_{n}$</p>
 <p>If you use an actor to play the game,each <script type="math/tex">\tau</script> has a probability to be sampled. The probability depends on actor parameter <script type="math/tex">\theta</script>:$P(\tau|\theta)$</p>
 <p>Use <script type="math/tex">\pi_{\theta}</script> to play the game N times,obtain <script type="math/tex">\left \{ \tau^{1},\tau^{2},...,\tau^{N} \right \}</script> </p>
 <p>Sampling <script type="math/tex">\tau</script> from <script type="math/tex">P(\tau|\theta)</script> N times.</p>
