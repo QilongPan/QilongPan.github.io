@@ -1231,6 +1231,13 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
 
               <time title="Created: 2021-05-06 20:16:47" itemprop="dateCreated datePublished" datetime="2021-05-06T20:16:47+08:00">2021-05-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-04 00:05:14" itemprop="dateModified" datetime="2021-06-04T00:05:14+08:00">2021-06-04</time>
+              </span>
 
           
 
@@ -1243,7 +1250,55 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    许多现实世界的应用程序都需要人工代理在复杂的环境中与其他代理进行竞争和协调。作为实现这一目标的垫脚石，星际争霸领域已成为人工智能的重要挑战研究，因为它在最困难的职业电子竞技中具有标志性和持久的地位，并且在其原始复杂性和多代理挑战方面与现实世界相关。在过去的十年和无数的比赛中，最强大的代理简化了游戏的重要方面，利用了超人的能力，或者采用了手工制作的子系统。尽管有这些优势，但没有一个之前的智能体能接近顶级星际争霸玩家的全面的水平。我们选择使用原则上适用于其他复杂领域的通用学习方法来应对星际争霸的挑战：一种多智能体强化学习算法，它使用来自人类和智能体游戏的数据，并在不断调整策略和反策略的多样化联盟中 ，每个都由深度神经网络表示 。我们通过一系列和人类玩家在线对战，评估了我们在StarCraft II 的完整游戏中的智能体AlphaStar。AlphaStar在所有三场星际争霸比赛中都被评为大师级，人类玩家的排名在99.8%以上。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>《星际争霸》是一款实时的战略游戏，玩家可以平衡高水平的经济决策和个人对数百个单元的控制。这个领域提出了重要的博弈论挑战：它具有循环、非传递策略和反策略的广阔空间； 单纯的自我对弈探索方法难以发现新策略； 这些策略在当与现实世界的玩家对战时可能不会有效。 此外，星际争霸有一个组合行动空间，一个扩展了数千个实时决策的规划范围和不完善的信息。</p>
+<p>​    每局游戏由成千上万的时间步和数千计的动作组成，在大约十分钟的游戏中实时选择。在每一步<script type="math/tex">t</script>，我们的代理AlphaStar接收一个观察<script type="math/tex">o_{t}</script>，其中包括所有可观测单位及其属性的列表。这个信息是不完美的；游戏只包括玩家自己的单位所看到的对手单位，并排除了相机视图之外的一些对手单位属性。</p>
+<p>​    每个动作都是高度结构化的：它从几百个动作类型中选择（例如，move或build worker）； 从代理单元的任何子集中向谁发出该操作； 在地图上的位置或摄像机视图内的单位中定位到哪里； 以及何时观察和下一步行动（Fig.1a）。 动作的这种表示导致每一步大约有 <script type="math/tex">10^{26}</script> 种可能的选择。 与人类玩家类似，可以使用特殊动作来移动相机视图，以收集更多信息。</p>
+<p>​    人类在物理限制下玩星际争霸，限制了他们的反应时间和行动速度。游戏的设计中考虑到了这些限制，而删除这些限制则改变了游戏的性质。因此，我们选择对AlphaStar施加约束：它由于网络延迟和计算时间而遭受延迟；它的每分钟动作actions per minute (APM)是有限的，峰值统计数字大大低于人类(图2c,3g用于性能分析）。AlphaStar 在这个接口上的玩法和这些限制得到了专业玩家的认可（see ‘Professional  player statement’ in Methods）。</p>
+<p><img src="/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/fig1_a.png" alt></p>
+<p>图1a</p>
+<p>AlphaStar通过概述地图和单位列表来观察游戏。要执行操作，代理将输出要发布的操作类型（例如build）、应用对象、目标位置以及何时发布下一个操作。动作会通过限制动作速率的监控层发送到游戏中。AlphaStar主张使用来自网络延迟和处理时间的延迟。</p>
+<p><img src="/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/fig1_b_c.png" alt></p>
+<p>图1b,c</p>
+<p><strong>b.</strong>AlphaStar是通过监督学习和强化学习来训练的。在监督学习（底部）中，参数被更新以优化 Kullback–Leibler(KL)其输出和从集合回放中采样的人类行为之间的差异。在强化学习（顶部）中，使用人类数据来采样统计<script type="math/tex">z</script>，并通过强化学习<script type="math/tex">\left ( TD\left ( \lambda  \right ),V-trace,UPGO \right )</script>结合对监督代理的KL损失来更新策略和价值输出。<strong>c.</strong>三个代理池，每个池由监督学习初始化，随后通过强化学习进行训练。在训练时，这些智能体断断续续地向联盟添加自己的副本——在特定时刻被冻结的“球员”。main agent通过训练来对抗所有这些过去的player，以及他们自己。legue exploiters进行训练以对抗所有过去的球员。Main exploiters被训练起来对付main agent。Main exploiters 和 league exploiters在加入player时可以重置为supervised agent。经星际娱乐公司的许可，星际争霸的图片被复制。</p>
+<h1 id="学习算法"><a href="#学习算法" class="headerlink" title="学习算法"></a>学习算法</h1><p>​    为了解决《星际争霸》的复杂性和博弈论挑战，AlphaStar结合了新的和现有的通用技术，比如神经网络架构、模仿学习、强化学习和多智能体学习。有关这些技术的进一步详细信息详见Methods。</p>
+<p>​    AlphaStar的核心是一个策略<script type="math/tex">\pi _{\theta }\left ( a_{t}|s_{t},z \right )=\mathbb{P}[a_{t}|s_{t},z]</script>，由一个神经网络与参数<script type="math/tex">\theta</script>表示，从游戏开始接收所有观察<script type="math/tex">s_{t}=(o_{1:t},a_{1:t-1})</script>作为输入，并选择动作作为输出。该策略还基于一个统计量<script type="math/tex">z</script>，它总结了从人类数据中采样的策略（例如build order）。</p>
+<p>​    我们的代理架构由处理星际争霸的原始复杂性的通用神经网络组件组成。使用自注意力机制处理玩家和对手单位的观察。为了整合空间信息和非空间信息，我们引入了散点连接。为了处理部分可观测性，观测的时间序列由一个深度长短期记忆(LSTM)系统来处理。要管理结构化的组合动作空间，代理将使用自动回归策略（参加7,10,11）和循环使用的指针网络(参见12)。扩展数据图3总结了架构和图。Fig.3f显示每个组件的消融。</p>
+<p>​    代理参数最初是由监督学习进行训练的。游戏是从一个公开的匿名人类回放数据集中采样的。然后该策略被训练来预测每个行动<script type="math/tex">a_{t}</script>，要么基于<script type="math/tex">s_{t}</script>，也基于<script type="math/tex">z</script>。这导致了一套反映人类游戏模式的不同策略。</p>
+<p>​    代理参数随后被一种强化学习算法训练，该算法旨在最大限度地提高对混合对手的胜率（即计算最佳反应）。对手的选择由多代理程序决定，如下所述。AlphaStar的强化学习算法是基于一种类似于advantage actor-critic(参见13)的策略梯度算法。算法使用经验重放(参见15)进行异步（参见14）更新。这需要一种称为off-policy学习(参见5)的方法，即根据以前策略生成的经验更新当前策略。我们的解决方案的动机是观察到，在较大的动作空间中，当前和以前的策略不太可能在许多步骤中相匹配。因此，我们使用了在不匹配的情况下可以有效学习的技术：时间差分学习(<script type="math/tex">TD\left ( \lambda  \right )</script>（参见16）、剪切重要性采样(V-trace)（参见14）和一种新的自模仿算法(UPGO)（参见17），该算法将策略移向优于平均奖励的轨迹移动。为了减少方差，仅在训练过程中，使用玩家和对手角度的信息来估计值函数。图3i,k分析了这些组件的相对重要性。</p>
+<p>​    星际争霸的主要挑战之一是发现新的策略。考虑一个已经学习了建立和利用地面部队微观战术的策略。任何建造和单纯地使用空中单元的偏差都会降低性能。简单的探索极不可能执行一个精确的指令序列，超过数千步，构建空中单位，并有效地利用他们的微观战术。为了解决这个问题，并鼓励像人类游戏的稳健行为，我们利用了人类数据。每个代理都初始化为监督学习代理的参数。 随后，在强化学习期间，我们要么以统计量 <script type="math/tex">z</script>为条件来调节智能体，在这种情况下，智能体会因遵循与<script type="math/tex">z</script>对应的策略而获得奖励，要么无条件地训练智能体，在这种情况下，智能体可以自由选择自己的策略。 每当代理的动作概率与监督策略不同时，他们也会受到惩罚。 这种人类探索确保在整个培训过程中继续探索各种相关的游戏模式。 图 3e 显示了人类数据在 AlphaStar 中的重要性。</p>
+<h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1><ol>
+<li><p>Sutton, R. &amp; Barto, A. <em>Reinforcement Learning: An Introduction</em> (MIT Press, 1998).</p>
+</li>
+<li><p>Vinyals, O. et al. StarCraft II: a new challenge for reinforcement learning. Preprint at  <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1708.04782">https://arxiv.org/abs/1708.04782</a> (2017).</p>
+</li>
+<li><p>Mikolov, T., Karafiat, M., Burget, L., Cernocky, J. &amp; Khudanpur, S. Recurrent neural network  </p>
+<p>based language model. <em>INTERSPEECH-2010</em> 1045–1048 (2010)</p>
+</li>
+<li><p>Metz, L., Ibarz, J., Jaitly, N. &amp; Davidson, J. Discrete sequential prediction of continuous  </p>
+<p>actions for deep RL. Preprint at <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1705.05035v3">https://arxiv.org/abs/1705.05035v3</a> (2017).</p>
+</li>
+<li><p>Vinyals, O., Fortunato, M. &amp; Jaitly, N. Pointer networks. <em>Adv. Neural Information Process.</em>  </p>
+<p><em>Syst</em>. <strong>28</strong>, 2692–2700 (2015).</p>
+</li>
+<li><p>Mnih, V. et al. Asynchronous methods for deep reinforcement learning. <em>Proc. Machine</em>  </p>
+<p><em>Learning Res</em>. <strong>48</strong>, 1928–1937 (2016).</p>
+</li>
+<li><p>Espeholt, L. et al. IMPALA: scalable distributed deep-RL with importance  </p>
+<p>weighted actor-learner architectures. <em>Proc. Machine Learning Res</em>. <strong>80</strong>, 1407–1416  </p>
+<p>(2018).</p>
+</li>
+<li><p>Wang, Z. et al. Sample efficient actor-critic with experience replay. Preprint at https:// </p>
+<p>arxiv.org/abs/1611.01224v2 (2017).</p>
+</li>
+<li><p>Sutton, R. Learning to predict by the method of temporal differences. <em>Mach. Learn</em>. <strong>3</strong>,  </p>
+<p>9–44 (1988).</p>
+</li>
+<li><p>Oh, J., Guo, Y., Singh, S. &amp; Lee, H. Self-Imitation Learning. <em>Proc. Machine Learning Res</em>. <strong>80</strong>,  </p>
+<p>3875–3884 (2018).</p>
+</li>
+</ol>
+
       
     </div>
 
