@@ -1236,7 +1236,7 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-04 00:05:14" itemprop="dateModified" datetime="2021-06-04T00:05:14+08:00">2021-06-04</time>
+                <time title="Modified: 2021-06-06 23:24:03" itemprop="dateModified" datetime="2021-06-06T23:24:03+08:00">2021-06-06</time>
               </span>
 
           
@@ -1267,7 +1267,15 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
 <p>​    代理参数最初是由监督学习进行训练的。游戏是从一个公开的匿名人类回放数据集中采样的。然后该策略被训练来预测每个行动<script type="math/tex">a_{t}</script>，要么基于<script type="math/tex">s_{t}</script>，也基于<script type="math/tex">z</script>。这导致了一套反映人类游戏模式的不同策略。</p>
 <p>​    代理参数随后被一种强化学习算法训练，该算法旨在最大限度地提高对混合对手的胜率（即计算最佳反应）。对手的选择由多代理程序决定，如下所述。AlphaStar的强化学习算法是基于一种类似于advantage actor-critic(参见13)的策略梯度算法。算法使用经验重放(参见15)进行异步（参见14）更新。这需要一种称为off-policy学习(参见5)的方法，即根据以前策略生成的经验更新当前策略。我们的解决方案的动机是观察到，在较大的动作空间中，当前和以前的策略不太可能在许多步骤中相匹配。因此，我们使用了在不匹配的情况下可以有效学习的技术：时间差分学习(<script type="math/tex">TD\left ( \lambda  \right )</script>（参见16）、剪切重要性采样(V-trace)（参见14）和一种新的自模仿算法(UPGO)（参见17），该算法将策略移向优于平均奖励的轨迹移动。为了减少方差，仅在训练过程中，使用玩家和对手角度的信息来估计值函数。图3i,k分析了这些组件的相对重要性。</p>
 <p>​    星际争霸的主要挑战之一是发现新的策略。考虑一个已经学习了建立和利用地面部队微观战术的策略。任何建造和单纯地使用空中单元的偏差都会降低性能。简单的探索极不可能执行一个精确的指令序列，超过数千步，构建空中单位，并有效地利用他们的微观战术。为了解决这个问题，并鼓励像人类游戏的稳健行为，我们利用了人类数据。每个代理都初始化为监督学习代理的参数。 随后，在强化学习期间，我们要么以统计量 <script type="math/tex">z</script>为条件来调节智能体，在这种情况下，智能体会因遵循与<script type="math/tex">z</script>对应的策略而获得奖励，要么无条件地训练智能体，在这种情况下，智能体可以自由选择自己的策略。 每当代理的动作概率与监督策略不同时，他们也会受到惩罚。 这种人类探索确保在整个培训过程中继续探索各种相关的游戏模式。 图 3e 显示了人类数据在 AlphaStar 中的重要性。</p>
-<h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1><ol>
+<p>​    为了解决博弈论上的挑战，我们引入了联盟训练，一种多智能体强化学习的算法(图 1b, c)。Self-play算法，类似于国际象棋和Go(参见18)中使用的算法，学习迅速，但可能会造成无限循环(例如，A打败B，B打败C，但A输给C)，没有取得进展（参见19）。Fictitious self-play(FSP)(参见20-22)通过计算对打之前所有策略的均匀混合物的最佳响应来避免循环；在双人零和博弈中，这种混合物收敛于纳什均衡（参见20）。我们扩展了这种方法来计算对非均匀混合的最佳反应。</p>
+<p>​    这个潜在对手的联盟包括不同种类的代理人。，以及当前和以前迭代中的策略。在每次迭代中，每个代理都会与从特定于该代理的混合策略中采样的对手玩游戏。代理的参数由上述actor-critic 强化学习程序从这些游戏的结果中更新。</p>
+<p>​    联盟由三种不同类型的代理人组成，主要区别在于他们选择对手混合物的机制。首先，main agent使用prioritized fictitious self-play(PFSP)机制，该机制根据每个对手的胜率成比例调整混合概率；这为我们的代理提供了更多的机会来克服最有问题的对手。在固定概率下，选择main agent作为对手,这恢复了自我发挥的快速学习(图3c)。第二，main exploiter代理只对抗当前迭代的main agent。其目的是查明main agent的潜在弱点；因此，鼓励main agent解决其弱点。第三，legue exploiter 代理使用与main exploiter代理类似的PFSP机制，但不是main exploiter代理的目标。他们的目的是发现整个联盟的系统性弱点。main exploiters 和league exploiter都定期重新初始化，以鼓励更多的多样性，并可能迅速发现不一定能够有效抵御利用的专业策略。。图3b分析了联盟内球员的选择。</p>
+<p>​    在星际争霸中，每个玩家从三个种族中选择一个种族：人族、神族或虫族，每个种族都有不同的机制。我们使用三个main agents（每个星际争霸种族中的一个)、三个main exploiter agents(每个种族一个)和6个league exploiter agents(每场种族两个）来训练联盟。每个代理使用32个第三代张量处理单元(TPU（参见23）)在44天内进行训练。在联盟训练中，共创造了近900名不同的玩家。</p>
+<h1 id="经验评估"><a href="#经验评估" class="headerlink" title="经验评估"></a>经验评估</h1><p>我们使用官方在线配对系统Battle.net，使用的无条件策略评估了main Alphastar 的三个代理人族，神族和虫族。在训练期间，每个agent在训练过程中以三种不同的快照进行评估：只在监督训练后(AlphaStar Supervised)、27天的联盟训练(AlphaStar Mid)和44天的联赛训练后(AlphaStar Final)。AlphaStar Supervised和AlphaStar Mid从Battle.net上的无等级评分开始，分别对每一场比赛进行30场和60场比赛的评估；AlphaStar决赛根据AlphaStar Mid的评分进行评估，每场比赛增加30场比赛。Battle.net配对程序选择了地图和对手。比赛是在盲目的条件下进行的：AlphaStar没有提供对手的身份，而是在一个匿名帐户。选择这些条件是为了估计AlphaStar在近似稳定条件下的强度，但并不直接测量其在重复播放下的易受攻击性。</p>
+<p>​    AlphaStar最终获得了6275的神族配对等级（MMR）， 人族为6048MMR，虫族为5835MMR，使它超过99.8%的人类玩家，并在大师级的所有三个种族（图 2a，扩展数据图7（分析），补充数据，回放（游戏回放）。AlphaStar的平均评分达到3699分，高于84%人类玩家并展示了监督学习的有效性。</p>
+<p>​    为了进一步分析AlphaStar，我们还运行了一些内部消融(图3)和评估(图4)。对于多智能体动力学，我们在整个联盟训练期间对所有球员进行了一次循环赛，并对训练遵循特定人类策略的持有验证代理进行了第二次main agent锦标赛。main agent性能在所有三个比赛中稳步提高。随着时间的推移，main exploiters的性能实际上有所下降，并且main agent的性能比保留的验证代理更好，这两种情况都表明main agent越来越强大。所有玩家在每个时间点上的联盟纳什均衡给先前迭代的玩家分配了很小的概率，这表明学习算法不会循环或回归。最后，在整个联赛训练过程中，单元组成发生了变化，这表明了一个多样化的战略进程。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>​    AlphaStar是第一个在星际争霸II中达到大师级的代理，并且第一个达到了人类玩家在一个广泛的职业电子竞技没有简化游戏的最高联盟。与星际争霸一样，现实世界的领域，如个人助理、自动驾驶汽车或机器人，在给定未完全观察到的信息的情况下，需要通过组合或结构化的动作空间进行实时决策。此外，与星际争霸类似，许多应用程序都有复杂的策略空间，其中包含循环或硬探索场景，代理可能会遇到意外的策略或者在现实世界中部署复杂的边缘情况。《星际争霸II》中AlphaStar的成功提出通用机器学习算法可能对复杂的现实问题有实质性的影响。</p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1><ol>
 <li><p>Sutton, R. &amp; Barto, A. <em>Reinforcement Learning: An Introduction</em> (MIT Press, 1998).</p>
 </li>
 <li><p>Vinyals, O. et al. StarCraft II: a new challenge for reinforcement learning. Preprint at  <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1708.04782">https://arxiv.org/abs/1708.04782</a> (2017).</p>
@@ -1296,6 +1304,20 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
 </li>
 <li><p>Oh, J., Guo, Y., Singh, S. &amp; Lee, H. Self-Imitation Learning. <em>Proc. Machine Learning Res</em>. <strong>80</strong>,  </p>
 <p>3875–3884 (2018).</p>
+</li>
+<li><p>Silver, D. et al. A general reinforcement learning algorithm that masters chess, shogi, and  </p>
+</li>
+</ol>
+<p>Go through self-play. <em>Science</em> <strong>362</strong>, 1140–1144 (2018).</p>
+<ol>
+<li><p>Balduzzi, D. et al. Open-ended learning in symmetric zero-sum games. <em>Proc. Machine</em>  </p>
+<p><em>Learning Res</em>. <strong>97</strong>, 434–443 (2019).</p>
+</li>
+<li><p>Brown, G. W. Iterative solution of games by fictitious play. <em>Act. Anal. Prod. Alloc</em>. <strong>13</strong>,  </p>
+<p>374–376 (1951).</p>
+</li>
+<li><p>Jouppi, N. P. et al. In-datacenter performance analysis of a tensor processing unit.  </p>
+<p>Preprint at <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1704.04760v1">https://arxiv.org/abs/1704.04760v1</a> (2017).</p>
 </li>
 </ol>
 
