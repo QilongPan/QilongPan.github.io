@@ -20,19 +20,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="视频讲解">
+  <meta name="description" content="摘要​    许多现实世界中的问题，如网络包路由和自动驾驶车辆的协调，很自然地被建模为合作的多智能体系统。非常需要新的强化学习方法，可以轻松地学习此类系统的分散策略。为此，我们提出了一种新的多智能体actor-critic方法，称为counterfactual multi-agent(COMA)策略梯度。COMA使用一个集中的critic来估计Q-function，并使用分散的actors来优化代">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Reinforcement Learning with Deep Energy-Based Policies">
-<meta property="og:url" content="http://example.com/2021/06/01/Reinforcement-Learning-with-Deep-Energy-Based-Policies/index.html">
+<meta property="og:title" content="Counterfactual Multi-Agent Policy Gradients">
+<meta property="og:url" content="http://example.com/2021/06/16/Counterfactual-Multi-Agent-Policy-Gradients/index.html">
 <meta property="og:site_name" content="潘其龙">
-<meta property="og:description" content="视频讲解">
+<meta property="og:description" content="摘要​    许多现实世界中的问题，如网络包路由和自动驾驶车辆的协调，很自然地被建模为合作的多智能体系统。非常需要新的强化学习方法，可以轻松地学习此类系统的分散策略。为此，我们提出了一种新的多智能体actor-critic方法，称为counterfactual multi-agent(COMA)策略梯度。COMA使用一个集中的critic来估计Q-function，并使用分散的actors来优化代">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-06-01T14:16:57.000Z">
-<meta property="article:modified_time" content="2021-06-01T15:22:35.697Z">
+<meta property="article:published_time" content="2021-06-16T13:19:44.000Z">
+<meta property="article:modified_time" content="2021-06-16T14:47:23.686Z">
 <meta property="article:author" content="QilongPan">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2021/06/01/Reinforcement-Learning-with-Deep-Energy-Based-Policies/">
+<link rel="canonical" href="http://example.com/2021/06/16/Counterfactual-Multi-Agent-Policy-Gradients/">
 
 
 <script id="page-configurations">
@@ -45,7 +45,7 @@
   };
 </script>
 
-  <title>Reinforcement Learning with Deep Energy-Based Policies | 潘其龙</title>
+  <title>Counterfactual Multi-Agent Policy Gradients | 潘其龙</title>
   
 
 
@@ -165,7 +165,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/01/Reinforcement-Learning-with-Deep-Energy-Based-Policies/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/16/Counterfactual-Multi-Agent-Policy-Gradients/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -178,7 +178,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Reinforcement Learning with Deep Energy-Based Policies
+          Counterfactual Multi-Agent Policy Gradients
         </h1>
 
         <div class="post-meta">
@@ -189,7 +189,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-06-01 22:16:57 / Modified: 23:22:35" itemprop="dateCreated datePublished" datetime="2021-06-01T22:16:57+08:00">2021-06-01</time>
+              <time title="Created: 2021-06-16 21:19:44 / Modified: 22:47:23" itemprop="dateCreated datePublished" datetime="2021-06-16T21:19:44+08:00">2021-06-16</time>
             </span>
 
           
@@ -203,8 +203,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1F5411W7fN/">视频讲解</a></p>
-
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    许多现实世界中的问题，如网络包路由和自动驾驶车辆的协调，很自然地被建模为合作的多智能体系统。非常需要新的强化学习方法，可以轻松地学习此类系统的分散策略。为此，我们提出了一种新的多智能体actor-critic方法，称为counterfactual multi-agent(COMA)策略梯度。COMA使用一个集中的critic来估计Q-function，并使用分散的actors来优化代理的策略。此外，为了解决多代理credit assignent的挑战，它使用了一个counterfactual(反事实的) baseline，边缘化一个单一代理的行动，同时保持其他代理的行动不变。COMA还使用了一种critic表示，允许在一次向前传递中有效地计算counterfactual baseline。我们在StarCraft unit micromanagement测试平台中评估 COMA，使用具有显着部分可观察性的分散变体。 在这种情况下，COMA 显着提高了其他多代理 actor-critic 方法的平均性能，并且性能最好的代理与可以访问完整状态的最先进的集中控制器相比具有竞争力。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    许多复杂的强化学习(RL)问题，如自动驾驶车辆的协调 (Cao et al. 2013)，网络分组传送 (Ye, Zhang, and Yang 2015),和分布式物流系统 (Ying and Dayong 2005)很自然地被建模为合作的多智能体系统。然而，为单个代理设计的RL方法通常在此类任务上表现不佳，因为代理的联合动作空间随着代理的数量呈指数级增长。</p>
+<p>​    为了应对这种复杂性，通常需要诉诸去中心化策略，其中每个代理仅根据其本地动作观察历史来选择自己的动作。 此外，执行期间的部分可观察性和通信限制可能需要使用分散的策略，即使联合行动空间不是很大。</p>
+<p>​    因此，非常需要能够有效学习分散策略的新 RL 方法。 在某些情况下，学习本身也可能需要去中心化。 然而，在许多情况下，学习可以在模拟器或实验室中进行，在那里可以获得额外的状态信息并且代理可以自由交流。 这种分散策略的集中训练是多智能体规划的标准范式Oliehoek, Spaan, and Vlassis 2008; Kraemer and Banerjee 2016)，最近被深度强化学习社区采用 (Foerster et al. 2016; Jorge, Kageback, and Gustavsson 2016).。 然而，如何最好地利用集中学习的机会的问题仍然存在。</p>
+<p>​    另一个关键挑战是多智能体credit assignment(信用分配)(Chang, Ho, and Kaelbling 2003)：在合作环境中，联合行动通常只产生全局奖励，这使得每个智能体很难推断出自己对团队成功的贡献。 有时可以为每个代理设计单独的奖励函数。 然而，这些奖励在合作环境中通常不可用，并且通常无法鼓励个体代理为更大的利益做出牺牲。 这通常会严重阻碍多智能体在具有挑战性的任务中学习，即使智能体数量相对较少。</p>
+<p>​    在本文中，我们提出了一种新的多智能体强化学习方法，称为counterfactual multi-agent（反事实多智能体 COMA) 策略梯度，以解决这些问题。 COMA 采用actor-critic(Konda and Tsitsiklis 2000)方法，其中actor即策略，通过遵循critic估计的梯度进行训练。 COMA 基于三个主要思想。</p>
+<p>​    首先，COMA 使用集中式critic。 critic只在学习期间使用，而在执行期间只需要actor。 由于学习是集中式的，因此我们可以使用集中式critic，以联合动作和所有可用状态信息为条件，而每个代理的策略仅以自己的动作观察历史为条件。</p>
+<p>​    其次，COMA使用了一个counterfactual baseline。这个想法的灵感来自difference rewards(Wolpert and Tumer 2002; Tumer and Agogino 2007),其中每个智能体从一个成形的奖励中学习，该奖励将全局奖励与当该智能体的动作替换为default action时收到的奖励进行比较。虽然差异奖励是执行多智能体信用分配的强大方法，但它们需要访问模拟器或估计奖励函数，并且通常不清楚如何选择默认动作。COMA 通过使用集中式critic来计算特定于代理的advantage function来解决这个问题，该function将当前联合行动的估计回报与边缘化单个代理的行为的反事实基线进行比较，同时保持其他代理的行为固定。这类似于计算aristocrat utility(贵族效用)（Wolpert and Tumer 2002)，但避免了策略和效用函数之间递归相互依赖的问题，因为反事实基线对策略梯度的预期贡献为零。因此，COMA 不依赖于额外的模拟、近似值或关于适当默认行为的假设，而是为每个代理计算单独的基线，该基线依赖于集中式critic来推理只有该代理的行为发生变化的反事实。</p>
+<p>​    第三，COMA 使用critic表示，允许有效计算反事实基线。 在单个前向传递中，它计算给定代理的所有不同动作的 Q 值，条件是所有其他代理的动作。 因为所有代理都使用一个集中的critic，所以所有代理的所有 Q 值都可以在单个分批前向传递中计算。</p>
+<p>​    我们在StarCraft unit micromanagement（参见1）的测试平台中评估 COMA，它最近成为具有高随机性、大状态动作空间和延迟奖励的具有挑战性的 RL 基准任务。 以前的工作 (Usunier et al. 2016; Peng et al. 2017)利用了集中控制策略，该策略以整个状态为条件，并且可以使用强大的宏观动作，使用星际争霸的内置规划器，结合移动和攻击动作 . 为了产生一个有意义的去中心化基准，证明即使在代理相对较少的情况下也具有挑战性，我们提出了一种变体，可以大规模减少每个代理的视野并删除对这些宏观动作的访问。</p>
+<p>​    我们在这个新基准上的实证结果表明，与其他多代理 actor-critic 方法以及 COMA 本身的消融版本相比，COMA 可以显着提高性能。 此外，COMA 的最佳代理可以与最先进的集中控制器竞争，后者可以访问完整的状态信息和宏操作。</p>
+<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1>
     </div>
 
     
@@ -219,13 +229,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/05/21/Deterministic-Policy-Gradient-Algorithms/" rel="prev" title="Deterministic Policy Gradient Algorithms">
-      <i class="fa fa-chevron-left"></i> Deterministic Policy Gradient Algorithms
+    <a href="/2021/06/01/deep-learning-tutorial/" rel="prev" title="deep_learning_tutorial">
+      <i class="fa fa-chevron-left"></i> deep_learning_tutorial
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/06/01/deep-learning-tutorial/" rel="next" title="deep_learning_tutorial">
-      deep_learning_tutorial <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -284,6 +291,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">相关工作</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
