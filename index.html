@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-18 00:29:54" itemprop="dateModified" datetime="2021-06-18T00:29:54+08:00">2021-06-18</time>
+                <time title="Modified: 2021-06-18 00:42:03" itemprop="dateModified" datetime="2021-06-18T00:42:03+08:00">2021-06-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -298,7 +298,11 @@ g=\bigtriangledown _{\theta ^{\pi }}log\pi \left ( u|\tau _{t}^{a} \right )\left
 <p>​    首先，它引入了显着的部分可观察性。 其次，这意味着单位只能在敌人范围内进行攻击，从而无法访问星际争霸宏操作。 第三，代理无法区分已死亡的敌人和超出范围的敌人，因此可以向这些敌人发出无效的攻击命令，从而导致不采取任何行动。 这大大增加了动作空间的平均大小，从而增加了探索和控制的难度。</p>
 <p>​    在这些困难的条件下，即使单元数量相对较少的场景也变得更加难以解决。 如表 1 所示，我们与一个简单的手工编码启发式进行了比较，该启发式指示代理向前跑到范围内，然后集中火力，依次攻击每个敌人直到其死亡。 这种启发式在 5m 的全视野下实现了 98% 的胜率，但在我们的设置中只有 66%。 为了在这项任务中表现出色，代理必须通过正确定位和集中火力来学习合作，同时记住哪些敌方和盟军单位还活着或不在视野中。</p>
 <p><img src="/2021/06/16/Counterfactual-Multi-Agent-Policy-Gradients/table1.png" alt></p>
-
+<p>​    所有代理在每个时间步都会收到相同的全局奖励，等于对对手单位造成的伤害总和减去所受伤害的一半。 杀死对手会产生 10 分的奖励，赢得比赛会产生等于团队剩余总生命值加 200 的奖励。 这种基于伤害的奖励信号与 Usunier et al. (2016)使用的信号相当。 与 (Peng et al. 2017)不同，我们的方法不需要估计本地奖励。</p>
+<h2 id="State-Features"><a href="#State-Features" class="headerlink" title="State Features"></a>State Features</h2><p>​    actor和critic接收不同的输入特征，分别对应于局部观察和全局状态。 两者都包括盟友和敌人的特征。 单位可以是盟友或敌人，而智能体是指挥盟友单位的分散控制器。</p>
+<p>​    每个代理的局部观察仅从以它控制的单位为中心的地图的圆形子集中绘制，并包括该视野内的每个单位：distance, relative x, relative y, unit type and shield（盾牌）（开火后一个单位的冷却时间被重置，它必须在再次开火前掉落。 盾牌吸收伤害直到它们破裂，之后单位开始失去健康。 龙骑兵和狂热者有盾牌，但海军陆战队没有）。 所有特征都是通过它们的最大值归一化。 我们不包括有关单位当前目标的任何信息。</p>
+<p>​    全局状态表示由相似的特征组成，但对于地图上的所有单元，无论视野如何。 不包括绝对距离，并且 x-y 位置是相对于地图中心而不是特定代理给出的。 全局状态还包括所有代理的生命值和冷却时间。 提供给集中式 Q-function critic的表示是全局状态表示与正在评估其行为的代理的局部观察的连接。 我们估计 V (s) 的中心化critic，因此是代理不可知的，接收与所有代理的观察连接的全局状态。 观察结果不包含新信息，但包括相对于该代理的自我中心距离。</p>
+<h2 id="Architecture-amp-Training"><a href="#Architecture-amp-Training" class="headerlink" title="Architecture &amp; Training"></a>Architecture &amp; Training</h2>
       
     </div>
 
@@ -1023,7 +1027,7 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-17 23:58:28" itemprop="dateModified" datetime="2021-06-17T23:58:28+08:00">2021-06-17</time>
+                <time title="Modified: 2021-06-18 00:43:12" itemprop="dateModified" datetime="2021-06-18T00:43:12+08:00">2021-06-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1360,7 +1364,7 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-17 23:58:10" itemprop="dateModified" datetime="2021-06-17T23:58:10+08:00">2021-06-17</time>
+                <time title="Modified: 2021-06-18 00:42:55" itemprop="dateModified" datetime="2021-06-18T00:42:55+08:00">2021-06-18</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
