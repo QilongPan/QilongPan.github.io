@@ -20,19 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="摘要​        在游戏AI的研究中，一对一的战斗游戏在棋盘游戏和实时模拟游戏之间起到了桥梁的作用，因为它需要中等水平的计算能力，具有中等大小的复杂性。 在本文中，我们提出了一种使用深度强化学习与self-play和蒙特卡罗树搜索(MCTS)创建战斗游戏AI代理的方法。 我们还分析了各种强化学习设置，如状态向量的变化，reward shaping，以及具有新性能度量的对手组合。 用该方法训练的">
+  <meta name="description" content="摘要​    最近在图像分类研究中取得的大部分进展都归功于训练过程的改进，例如数据增强和优化方法的变化。 然而，在文献中，大多数改进要么作为实现细节被简要提及，要么仅在源代码中可见。 在本文中，我们将检查这些改进的集合，并通过消融研究凭经验评估它们对最终模型准确性的影响。 我们将证明，通过将这些改进结合在一起，我们能够显着改进各种 CNN 模型。 例如，我们将 ResNet-50 在 ImageN">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mastering Fighting Game Using Deep Reinforcement Learning With Self-play">
-<meta property="og:url" content="http://example.com/2021/01/14/Mastering-Fighting-Game-Using-Deep-Reinforcement-Learning-With-Self-play/index.html">
+<meta property="og:title" content="Bag of Tricks for Image Classification with Convolutional Neural Networks">
+<meta property="og:url" content="http://example.com/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/index.html">
 <meta property="og:site_name" content="潘其龙">
-<meta property="og:description" content="摘要​        在游戏AI的研究中，一对一的战斗游戏在棋盘游戏和实时模拟游戏之间起到了桥梁的作用，因为它需要中等水平的计算能力，具有中等大小的复杂性。 在本文中，我们提出了一种使用深度强化学习与self-play和蒙特卡罗树搜索(MCTS)创建战斗游戏AI代理的方法。 我们还分析了各种强化学习设置，如状态向量的变化，reward shaping，以及具有新性能度量的对手组合。 用该方法训练的">
+<meta property="og:description" content="摘要​    最近在图像分类研究中取得的大部分进展都归功于训练过程的改进，例如数据增强和优化方法的变化。 然而，在文献中，大多数改进要么作为实现细节被简要提及，要么仅在源代码中可见。 在本文中，我们将检查这些改进的集合，并通过消融研究凭经验评估它们对最终模型准确性的影响。 我们将证明，通过将这些改进结合在一起，我们能够显着改进各种 CNN 模型。 例如，我们将 ResNet-50 在 ImageN">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-01-14T12:21:44.000Z">
-<meta property="article:modified_time" content="2021-01-14T14:44:07.574Z">
+<meta property="og:image" content="http://example.com/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/table1.png">
+<meta property="article:published_time" content="2021-06-21T14:28:16.000Z">
+<meta property="article:modified_time" content="2021-06-21T14:49:30.363Z">
 <meta property="article:author" content="QilongPan">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/table1.png">
 
-<link rel="canonical" href="http://example.com/2021/01/14/Mastering-Fighting-Game-Using-Deep-Reinforcement-Learning-With-Self-play/">
+<link rel="canonical" href="http://example.com/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/">
 
 
 <script id="page-configurations">
@@ -45,7 +47,7 @@
   };
 </script>
 
-  <title>Mastering Fighting Game Using Deep Reinforcement Learning With Self-play | 潘其龙</title>
+  <title>Bag of Tricks for Image Classification with Convolutional Neural Networks | 潘其龙</title>
   
 
 
@@ -165,7 +167,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/14/Mastering-Fighting-Game-Using-Deep-Reinforcement-Learning-With-Self-play/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -178,7 +180,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Mastering Fighting Game Using Deep Reinforcement Learning With Self-play
+          Bag of Tricks for Image Classification with Convolutional Neural Networks
         </h1>
 
         <div class="post-meta">
@@ -189,7 +191,16 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-01-14 20:21:44 / Modified: 22:44:07" itemprop="dateCreated datePublished" datetime="2021-01-14T20:21:44+08:00">2021-01-14</time>
+              <time title="Created: 2021-06-21 22:28:16 / Modified: 22:49:30" itemprop="dateCreated datePublished" datetime="2021-06-21T22:28:16+08:00">2021-06-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB/" itemprop="url" rel="index"><span itemprop="name">图像分类</span></a>
+                </span>
             </span>
 
           
@@ -203,9 +214,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​        在游戏AI的研究中，一对一的战斗游戏在棋盘游戏和实时模拟游戏之间起到了桥梁的作用，因为它需要中等水平的计算能力，具有中等大小的复杂性。 在本文中，我们提出了一种使用深度强化学习与self-play和蒙特卡罗树搜索(MCTS)创建战斗游戏AI代理的方法。 我们还分析了各种强化学习设置，如状态向量的变化，reward shaping，以及具有新性能度量的对手组合。 用该方法训练的Agent对其他AI进行了评价。 评估结果表明，将MCTS和self-play混合在1：3的比例下，可以以94.4%的胜率压倒其他AI。 完全训练的代理理解游戏机制，使它等待直到接近敌人，并在最佳时机执行行动。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    FightingICE是一个1v1战斗游戏环境，其名称来源于Intelligent Computer Entertainment lab in Ritsumeikan </p>
-<p>university组织的战斗游戏平台。 一对一的战斗游戏对于研究不同的人工智能算法具有明显的特点。 首先，它是介于棋盘游戏和实时策略模拟游戏之间的中间步骤。 棋盘游戏AI，如深蓝[1]或阿尔法围棋[2]有足够的时间来考虑玩家在玩游戏时的未来行动。 然而，一对一的战斗游戏AI几乎没有时间，所以它必须实时反应。 这使得战斗游戏比棋盘游戏更困难。 同时，战斗游戏比星际争霸或DOTA2等实时模拟游戏具有更短的游戏时间和更少的动作复杂度。 它具有设计和评估AI算法的优点，计算量小</p>
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    最近在图像分类研究中取得的大部分进展都归功于训练过程的改进，例如数据增强和优化方法的变化。 然而，在文献中，大多数改进要么作为实现细节被简要提及，要么仅在源代码中可见。 在本文中，我们将检查这些改进的集合，并通过消融研究凭经验评估它们对最终模型准确性的影响。 我们将证明，通过将这些改进结合在一起，我们能够显着改进各种 CNN 模型。 例如，我们将 ResNet-50 在 ImageNet 上的 top-1 验证准确率从 75.3% 提高到 79.29%。 我们还将证明图像分类精度的提高导致在其他应用领域（如目标检测和语义分割）中更好的迁移学习性能。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    自 2012 年 AlexNet [15] 推出以来，深度卷积神经网络已成为图像分类的主要方法。 从那时起，人们提出了各种新架构，包括 VGG [24]、NiN [16]、Inception [1]、ResNet [9]、DenseNet [13] 和 NASNet [34]。 同时，我们看到了模型精度提升的稳定趋势。 例如，ImageNet [23] 上的 top-1 验证准确率已从 62.5% (AlexNet) 提高到 82.7% (NASNet-A)。</p>
+<p>​    然而这些进步不仅仅来自改进的模型架构，训练过程的改进，包括损失函数的变化、数据预处理和优化方法也发挥了重要作用。 过去几年已经提出了大量这样的改进，但受到的关注相对较少。 在文献中，大多数只是作为实现细节被简要提及，而其他的只能在源代码中找到。</p>
+<p>​    在本文中，我们将研究一系列训练过程和模型架构改进，这些改进提高了模型的准确性，但几乎没有改变计算复杂性。 其中许多都是小“trick”，例如修改特定卷积层的步幅大小或调整学习率计划。 然而总的来说，它们有很大的不同。 我们将在多个网络架构和数据集上评估它们，并报告它们对最终模型准确性的影响。</p>
+<p>​    我们的经验评估表明，一些技巧可以显着提高精度，将它们组合在一起可以进一步提高模型精度。 我们将应用所有技巧后的 ResNet-50 与表 1 中的其他相关网络进行比较。请注意，这些技巧在ImageNet上将 ResNet50 的 top-1 验证准确率从 75.3% 提高到 79.29%。 它还优于其他更新和改进的网络架构，例如 SE-ResNeXt-50。 此外，我们表明我们的方法可以推广到其他网络（Inception V3 [1] 和 MobileNet [11]）和数据集（Place365 [32]）。 我们进一步表明，使用我们的技巧训练的模型在其他应用领域（如目标检测和语义分割）中带来了更好的迁移学习性能。</p>
+<p><img src="/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/table1.png" alt></p>
 
     </div>
 
@@ -221,13 +235,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/" rel="prev" title="Playing Atari with Deep Reinforcement Learning">
-      <i class="fa fa-chevron-left"></i> Playing Atari with Deep Reinforcement Learning
+    <a href="/2021/06/16/Counterfactual-Multi-Agent-Policy-Gradients/" rel="prev" title="Counterfactual Multi-Agent Policy Gradients">
+      <i class="fa fa-chevron-left"></i> Counterfactual Multi-Agent Policy Gradients
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/01/15/Policy-Gradient-Methods-for-Reinforcement-Learning-with-Function-Approximation/" rel="next" title="Policy Gradient Methods for Reinforcement Learning with Function Approximation">
-      Policy Gradient Methods for Reinforcement Learning with Function Approximation <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
