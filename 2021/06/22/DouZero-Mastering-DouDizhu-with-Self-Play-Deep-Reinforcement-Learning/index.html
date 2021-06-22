@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="摘要​    游戏是现实世界的抽象，在那里人造的代理学会与其他代理竞争和合作。尽管在各种完美和不完美信息游戏中取得了重大成就，但三人纸牌游戏斗地主（又名斗地主）仍未解决。斗地主是一个非常具有挑战性的领域，竞争、协作、信息不完善、状态空间大，尤其是大量可能的行为（合法行为在不同回合之间差异很大）。不幸的是，现代强化学习算法主要关注简单和小的动作空间，毫不奇怪，在斗地主上没有取得令人满意的进展。在这项">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DouZero:Mastering DouDizhu with Self-Play Deep Reinforcement Learning">
+<meta property="og:url" content="http://example.com/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/index.html">
+<meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="摘要​    游戏是现实世界的抽象，在那里人造的代理学会与其他代理竞争和合作。尽管在各种完美和不完美信息游戏中取得了重大成就，但三人纸牌游戏斗地主（又名斗地主）仍未解决。斗地主是一个非常具有挑战性的领域，竞争、协作、信息不完善、状态空间大，尤其是大量可能的行为（合法行为在不同回合之间差异很大）。不幸的是，现代强化学习算法主要关注简单和小的动作空间，毫不奇怪，在斗地主上没有取得令人满意的进展。在这项">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/fiture1.png">
+<meta property="article:published_time" content="2021-06-22T13:51:20.000Z">
+<meta property="article:modified_time" content="2021-06-22T15:30:06.006Z">
+<meta property="article:author" content="QilongPan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/fiture1.png">
+
+<link rel="canonical" href="http://example.com/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>DouZero:Mastering DouDizhu with Self-Play Deep Reinforcement Learning | 潘其龙</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">潘其龙</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DouZero:Mastering DouDizhu with Self-Play Deep Reinforcement Learning
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-06-22 21:51:20 / Modified: 23:30:06" itemprop="dateCreated datePublished" datetime="2021-06-22T21:51:20+08:00">2021-06-22</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    游戏是现实世界的抽象，在那里人造的代理学会与其他代理竞争和合作。尽管在各种完美和不完美信息游戏中取得了重大成就，但三人纸牌游戏斗地主（又名斗地主）仍未解决。斗地主是一个非常具有挑战性的领域，竞争、协作、信息不完善、状态空间大，尤其是大量可能的行为（合法行为在不同回合之间差异很大）。不幸的是，现代强化学习算法主要关注简单和小的动作空间，毫不奇怪，在斗地主上没有取得令人满意的进展。在这项工作中，我们提出了一个概念上简单但有效的斗地主 AI 系统，即 DouZero，它通过深度神经网络、动作编码和并行actor增强了传统的蒙特卡洛方法。从零开始，在单台四颗GPU的服务器上，训练天数超过了所有现有的斗地主AI程序，在344个AI代理中在Botzone排行榜中名列第一。通过构建 DouZero，我们展示了经典的 Monte-Carlo 方法可以在具有复杂动作空间的硬领域中提供强大的结果。发布了代码和在线演示<a target="_blank" rel="noopener" href="https://github.com/kwai/DouZero">repo</a>，希望这种见解可以激发未来的工作。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    游戏通常作为 AI 的基准，因为它们是许多现实世界问题的抽象。在完全信息博弈方面取得了显著成果。例如，AlphaGo (Silver et al., 2016)、AlphaZero (Silver et al., 2018) 和 MuZero (Schrittwieser et al., 2020) 已经在围棋游戏中取得了最先进的性能。最近的研究已经发展到更具挑战性的不完美信息游戏，其中代理在部分可观察的环境中与其他人竞争或合作。双人游戏中取得了鼓舞人心的进展，例如简单的 Leduc Hold’em and limit/no-limit Texas Hold’em (Zinkevich et al., 2008; Heinrich &amp; Silver, 2016; Moravck et al., 2017; Brown &amp; Sandholm, 2018)，多人游戏，例如多人Texas hold’em (Brown &amp; Sandholm, 2019b)、 Starcraft (Vinyals et al., 2019), DOTA (Berner et al., 2019), Hanabi (Lerer  et al., 2020), Mahjong (Li et al., 2020a), Honor of Kings (Ye et al., 2020b;a), and No-Press Diplomacy (Gray et al., 2020)。</p>
+<p>​    这项工作旨在为斗地主（又名斗地主）构建人工智能程序，斗地主是中国最受欢迎的纸牌游戏，每天有数亿活跃玩家。斗地主有两个有趣的特性，它们对人工智能系统构成了巨大的挑战。首先，斗地主中的玩家需要在一个部分可观察的环境中与其他人竞争和合作，交流有限。具体来说，两名农民玩家将组队对抗地主玩家。扑克游戏的流行算法，例如 Counterfactual Regret Minimization (CFR) (Zinkevich et al., 2008)）及其变体，在这种复杂的三人游戏环境中通常没有声音。其次，斗地主拥有大量平均大小非常大的信息集，并且由于卡片的组合而具有非常复杂和庞大的动作空间，多达<script type="math/tex">10^{4}</script>个可能的动作（Zha et al., 2019a）。与德州扑克不同，斗地主中的动作不容易抽象，这使得搜索计算量大且常用的强化学习算法效果不佳。由于高估问题，Deep Q-Learning(DQN) (Mnih et al., 2015) 在非常大的动作空间中存在问题 (Zahavy et al., 2018)；策略梯度方法，例如 A3C (Mnih et al., 2016)，无法利用斗地主中的动作特征，因此无法像 DQN 那样自然地泛化不可见的动作 (Dulac-Arnold et al., 2015)。毫不奇怪，之前的工作表明，DQN 和 A3C 在斗地主上并没有取得令人满意的进展。在 (You et al., 2019) 中，即使经过 20 天的训练，DQN 和 A3C 对抗简单的基于规则的代理的胜率也低于 20%； (Zha et al., 2019a)中的 DQN 仅比均匀采样合法移动的随机代理略好。</p>
+<p>​    之前已经做了一些努力，通过将人类启发式学习和搜索相结合来构建斗地主 AI。Combination Q-Network (CQN) (You et al., 2019)建议通过将动作解耦为分解选择和最终移动选择来减少动作空间。然而，分解依赖于人类启发式，并且非常缓慢。在实践中，经过二十天的训练，CQN 甚至无法击败简单的启发式规则。DeltaDou (Jiang et al., 2019)是第一个与顶级人类玩家相比达到人类水平表现的人工智能程序。它通过使用贝叶斯方法来推断隐藏信息并根据他们自己的策略网络对其他玩家的行为进行采样，从而实现了类似于 AlphaZero 的算法。为了抽象动作空间，DeltaDou 基于启发式规则预训练了一个kicker network(选择带牌，三带一，四带二等)。然而，kicker在斗地主中扮演着重要的角色，不能轻易抽象。kicker的错误选择可能会直接导致输掉比赛，因为它可能会破坏其他一些卡片类别，例如单顺。此外，贝叶斯推理和搜索在计算上是昂贵的。即使在使用监督回归启发式算法初始化网络时，训练 DeltaDou 也需要两个多月的时间(Jiang et al., 2019)。因此，现有的斗地主 AI 程序在计算上很昂贵，并且可能是次优的，因为它们高度依赖于人类知识的抽象。</p>
+<p>​    在这项工作中，我们展示了 DouZero，这是一个概念上简单但有效的斗地主 AI 系统，没有抽象状态/动作空间或任何人类知识。 DouZero 使用深度神经网络、动作编码和并行actor增强了传统的蒙特卡罗方法 (Sutton &amp; Barto, 2018)。 DouZero 有两个可取的特性。首先，与 DQN 不同，它不容易受到高估偏差的影响。其次，通过将动作编码到 card matrices（卡片矩阵）中，它可以自然地泛化在整个训练过程中不常见的动作。这两个属性对于处理斗地主庞大而复杂的动作空间都至关重要。与许多树搜索算法不同，DouZero 基于采样，这使我们能够使用复杂的神经架构并在计算资源相同的情况下每秒生成更多数据。与之前许多依赖特定领域抽象的扑克 AI 研究不同，DouZero 不需要任何领域知识或底层动态知识。在只有 48 个内核和 4 个 1080Ti GPU 的单台服务器上从头开始训练，DouZero 在半天之内就超过了 CQN 和启发式规则，在两天内击败了我们的内部监督代理，并在 10 天内超越了 DeltaDou。广泛的评估表明，DouZero是迄今为止最强的斗地主人工智能系统。</p>
+<p>​    通过构建 DouZero 系统，我们证明了经典的 Monte-Carlo 方法可以在需要推理巨大状态和动作空间上的竞争和合作的大型复杂纸牌游戏中取得出色的结果。我们注意到，一些工作还发现蒙特卡罗方法可以实现有竞争力的表现 (Mania et al., 2018; Zha et al., 2021a)并有助于稀疏奖励设置 (Guo et al., 2018; Zha et al.,  2021b)。与这些专注于简单和小型环境的研究不同，我们展示了蒙特卡洛方法在大型纸牌游戏中的强大性能。希望这一见解可以促进未来对解决多智能体学习、稀疏奖励、复杂动作空间和不完美信息的研究，我们发布了我们的环境和训练代码。与许多需要数千个 CPU 进行训练的扑克 AI 系统不同，例如 DeepStack (Moravcık et al., 2017)和 Libratus (Brown &amp; Sandholm, 2018)，DouZero 实现了合理的实验管道，只需要几天的训练大多数研究实验室都负担得起的单个 GPU 服务器。我们希望它可以激发该领域的未来研究并作为强大的基线。</p>
+<h1 id="斗地主背景"><a href="#斗地主背景" class="headerlink" title="斗地主背景"></a>斗地主背景</h1><p>​    斗地主是一款流行的三人纸牌游戏，易学难精。 它在中国吸引了数亿玩家，每年举办许多比赛。 这是一个shedding-type（脱落类型）的游戏，玩家的目标是在其他玩家之前清空自己手中的所有牌。 两名农民玩家组队与另一位地主玩家作战。 如果农民玩家中的任何一个是第一个没有剩余牌的，则农民获胜。 每场比赛都有一个叫牌阶段，玩家根据手牌的强弱来竞标地主，还有一个打牌阶段，玩家轮流打牌。 我们在附录 A 中提供了详细介绍。</p>
+<p>​    DouDizhu 仍然是多智能体强化学习的未解决基准 (Zha et al., 2019a; Terry et al., 2020)。两个有趣的特性使得斗地主特别难于解决。首先，农民需要合作对抗地主。例如，图10显示了一个典型的情况，底部的农民可以选择打一个小单张来帮助右边的农民获胜。其次，斗地主因卡牌组合而具有复杂而庞大的动作空间。有 27, 472种可能的组合，其中这些组合的不同子集对于不同的手牌是合法的。图1是一手牌的例子，它有391种合法组合，包括Solo（单牌）、Pair(对子)、Trio（三张）、Bomb（炸弹）、Plane（飞机）、Quad等。 动作空间不能轻易抽象，因为不正确的打牌可能会打破其他类别并直接导致在输掉一场比赛中。因此，构建斗地主AI具有挑战性，因为斗地主中的玩家需要在巨大的动作空间上进行竞争和合作的推理。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/fiture1.png" alt></p>
+<h1 id="Deep-Monte-Carlo"><a href="#Deep-Monte-Carlo" class="headerlink" title="Deep Monte-Carlo"></a>Deep Monte-Carlo</h1><p>​    在本节中，我们重新审视Monte-Carlo (MC) 方法并介绍Deep Monte-Carlo (DMC)，它将 MC 与深度神经网络泛化为函数逼近。 然后我们将 DMC 与策略梯度方法（例如 A3C）和 DQN 进行讨论和比较，这些方法在斗地主中被证明是失败的 (You et al., 2019; Zha et al., 2019a)。</p>
+<h2 id="Monte-Carlo-Methods-with-Deep-Neural-Networks"><a href="#Monte-Carlo-Methods-with-Deep-Neural-Networks" class="headerlink" title="Monte-Carlo Methods with Deep Neural Networks"></a>Monte-Carlo Methods with Deep Neural Networks</h2><p>​    蒙特卡洛 (MC) 方法是基于平均样本回报的传统强化学习算法 (Sutton &amp; Barto, 2018)。 MC 方法是为episodic任务设计的，其中experiences可以分为episodes并且所有episodes最终都终止。 为了优化策略<script type="math/tex">\pi</script>，每次访问 MC 可用于通过迭代执行以下过程来估计 Q-table <script type="math/tex">Q(s, a)</script>：</p>
+<ol>
+<li>使用<script type="math/tex">\pi</script>生成episode。</li>
+<li>对于每个<script type="math/tex">s,a</script>出现在episode中，计算并更新<script type="math/tex">Q(s, a)</script>，并使用关于<script type="math/tex">s,a</script>的所有样本的平均回报。</li>
+<li>对episode中的每个<script type="math/tex">s</script>，<script type="math/tex">\pi \left ( s \right )\leftarrow arg max_{a}Q\left ( s,a \right )</script>。</li>
+</ol>
+<p>​    Step 2 中的平均回报通常是通过折现累积奖励获得的。 与依赖bootstrapping的 Q-learning 不同，MC 方法直接逼近目标 Q 值。 在步骤 1 中，我们可以使用 epsilon-greedy 来平衡探索和利用。 上述过程可以与深度神经网络自然结合，从而导致深度蒙特卡罗（DMC）。 具体来说，我们可以用神经网络替换 Q 表，并在步骤 2 中使用均方误差 (MSE) 更新 Q 网络。</p>
+<p>​    虽然 MC 方法被批评不能处理不完整的episode，并且由于高方差而被认为效率低下 (Sutton &amp; Barto, 2018)，但 DMC 非常适合斗地主。 首先，斗地主是一个episode任务，所以我们不需要处理不完整的episode。 其次，DMC 可以很容易地并行化，以每秒有效地生成许多样本，以缓解高方差问题。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/" rel="prev" title="Bag of Tricks for Image Classification with Convolutional Neural Networks">
+      <i class="fa fa-chevron-left"></i> Bag of Tricks for Image Classification with Convolutional Neural Networks
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%97%E5%9C%B0%E4%B8%BB%E8%83%8C%E6%99%AF"><span class="nav-number">3.</span> <span class="nav-text">斗地主背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Deep-Monte-Carlo"><span class="nav-number">4.</span> <span class="nav-text">Deep Monte-Carlo</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Monte-Carlo-Methods-with-Deep-Neural-Networks"><span class="nav-number">4.1.</span> <span class="nav-text">Monte-Carlo Methods with Deep Neural Networks</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">QilongPan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">QilongPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

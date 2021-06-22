@@ -160,6 +160,63 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/" class="post-title-link" itemprop="url">IMPALA:Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-07 20:10:31" itemprop="dateCreated datePublished" datetime="2021-05-07T20:10:31+08:00">2021-05-07</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1183,85 +1240,6 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Playing Atari with Deep Reinforcement Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-13 22:44:52" itemprop="dateCreated datePublished" datetime="2021-01-13T22:44:52+08:00">2021-01-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-24 14:15:28" itemprop="dateModified" datetime="2021-04-24T14:15:28+08:00">2021-04-24</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    我们提出了第一个深度学习模型，利用强化学习直接从高维感知输入中学习控制策略。 该模型是一个卷积神经网络，使用Q学习的变体进行训练，其输入是原始像素，其输出是估计未来回报的值函数。 我们将我们的方法应用于7个Atari2600游戏，从Arcade Learning Environment,，没有调整架构或学习算法。 我们发现，在六场比赛中，它的表现优于以往的所有方法，并超过了人类专家在其中三场比赛中的表现。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​        学习直接从视觉和语言等高维感知输入控制代理是强化学习(RL)的长期挑战之一。 在这些领域操作成功的大多数的RL应用程序都依赖于手工制作的特征以及线性值函数或策略表示。 显然，这些系统的性能在很大程度上取决于特征表示的质量。</p>
-<p>​        最近深度学习的进展使得从原始感官数据中提取高层次特征成为可能，从而导致计算机视觉和语音识别的突破。 这些方法利用了一系列神经网络结构，包括卷积网络、多层感知器、受限波尔兹曼机和递归神经网络，并利用了监督学习和非监督学习。 似乎很自然地问，类似的技术是否也可以有益于RL与感知数据。</p>
-<p>​        然而，强化学习从深度学习的角度提出了几个挑战。 首先，迄今为止最成功的深度学习应用程序需要大量的手工标记训练数据。 另一方面，RL算法必须能够从频繁稀疏、噪声和延迟的标量奖励信号中学习。 与监督学习中发现的投入和目标之间的直接联系相比，行动和结果奖励之间的延迟（可能是数千个时间步长）似乎特别令人望而生畏。 另一个问题是，大多数深度学习算法假设数据样本是独立的，而在强化学习中，通常会遇到高度相关状态的序列。 此外，在RL中数据分布随着算法学习新行为而变化，这对于假设固定底层分布的深度学习方法来说可能是有问题的。</p>
-<p>​        本文证明了卷积神经网络可以克服这些挑战，从复杂的RL环境中的原始视频数据中学习成功的控制策略。 采用Q-learning算法的变体对网络进行训练，采用随机梯度下降来更新权值。 为了缓解相关数据和非平稳分布的问题，我们使用了一种经验重放机制它随机采样以前的转换，从而平滑训练分布在许多过去的行为。</p>
-<p>​        我们将我们的方法应用于一系列Atari2600游戏，在Arcade学习环境(ALE)中实现。 Atari2600是一个具有挑战性的RL测试集，它提供了高维视觉输入(210×160RGB video at 60Hz)和一组多样化有趣的任务，这些任务被设计成对人类玩家来说是困难的。 我们的目标是创建一个单一的神经网络代理，能够成功地学习尽可能多的游戏。 该网络没有提供任何特定于游戏的信息或手工设计的视觉特征，也没有与模拟器的内部状态相关；它从视频输入、奖励和终端信号以及一组可能的操作中学习到，就像人类玩家一样。 此外，网络体系结构和所有用于训练的超参数在整个游戏中保持不变。 到目前为止，在我们尝试过的七场比赛的六场比赛中，网络的水平已经超过了所有以前的RL算法，并在其中三场比赛中超过了一名职业玩家。 图1提供了用于训练的五个游戏的示例截图。</p>
-<p><img src="/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/screen_shoot.png" alt></p>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>​        我们考虑代理与环境<script type="math/tex">\varepsilon</script>交互的任务，在这种情况下，Atari模拟器，按照一系列的actions、observations和rewards。 在每个时间步骤中，代理从一组合法游戏操作中选择一个动作，A={1，…，K}。 动作传递给仿真器，并修改其内部状态和游戏得分。通常可能是随机的。 模拟器的内部状态不被代理观察到；相反，它从模拟器中观察到一个图像<script type="math/tex">x_{t}\in  \mathbb{R}^{d}</script>，它是表示当前屏幕的原始像素值的向量。 此外，它还收到一个奖励<script type="math/tex">r_{t}</script>，代表游戏分数的变化。 请注意，通常游戏分数可能取决于整个先前的动作和观察顺序；关于一个行动的反馈只有在几千个时间步骤过去之后才能收到。</p>
-<p>​    由于代理只观察当前屏幕的图像，任务被部分观察到，许多模拟器状态被感知混叠。即不可能仅从当前屏幕<script type="math/tex">x_{t}</script>中完全理解当前的情况。因此，我们考虑动作和观察序列<script type="math/tex">s_{t}=x_{1},a_{1},x_{2},...,a_{t-1},x_{t}</script>,并依赖这些序列学习游戏策略。假设模拟器中的所有序列都在有限数量的时间步长中终止。这种形式产生了一个大的但有限的马尔可夫决策过程(MDP)，其中每个序列都是一个不同的状态。因此，我们可以应用标准的强化学习方法，简单地使用完整的序列<script type="math/tex">s_{t}</script>作为时间<script type="math/tex">t</script>时的状态表示。</p>
-<p>​    代理的目标是通过选择动作，以最大化未来回报的方式来与模拟器交互。我们做了标准的假设，未来奖励每个时间步通过<script type="math/tex">\gamma</script>折现，并将时间<script type="math/tex">t</script>的未来折扣回报定义为<script type="math/tex">R_{t} = \sum _{t^{'}=t}^{T}\gamma^{t^{'}-t}r_{t^{'}}</script>，其中T是游戏结束的时间步长。我们将最优动作值函数<script type="math/tex">Q^{*}(s,a)</script>定义为遵循任何策略在看到一些序列后，然后采取一些动作<script type="math/tex">a</script>，<script type="math/tex">Q^{*}(s,a)=max_{\pi }E[R_{t}|s_{t}=s,a_{t}=a,\pi ]</script>，其中<script type="math/tex">\pi</script>是一个策略映射序列到动作（或动作的分布）。</p>
-<h1 id="阅读总结"><a href="#阅读总结" class="headerlink" title="阅读总结"></a>阅读总结</h1><ul>
-<li>缓解相关性数据和非平稳分布的问题，采用经验重复。</li>
-<li>该方法在尝试过的七场比赛的六场比赛中，网络的性能已经超过了所有以前的RL算法，并在其中三场比赛中超过了一名专家人类球员</li>
-<li></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1331,7 +1309,7 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
