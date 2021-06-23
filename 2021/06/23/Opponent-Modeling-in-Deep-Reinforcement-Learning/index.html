@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="摘要​    在多智能体设置中，对手建模是必要的，其中具有竞争目标的二级智能体也会调整他们的策略，但它仍然具有挑战性，因为策略之间会相互作用并发生变化。 以前的大部分工作都侧重于为特定应用开发概率模型或参数化策略。 受到深度强化学习最近成功的启发，我们提出了基于神经的模型，可以共同学习策略和对手的行为。 我们没有明确预测对手的动作，而是将对手的观察编码到deep Q-Network（DQN）中；">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Opponent Modeling in Deep Reinforcement Learning">
+<meta property="og:url" content="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/index.html">
+<meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="摘要​    在多智能体设置中，对手建模是必要的，其中具有竞争目标的二级智能体也会调整他们的策略，但它仍然具有挑战性，因为策略之间会相互作用并发生变化。 以前的大部分工作都侧重于为特定应用开发概率模型或参数化策略。 受到深度强化学习最近成功的启发，我们提出了基于神经的模型，可以共同学习策略和对手的行为。 我们没有明确预测对手的动作，而是将对手的观察编码到deep Q-Network（DQN）中；">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula1.png">
+<meta property="og:image" content="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula2.png">
+<meta property="og:image" content="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/figure1.png">
+<meta property="og:image" content="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula3.png">
+<meta property="og:image" content="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula4.png">
+<meta property="og:image" content="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/figure2.png">
+<meta property="og:image" content="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/figure3.png">
+<meta property="og:image" content="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/table2.png">
+<meta property="article:published_time" content="2021-06-23T11:57:45.000Z">
+<meta property="article:modified_time" content="2021-06-23T12:13:51.667Z">
+<meta property="article:author" content="QilongPan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula1.png">
+
+<link rel="canonical" href="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Opponent Modeling in Deep Reinforcement Learning | 潘其龙</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">潘其龙</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Opponent Modeling in Deep Reinforcement Learning
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-06-23 19:57:45 / Modified: 20:13:51" itemprop="dateCreated datePublished" datetime="2021-06-23T19:57:45+08:00">2021-06-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在多智能体设置中，对手建模是必要的，其中具有竞争目标的二级智能体也会调整他们的策略，但它仍然具有挑战性，因为策略之间会相互作用并发生变化。 以前的大部分工作都侧重于为特定应用开发概率模型或参数化策略。 受到深度强化学习最近成功的启发，我们提出了基于神经的模型，可以共同学习策略和对手的行为。 我们没有明确预测对手的动作，而是将对手的观察编码到deep Q-Network（DQN）中； 然而，我们使用多任务处理保留显式建模（如果需要）。 通过使用 Mixture-of-Experts 架构，我们的模型无需额外监督即可自动发现对手的不同策略模式。 我们在模拟足球比赛和流行的trivia游戏上评估我们的模型，显示出优于 DQN 及其变体的性能。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    在战略环境（例如协作或竞争任务）中工作的智能代理必须预测其他代理的行为并推断他们的意图。 这很重要，因为所有活跃的代理都会影响世界的状态。 例如，如果多人游戏 AI 可以预测他们的坏动作，它就可以利用次优玩家； 谈判代理人如果知道对方的底线，可以更快地达成协议； 自动驾驶汽车必须通过预测汽车和行人的去向来避免事故。 对手建模中的两个关键问题是要建模的变量以及如何使用预测信息。 然而，答案在很大程度上取决于具体的应用程序，而且之前的大多数工作 (Billings et al., 1998a; Southey et al.,2005; Ganzfried &amp; Sandholm, 2011)都专注于需要大量领域知识的扑克游戏。</p>
+<p>​    我们的目标是在强化学习环境中建立一个通用的对手建模框架，使代理能够利用各种对手的特质。 首先，为了解释不断变化的行为，我们对对手策略的不确定性进行建模，而不是将其归类为一组刻板印象。 其次，当预测对手与学习世界动态分开时，通常需要领域知识。 因此，我们共同学习策略并概率性地对对手建模。</p>
+<p>​    我们基于在第 3 节中最近的深度 Q 网络（Mnih et al. (2015, DQN)开发了一个新模型 DRON(Deep Reinforcement Opponent Network)。 DRON 有一个预测 Q 值的策略学习模块和一个推断对手策略的对手学习模块（Code and data: <a target="_blank" rel="noopener" href="https://github.com/hhexiy/opponent）。DRON">https://github.com/hhexiy/opponent）。DRON</a> 不是明确预测对手属性，而是根据过去的观察和 使用它（除了状态信息之外）来计算自适应响应。 更具体地说，我们提出了两种架构，一种使用简单的串联来组合两个模块，一种基于 Mixture-of-Experts 网络。 虽然我们隐式地模拟对手，但可以通过多任务处理添加额外的监督（例如采取的行动或策略）。</p>
+<p>​    与之前专门用于特定应用的模型相比，DRON 的设计具有通用性，不需要了解可能的（参数化）游戏策略。</p>
+<p>​    第二个贡献是在多代理设置中学习的 DQN 代理。 深度强化学习在各种任务中都表现出竞争力：arcade games (Mnih et al., 2015), object recognition (Mnih et al., 2014), and robot navigation (Zhang et al., 2015)。 然而，它主要应用于具有固定环境的单代理决策理论设置。 一个例外是Tampuu et al.(2015)，其中由独立 DQN 控制的两个代理在协作和竞争奖励下进行交互。 虽然他们的重点是具有已知控制器的多代理系统的集体行为，但我们从单个代理的角度进行研究，该代理必须在充满未知对手的随机环境中学习反应策略。</p>
+<p>​    我们在第 4 节中针对两个任务评估了我们的方法：网格世界中模拟的两人足球游戏，以及针对在线玩家的真实问答游戏。 两款游戏的对手都采用不同的策略，需要不同的反制策略。 我们的模型始终比 DQN 基线取得更好的结果。 此外，我们展示了我们的方法对非平稳策略更稳健； 成功识别对手策略并做出相应反应。</p>
+<h1 id="Deep-Q-Learning"><a href="#Deep-Q-Learning" class="headerlink" title="Deep Q-Learning"></a>Deep Q-Learning</h1><h1 id="Deep-Reinforcement-Opponent-Network"><a href="#Deep-Reinforcement-Opponent-Network" class="headerlink" title="Deep Reinforcement Opponent Network"></a>Deep Reinforcement Opponent Network</h1><p>​    在多代理设置中，环境受到所有代理的联合动作的影响。 从一个智能体的角度来看，一个动作在给定状态下的结果不再是稳定的，而是依赖于其他智能体的动作。 在本节中，我们首先分析多个代理对 Q-learning 框架的影响； 然后我们介绍 DRON 及其多任务变体。</p>
+<h2 id="Q-Learning-with-Opponents"><a href="#Q-Learning-with-Opponents" class="headerlink" title="Q-Learning with Opponents"></a>Q-Learning with Opponents</h2><p>​    在 MDP 术语中，联合动作空间由<script type="math/tex">A^{M}=A_{1}\times A_{2} \times ...\times A_{n}</script> 定义, 其中 n 是代理的总数。 我们使用 a 表示我们控制的代理（主要代理）的动作，使用 o 表示所有其他代理（二级代理）的联合动作，例如 <script type="math/tex">\left ( a,o \right )\in A^{M}</script>。 类似地，转移概率变为<script type="math/tex">\tau ^{M}\left ( s,a,o,s^{'} \right )=Pr\left ( s^{'}|s,a,o \right )</script>，新的奖励函数为<script type="math/tex">R^{M}\left ( s,a,o,s^{'} \right )</script>。 我们的目标是在与次要代理的联合策略<script type="math/tex">\pi ^{0}</script>交互的情况下为主要代理学习最佳策略。</p>
+<p>​    如果<script type="math/tex">\pi ^{0}</script>是固定的，那么多智能体 MDP 就简化为单智能体 MDP：对手可以被认为是世界的一部分。 因此，他们重新定义了转换和奖励：</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula1.png" alt></p>
+<p>​    因此，一个代理可以忽略其他代理，标准 Q 学习就足够了。</p>
+<p>​    然而，假设对手使用固定策略通常是不现实的。 其他代理也可能正在学习或适应以最大化奖励。 例如在策略游戏中，玩家可能会在开始时伪装自己的真实策略来愚弄对手； 获胜的球员通过防守来保护他们的领先优势； 输球的球员打得更积极。 在这些情况下，我们面对的对手的策略<script type="math/tex">\pi _{t}^{o}</script>会随着时间而变化。</p>
+<p>​    考虑到其他代理的影响，第 2 节中最优策略的定义不再适用——有效性策略现在取决于次要的代理的策略。因此，我们定义了相对于对手联合策略的最优 Q 函数：<script type="math/tex">Q^{*|\pi ^{o}}=max_{\pi }Q^{\pi |\pi ^{o}}\left ( s,a \right )</script>  <script type="math/tex">\forall _{s}\in S</script>和 <script type="math/tex">\forall _{a}\in A</script>。 Q 值之间的循环关系成立：</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula2.png" alt></p>
+<h2 id="DQN-with-Opponent-Modeling"><a href="#DQN-with-Opponent-Modeling" class="headerlink" title="DQN with Opponent Modeling"></a>DQN with Opponent Modeling</h2><p>​    给定等式 1，我们可以继续应用 Q-learning 并通过随机更新来估计转移函数和对手的策略。 然而，将对手视为世界的一部分会减缓对适应性对手的反应  (Uther &amp; Veloso, 2003)，因为行为的变化被世界的动态所掩盖。</p>
+<p>​    为了明确地编码对手的行为，我们提出了联合<script type="math/tex">Q^{.|\pi ^{o}}</script> 和<script type="math/tex">\pi ^{o}</script>建模的Deep Reinforcement Opponent Network (DRON)。 DRON 是一个 Q 网络（<script type="math/tex">N_{Q}</script>），它评估一个状态和一个学习<script type="math/tex">\pi ^{o}</script>表示的对手网络(<script type="math/tex">N_{o}</script>)的动作。。 剩下的问题是如何结合两个网络以及使用什么监督信号。 为了回答第一个问题，我们研究了两种网络架构：连接<script type="math/tex">N_{Q}</script>和 <script type="math/tex">N_{o}</script>的 DRON-concat，以及应用 Mixture-of-Experts 模型的 DRON-MOE。</p>
+<p>​    为了回答第二个问题，我们考虑两种设置：（a）仅预测 Q 值，因为我们的目标是最好的奖励而不是准确地模拟对手； (b) 还可以预测有关对手的额外信息（例如，他们的策略类型）。</p>
+<h3 id="DRON-concat"><a href="#DRON-concat" class="headerlink" title="DRON-concat"></a>DRON-concat</h3><p>​    我们从状态 (<script type="math/tex">\phi ^{s}</script> 和对手 (<script type="math/tex">\phi ^{o}</script>) 中提取特征，然后使用带有整流(线性整流函数Relu)或卷积神经网络（<script type="math/tex">N_{Q}</script>和 <script type="math/tex">N_{o}</script>）的线性层将它们嵌入到单独的隐藏空间 (<script type="math/tex">h^{s}</script>和 <script type="math/tex">h^{o}</script>）。 为了将<script type="math/tex">\pi ^{o}</script>的知识整合到 Q 网络中，我们连接了状态和对手的表示（图 1a）然后联合预测 Q 值。 因此，神经网络的最后一层负责理解对手和 Q 值之间的交互。 由于只有一个 Q-Network，该模型需要对手的更具辨别力的表示来学习自适应策略。 为了缓解这种情况，我们的第二个模型基于等式 1 对对手的行为与 Q 值之间的关系进行了更强的先验编码。</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/figure1.png" alt></p>
+<h3 id="DRON-MOE"><a href="#DRON-MOE" class="headerlink" title="DRON-MOE"></a>DRON-MOE</h3><p>​    等式 1 的右边部分可以写成 <script type="math/tex">\sum _{o_{t}}\pi _{t}^{o}\left ( o_{t}|s_{t} \right )Q^{\pi }\left ( s_{t},a_{t},o_{t} \right )</script>，这是对不同对手行为的期望。 我们使用  Mixture-of-Experts network (Jacobs et al., 1991)将对手动作明确建模为隐藏变量并对其进行边缘化（图 1b）。 通过组合来自多个专家网络的预测获得预期 Q 值：</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula3.png" alt></p>
+<p>​    每个专家网络预测当前状态下可能的奖励。 基于对手表示的门控网络计算组合权重（专家分布）：</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula4.png" alt></p>
+<p>​    这里 <script type="math/tex">f\left ( . \right )</script>是一个非线性激活函数（所有实验都是 ReLU），W 代表线性变换矩阵，b 是偏置项。</p>
+<p>​    与 DRON-concat 忽略世界和对手行为之间的相互作用不同，DRON-MOE 知道 Q 值根据<script type="math/tex">\phi ^{o}</script>有不同的分布； 每个专家网络捕获一种类型的对手策略。</p>
+<h3 id="Multitasking-with-DRON"><a href="#Multitasking-with-DRON" class="headerlink" title="Multitasking with DRON"></a>Multitasking with DRON</h3><p>​    前两个模型仅预测 Q 值，因此通过来自 Q 值的反馈间接学习对手表示。 关于对手的额外信息可以直接监督 <script type="math/tex">N_{o}</script>。许多游戏除了在游戏结束时显示最终奖励外，还会显示其他信息。 至少代理已经观察到对手在过去状态中采取的行动； 有时他们的私人信息，例如扑克中的隐藏牌。 更高级的信息包括抽象的计划或策略。 这些信息反映了对手的特征，有助于策略学习。</p>
+<p>​    与之前学习单独模型来预测对手的这些信息的工作不同 (Davidson, 1999;Ganzfried &amp; Sandholm, 2011; Schadd et al., 2007)，我们应用多任务学习并使用观察作为额外监督来学习共享对手表示<script type="math/tex">h^o</script>。 图 2 展示了多任务 DRON 的架构，其中监督是 yo 。 与显式对手建模相比，多任务处理的优势在于它使用了游戏和对手的高级知识，同时对不足的对手数据和 Q 值建模错误保持鲁棒性。 在第 4 节中，我们使用两种类型的监督信号评估多任务 DRON：未来行动和对手的整体策略。</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/figure2.png" alt></p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>​    在本节中，我们在两个任务上评估我们的模型，soccer game和quiz bowl。 这两项任务都有两个玩家互相对抗，对手表现出不同的行为。 我们将 DRON 模型与 DQN 进行比较，并分析它们对不同类型对手的反应。</p>
+<p>​    所有系统都在相同的 Q-learning 框架下进行训练。 除非另有说明，实验具有以下配置：折扣因子<script type="math/tex">\gamma</script>为 0.9，参数由 AdaGrad  (Duchi et al., 2011) 优化，学习率为 0.0005，mini-batch大小为 64。我们使用<script type="math/tex">\epsilon</script>-greddy在训练期间探索，从探索率 0.3 开始，在 500,000 步内线性衰减到 0.1。 我们将所有模型训练 50 个 epoch。 交叉熵用作多任务学习中的损失。</p>
+<h2 id="Soccer"><a href="#Soccer" class="headerlink" title="Soccer"></a>Soccer</h2><p>​    我们的第一个测试平台是在之前的多人游戏工作之后的soccer变体(Littman, 1994; Collins, 2007; Uther &amp; Veloso, 2003)。 比赛由 A 和 B 两名球员在<script type="math/tex">6\times 9</script>格子（图 3）上进行(尽管游戏是在网格世界中进行的，但我们并没有像以前的工作那样以表格形式表示 Q 函数。 因此它可以推广到更复杂的基于像素的设置)。比赛开始时 A 和 B 在左右半场（球门除外）的随机方格中，球传给其中之一。 玩家从五个动作中选择：移动 N、S、W、E 或站着不动（图 3（1））。 如果一个动作将玩家带到一个阴影方块或边界外，则该动作无效。 如果两个玩家移动到同一个方格，移动前拥有球的玩家将球输给对手（图 3（2）），移动不会发生。</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/figure3.png" alt></p>
+<p>​    如果玩家将球带到对手的球门（图 3（3）、（4）），则游戏结束，则该玩家得分一分。 如果双方在一百步内都没有进球，则比赛以零-零平局结束。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>​    我们设计了一个基于规则的两种模式代理作为对手图 3（右）。 在进攻模式下，代理总是优先考虑进攻而不是防守。 在与随机代理的 5000 场比赛中，它获胜的时间为 99.86%，平均episode长度为 10.46。 在防守模式下，代理只专注于捍卫自己的目标。 结果它赢得了 31.80% 的比赛，并58.40% 的比赛平局； 平均episode长度为81.70。 很容易找到在任一模式下击败对手的策略，但是该策略不适用于两种模式，如表 2 所示。因此，智能体在每个游戏中随机选择两种模式来创建不同的策略。</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/table2.png" alt></p>
+<p>​    输入状态是一个<script type="math/tex">1\times 15</script>的向量，表示agent、对手、场地的轴边界、球门区域的位置和控球权的坐标。 我们通过五种情况来定义玩家的移动：接近代理、避开代理、接近代理球门、接近自己球门和静止不动。 对手特征包括观察到的对手移动的频率、其最近的移动和动作以及将球丢给对手的频率。</p>
+<p>​    基线 DQN 有两个隐藏层，都有 50 个隐藏单元。 我们称这个模型为 DQN-world：对手被建模为世界的一部分。 DRON 中对手网络的隐藏层也有 50 个隐藏单元。 对于多任务处理，我们试验了两个监督信号，当前状态下的对手动作（+action）和对手模式（+type）。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/" rel="prev" title="DouZero:Mastering DouDizhu with Self-Play Deep Reinforcement Learning">
+      <i class="fa fa-chevron-left"></i> DouZero:Mastering DouDizhu with Self-Play Deep Reinforcement Learning
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Deep-Q-Learning"><span class="nav-number">3.</span> <span class="nav-text">Deep Q-Learning</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Deep-Reinforcement-Opponent-Network"><span class="nav-number">4.</span> <span class="nav-text">Deep Reinforcement Opponent Network</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Q-Learning-with-Opponents"><span class="nav-number">4.1.</span> <span class="nav-text">Q-Learning with Opponents</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DQN-with-Opponent-Modeling"><span class="nav-number">4.2.</span> <span class="nav-text">DQN with Opponent Modeling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DRON-concat"><span class="nav-number">4.2.1.</span> <span class="nav-text">DRON-concat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DRON-MOE"><span class="nav-number">4.2.2.</span> <span class="nav-text">DRON-MOE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Multitasking-with-DRON"><span class="nav-number">4.2.3.</span> <span class="nav-text">Multitasking with DRON</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">5.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Soccer"><span class="nav-number">5.1.</span> <span class="nav-text">Soccer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0"><span class="nav-number">5.1.1.</span> <span class="nav-text">实现</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">QilongPan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">QilongPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
