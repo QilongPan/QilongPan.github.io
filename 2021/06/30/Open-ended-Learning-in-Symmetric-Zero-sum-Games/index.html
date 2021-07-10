@@ -27,10 +27,22 @@
 <meta property="og:site_name" content="潘其龙">
 <meta property="og:description" content="摘要​    零和游戏，如国际象棋和扑克，抽象上是评估代理对的功能，例如将它们标记为“赢家”和“输家”。如果博弈是近似传递的，那么自我博弈会生成强度不断增加的代理序列。然而，非传递博弈，如石头剪刀布，可以表现出战略循环，并且不再有明确的目标——我们希望代理人增加实力，但不清楚和谁对战。在本文中，我们引入了一个几何框架，用于在零和游戏中制定代理目标，以构建产生开放式学习的自适应目标序列。该框架使我们">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula1.png">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula2.png">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula3.png">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula4.png">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula5.png">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula6.png">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/alg1.png">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula7.png">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula8.png">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula9.png">
+<meta property="og:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula10.png">
 <meta property="article:published_time" content="2021-06-30T12:06:18.000Z">
-<meta property="article:modified_time" content="2021-06-30T14:27:34.276Z">
+<meta property="article:modified_time" content="2021-07-05T12:37:10.700Z">
 <meta property="article:author" content="QilongPan">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula1.png">
 
 <link rel="canonical" href="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/">
 
@@ -187,10 +199,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-06-30 20:06:18 / Modified: 22:27:34" itemprop="dateCreated datePublished" datetime="2021-06-30T20:06:18+08:00">2021-06-30</time>
+              <time title="Created: 2021-06-30 20:06:18" itemprop="dateCreated datePublished" datetime="2021-06-30T20:06:18+08:00">2021-06-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-07-05 20:37:10" itemprop="dateModified" datetime="2021-07-05T20:37:10+08:00">2021-07-05</time>
+              </span>
 
           
 
@@ -211,7 +229,49 @@
 <h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>​    本文从第 2 部分开始，介绍了函数形式博弈 (FFG) 作为参数化代理（如神经网络）所玩零和博弈的新数学模型。 定理 1 将任何 FFG 分解为传递分量和循环分量的总和。 传递博弈和密切相关的单调博弈是self-play的自然设置，但非传递博弈中存在的循环组件需要更复杂的算法，这激发了本文的其余部分。</p>
 <p>​    处理非传递性博弈（不一定有最佳代理）的主要问题是理解目标应该是什么。 在第 3 节中，我们根据游戏场景（编码游戏中代理之间的交互的凸多边形）来制定全局目标。 如果游戏是可传递的或单调的，那么游戏场景就会退化为一维场景。 在非传递游戏中，游戏场景可以是高维的，因为针对一个智能体的训练可能与针对另一个智能体的训练有着根本的不同。</p>
 <p>​    在非传递博弈中，衡量个体代理的表现是一件很烦恼的事情。 因此，在第 3 节中，我们开发了分析代理群体的工具，包括群体水平的性能度量defifinition 3。群体水平性能的一个重要特性是它随着游戏场景多面体在非传递游戏中的扩展而传递性增加。 因此，我们重新制定了从寻找最佳代理到扩大游戏景观的游戏学习问题。 为此，我们考虑了两种方法，一种与绩效直接相关，另一种侧重于多样性的度量defifinition 4。至关重要的是，该度量量化了不同的有效行为——我们对不会导致结果差异的策略差异不感兴趣，也对以新的和令人惊讶的方式失败的代理人不感兴趣。</p>
-<p>​    第4节介绍了两种算法，一种是旧算法，另一种是新算法，用于扩大游戏场景。这些算法可以看作是在Lanctot et al. (2017)中引入的 policy space response oracle(PSRO)的专门化。第一个算法是Nash response (<script type="math/tex">PSRO_{N}</script>)，它是McMahan et al. (2003)对 double oracle algorithm的函数形式对策的扩展。（2003）。给定一个种群，Nash response通过纳什均衡的平均创造了一个训练的目标。纳什服务可作为“best agent”的代理，这种概念不能保证在一般的零和博弈中存在。第二种互补算法是rectifified Nash response(<script type="math/tex">PSRO_{rN}</script>)。该算法通过自适应地构建博弈论利基，鼓励代理“发挥优势，忽略弱点”来放大代理群体的战略多样性。</p>
+<p>​    第4节介绍了两种算法，一种是旧算法，另一种是新算法，用于扩大游戏场景。这些算法可以看作是在Lanctot et al. (2017)中引入的 policy space response oracle(PSRO)的专门化。第一个算法是Nash response (<script type="math/tex">PSRO_{N}</script>)，它是McMahan et al. (2003)对 double oracle algorithm的函数形式对策的扩展。给定一个种群，Nash response通过平均纳什均衡创造了一个训练的目标。纳什服务可作为“best agent”的代理，这种概念不能保证在一般的零和博弈中存在。第二种互补算法是rectifified Nash response(<script type="math/tex">PSRO_{rN}</script>)。该算法通过自适应地构建博弈论利基，鼓励代理“发挥优势，忽略弱点”来放大代理群体的战略多样性。</p>
+<p>​    最后，在第5节中，我们研究了这些算法在 Colonel Blotto (Borel, 1921; Tukey, 1949; Roberson, 2006)中的性能和一个可微模拟，我们称为differentiable Lotto。Blotto-style games涉及到分配有限的资源，并且是高度不可传递的。我们发现<script type="math/tex">PSRO_{rN}</script>的性能优于<script type="math/tex">PSRO_{N}</script>，这两者在这些领域都大大优于self-play。我们还与一种响应均匀分布<script type="math/tex">PSRO_{U}</script>的算法进行了比较，它的性能与<script type="math/tex">PSRO_{N}</script>差不多。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>​    有大量关于新奇搜索、开放进化和好奇心novelty search, open-ended evolution, and curiosity的文献，这些文献的目的是不断拓展代理中游戏知识的前沿(Lehman &amp; Stanley, 2008; Taylor et al., 2016; Banzhaf et al., 2016; Brant &amp; Stanley, 2017; Pathak et al., 2017; Wang et al., 2019)。一个共同的线索是自适应目标，它迫使代理不断改进。例如，在novelty search中，目标会不断变化，因此不能简化为一个固定的目标进行一次性优化。</p>
+<p>​    我们在游戏学习方面大量借鉴了前人的研究成果，尤其是Heinrich et al. (2015); Lanctot et al. (2017) ，下文将对此进行讨论。我们的设置类似于多目标优化 (Fonseca &amp; Fleming, 1993; Miettinen, 1998)。然而与多目标优化不同的是，我们同时关注目标的生成和优化。生成性对抗网络 (Goodfellow et al., 2014) 是零和博弈，由于缺乏对称性，不属于本文的研究范围，见附录？？。</p>
+<h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><p>​    向量为列。0和1的常数向量为<strong>0</strong>和<strong>1</strong>。我们有时使用<script type="math/tex">p\left [ i \right ]</script>来表示向量<script type="math/tex">p</script>的第<script type="math/tex">i</script>条目。证明在附录中。</p>
+<h1 id="Functional-form-games-FFGs"><a href="#Functional-form-games-FFGs" class="headerlink" title="Functional-form games (FFGs)"></a>Functional-form games (<strong>FFG</strong>s)</h1><p>​    假设，给定任意一对代理，我们可以计算出在围棋、国际象棋或星际争霸等游戏中一个打败对方的概率。我们将设置形式化如下。</p>
+<h2 id="Definition-1"><a href="#Definition-1" class="headerlink" title="Definition 1"></a>Definition 1</h2><p>​    设W是一组由神经网络的权值参数化的代理。对称零和函数形式博弈<strong>symmetric zero-sum functional-form game</strong>(FFG)是一个反对称函数<script type="math/tex">\varnothing \left ( v,w \right )=-\varnothing  \left ( w,v \right )</script>，它评估一对代理</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula1.png" alt></p>
+<p>​    较高的<script type="math/tex">\varnothing \left ( v,w \right )</script>，代理<script type="math/tex">v</script>就越好。对于<script type="math/tex">v</script>我们将<script type="math/tex">\varnothing > 0, \varnothing < 0, \varnothing = 0</script>称为赢、输和平手。</p>
+<p>​    请注意<script type="math/tex">(i)</script>FFG中的策略是参数化的代理，<script type="math/tex">(ii)</script>代理的参数化被折叠到<script type="math/tex">\varnothing</script>中，因此游戏是代理的架构和环境本身的组合。</p>
+<p>​    假设<script type="math/tex">v</script>击败<script type="math/tex">w</script>的概率，表示为<script type="math/tex">P\left ( v\succ w \right )</script>，可以计算或估计。赢/输概率可以通过<script type="math/tex">\varnothing \left ( v,w \right ):=P\left ( v\succ w \right )-\frac{1}{2}</script>或<script type="math/tex">\varnothing \left ( v,w \right ):=log\frac{P\left ( v\succ w \right )}{P\left ( v\prec w \right )}</script>呈现为反对称形式。  <script type="math/tex">\succ</script>可以表示偏好的意思。</p>
+<h2 id="Tools-for-FFGs"><a href="#Tools-for-FFGs" class="headerlink" title="Tools for FFGs"></a>Tools for FFGs</h2><p>​        解决FFGs需要不同的方法来解决正常形式的游戏(Shoham &amp; Leyton-Brown, 2008) ，因为它们的连续性质。因此，我们开发了以下基本工具。</p>
+<p>​    首先，<strong>curry</strong> operator将一个双人游戏转换为一个从代理到目标的函数</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula2.png" alt>    </p>
+<p>​    其次，一个 <strong>approximate best-response oracle</strong> ，给定代理<script type="math/tex">v</script>和目标<script type="math/tex">\varnothing _{w}\left ( \bullet  \right )</script>，如果可能，返回一个新的代理<script type="math/tex">v^{'}:=oracle\left ( v,\varnothing _{w}\left ( \bullet  \right ) \right )</script>和<script type="math/tex">\varnothing _{w}\left ( v^{'} \right ) > \varnothing _{w}\left ( v \right )+\epsilon</script>,oracle可以使用梯度、强化学习或进化算法。</p>
+<p>​    第三，给定一个由<script type="math/tex">n</script>个代理组成的总体<script type="math/tex">\ss</script>（指图中的特殊符号），则<script type="math/tex">n \times n</script>反对称评价矩阵为</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula3.png" alt></p>
+<p>​    第四，我们将在<script type="math/tex">A_{\ss }</script>指定的零和矩阵对策上使用（不一定是唯一的）纳什均衡。</p>
+<p>​    最后，我们使用下面的博弈分解。假设<script type="math/tex">W</script>是一个具有概率测量的compact set紧集。然后<script type="math/tex">W</script>上的可积反对称函数集形成了一个向量空间。附录D显示了如下内容：</p>
+<pre><code>## Theorem 1(博弈分解)
+</code></pre><p>​    每个FFG都会分解成一个传递博弈和循环博弈的和。</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula4.png" alt></p>
+<p>相对于一个适当定义的内积。</p>
+<p>​    下面讨论了传递性对策和循环对策。很少有游戏是纯粹的传递的或循环的。然而理解这些情况很重要，因为一般算法至少应该在这两种特殊情况下都起作用。</p>
+<h2 id="Transitive-games"><a href="#Transitive-games" class="headerlink" title="Transitive games"></a>Transitive games</h2><p>​    如果游戏有一个“rating function” <script type="math/tex">f</script>，因此游戏的性能就是ratings的差异，那么游戏就是过渡的：</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula5.png" alt></p>
+<p>​    换句话说，如果<script type="math/tex">\varnothing</script>允许“减法因式分解”。</p>
+<p><strong>Optimization (training against a fifixed opponent)</strong>解决一个Transitive的游戏被简化为发现</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula6.png" alt></p>
+<p>​    至关重要的是，对对手<script type="math/tex">w</script>的选择对解决方案没有任何区别。因此最简单的学习算法是对固定对手进行训练，请参见算法1。</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/alg1.png" alt></p>
+<p><strong>Monotonic games</strong>一般的transitive games。如果有一个单调的函数<script type="math/tex">\sigma</script>，那么FFG是单调的</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula7.png" alt></p>
+<p>例如，Elo（1978）模拟了一个代理击败另一个代理的概率</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula8.png" alt></p>
+<p>对于一些<script type="math/tex">\sigma > 0</script>，其中<script type="math/tex">f</script>将Elo评级分配给代理。该模型在国际象棋、围棋等游戏中得到了广泛的应用。</p>
+<p>在单调的游戏中，优化对抗固定对手的表现很差。具体地说，如果Elo的模型成立，那么对更弱的对手的训练就不会产生学习信号，因为一旦当<script type="math/tex">f\left ( v_{t} \right )> > f\left ( w \right )</script>，sigmoid饱和时，梯度<script type="math/tex">\bigtriangledown _{v}\varnothing \left ( v_{t},w \right )\approx 0</script>就会消失。</p>
+<p><strong>Self-play (algorithm 2)</strong> 生成一系列的对手。对一系列强度增强的对手进行训练可以防止梯度因较大的技能差异而导致梯度消失，因此自我发挥非常适合由等式(1)建模的游戏。self-play在国际象棋、围棋和其他游戏中已被证明有效 (Silver et al., 2018; Al-Shedivat et al., 2018)。</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula9.png" alt></p>
+<p>Self-play是一种开放式的学习算法：它提出和掌握了一系列的目标，而不是优化一个预先指定的目标。然而，self-play假设了传递性：本地改进(<script type="math/tex">v_{t+1}</script>击败了<script type="math/tex">v_{t}</script>)意味着全局改进(<script type="math/tex">v_{t+1}</script>beats <script type="math/tex">v_{1},v_{2},...,v_{t}</script>)。这个假设在非传递游戏中失败了，比如下面的nontransitive游戏。由于性能是不可传递的，对一个代理的改进并不能保证对其他代理的改进。</p>
+<h2 id="Cyclic-games"><a href="#Cyclic-games" class="headerlink" title="Cyclic games"></a>Cyclic games</h2><p>​    一个游戏是循环的，如果</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula10.png" alt></p>
+<p>换句话说，对一些代理人的胜利必然与他人的损失相平衡。当agent同时玩移动或不完美的信息游戏，如石头剪刀布，扑克，或星际争霸时，通常会出现策略循环。</p>
 
     </div>
 
@@ -230,7 +290,10 @@
     <a href="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/" rel="prev" title="Opponent Modeling in Deep Reinforcement Learning">
       <i class="fa fa-chevron-left"></i> Opponent Modeling in Deep Reinforcement Learning
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/07/06/%E6%9D%8E%E5%AE%8F%E6%AF%85%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="next" title="李宏毅机器学习笔记">
+      李宏毅机器学习笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -289,7 +352,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%A6%81"><span class="nav-number">2.1.</span> <span class="nav-text">概要</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%A6%81"><span class="nav-number">2.1.</span> <span class="nav-text">概要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.2.</span> <span class="nav-text">相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7"><span class="nav-number">2.3.</span> <span class="nav-text">符号</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Functional-form-games-FFGs"><span class="nav-number">3.</span> <span class="nav-text">Functional-form games (FFGs)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Definition-1"><span class="nav-number">3.1.</span> <span class="nav-text">Definition 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tools-for-FFGs"><span class="nav-number">3.2.</span> <span class="nav-text">Tools for FFGs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transitive-games"><span class="nav-number">3.3.</span> <span class="nav-text">Transitive games</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cyclic-games"><span class="nav-number">3.4.</span> <span class="nav-text">Cyclic games</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -303,7 +366,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">26</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
