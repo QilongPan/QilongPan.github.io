@@ -183,10 +183,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-07-10 19:01:30 / Modified: 23:15:24" itemprop="dateCreated datePublished" datetime="2021-07-10T19:01:30+08:00">2021-07-10</time>
+              <time title="Created: 2021-07-10 19:01:30" itemprop="dateCreated datePublished" datetime="2021-07-10T19:01:30+08:00">2021-07-10</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-07-11 14:03:13" itemprop="dateModified" datetime="2021-07-11T14:03:13+08:00">2021-07-11</time>
+              </span>
 
           
 
@@ -201,6 +207,12 @@
       
           <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    深度强化学习(RL)最近取得了许多新的成功，但实验周转时间仍然是研究和实践中的一个关键瓶颈。我们研究如何优化现代计算机的深度RL算法，特别是CPU和GPU的组合。我们证实了策略梯度和Q-value学习算法都可以适应于使用许多并行模拟器实例的学习。我们进一步发现，可以使用比标准尺寸大得多的批量大小进行训练，而不会对样本复杂度或最终性能产生负面影响。我们利用这些事实来建立一个统一的并行化框架，这极大地加速了这两种算法的实验。所有的神经网络计算都使用GPU，加速了数据的收集和训练。我们的结果包括使用整个DGX-1在雅达利游戏上在几分钟内的学习成功策略，使用同步和异步算法。</p>
 <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    本文的贡献是一个并行深度RL的框架，包括推理和训练的GPU加速的新技术。</p>
+<h1 id="Parallel-Accelerated-RL-Fraework"><a href="#Parallel-Accelerated-RL-Fraework" class="headerlink" title="Parallel,Accelerated RL Fraework"></a>Parallel,Accelerated RL Fraework</h1><p>​    我们考虑使用深度神经网络的基于 CPU 的模拟器环境和策略。 我们在这里描述了一套完整的深度强化学习并行化技术，这些技术在采样和优化期间都实现了高吞吐量。 我们对 GPU 一视同仁； 每个都执行相同的采样学习过程。 此策略可直接扩展到各种数量的 GPU。</p>
+<h2 id="Synchronized-Sampling同步采样"><a href="#Synchronized-Sampling同步采样" class="headerlink" title="Synchronized Sampling同步采样"></a>Synchronized Sampling同步采样</h2><p>​    我们首先将多个 CPU 内核与单个 GPU 相关联。 多个模拟器在多个CPU核上并行运行，这些进程以同步方式执行环境步骤。 在每一步，所有单独的observation都被收集到一个批处理中进行推理，在提交最后一个观察后在 GPU 上调用。 一旦动作返回，模拟器就会再次步进，依此类推。 系统共享内存数组提供actor-server和模拟器进程之间的快速通信。</p>
+<p>​    由于落后者效应，同步采样可能会变慢—在每一步等待最慢的进程。 step时间的差异源于不同模拟器状态的不同计算负载和其他随机波动。 随着并行进程数量的增加，落后者效应会恶化，但我们通过为每个进程堆叠多个独立的模拟器实例来减轻它。 对于每个推理批次，每个进程都会（按顺序）执行其所有模拟器。 这种安排还允许推理的批量大小增加到超过进程数（即 CPU 内核）。 示意图如图 1(a) 所示。 可以通过仅在优化暂停期间重置来避免长时间环境重置导致的减速。</p>
+<p><img src="/2021/07/10/Accelerated-Methods-For-Deep-Reinforcement-Learning/figurea.png" alt></p>
+<p>​    如果模拟和推理负载达到平衡，每个组件将有一半的时间空闲，所以我们组成两个交替的模拟器进程组。当一个组等待下一个操作时，另一个步骤和GPU在为每个组之间交替服务。交替保持了高利用率，并进一步隐藏了两者中最快的计算量的执行时间。</p>
+<p>​    我们通过重复模板来组织多个GPU，均匀地分配可用的CPU核心。我们发现固定每个模拟器进程的CPU分配是有益的，并保留一个核心来运行每个GPU。实验部分包含了采样速度的测量值，采样速度随着环境实例数量的增加而增加。</p>
 
       
     </div>
@@ -309,10 +321,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-07-06 22:46:32 / Modified: 23:47:39" itemprop="dateCreated datePublished" datetime="2021-07-06T22:46:32+08:00">2021-07-06</time>
+              <time title="Created: 2021-07-06 22:46:32" itemprop="dateCreated datePublished" datetime="2021-07-06T22:46:32+08:00">2021-07-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-07-11 22:41:06" itemprop="dateModified" datetime="2021-07-11T22:41:06+08:00">2021-07-11</time>
+              </span>
 
           
 
@@ -326,8 +344,6 @@
 
       
           <p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Wv411h7kN?p=40">视频地址</a></p>
-<h1 id="概率论与数理统计"><a href="#概率论与数理统计" class="headerlink" title="概率论与数理统计"></a>概率论与数理统计</h1><p>确定性（必然）：一定发生（不发生）；</p>
-<p>随机（偶然）：可能发生，可能不发生；</p>
 
       
     </div>
