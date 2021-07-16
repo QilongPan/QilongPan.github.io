@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="title: 强化学习常用游戏模拟环境date: 2021-07-15 21:19:45tags: 网易伏羲视频地址 Grid world Multi-agent Grid world Particle Magent OpenAI Gym OpenAI Gym Retro ProGen Malmo Obstacle Tower Torcs赛车 DeepMind Lab Hard Eight Dee">
+<meta property="og:type" content="article">
+<meta property="og:title" content="潘其龙">
+<meta property="og:url" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="title: 强化学习常用游戏模拟环境date: 2021-07-15 21:19:45tags: 网易伏羲视频地址 Grid world Multi-agent Grid world Particle Magent OpenAI Gym OpenAI Gym Retro ProGen Malmo Obstacle Tower Torcs赛车 DeepMind Lab Hard Eight Dee">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic1.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic2.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic3.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic4.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic5.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic6.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic7.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic8.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic9.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic10.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic11.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic12.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic13.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic14.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic15.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic16.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic17.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic18.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic19.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic20.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic21.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic22.png">
+<meta property="og:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic23.png">
+<meta property="article:published_time" content="2021-07-16T16:21:56.619Z">
+<meta property="article:modified_time" content="2021-07-16T16:23:42.930Z">
+<meta property="article:author" content="QilongPan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic1.png">
+
+<link rel="canonical" href="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title> | 潘其龙</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">潘其龙</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-07-17 00:21:56 / Modified: 00:23:42" itemprop="dateCreated datePublished" datetime="2021-07-17T00:21:56+08:00">2021-07-17</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>title: 强化学习常用游戏模拟环境<br>date: 2021-07-15 21:19:45<br>tags:</p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1GN411o7uy">网易伏羲视频地址</a></p>
+<h1 id="Grid-world"><a href="#Grid-world" class="headerlink" title="Grid world"></a>Grid world</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic1.png" alt></p>
+<h1 id="Multi-agent-Grid-world"><a href="#Multi-agent-Grid-world" class="headerlink" title="Multi-agent Grid world"></a>Multi-agent Grid world</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic2.png" alt></p>
+<h1 id="Particle"><a href="#Particle" class="headerlink" title="Particle"></a>Particle</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic3.png" alt></p>
+<h1 id="Magent"><a href="#Magent" class="headerlink" title="Magent"></a>Magent</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic4.png" alt></p>
+<h1 id="OpenAI-Gym"><a href="#OpenAI-Gym" class="headerlink" title="OpenAI Gym"></a>OpenAI Gym</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic5.png" alt></p>
+<h1 id="OpenAI-Gym-Retro"><a href="#OpenAI-Gym-Retro" class="headerlink" title="OpenAI Gym Retro"></a>OpenAI Gym Retro</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic6.png" alt></p>
+<h1 id="ProGen"><a href="#ProGen" class="headerlink" title="ProGen"></a>ProGen</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic7.png" alt></p>
+<h1 id="Malmo"><a href="#Malmo" class="headerlink" title="Malmo"></a>Malmo</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic8.png" alt></p>
+<h1 id="Obstacle-Tower"><a href="#Obstacle-Tower" class="headerlink" title="Obstacle Tower"></a>Obstacle Tower</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic9.png" alt></p>
+<h1 id="Torcs赛车"><a href="#Torcs赛车" class="headerlink" title="Torcs赛车"></a>Torcs赛车</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic10.png" alt></p>
+<h1 id="DeepMind-Lab"><a href="#DeepMind-Lab" class="headerlink" title="DeepMind Lab"></a>DeepMind Lab</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic11.png" alt></p>
+<h1 id="Hard-Eight"><a href="#Hard-Eight" class="headerlink" title="Hard Eight"></a>Hard Eight</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic12.png" alt></p>
+<h1 id="DeepMind-Control"><a href="#DeepMind-Control" class="headerlink" title="DeepMind Control"></a>DeepMind Control</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic13.png" alt></p>
+<h1 id="VizDoom"><a href="#VizDoom" class="headerlink" title="VizDoom"></a>VizDoom</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic14.png" alt></p>
+<h1 id="Pommerman"><a href="#Pommerman" class="headerlink" title="Pommerman"></a>Pommerman</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic15.png" alt></p>
+<h1 id="Multiagent-emergence"><a href="#Multiagent-emergence" class="headerlink" title="Multiagent emergence"></a>Multiagent emergence</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic16.png" alt></p>
+<h1 id="Quake-III-Arena-Capture-the-Flag"><a href="#Quake-III-Arena-Capture-the-Flag" class="headerlink" title="Quake III Arena Capture the Flag"></a>Quake III Arena Capture the Flag</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic17.png" alt></p>
+<h1 id="Google-Research-Football"><a href="#Google-Research-Football" class="headerlink" title="Google Research Football"></a>Google Research Football</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic18.png" alt></p>
+<h1 id="Neural-MMOs"><a href="#Neural-MMOs" class="headerlink" title="Neural MMOs"></a>Neural MMOs</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic19.png" alt></p>
+<h1 id="StarCraft-II"><a href="#StarCraft-II" class="headerlink" title="StarCraft II"></a>StarCraft II</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic20.png" alt></p>
+<h1 id="Unity-ML-Agents-Tooklkit"><a href="#Unity-ML-Agents-Tooklkit" class="headerlink" title="Unity ML-Agents Tooklkit"></a>Unity ML-Agents Tooklkit</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic21.png" alt></p>
+<h1 id="Al2Thor"><a href="#Al2Thor" class="headerlink" title="Al2Thor"></a>Al2Thor</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic22.png" alt></p>
+<h1 id="潮人篮球"><a href="#潮人篮球" class="headerlink" title="潮人篮球"></a>潮人篮球</h1><p><img src="/2021/07/17/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic23.png" alt></p>
+<h1 id="Arcade-Learning-Environment"><a href="#Arcade-Learning-Environment" class="headerlink" title="Arcade-Learning-Environment"></a>Arcade-Learning-Environment</h1><p><a target="_blank" rel="noopener" href="https://github.com/mgbellemare/Arcade-Learning-Environment">github</a></p>
+<h1 id="Fighting-ICE"><a href="#Fighting-ICE" class="headerlink" title="Fighting ICE"></a>Fighting ICE</h1><p><a target="_blank" rel="noopener" href="https://github.com/myt1996/gym-fightingice">github</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/07/14/TD3-Addressing-Function-Approximation-Error-in-Actor-Critic-Methods/" rel="prev" title="TD3_Addressing Function Approximation Error in Actor-Critic Methods">
+      <i class="fa fa-chevron-left"></i> TD3_Addressing Function Approximation Error in Actor-Critic Methods
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Grid-world"><span class="nav-number">1.</span> <span class="nav-text">Grid world</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Multi-agent-Grid-world"><span class="nav-number">2.</span> <span class="nav-text">Multi-agent Grid world</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Particle"><span class="nav-number">3.</span> <span class="nav-text">Particle</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Magent"><span class="nav-number">4.</span> <span class="nav-text">Magent</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenAI-Gym"><span class="nav-number">5.</span> <span class="nav-text">OpenAI Gym</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenAI-Gym-Retro"><span class="nav-number">6.</span> <span class="nav-text">OpenAI Gym Retro</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ProGen"><span class="nav-number">7.</span> <span class="nav-text">ProGen</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Malmo"><span class="nav-number">8.</span> <span class="nav-text">Malmo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Obstacle-Tower"><span class="nav-number">9.</span> <span class="nav-text">Obstacle Tower</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Torcs%E8%B5%9B%E8%BD%A6"><span class="nav-number">10.</span> <span class="nav-text">Torcs赛车</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DeepMind-Lab"><span class="nav-number">11.</span> <span class="nav-text">DeepMind Lab</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hard-Eight"><span class="nav-number">12.</span> <span class="nav-text">Hard Eight</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#DeepMind-Control"><span class="nav-number">13.</span> <span class="nav-text">DeepMind Control</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VizDoom"><span class="nav-number">14.</span> <span class="nav-text">VizDoom</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Pommerman"><span class="nav-number">15.</span> <span class="nav-text">Pommerman</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Multiagent-emergence"><span class="nav-number">16.</span> <span class="nav-text">Multiagent emergence</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Quake-III-Arena-Capture-the-Flag"><span class="nav-number">17.</span> <span class="nav-text">Quake III Arena Capture the Flag</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Google-Research-Football"><span class="nav-number">18.</span> <span class="nav-text">Google Research Football</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Neural-MMOs"><span class="nav-number">19.</span> <span class="nav-text">Neural MMOs</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#StarCraft-II"><span class="nav-number">20.</span> <span class="nav-text">StarCraft II</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Unity-ML-Agents-Tooklkit"><span class="nav-number">21.</span> <span class="nav-text">Unity ML-Agents Tooklkit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Al2Thor"><span class="nav-number">22.</span> <span class="nav-text">Al2Thor</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%BD%AE%E4%BA%BA%E7%AF%AE%E7%90%83"><span class="nav-number">23.</span> <span class="nav-text">潮人篮球</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Arcade-Learning-Environment"><span class="nav-number">24.</span> <span class="nav-text">Arcade-Learning-Environment</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Fighting-ICE"><span class="nav-number">25.</span> <span class="nav-text">Fighting ICE</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">QilongPan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">QilongPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
