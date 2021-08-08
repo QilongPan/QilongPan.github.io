@@ -160,6 +160,79 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/" class="post-title-link" itemprop="url">Bag of Tricks for Image Classification with Convolutional Neural Networks</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-06-21 22:28:16 / Modified: 22:49:30" itemprop="dateCreated datePublished" datetime="2021-06-21T22:28:16+08:00">2021-06-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%9B%BE%E5%83%8F%E5%88%86%E7%B1%BB/" itemprop="url" rel="index"><span itemprop="name">图像分类</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    最近在图像分类研究中取得的大部分进展都归功于训练过程的改进，例如数据增强和优化方法的变化。 然而，在文献中，大多数改进要么作为实现细节被简要提及，要么仅在源代码中可见。 在本文中，我们将检查这些改进的集合，并通过消融研究凭经验评估它们对最终模型准确性的影响。 我们将证明，通过将这些改进结合在一起，我们能够显着改进各种 CNN 模型。 例如，我们将 ResNet-50 在 ImageNet 上的 top-1 验证准确率从 75.3% 提高到 79.29%。 我们还将证明图像分类精度的提高导致在其他应用领域（如目标检测和语义分割）中更好的迁移学习性能。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    自 2012 年 AlexNet [15] 推出以来，深度卷积神经网络已成为图像分类的主要方法。 从那时起，人们提出了各种新架构，包括 VGG [24]、NiN [16]、Inception [1]、ResNet [9]、DenseNet [13] 和 NASNet [34]。 同时，我们看到了模型精度提升的稳定趋势。 例如，ImageNet [23] 上的 top-1 验证准确率已从 62.5% (AlexNet) 提高到 82.7% (NASNet-A)。</p>
+<p>​    然而这些进步不仅仅来自改进的模型架构，训练过程的改进，包括损失函数的变化、数据预处理和优化方法也发挥了重要作用。 过去几年已经提出了大量这样的改进，但受到的关注相对较少。 在文献中，大多数只是作为实现细节被简要提及，而其他的只能在源代码中找到。</p>
+<p>​    在本文中，我们将研究一系列训练过程和模型架构改进，这些改进提高了模型的准确性，但几乎没有改变计算复杂性。 其中许多都是小“trick”，例如修改特定卷积层的步幅大小或调整学习率计划。 然而总的来说，它们有很大的不同。 我们将在多个网络架构和数据集上评估它们，并报告它们对最终模型准确性的影响。</p>
+<p>​    我们的经验评估表明，一些技巧可以显着提高精度，将它们组合在一起可以进一步提高模型精度。 我们将应用所有技巧后的 ResNet-50 与表 1 中的其他相关网络进行比较。请注意，这些技巧在ImageNet上将 ResNet50 的 top-1 验证准确率从 75.3% 提高到 79.29%。 它还优于其他更新和改进的网络架构，例如 SE-ResNeXt-50。 此外，我们表明我们的方法可以推广到其他网络（Inception V3 [1] 和 MobileNet [11]）和数据集（Place365 [32]）。 我们进一步表明，使用我们的技巧训练的模型在其他应用领域（如目标检测和语义分割）中带来了更好的迁移学习性能。</p>
+<p><img src="/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/table1.png" alt></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/16/Counterfactual-Multi-Agent-Policy-Gradients/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1396,84 +1469,6 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Asynchronous Methods for Deep Reinforcement Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-05-06 20:26:41" itemprop="dateCreated datePublished" datetime="2021-05-06T20:26:41+08:00">2021-05-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-18 00:42:55" itemprop="dateModified" datetime="2021-06-18T00:42:55+08:00">2021-06-18</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Asynchronous-Methods-for-Deep-Reinforcement-Learning"><a href="#Asynchronous-Methods-for-Deep-Reinforcement-Learning" class="headerlink" title="Asynchronous Methods for Deep Reinforcement Learning"></a>Asynchronous Methods for Deep Reinforcement Learning</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>​    我们提出了一个概念上简单和轻量级的深度强化学习框架，它使用异步梯度下降来优化深度神经网络控制器。我们提出了四种标准强化学习算法的异步变体，并表明并行actor-learner对训练有稳定的效果，使所有四种方法都能够成功地训练神经网络控制器。性能最好的方法是actor-critic的异步变体，它在一个多核CPU而不是GPU上训练一半的时间，超过了Atari领域上最先进的方法。此外，我们还证明了异步actor-critic在各种连续电机控制问题以及使用视觉输入导航随机三维迷宫的新任务上取得了成功。</p>
-<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    深度神经网络提供了丰富的表示，可以使强化学习(RL)算法能够有效地执行。然而，以前人们认为，简单的online RL算法与深度神经网络的结合从根本上是不稳定的。相反，已经提出了各种解决方案来稳定该算法（(Riedmiller, 2005; Mnih et al., 2013; 2015; Van Hasselt et al., 2015; Schulman et al., 2015a)。这些方法有一个共同的想法：online RL代理遇到的观察数据序列是非平稳的，与online RL更新有很强的相关性。通过将代理的数据存储在经验回放内存中，数据可以从不同的时间步长进行分组 (Riedmiller, 2005; Schulman et al., 2015a) 或随机采样 (Mnih et al., 2013; 2015; Van Hasselt et al., 2015) 。以这种方式聚合内存可以减少非平稳性和去相关的更新，但同时将这些方法限制为off-policy强化学习算法。</p>
-<p>​    基于经验重放的深度RL算法在Atari2600等具有挑战性的领域中取得了前所未有的成功。然而，经验回放有几个缺点：它每次实际交互使用更多的内存和计算；它需要off-policy的学习算法，可以从旧策略生成的数据进行更新。</p>
-<p>​    在本文中，我们提供了一个非常不同的深度强化学习范式。我们在环境的多个实例上异步地并行执行多个代理，而不是经验重放。这种并行性还将代理的数据重新关联到一个更平稳的过程中，因为在任何给定的时间步长中，并行代理都将经历各种不同的状态。这个简单的想法使基本的策略RL算法，比如Sarsa,n-step方法,actor-critic方法以及off-policy的RL算法，如Q-learning,将使用深度神经网络稳健和有效地应用。</p>
-<p>​    我们的并行强化学习范式也提供了实际的好处。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1543,7 +1538,7 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
