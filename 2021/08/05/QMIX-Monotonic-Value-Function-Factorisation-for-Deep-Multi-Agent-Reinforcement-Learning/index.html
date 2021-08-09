@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="摘要​    在许多现实世界中，一组代理必须以分散的方式行事的同时协调他们的行为。同时，通常可以在模拟或实验室环境中以集中方式训练代理，其中全局状态信息可用并且通信限制被解除。学习以额外状态信息为条件的联合行动值是一种利用集中学习的有吸引力的方式，但提取分散策略的最佳策略尚不清楚。我们的解决方案是 QMIX，这是一种新颖的基于价值的方法，可以在集中的端到端时尚中训练分散的策略。 QMIX 采用了一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QMIX:Monotonic Value Function Factorisation for Deep Multi-Agent Reinforcement Learning">
+<meta property="og:url" content="http://example.com/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/index.html">
+<meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="摘要​    在许多现实世界中，一组代理必须以分散的方式行事的同时协调他们的行为。同时，通常可以在模拟或实验室环境中以集中方式训练代理，其中全局状态信息可用并且通信限制被解除。学习以额外状态信息为条件的联合行动值是一种利用集中学习的有吸引力的方式，但提取分散策略的最佳策略尚不清楚。我们的解决方案是 QMIX，这是一种新颖的基于价值的方法，可以在集中的端到端时尚中训练分散的策略。 QMIX 采用了一">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula1.png">
+<meta property="og:image" content="http://example.com/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula4.png">
+<meta property="og:image" content="http://example.com/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula5.png">
+<meta property="og:image" content="http://example.com/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/figure2.png">
+<meta property="og:image" content="http://example.com/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula6.png">
+<meta property="article:published_time" content="2021-08-05T12:55:47.000Z">
+<meta property="article:modified_time" content="2021-08-09T12:18:59.476Z">
+<meta property="article:author" content="QilongPan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula1.png">
+
+<link rel="canonical" href="http://example.com/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>QMIX:Monotonic Value Function Factorisation for Deep Multi-Agent Reinforcement Learning | 潘其龙</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">潘其龙</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          QMIX:Monotonic Value Function Factorisation for Deep Multi-Agent Reinforcement Learning
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-08-05 20:55:47" itemprop="dateCreated datePublished" datetime="2021-08-05T20:55:47+08:00">2021-08-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-09 20:18:59" itemprop="dateModified" datetime="2021-08-09T20:18:59+08:00">2021-08-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/" itemprop="url" rel="index"><span itemprop="name">多智能体</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在许多现实世界中，一组代理必须以分散的方式行事的同时协调他们的行为。同时，通常可以在模拟或实验室环境中以集中方式训练代理，其中全局状态信息可用并且通信限制被解除。学习以额外状态信息为条件的联合行动值是一种利用集中学习的有吸引力的方式，但提取分散策略的最佳策略尚不清楚。我们的解决方案是 QMIX，这是一种新颖的基于价值的方法，可以在集中的端到端时尚中训练分散的策略。 QMIX 采用了一个网络，该网络将联合动作值估计为仅以局部观察为条件的每个代理值的复杂非线性组合。我们在结构上强制每个代理值中的联合动作值是单调的，这允许在离策略学习中实现联合动作值的最大化，并保证集中和分散策略之间的一致性。我们在一组具有挑战性的星际争霸 II 微观管理任务上评估 QMIX，并表明 QMIX 显着优于现有的基于价值的多智能体强化学习方法。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    强化学习(RL)对于帮助解决各种合作的多主体问题具有相当大的前景，如机器人群的协调 (Huttenrauch et al.,2017)和自动驾驶汽车(Cao et al., 2012)。</p>
+<p>​    在许多这样的设置中，部分可观察性和/或通信限制需要学习分散的策略，这只以每个代理的本地操作观察历史为条件。分散化的策略也自然地减弱了联合动作空间随着代理数量呈指数级增长的问题，这往往使传统的单代理RL方法的应用不切实际。</p>
+<p>​    幸运的是，分散的政策通常可以在模拟或实验室设置中以集中的方式学习。这通常授予对其他状态信息的访问，否则对代理隐藏，并删除代理间通信约束。具有分散执行的集中培训范式 (Oliehoek et al., 2008; Kraemer &amp; Banerjee, 2016)最近引起了RL社区的关注(Jorge et al., 2016; Foerster et al., 2018)。然而，围绕如何最好地利用集中式训练的许多挑战仍然存在。</p>
+<p>​    其中一个挑战是如何表示和使用大多数RL方法所学习的动作值函数。一方面，正确捕获代理操作的影响需要一个集中的动作值函数Qtot，它以全局状态和联合动作为条件。另一方面，当有许多代理时，这种函数很难学习，即使可以学习，也没有提供明显的方法来提取分散的策略，允许每个代理只基于单个观察选择单个操作。</p>
+<p>​    最简单的选择是放弃一个集中的动作值函数，让每个代理独立学习单个动作值函数Qa，如独立的Q学习(IQL) (Tan, 1993)。然而，这种方法不能明确地表示代理之间的相互作用，也可能不会收敛，因为每个代理的学习都被其他代理的学习和探索所混淆。</p>
+<p>​    在另一个极端，我们可以学习一个完全集中的状态操作值函数<script type="math/tex">Q_{tot}</script>，然后使用它来指导参与者-批评框架中的分散策略的优化，反事实多代理(COMA)策略梯度(Foerster et al., 2018)，以及Gupta et al. (2017)等人的工作。然而，这需要关于政策学习，这可能是样本效率低下的，当有多个代理时，训练完全集中的批评者就变得不切实际。</p>
+<p>​    在这两个极端之间，我们可以学习一个集中但被分解的<script type="math/tex">Q_{tot}</script>，这是一种由值分解网络(VDN)采用的方法(Sunehag et al., 2017)。通过将<script type="math/tex">Q_{tot}</script>表示为单个值函数<script type="math/tex">Q_{a}</script>的和，只影响单个观察和动作，一个分散的策略仅仅从每个代理贪婪地选择动作而产生。然而，VDN严重限制了可以表示的集中动作值函数的复杂性，并忽略了训练期间可用的任何额外的状态信息。</p>
+<p>​    在本文中，我们提出了一种名为QMIX的新方法，它像VDN一样，位于IQL和COMA的极端之间，但可以代表更丰富的操作值函数。我们的方法的关键是，VDN的完全因式分解不必要提取去中心策略。相反，我们只需要确保在<script type="math/tex">Q_{tot}</script>上执行的全局argmax就会产生与在每个<script type="math/tex">Q_{a}</script>上执行的一组单个argmax操作相同的结果。为此，对<script type="math/tex">Q_{tot}</script>和每个<script type="math/tex">Q_{a}</script>之间的关系实施单调性约束就足够了：</p>
+<p><img src="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula1.png" alt></p>
+<p>​    QMIX由代表每个<script type="math/tex">Q_{a}</script>的代理网络和一个将它们组合成<script type="math/tex">Q_{tot}</script>的混合网络组成，不像在VDN中那样是一个简单的和，而是以一种复杂的非线性方式，确保集中和分散策略之间的一致性。同时，它通过限制混合网络具有正权值来加强（1）的约束。因此，QMIX可以用一个分解的表示来表示复杂的集中动作值函数，该函数可以扩展代理数量，并允许通过线性时间单个argmax操作轻松提取分散的策略。</p>
+<p>​    我们在星际争霸 II中构建的一系列单元微管理任务上评估 QMIX (Vinyals et al., 2017)。 我们的实验表明，QMIX 在绝对性能和学习速度方面都优于 IQL 和 VDN。 特别是，我们的方法在具有异构代理（系统内智能体的动力学不完全一致）<a target="_blank" rel="noopener" href="http://cdmd.cnki.com.cn/Article/CDMD-10487-1019616494.htm#:~:text=%E5%BC%82%E6%9E%84%E6%8C%87%E7%9A%84%E6%98%AF%E7%B3%BB%E7%BB%9F%E5%86%85%E6%99%BA%E8%83%BD%E4%BD%93%E7%9A%84%E5%8A%A8%E5%8A%9B%E5%AD%A6%E4%B8%8D%E5%AE%8C%E5%85%A8%E4%B8%80%E8%87%B4%2C%E6%98%BE%E7%84%B6%E8%BF%99%E4%B8%80%E7%89%B9%E6%80%A7%E5%9C%A8%E4%BC%97%E5%A4%9A%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E7%B3%BB%E7%BB%9F%E4%B8%AD%E9%83%BD%E6%98%AF%E5%AD%98%E5%9C%A8%E7%9A%84%2C%E4%BD%86%E6%97%B6%E5%B8%B8%E5%BF%BD%E7%95%A5%E4%BA%86%E6%99%BA%E8%83%BD%E4%BD%93%E9%97%B4%E7%9A%84%E5%B7%AE%E5%BC%82%E6%80%A7%E3%80%82,%E5%BC%82%E6%9E%84%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%B8%80%E4%B8%AA%E5%85%B8%E5%9E%8B%E4%BE%8B%E5%AD%90%E6%98%AF%E7%94%B1%E6%97%A0%E4%BA%BA%E6%9C%BA%E5%92%8C%E6%97%A0%E4%BA%BA%E8%89%87%E7%BB%84%E6%88%90%E7%9A%84%E6%B7%B7%E5%90%88%E7%BC%96%E9%98%9F%E3%80%82%20%E6%9C%AC%E6%96%87%E7%A0%94%E7%A9%B6%E4%BA%86%E4%B8%80%E7%B1%BB%E5%BC%82%E6%9E%84%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98%2C%E6%8F%90%E5%87%BA%E4%BA%86%E6%9C%89%E6%95%88%E7%9A%84%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5%2C%E5%BE%97%E5%87%BA%E4%BA%86%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5%E7%9A%84%E5%85%85%E5%88%86%E5%92%8C%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6%2C%E5%B9%B6%E9%87%8F%E5%8C%96%E4%BA%86%E5%90%8C%E6%AD%A5%E9%80%9F%E7%8E%87%E3%80%82">异构代理</a>的任务上显示出可观的性能提升。 此外，我们的消融显示了对状态信息进行调节的必要性和代理 Q 值的非线性混合，以便在任务之间实现一致的性能。</p>
+<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><p>​    最近在多代理RL方面的工作已经开始从表格方法(Yang &amp; Gu, 2004; Busoniu et al., 2008)转向能够处理高维状态和动作空间的深度学习方法(Tampuu et al., 2017; Foerster et al.,2018; Peng et al., 2017)。在本文中，我们重点关注合作设置。</p>
+<p>​    一方面，为多智能体系统查找策略的一种自然方法是直接学习分散的值函数或策略。独立的Q-学习 (Tan, 1993)使用Q-学习 (Watkins, 1989)为每个代理训练独立的动作价值函数。(Tammuu等人，2017)使用DQN将该方法扩展到深度神经网络(Mnih et al., 2015)。虽然这些方法只是实现了分散化，但它们容易出现由于同时学习和探索代理所引起的环境的非平稳性而引起的不稳定性。Omidshafiei et al. (2017) and Foerster et al. (2017)在一定程度上解决了学习稳定问题，但仍然学习了分散的值函数，不允许在培训期间包含额外的状态信息。</p>
+<p>​    另一方面，联合行动的集中学习可以自然地处理协调问题，避免非平稳性，但随着联合行动空间的扩大，代理数量呈指数增长。可扩展集中学习的经典方法包括coordination graphs (Guestrin et al., 2002)，它通过将全局奖励函数分解为 agent-local项的和来利用代理之间的条件独立性。Sparse cooperative Q-learning (Kok &amp; Vlassis, 2006)是一种表格q学习算法，它只在需要这种协调的状态下学习协调一组协作代理的动作，将这些依赖关系编码在coordination graph中。这些方法要求预先提供代理之间的依赖关系，而我们不需要这样的先验知识。相反，我们假设每个代理总是对全局奖励有贡献，并学习其在每个状态下的贡献的大小。</p>
+<p>​    最近的集中学习方法在执行过程中需要更多的通信： CommNet(Sukhbaatar et al., 2016)使用集中的网络体系结构在代理之间交换信息。BicNet(Pengetal.，2017)使用双向rnn在行为者-批评者环境中在代理之间交换信息。这种方法还需要估计个体代理的奖励。</p>
+<p>​    一些工作已经开发了混合方法，利用完全分散执行的集中学习设置。COMA(Foersteretal.，2018)使用一个集中的批评者来培训分散的参与者，估计每个代理的反事实优势函数，以解决多代理的信用分配。同样地，Gupta et al. (2017)提出了一个集中的参与者批评算法，该算法随代理的数量而扩展，但减轻了集中化的优势。Lowe et al. (2017)为每个代理学习一个集中的批评者，并将其应用于具有连续动作空间的竞争游戏。这些方法采用策略上的策略梯度学习，其样本效率较低，容易陷入次优局部最小值。</p>
+<p>​    Sunehag et al. (2017)提出了价值分解网络(VDN)，它允许具有分散执行的集中价值函数学习。他们的算法将一个中心状态动作值函数分解为单个代理项的和。这对应于使用一个退化的完全不连通的协调图。VDN在训练期间不使用额外的状态信息，只能代表有限的集中动作值函数。</p>
+<p>​    许多论文已经在星际争霸中建立了单位微管理，作为深度多代理RL的基准。Usunier et al. (2017)提出了一种使用集中贪婪MDP和一阶优化的算法。Peng et al. (2017)也评估了他们在星际争霸上的方法。然而，两者都不需要分散的执行。与我们的设置类似的是Foerster et al. (2017)的工作，他评估了IQL对最多5名特工的战斗场景的重放稳定方法。Foerster et al. (2018)也会使用此设置。在本文中，我们构建了StarCraft II Learning Environment(SC2LE)中(Vinyalsetal.，2017)的单元微管理任务，因为它得到了游戏开发者的积极支持，SC2LE提供了一个更稳定的测试环境。</p>
+<p>​    QMIX依赖于一个神经网络来将集中状态转换为另一个神经网络的权值，以一种让人想起hypernetworks (Ha et al., 2017)的方式。第二个神经网络通过保持其权重为正，限制其输入是单调的。Dugas et al. (2009)研究了神经网络的这种功能限制。</p>
+<h1 id="QMIX"><a href="#QMIX" class="headerlink" title="QMIX"></a>QMIX</h1><p>​    在本节中，我们提出了一种名为QMIX的新方法，它和VDN一样，位于IQL和集中q学习的极端之间，但可以代表更丰富的动作值函数。</p>
+<p>​    我们的方法的关键是，为了能够提取与集中对应策略完全一致的分散策略，VDN是不必完全分解的。相反，为了保持一致性，我们只需要确保在<script type="math/tex">Q_{tot}</script>上执行的全局argmax就会产生与在每个<script type="math/tex">Q_{a}</script>上执行的一组单个argmax操作相同的结果：</p>
+<p><img src="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula4.png" alt></p>
+<p>​    这允许每个代理a只通过对其<script type="math/tex">Q_{a}</script>选择贪婪的行动来参与一个分散的执行。作为一个副作用，如果满足（4），那么获取策略外学习更新所需的<script type="math/tex">Q_{tot}</script>的argmax是非常易于处理的。</p>
+<p>​    VDN 的表示足以满足（4）。 然而，QMIX 基于这样的观察，即这种表示可以推广到更大的单调函数族，这些单调函数也足以满足（4）但不是必需的。 可以通过对 Qtot 和每个 Qa 之间关系的约束来强制执行单调性</p>
+<p><img src="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula5.png" alt></p>
+<p>​    为了强制执行（5），QMIX使用由agent networks, a mixing network, and a setof hypernetworks (Ha et al., 2017)。图2说明了整个设置。</p>
+<p>​    对于每个代理a，都有一个代理网络代表其单个值函数<script type="math/tex">Q_{a}\left ( \tau ^{a},u^{a} \right )</script>。我们将代理网络表示为drqn，在每个时间步长接收当前的个体观察<script type="math/tex">o_{t}^{a}</script>和最后一个动作<script type="math/tex">u_{t-1}^{a}</script>作为输入，如图2c所示。</p>
+<p>​    混合网络是一个前馈神经网络，它将代理网络的输出作为输入，并单调地混合，产生<script type="math/tex">Q_{tot}</script>的值，如图2a所示。为了加强（5)的单调性约束，混合网络的权值(而不是偏差）被限制为非负的。这允许混合网络任意紧密地逼近任何单调函数(Dugas et al., 2009)。</p>
+<p>​        混合网络的权值由单独的超网络产生的。每个超网络以状态s作为输入，生成一层混合网络的权值。每个超网络由一个线性层组成，然后是一个绝对激活函数，以确保混合网络的权值是非负的。超网络的输出是一个向量，它被重新塑造成一个适当大小的矩阵。bias以同样的方式产生，但不限于非负性。最终的偏差是由一个具有ReLU非线性的2层超网络产生的。图2a说明了混合网络和超网络。</p>
+<p><img src="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/figure2.png" alt></p>
+<p>​    状态由超网络使用，而不是直接传递到混合网络，因为<script type="math/tex">Q_{tot}</script>可以以非单调方式依赖于额外的状态信息。 因此，将 s 的某些函数与每个代理的值一起通过单调网络传递会受到过度约束。 相反，超网络的使用可以以任意方式调节单调网络在 s 上的权重，从而尽可能灵活地将完整状态 s 集成到联合动作值估计中。</p>
+<p>​    QMIX经过端到端培训，以尽量减少以下损失：</p>
+<p><img src="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula6.png" alt></p>
+<p>​    其中b是从重放缓冲区采样的转换的批大小,<script type="math/tex">y^{tot}=r+\gamma max_{u^{'}}Q_{tot}\left ( \tau ^{'},u^{'},s^{'};\theta ^{-} \right )</script>,<script type="math/tex">\theta ^{-}</script>是目标网络的参数，如DQN中（6)类似于(2）的标准DQN损失。由于（4）成立，我们可以在代理数量上以时间线性地执行<script type="math/tex">Q_{tot}</script>的最大化（而不是在最坏情况下按指数缩放）。</p>
+<h1 id="表示复杂性"><a href="#表示复杂性" class="headerlink" title="表示复杂性"></a>表示复杂性</h1><p>​    可用QMIX表示的值函数类包括任何值函数，在完全可观测的设置中，它们可以分解为代理的单个值函数的非线性单调组合。这扩展了由VDN可表示的线性单调值函数。然而，（5）中的约束阻止了QMIX表示不以这种方式分解的值函数。</p>
+<p>​    直观地说，一个代理的最佳操作依赖于其他代理在同一时间步长的动作的任何值函数都不会适当地因式分解，因此不能用QMIX完美地表示。然而，QMIX可以比VDN更准确地近似这些值函数。此外，它可以利用训练过程中可用的额外状态信息，我们通过经验证明。关于表示复杂性的更详细的讨论可在补充材料中找到。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/07/31/Value-Decomposition-Networks-For-Cooperative-Multi-Agent-Learning/" rel="prev" title="Value-Decomposition Networks For Cooperative Multi-Agent Learning">
+      <i class="fa fa-chevron-left"></i> Value-Decomposition Networks For Cooperative Multi-Agent Learning
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">相关工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#QMIX"><span class="nav-number">4.</span> <span class="nav-text">QMIX</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A1%A8%E7%A4%BA%E5%A4%8D%E6%9D%82%E6%80%A7"><span class="nav-number">5.</span> <span class="nav-text">表示复杂性</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">QilongPan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">QilongPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
