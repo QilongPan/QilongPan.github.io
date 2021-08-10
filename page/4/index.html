@@ -160,6 +160,526 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Genetic State-Grouping Algorithm for Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-26 21:10:23" itemprop="dateCreated datePublished" datetime="2021-04-26T21:10:23+08:00">2021-04-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-27 00:00:49" itemprop="dateModified" datetime="2021-04-27T00:00:49+08:00">2021-04-27</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning"><a href="#Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning" class="headerlink" title="Genetic State-Grouping Algorithm for Deep Reinforcement Learning"></a>Genetic State-Grouping Algorithm for Deep Reinforcement Learning</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>​    虽然强化学习已经被认为是机器学习中最重要和最著名的技术之一，但由于其较长的初始学习时间和学习不稳定，它在现实问题中的适用性仍然有限。特别是在实时约束下，大量分支因子的问题仍然无法克服，这需要一种针对下一代强化学习的新方法。本文提出了基于深度强化学习的Genetic State-Grouping Algorithm。其核心思想是将整个状态集划分为几个状态组。每一组都由相互相似的状态组成，从而代表了它们的共同特征。然后使用遗传优化器来处理状态组，从而发现杰出的操作。这些步骤有助于深度Q网络避免过度的探索，从而导致不能显著减少初始学习时间。对实时战斗电子游戏(FightingICE)的实验证明了该方法的有效性。</p>
+<p>关键词：强化学习，遗传算法，混合方法，蒙特卡罗技术</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    强化学习方法(RL)击败了世界上最好的人类围棋玩家之一，引起了专家们的认真关注。它的基于试验和错误的迭代而不是大量的预定义数据集进行培训的性质在全世界引起了热烈的讨论和兴趣。然而，除了强化学习的所有成就外，它还暴露了许多技术困难，如学习不稳定和进入局部最优。具体地说，很难定义一个找到复杂问题中的全局解的奖励函数，它比其他类型的机器学习需要更多的计算资源和初始学习时间。之前的研究提出了各种解决这些缺点的解决方案，有些是利用实时视频游戏环境与现实世界相似，表明它们适合RL对内存和时间的苛刻需求。然而，这些研究的主要贡献仅限于只有几个分支因素的问题，因为提高它们的数量会呈指数级地增加所需的计算资源数量。</p>
+<p>​    本文介绍了通过深度强化学习增强的Genetic State-Grouping Algorithm (GSGA)。它是遗传算法和State Grouping的集成，我们真正的方法，以追求提高深度强化学习在时间和资源效率方面的学习效率。我们展示了它在FightingICE中的表现，这是一个实时战斗视频游戏，由IEEE CoG完成。我们认为它是一个适当的试验场来验证我们提出的结构的有效性，因为它包含了各种类似于现实世界的环境因素。</p>
+<p>​    FightingICE由 Intelligent Computer Entertainment Lab in Ritsumeikan University, Japan开发。因为它是一个为构建通用战斗游戏ai而设计的环境，所以在属性和风格方面，它是一种相当典型的类型。在每一轮中，两个玩家代理在二维空间中相互战斗，他们之间实例化一个物理距离。游戏向每个代理提供多达56个可执行操作。此外，根据交战规则，每个玩家被允许一次只使用一个线程，以复制真实世界的问题条件，这需要大量使用计算资源。总的来说,FightingICE玩家只利用单个线程在16.67ms的每个时间帧内必须考虑多达3136个动作状态。游戏中的物理空间由<script type="math/tex">960\times 640</script>像素组成，分为5像素大小的房间，每个代理都可以放置在里面。因此，每个代理总共有<script type="math/tex">192\times128</script>的状态空间来重新定位。</p>
+<p>​    本文的排列格式如下：第二章我们介绍了一些与本文主要思想有关的研究。在第三章中，我们介绍了我们的技术的核心理论，以及关于电子游戏环境的细节。第4章介绍了我们的模型及其竞争对手的过程和实验结果，第五章提供了我们对模型整体性能的评论和关注。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>​    在强化学习过程中，人们多次尝试减少长初始学习时间，稳定整体学习的过程。Justesen等人提出一种强化学习代理，有效解决实时问题的时间划分和对抗环境，Langford提出一种有效的探索方法。一些研究选择通过增强学习稳定性来降低结构复杂性，尽管他们的方法对涉及多个分支因素的问题缺乏足够的适用性，但在这些问题中，环境高度复杂，或者为代理提供了大量的操作选择。此外，(Justesen等人，2016)提出了一个解决在线进化的巨大分支因素的解决方案，尽管它几乎不适用于实时视频游戏。在具有多变量的实时问题中，大量的分支因素特别吓人，其中分支的数量增长得非常快。尽管RL具有探索和经验学习的性质，适合于开发实时自适应AI，但在现实世界中常见的多分支因子问题中，RL的学习效率会大大降低。</p>
+<p>​    其他几项研究采用蒙特卡罗树搜索（MCTS），结合进化算法，作为强化学习的补充在开发视频游戏AI时，证明了其在足够时间内找到最佳解决方案的能力。尽管如此，在大多数方面强化学习需要大量计算资源和时间的本质仍然是不可妥协的。</p>
+<h2 id="提出的方法"><a href="#提出的方法" class="headerlink" title="提出的方法"></a>提出的方法</h2><p>​    强化学习是一种机器学习技术，它在代理与未知环境交互时为他们找到最佳的学习策略。这种过程通常被形式化为马尔可夫决策过程(MDPs)，它可以由4个元素<script type="math/tex">(S,A,P,R)</script>来定义。在每个时间戳<script type="math/tex">t</script>，agent观察一组状态<script type="math/tex">s_{t}\in S</script>，并采取一组操作<script type="math/tex">a_{t}\in A</script>。与转换函数<script type="math/tex">P</script>相关联，所有状态都为马尔可夫的环境，决定奖励<script type="math/tex">r_{t}\sim R(s_{t},a_{t})</script>和后续或以下状态<script type="math/tex">s_{t+1}\sim P(s_{t},a_{t})</script>。我们将根据一阶马尔可夫假设来解释所提出的方法。</p>
+<p>​    图1从概念上表示了我们提议的GSGA的总体结构。它由三个主体组成：1）state grouping，2） genetic optimizer，和3) deep Q network。其详细的程序描述如下。</p>
+<p><img src="/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/figure1.png" alt></p>
+<p>​        State Grouping(SG)是一种技术，通过将相似的状态结合在一起，压缩状态线的大小，包括物理距离。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/26/Reinforcement-Study-Notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/26/Reinforcement-Study-Notes/" class="post-title-link" itemprop="url">Reinforcement Study Notes</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-26 20:53:20" itemprop="dateCreated datePublished" datetime="2021-04-26T20:53:20+08:00">2021-04-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-21 21:42:18" itemprop="dateModified" datetime="2021-06-21T21:42:18+08:00">2021-06-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="论文下载"><a href="#论文下载" class="headerlink" title="论文下载"></a>论文下载</h1><p>sci-hub</p>
+<p>根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载</p>
+<p><a target="_blank" rel="noopener" href="https://www.douban.com/group/topic/144179135/">https://www.douban.com/group/topic/144179135/</a></p>
+<p><a target="_blank" rel="noopener" href="https://gfsoso.99lb.net/sci-hub.html">https://gfsoso.99lb.net/sci-hub.html</a></p>
+<h1 id="李宏毅视频笔记"><a href="#李宏毅视频笔记" class="headerlink" title="李宏毅视频笔记"></a>李宏毅视频笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1UE411G78S?from=search&amp;seid=9027506742489609557">视频地址</a></p>
+<h2 id="lesson1"><a href="#lesson1" class="headerlink" title="lesson1"></a>lesson1</h2><h3 id="强化学习难点"><a href="#强化学习难点" class="headerlink" title="强化学习难点"></a>强化学习难点</h3><ul>
+<li>Reward delay</li>
+<li>Agent’s actions affect the subsequent data it receives</li>
+</ul>
+<h3 id="强化学习方法"><a href="#强化学习方法" class="headerlink" title="强化学习方法"></a>强化学习方法</h3><p>policy-based :   Learning an Actor</p>
+<p>value-based:    Learning a Critic</p>
+<p>model-based</p>
+<p>Three Steps for Deep Learning</p>
+<ul>
+<li>Neural Network as Actor</li>
+</ul>
+<p>Input of neural network:the observation of machine represented as a vector or a matrix</p>
+<p>Output neural network:each action corresponds to a neuron in output layer</p>
+<ul>
+<li>goodness of function</li>
+</ul>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic1.png" alt></p>
+<p>Actor的好坏。通过actor玩游戏算reward期望</p>
+<p>An episode is considered as a trajectory </p>
+<p>$\tau = \left \{ s_{1},a_{1},r_{1},s_{2},a_{2},r_{2},…,s_{T},a_{T},r_{T} \right \}$</p>
+<p>$R_{\tau } = \sum_{n=1}^{N}r_{n}$</p>
+<p>If you use an actor to play the game,each <script type="math/tex">\tau</script> has a probability to be sampled. The probability depends on actor parameter <script type="math/tex">\theta</script>:$P(\tau|\theta)$</p>
+<p>Use <script type="math/tex">\pi_{\theta}</script> to play the game N times,obtain <script type="math/tex">\left \{ \tau^{1},\tau^{2},...,\tau^{N} \right \}</script> </p>
+<p>Sampling <script type="math/tex">\tau</script> from <script type="math/tex">P(\tau|\theta)</script> N times.</p>
+<script type="math/tex; mode=display">\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})</script><p>Gradient Ascent</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic2.png" alt></p>
+<p>Problem statement</p>
+<script type="math/tex; mode=display">\theta ^{*} = argmax \bar{R_{\theta}}</script><script type="math/tex; mode=display">\bar{R_{\theta}}=\sum_{\tau}R(\tau)P(\tau|\theta)$$\
+
+Start with $$\theta^{0}</script><script type="math/tex; mode=display">\theta ^{1}\leftarrow \theta ^{0}+\eta \bigtriangledown \bar{R_{\theta ^{0}}}</script><script type="math/tex; mode=display">\theta ^{2}\leftarrow \theta ^{1}+\eta \bigtriangledown \bar{R_{\theta ^{1}}}</script><script type="math/tex; mode=display">...</script><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic3.png" alt></p>
+<script type="math/tex; mode=display">\bigtriangledown \bar{R_{\theta }}=\sum_{\tau}R(\tau)\bigtriangledown P(\tau|\theta) =\sum_{\tau}R(\tau)P(\tau|\theta)\frac{\bigtriangledown P(\tau|\theta)}{P(\tau|\theta)} =\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta)</script><script type="math/tex; mode=display">\frac{dlog(f(x))}{dx}=\frac{1}{f(x)}\frac{df(x)}{dx}</script><script type="math/tex; mode=display">\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta) \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)$$,Because $$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$.
+
+![](./Reinforcement-Study-Notes/pic4.png)
+
+Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left \{ \tau^{1},\tau^{2},...,\tau^{N} \right \}</script><script type="math/tex; mode=display">R(\tau)$$ do not have to be differentiable It can even be a black box.
+
+$$P(\tau|\theta) = p(s_{1})p(a_{1}|s_{1},\theta)p(r_{1},s_{2}|s_{1},a_{1})p(a_{2}|s_{2},\theta)p(r_{2},s_{3}|s_{2},a_{2})... = p(s_{1})\prod_{t=1}^{T}p(a_{t}|s_{t},\theta)p(r_{t},s_{t+1}|s_{t},a_{t})$$ ![](./Reinforcement-Study-Notes/pic5.png)
+
+$$p(a_{1}|s_{1},\theta)$$取决于策略，$$p(r_{1},s_{2}|s_{1},a_{1})$$取决于游戏。$$p(s_{1})$$ and $$p(r_{t},s_{t+1}|s_{t},a_{t})$$ not releated to your actor
+
+$$logP(\tau|\theta) = logp(s_{1}) + \sum_{t=1}^{T}logp(a_{t}|s_{t},\theta) + logp(r_{t},s_{t+1}|s_{t},a_{t})</script><p>Ignore the terms not related to <script type="math/tex">\theta</script></p>
+<script type="math/tex; mode=display">\bigtriangledown logP(\tau|\theta) = \sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta)</script><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic6.png" alt></p>
+<p>finally:</p>
+<script type="math/tex; mode=display">\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)= \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) = \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) =\frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}R(\tau ^{n})\bigtriangledown logp(a_{t}|s_{t},\theta)</script><script type="math/tex; mode=display">\theta^{new}\leftarrow \theta^{old} + \eta \bigtriangledown \bar{R_{\theta ^{old}}}</script><p>If in <script type="math/tex">\tau^{n}</script> machine takes  <script type="math/tex">a_{t}^{n}</script> when seeing <script type="math/tex">s_{t}^{n}</script> in </p>
+<script type="math/tex; mode=display">R(\tau^{n})$$ is positive  -------> Tuning  $$\theta$$ to increase  $$p(a_{t}^{n})|s_{t}^{n})</script><script type="math/tex; mode=display">R(\tau^{n})$$ is negative  -------> Tuning  $$\theta$$ to decrease $$p(a_{t}^{n})|s_{t}^{n})</script><p>It is very important to consider the cumulative reward <script type="math/tex">R(\tau^{n})</script> of the whole trajectory <script type="math/tex">\tau^{n}</script> instead of immediate reward <script type="math/tex">r_{t}^{n}</script>(是用整个trajectory的累加reward而不是用某一时刻的reward去乘)</p>
+<p>如果使用的是某一时刻的reward去乘，只会让那一个动作的概率增加，而不会让其它动作概率增加</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic7.png" alt></p>
+<p><strong>为什么要使用<script type="math/tex">\bigtriangledown logP(\tau^{n}|\theta)</script>,而不用<script type="math/tex">\frac{\bigtriangledown P(a_{t}^{n}|s_{t}^{n},\theta)}{ P(a_{t}^{n}|s_{t}^{n},\theta)}</script></strong></p>
+<p>e.g. in the sampling data… s has been seen in <script type="math/tex">\tau^{13},\tau^{15},\tau^{17},\tau^{33}</script></p>
+<p>In <script type="math/tex">\tau^{13}</script> ,take action a <script type="math/tex">R(\tau^{13})=2</script></p>
+<p>In <script type="math/tex">\tau^{15}</script> ,take action b <script type="math/tex">R(\tau^{15})=1</script></p>
+<p>In <script type="math/tex">\tau^{17}</script> ,take action b <script type="math/tex">R(\tau^{17})=1</script></p>
+<p>In <script type="math/tex">\tau^{33}</script> ,take action b <script type="math/tex">R(\tau^{33})=1</script></p>
+<p>因为求期望是rewad乘以概率的累加，所以因为b出现次数较多，所以会导致虽然b的单次reward不如a高，但是由于其出现次数多，会使b的概率大于a。所以需要divided by <script type="math/tex">P(a_{t}^{n}|s_{t}^{n},\theta)</script>,相当于进行normalize</p>
+<p><strong>Add a Baseline</strong></p>
+<p>It is possible that <script type="math/tex">R(\tau^{n})</script> is always positive.</p>
+<p>假如有动作a没有被sample，其它动作<script type="math/tex">R(\tau^{n})</script>为正，所以概率会增加，相对的动作a的概率就是减小</p>
+<p>The probability of the actions not sampled will decrease.</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/add_baseline.png" alt></p>
+<script type="math/tex; mode=display">\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}(R(\tau ^{n}) - b)\bigtriangledown logp(a_{t}|s_{t},\theta)</script><p>大于baseline才增加概率，小于baseline减小概率</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic24.png" alt></p>
+<p>假设游戏只有三步，从图中可以看出第一个episode得了3分，但是每个action的贡献都不一样，<script type="math/tex">a_{1}</script>贡献了5分，<script type="math/tex">a_{3}</script>贡献了-3分，但是训练的时候反而会增加<script type="math/tex">a_{3}</script>的概率。如果sample的episode够多，能够得到一个期望分数，或许能够忽略这个问题，比如第二个episode的情况下，<script type="math/tex">a_{3}</script>的reward为负的。为了解决这个问题，可以讲公式中的<script type="math/tex">R(\tau^{n})</script>(整个episode的reward和)换成只从当前action开始的reward和，因为之前的reward和当前action无关，公式如图所示。</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic25.png" alt></p>
+<p>由于未来的reward不确定性大，所以在计算reward和时会加入衰减，公式如图所示。</p>
+<script type="math/tex; mode=display">R(\tau^{n}) - b$$是状态独立的，为Advantage Function,表示该状态采取该动作有多好，这个是相对的。Advantage Function有多种形式，这里只是其中一种。
+
+**Critic**
+
+- A critic does not determine the action.
+- Given an actor,it evaluates the how good the actor is
+
+- pick the best function  
+
+## lesson2
+
+该部分通俗解释policy gradient的公式
+
+![](./Reinforcement-Study-Notes/pic8.png)
+
+![](./Reinforcement-Study-Notes/pic9.png)
+
+![](./Reinforcement-Study-Notes/pic10.png)
+
+$$R(\tau^{1})$$可以看成是增加其对应数据的样本
+
+## lesson3
+
+![](./Reinforcement-Study-Notes/pic11.png)
+
+![](./Reinforcement-Study-Notes/pic12.png)
+
+![](./Reinforcement-Study-Notes/pic13.png)
+
+![](./Reinforcement-Study-Notes/pic14.png)
+
+TD approach 不用等到游戏结束就可以train，只需要一段时间就可以。
+
+![](./Reinforcement-Study-Notes/pic15.png)
+
+dqn、dueling dqn、rainbow
+
+![](./Reinforcement-Study-Notes/pic16.png)
+
+![](./Reinforcement-Study-Notes/pic17.png)
+
+每个actor复制global parameters，然后和环境进行交互，计算gradients，然后传回global network
+
+![](./Reinforcement-Study-Notes/pic18.png)
+
+![](./Reinforcement-Study-Notes/pic19.png)
+
+![](./Reinforcement-Study-Notes/pic20.png)
+
+很多情况下是不知道reward function的，所以需要根据专家的历史trajectory来推出reward function，然后可以进行强化学习。
+
+![](./Reinforcement-Study-Notes/pic21.png)
+
+![](./Reinforcement-Study-Notes/pic22.png)
+
+![](./Reinforcement-Study-Notes/pic23.png)
+
+## lesson4
+
+### Proximal Policy Optimization(PPO)
+
+**From on-policy to off-policy**
+
+![](./Reinforcement-Study-Notes/pic26.png)
+
+![](./Reinforcement-Study-Notes/pic27.png)
+
+![](./Reinforcement-Study-Notes/pic28.png)如如果$$p(x)$$与$$q(x)$$相差太大，会导致方差大
+
+![](./Reinforcement-Study-Notes/pic29.png)
+
+![](./Reinforcement-Study-Notes/pic30.png)
+
+![](./Reinforcement-Study-Notes/pic31.png)
+
+![](./Reinforcement-Study-Notes/pic32.png)
+
+![](./Reinforcement-Study-Notes/pic33.png)
+
+![](./Reinforcement-Study-Notes/pic34.png)
+
+## lesson5
+
+### Q-Learning
+
+![](./Reinforcement-Study-Notes/pic35.png)
+
+![](./Reinforcement-Study-Notes/pic36.png)
+
+这种方法每次需要计算cumulated reward，需要游戏结束
+
+![](./Reinforcement-Study-Notes/pic38.png)
+
+不是预测$$V^{\pi}$$,而是预测$$V^{\pi}(s_{t})-V^{\pi}(s_{t+1})=r_{t}</script><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic39.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic40.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic41.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic42.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic43.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic44.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic45.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic46.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic47.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic48.png" alt></p>
+<h2 id="lesson6"><a href="#lesson6" class="headerlink" title="lesson6"></a>lesson6</h2><h3 id="Tips-of-Q-Learning"><a href="#Tips-of-Q-Learning" class="headerlink" title="Tips of Q-Learning"></a>Tips of Q-Learning</h3><ul>
+<li><p>Nature DQN</p>
+<p>Nature DQN做了一个改进，就是增加Target Q网络。也就是我们在计算目标Q值时使用专门的一个目标Q网络来计算，而不是直接使用预更新的Q网络。这样做的目的是为了减少目标计算与当前值的相关性。  原来NIPS版本的DQN目标Q网络是动态变化的，跟着Q网络的更新而变化，这样不利于计算目标Q值，导致目标Q值和当前的Q值相关性较大。因此提出单独使用一个目标Q网络。那么目标Q网络的参数如何来呢？还是从Q网络中来，只不过是延迟更新。也就是每次等训练了一段时间再将当前Q网络的参数值复制给目标Q网络。 </p>
+</li>
+<li><p>Double DQN</p>
+</li>
+</ul>
+<p>Q value is usually over-estimated</p>
+<ul>
+<li>Dueling DQN</li>
+</ul>
+<p>修改network架构</p>
+<ul>
+<li>Prioritized Reply</li>
+<li>Multi-step</li>
+</ul>
+<p>Balance between MC and TD</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic49.png" alt></p>
+<ul>
+<li><p>Noisy Net</p>
+</li>
+<li><p>Distributional Q-function</p>
+</li>
+<li><p>Rainbow</p>
+</li>
+</ul>
+<h2 id="lesson7"><a href="#lesson7" class="headerlink" title="lesson7"></a>lesson7</h2><h3 id="Q-Learning-for-Continuous-Actions"><a href="#Q-Learning-for-Continuous-Actions" class="headerlink" title="Q-Learning for Continuous Actions"></a>Q-Learning for Continuous Actions</h3><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic50.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic51.png" alt></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/17/TLeague/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/17/TLeague/" class="post-title-link" itemprop="url">TLeague</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-17 21:12:44" itemprop="dateCreated datePublished" datetime="2021-03-17T21:12:44+08:00">2021-03-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-18 22:38:20" itemprop="dateModified" datetime="2021-03-18T22:38:20+08:00">2021-03-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Tleague-A-Framework-for-Competitive-Self-Play-based-Distributed-Multi-Agent-Reinforcement-Learning"><a href="#Tleague-A-Framework-for-Competitive-Self-Play-based-Distributed-Multi-Agent-Reinforcement-Learning" class="headerlink" title="Tleague:A Framework for Competitive Self-Play based Distributed Multi-Agent Reinforcement Learning"></a>Tleague:A Framework for Competitive Self-Play based Distributed Multi-Agent Reinforcement Learning</h1><p>多智能体强化学习需要大量的数据，为了解决这个问题实现了TLeague框架。TLeague的目标是实现大规模训练以及主流的Competitive Self-Play (CSP)算法。训练可以在单机和多机。在 StarCraft II, ViZDoom and Pommerman中展示了它的效率和有效性。<a target="_blank" rel="noopener" href="https://github.com/tencent-ailab/tleague_projpage">code</a></p>
+<p>该框架用于多智能体竞争self-play的学习。框架如下图所示</p>
+<p><img src="/2021/03/17/TLeague/framework.png" alt></p>
+<ul>
+<li>Learner</li>
+</ul>
+<p>每个Learner从与之对应的Actor接收trajectories进行学习。每个Learner对应一个ReplayMem和DataServer，进行数据预处理和存储在ReplayMem中。学习开始时会从LeagueMgr接收到task，可以从中知道需要学习的策略。在学习过程中也会更新策略到ModelPool中。</p>
+<ul>
+<li>InfServer</li>
+</ul>
+<p>从不同的Actor中收集一批observation进行预测，并返回给对应的Actor；</p>
+<ul>
+<li>ModelPool</li>
+</ul>
+<p>存储策略参数作为对手模型池。Actor和Learner会读取和写入策略参数。</p>
+<ul>
+<li>LeagueMgr</li>
+</ul>
+<p>用于协调其它模块。GameMgr有不同的对手选取算法。HyperMgr进行超参数的管理。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/" class="post-title-link" itemprop="url">Sample Factory:Egocentric 3D Control from Pixels at 100000 FPS with Asynchronous Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-01-20 20:25:13" itemprop="dateCreated datePublished" datetime="2021-01-20T20:25:13+08:00">2021-01-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-18 22:45:33" itemprop="dateModified" datetime="2021-03-18T22:45:33+08:00">2021-03-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2006.11751">paper</a></p>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    强化学习实验的规模不断扩大，使得研究人员在训练复杂的电子游戏代理和在机器人的模拟到现实转移方面都取得了前所未有的成果。 通常，这种实验依赖于大型分布式系统，需要昂贵的硬件设置，限制了对这一令人兴奋的研究领域的更广泛访问。 在本工作中，我们旨在通过优化强化学习算法的效率和资源利用来解决这个问题，而不是依赖分布式计算。 我们提出了“Sample Factory”，这是一个为单机情况下优化的高吞吐量训练系统。 我们的体系结构结合了一个高效的、异步的、基于GPU的采样器和off-policy校正技术，使我们能够在3D中实现高于<script type="math/tex">10^{5}</script>个环境帧/秒的吞吐量，而个环境帧/秒的吞吐量。 我们扩展了Sample Factory，以支持self-play和 population-based的训练，并应用这些技术来为多人第一人称射击游戏训练高能力的代理。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ alex-petrenko/sample-factory">Github</a></p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    模拟环境中的训练代理是当代强化学习研究的基石。 近年来，通过应用强化学习方法在这些快速和高效的环境中训练代理，无论是解决复杂的计算机游戏 (Dosovitskiy &amp; Koltun, 2017; Jaderberg et al., 2019; Vinyals et al., 2019) ，还是通过模拟到真实的转移来解决复杂的机器人控制问题 (Müller et al., 2018;Hwangbo et al., 2019; Molchanov et al., 2019; Andrychowicz et al., 2020)。</p>
+<p>​    尽管现代学习方法的采样效率有了很大的提高，但其中大多数仍然需要大量的数据。 在大多数情况下，近年来的结果水平已经上升，因为实验的规模增加，而不是学习的效率。 在复杂环境中进行的数十亿规模的实验现在相对普遍 (Horgan et al., 2018; Espeholt et al., 2018; Kapturowski et al., 2019)，最先进的成果在一次训练中消耗了数万亿次环境转变 (Berner et al., 2019)。</p>
+<p>​    为了尽量减少这些大规模实验的周转时间，常用的方法是使用由数百台单独机器组成的分布式超级计算系统 (Berner et al., 2019)。 在这里，我们表明，通过优化结构和提高强化学习算法的资源利用率，我们可以在数十亿个环境转变上训练代理，即使在单个计算节点上也是如此。 我们提出了“Sample Factory”，一个为单机场景优化的高吞吐量训练系统。 Sample Factory基于异步近端策略优化(APPO)算法，是一种强化学习架构，它允许我们在一个只有一个GPU的多核计算节点上积极地并行化经验收集并实现高达130000FPS（每秒环境帧）的吞吐量。 我们描述了理论和实践优化，使我们能够在广泛可用的商品硬件上实现极端帧速率。</p>
+<p>​    我们在一组具有挑战性的3D环境中评估我们的算法，并演示如何利用大量的模拟经验来训练达到高技能水平的代理。 然后，我们扩展了Sample Factory，以支持self-play和population-based训练，并应用这些技术来为一个完整的多人游戏的Doom培训高能力的代理 (Kempka et al., 2016)。</p>
+<h1 id="Sample-Factory"><a href="#Sample-Factory" class="headerlink" title="Sample Factory"></a>Sample Factory</h1><p>​    Sample factory是一种在单机上进行高吞吐量强化学习的体系结构。 在设计系统时，我们专注于使所有关键计算完全异步，以及最小化组件之间的延迟和通信成本，充分利用快速本地消息传递。</p>
+<p>​    一个典型的强化学习场景涉及三个主要的计算工作负载：环境模拟、模型推理和反向传播。 我们的主要动机是构建一个系统，其中最慢的三个工作负载从来不需要等待任何其他进程提供执行下一次计算所需的数据，因为算法的总体吞吐量最终由吞吐量最低的工作负载定义。 为了最小化进程等待的时间，我们需要保证输入的新部分总是可用的，即使在下一步的计算即将开始之前。 计算密集型工作负载从不闲置的系统可以达到最高的资源利用率，从而接近最佳性能。</p>
+<h2 id="High-level-design"><a href="#High-level-design" class="headerlink" title="High-level design"></a>High-level design</h2><p>​    最小化所有关键计算的空闲时间的愿望激发了系统的高级设计（图1）。 我们将每个计算工作负载与三种专用类型的组件之一相关联。 这些组件使用基于FIFO队列和共享内存的快速协议相互通信。 队列机制为连续和异步执行提供了基础，只要队列中有要处理的东西，就可以立即启动下一个计算步骤。 将每个工作负载分配给专用组件类型的决定也允许我们独立地并行化它们，从而实现优化的资源平衡。 这与以前的工作不同 (Mnih et al., 2016; Espeholt et al., 2018)，其中单个系统组件，如actor通常负有多重责任。 涉及的三种类型的组件是 rollout workers, policy workers, and learners。</p>
+<p><img src="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure1.png" alt></p>
+<p>Rollout workers单独负责环境模拟。 每个rollout worker托管<script type="math/tex">k≥1</script>个环境实例，并依次与这些环境交互，收集观察<script type="math/tex">x_{t}</script>并奖励<script type="math/tex">r_{t}</script>。 请注意，rollout worker没有自己的策略副本，这使得它们非常轻量级，允许我们在现代多核CPU上大规模并行化收集。</p>
+<p>然后将观察<script type="math/tex">x_{t}</script>和代理的隐藏状态<script type="math/tex">h_{t}</script>发送给policy worker，policy worker从多个rollout worker收集<script type="math/tex">x_{t}</script>、<script type="math/tex">h_{t}</script>的批次，并调用策略<script type="math/tex">\pi</script>，由神经网络参数化<script type="math/tex">\theta _{\pi }</script>以计算动作分布<script type="math/tex">\mu \left ( a_{t}|x_{t},h_{t} \right )</script>和更新的隐藏状态<script type="math/tex">h_{t+1}</script>。 然后从分布<script type="math/tex">\mu</script>中采样<script type="math/tex">a_{t}</script>的动作，并与<script type="math/tex">h_{t+1}</script>一起通信回相应的rollout worker。 这个rollout worker使用动作<script type="math/tex">a_{t}</script>推进模拟和收集下一个观察<script type="math/tex">x_{t+1}</script>和奖励<script type="math/tex">r_{t+1}</script>。</p>
+<p>Rollout workers保存每个环境转换到共享内存中的轨迹缓冲区。 一旦模拟了<script type="math/tex">T</script>环境步骤，观察、隐藏状态、动作和奖励的轨迹<script type="math/tex">\tau = x_{1},h_{1},a_{1},r_{1},...,x_{T},h_{T},a_{T},r_{T}</script>就可以提供给learner。 learner不断地处理批量的轨迹，并更新actor <script type="math/tex">\theta _{\pi }</script>和critic <script type="math/tex">\theta _{V}</script>的参数。 这些参数更新一旦可用就发送给policy worker，这减少了前一个版本模型收集的经验量，最小化了平均policy lag。 这就完成了一次训练迭代。</p>
+<p>Parallelism。如前所述，rollout worker不拥有该策略的副本，因此基本上是环境实例周围的薄包装。 这允许它们大规模并行化。 此外，Sample Factory还将policy worker并行化。 这可以实现，因为所有当前轨迹数据<script type="math/tex">(x_{t},h_{t},a_{t},...)</script>都存储在所有进程都可以访问的共享张量中。 这允许policy workers本身处于无状态，因此，他们中的任何一个都可以很容易地处理来自单个环境的连续轨迹步骤。 在实际场景中，2到4个policy worker实例很容易使rollout worker操作饱和，加上一个特殊的采样器设计（第3.2节），使我们能够消除这一潜在的瓶颈。</p>
+<p>Learner是我们运行单一副本的唯一组件，至少只要涉及单一策略训练（多策略训练在3.5节中讨论）。 然而，我们可以通过利用Learner上的多个加速器数据并行训练和Hogwild风格的参数更新(Recht et al., 2011)。 加上在复杂环境中稳定训练通常需要的大批处理大小，这使Learner有足够的吞吐量来匹配经验收集率，除非计算图是高度非平凡的。</p>
+<h2 id="Sampling"><a href="#Sampling" class="headerlink" title="Sampling"></a>Sampling</h2><p>​    Rollout workers和policy workers共同组成采样器。 采样子系统对RL算法的吞吐量影响最大，因为它往往是瓶颈。 我们提出了一种具体的实现采样器的方法，它允许通过最小化rollout workers的空闲时间来优化资源利用。</p>
+<p>​    首先，注意训练和经验收集是解耦的，因此可以在反向传播步骤中收集新的环境转换。 Rollout workers也没有参数更新，因为操作生成的工作是卸载给policy worker的。 然而，如果没有解决，这仍然使rollout workers等待policy workers产生的行动，并通过进程间通信转移回来。</p>
+<p>​    为了缓解这种低效率，我们使用 Double-Buffered Sampling（图2）。 与其只在rollout worker上存储单个环境，不如存储环境<script type="math/tex">E_{1},...,E_{k}</script>的向量，其中k甚至是为了简单起见。 我们将这个向量分成两组<script type="math/tex">E_{1},...,E_{k/2}</script>，<script type="math/tex">E_{k/2+1},...,E_{k}</script>，并在它们之间交替进行。 当第一组环境正在step，第二组的操作是根据policy worker计算的，反之亦然。 有了足够快的policy worker和<script type="math/tex">k</script>的正确调优值，我们可以完全屏蔽通信开销，并确保在采样期间充分利用CPU核心，如图2所示。 用于双缓冲器的最大性能采样我们希望<script type="math/tex">k/2> \left \lceil t_{inf}/t_{env} \right \rceil</script>，其中<script type="math/tex">t_{inf}</script>和<script type="math/tex">t_{env}</script>分别是平均推理和模拟时间。</p>
+<p><img src="/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/figure2.png" alt></p>
+<h2 id="Communication-between-components"><a href="#Communication-between-components" class="headerlink" title="Communication between components"></a>Communication between components</h2><p>​    解锁本地单机设置的全部潜力的关键是利用系统组件之间的快速通信机制。 如图1所示，信息流有四条主要途径：rollout和policy worker之间的双向沟通，rollout将完整的轨迹传递给learner，以及将参数更新从learner转移到policy worker。 对于前三种交互，我们使用基于PyTorch的共享内存张量机制 (Paszke et al., 2019)。 我们注意到，RL算法中使用的大多数数据结构可以表示为固定形状的张量，无论它们是轨迹、观测还是隐藏状态。 因此，我们在系统RAM中预先分配足够数量的张量。 每当组件需要通信时，我们都会将数据复制到共享张量中，并且只通过FIFO队列发送这些张量的索引，使得消息与传输的总体数据量相比很小。</p>
+<p>​    对于参数更新，我们使用GPU上的内存共享。 每当需要更新模型时，policy worker只需将权重从共享内存复制到模型的本地副本。</p>
+<p>​    与许多流行的异步和分布式实现不同，我们不执行任何类型的数据序列化作为通信协议的一部分。 在全节流阀下，SampleFactory每秒产生和消耗超过1GB的数据，即使是最快的序列化/去序列化机制也会严重阻碍吞吐量。</p>
+<h2 id="Policy-lag"><a href="#Policy-lag" class="headerlink" title="Policy lag"></a>Policy lag</h2><p>​    Policy lag是异步RL算法的固有特性，它是收集经验（行为策略）的策略与学习的目标策略之间的差异。 这种差异的存在为off-policy训练提供了条件。off-policy学习对于策略梯度方法来说是很困难的，其中模型参数通常按照<script type="math/tex">\bigtriangledown log\mu (a_{s}|x_{s})q(x_{s},a_{s})</script>的方向更新，其中<script type="math/tex">q(x_{s},a_{s})</script>是策略state-action值的估计。 策略滞后越大，就越难从行为策略中使用一组样本<script type="math/tex">x_{s}</script>正确估计这个梯度。 从经验上讲，这在学习涉及循环策略、高维观测和复杂行动空间的问题方面变得更加困难，在这些问题中，即使是非常相似的政策也不太可能在很长的轨迹上表现出相同的性能。</p>
+<p>​    异步RL方法中的策略滞后可能是通过使用旧策略在环境中的作用引起的，或者在一次迭代中从并行环境中收集更多的轨迹，而不是学习者在一个batch中摄入的轨迹，导致部分经验在处理时变得不符合策略。 我们处理第一个问题，一旦有了新的参数立即更新政策工作者的模型。 在Sample factory中，参数更新很便宜，因为模型存储在共享内存中。 一个典型的更新需要小于1ms，因此我们收集了与“master”不同的策略非常少的经验。</p>
+<p>​    然而，不一定能够消除第二个原因。 在RL中，并行收集来自许多环境实例的训练数据是有益的。 这不仅使经验相互关联，它还允许我们利用多核CPU，并且具有更大的<script type="math/tex">k</script>值（每个核心的环境），充分利用双缓冲采样器。 在一次经验收集的“迭代”中，n个rollout workers，每个运行k个环境，将产生总共<script type="math/tex">N_{iter}=n\times k\times T</script>个样本。 由于我们在学习者步骤之后立即更新策略工作者，可能在轨迹的中间，这导致轨迹中最早的样本平均滞后于<script type="math/tex">N_{iter}/N_{batch}-1</script>策略更新，而最新的样本没有滞后。</p>
+<p>​    可以通过减小<script type="math/tex">T</script>或增加最小批量大小<script type="math/tex">N_{batch}</script>来最小化策略滞后。 两者都对学习有影响。 我们通常想要更大的T，在<script type="math/tex">2^5-2^7</script>范围内，通过反向传播与时间循环策略，大的最小批量可能会降低样本效率。 最佳批次大小取决于特定的环境，更大的批次被证明适合于具有噪声梯度的复杂问题(McCandlish et al., 2018)。</p>
+<p>​    此外，还有两大类用于处理off-policy学习的技术。 第一个想法是应用信任区域方法 (Schulman et al., 2015; 2017)通过在学习期间保持接近行为策略，我们提高了使用该策略的样本获得的梯度估计的质量。 另一种方法是使用重要性采样来纠正目标价值函数<script type="math/tex">V^\pi</script>以改进目标政策下折扣奖励之和的近似 (Harutyunyan et al., 2016). </p>
+<p>IMPALA (Espeholt et al., 2018) 介绍了V-trace算法，该算法使用截断的重要性抽样权重来修正值目标。 这有助于提高off-policy学习的稳定性和样本效率。</p>
+<p>​    这两种方法都可以独立应用，因为V-trace纠正了我们的训练目标，信任区域防止破坏性参数更新。 因此，我们在Sample Factory实现了V-trace和PPO clipping。 是否使用这些方法可以被认为是特定实验的超参数选择。 我们发现PPO clipping和V-trace的结合在任务之间很好地工作，并产生稳定的训练，因此我们决定在本文报道的所有实验中使用这两种方法。</p>
+<h2 id="Multi-agent-learning-and-self-play"><a href="#Multi-agent-learning-and-self-play" class="headerlink" title="Multi-agent learning and self-play"></a><strong>Multi-agent learning and self-play</strong></h2><p>​    通过多智能体强化学习和self-play，在深度RL方面取得了一些最先进的最新成果 (Bansal et al., 2018; Berner et al., 2019)。 通过self-play训练的特工比在固定场景中训练的对手表现出更高的技能水平 (Jaderberg et al.,2019)。 随着策略在self-play过程中的改进，它们产生了一个逐渐增加复杂性的训练环境，自然为代理提供了一个课程，并允许他们逐步学习更复杂的技能。 复杂行为(例如合作和工具使用)已被证明出现在这些培训情景中 (Baker et al., 2020)。</p>
+<p>​    还有证据表明，在多智能体环境中一起训练的代理群体可以避免常规的自玩设置所经历的一些失败模式，例如早期收敛到局部最优或过度拟合。 不同的培训人群可以使代理人接触到更广泛的对抗性政策，并产生更强大的代理人，在复杂的任务中达到更高的技能水平(Vinyals et al., 2019; Jaderberg et al., 2019)。</p>
+<p>​    为了释放我们系统的全部潜力，我们增加了对多代理环境的支持，以及对代理的培训人群。Sample Factory自然扩展到多智能体和多策略学习。 由于rollout workers只是环境实例的包装器，他们完全不知道提供操作的策略。 因此，为了在培训过程中增加更多的政策，我们只是催生了更多的policy workers和更多的learners来支持他们。 在rollout workers中，对于每个多代理环境中的每个代理，我们在每一集开始时从族群中抽样一个随机的策略<script type="math/tex">\pi_{i}</script>。 然后使用一组FIFO队列将操作请求路由到相应的policy workers，每<script type="math/tex">\pi_{i}</script>一个队列。 我们在这项工作中使用的基于族群的设置在第4节中得到了更详细的解释。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/19/Hybrid-Reward-Architecture-for-Reinforcement-Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -679,7 +1199,7 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-21 21:49:37" itemprop="dateModified" datetime="2021-06-21T21:49:37+08:00">2021-06-21</time>
+                <time title="Modified: 2021-08-10 22:05:28" itemprop="dateModified" datetime="2021-08-10T22:05:28+08:00">2021-08-10</time>
               </span>
 
           
@@ -744,74 +1264,15 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: index.html</span><br><span class="line">date: 2018-07-05 12:01:30</span><br><span class="line">tags:</span><br><span class="line">mathjax: true</span><br><span class="line">--</span><br></pre></td></tr></table></figure>
 <p> 之所以要在文章头里设置开关，是因为考虑只有在用到公式的页面才加载 Mathjax，这样不需要渲染数学公式的页面的访问速度就不会受到影响 </p>
 <p><a target="_blank" rel="noopener" href="https://dragon-liu.github.io/2019/04/26/blog6/">参考1</a></p>
+<h2 id="解决一篇文章多个分类"><a href="#解决一篇文章多个分类" class="headerlink" title="解决一篇文章多个分类"></a>解决一篇文章多个分类</h2><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/bff1b1845ac9">参考</a></p>
+<h3 id="子分类"><a href="#子分类" class="headerlink" title="子分类"></a>子分类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">categories:</span><br><span class="line">  - Java</span><br><span class="line">  - Servlet</span><br></pre></td></tr></table></figure>
+<p>或者：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">categories: [Java, Servlet]</span><br></pre></td></tr></table></figure>
+<h3 id="多个分类"><a href="#多个分类" class="headerlink" title="多个分类"></a>多个分类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">categories:</span><br><span class="line">  -[Java]</span><br><span class="line">  -[Servlet]</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">categories:</span><br><span class="line">  -[Java, Servlet]</span><br><span class="line">  -[Programming]</span><br></pre></td></tr></table></figure>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000017986794">参考1</a></p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/thanksblog/p/12900165.html">参考2</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/06/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/06/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-06 23:50:44" itemprop="dateCreated datePublished" datetime="2021-01-06T23:50:44+08:00">2021-01-06</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 
       
     </div>
@@ -830,7 +1291,7 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -896,14 +1357,14 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">41</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -995,6 +1456,61 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
