@@ -160,6 +160,84 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Asynchronous Methods for Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-06 20:26:41" itemprop="dateCreated datePublished" datetime="2021-05-06T20:26:41+08:00">2021-05-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-18 00:42:55" itemprop="dateModified" datetime="2021-06-18T00:42:55+08:00">2021-06-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Asynchronous-Methods-for-Deep-Reinforcement-Learning"><a href="#Asynchronous-Methods-for-Deep-Reinforcement-Learning" class="headerlink" title="Asynchronous Methods for Deep Reinforcement Learning"></a>Asynchronous Methods for Deep Reinforcement Learning</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>​    我们提出了一个概念上简单和轻量级的深度强化学习框架，它使用异步梯度下降来优化深度神经网络控制器。我们提出了四种标准强化学习算法的异步变体，并表明并行actor-learner对训练有稳定的效果，使所有四种方法都能够成功地训练神经网络控制器。性能最好的方法是actor-critic的异步变体，它在一个多核CPU而不是GPU上训练一半的时间，超过了Atari领域上最先进的方法。此外，我们还证明了异步actor-critic在各种连续电机控制问题以及使用视觉输入导航随机三维迷宫的新任务上取得了成功。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    深度神经网络提供了丰富的表示，可以使强化学习(RL)算法能够有效地执行。然而，以前人们认为，简单的online RL算法与深度神经网络的结合从根本上是不稳定的。相反，已经提出了各种解决方案来稳定该算法（(Riedmiller, 2005; Mnih et al., 2013; 2015; Van Hasselt et al., 2015; Schulman et al., 2015a)。这些方法有一个共同的想法：online RL代理遇到的观察数据序列是非平稳的，与online RL更新有很强的相关性。通过将代理的数据存储在经验回放内存中，数据可以从不同的时间步长进行分组 (Riedmiller, 2005; Schulman et al., 2015a) 或随机采样 (Mnih et al., 2013; 2015; Van Hasselt et al., 2015) 。以这种方式聚合内存可以减少非平稳性和去相关的更新，但同时将这些方法限制为off-policy强化学习算法。</p>
+<p>​    基于经验重放的深度RL算法在Atari2600等具有挑战性的领域中取得了前所未有的成功。然而，经验回放有几个缺点：它每次实际交互使用更多的内存和计算；它需要off-policy的学习算法，可以从旧策略生成的数据进行更新。</p>
+<p>​    在本文中，我们提供了一个非常不同的深度强化学习范式。我们在环境的多个实例上异步地并行执行多个代理，而不是经验重放。这种并行性还将代理的数据重新关联到一个更平稳的过程中，因为在任何给定的时间步长中，并行代理都将经历各种不同的状态。这个简单的想法使基本的策略RL算法，比如Sarsa,n-step方法,actor-critic方法以及off-policy的RL算法，如Q-learning,将使用深度神经网络稳健和有效地应用。</p>
+<p>​    我们的并行强化学习范式也提供了实际的好处。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1184,160 +1262,6 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Creating Pro-Level AI for a Real-Time Fighting Game Using Deep Reinforcement Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-10 19:46:14" itemprop="dateCreated datePublished" datetime="2021-01-10T19:46:14+08:00">2021-01-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-16 23:17:39" itemprop="dateModified" datetime="2021-06-16T23:17:39+08:00">2021-06-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning"><a href="#Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning" class="headerlink" title="Creating Pro-Level AI for a Real-Time Fighting Game  Using Deep Reinforcement Learning"></a><strong>Creating Pro-Level AI for a Real-Time Fighting Game</strong>  Using Deep Reinforcement Learning</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>​    强化学习与深层神经网络相结合最近在许多类型的游戏中表现得非常好。它在固定的游戏环境和基于回合制的两个玩家棋盘游戏已经超过了人类水平的表现。然而，据我们所知，目前的研究还没有在现代复杂的战斗游戏中超过人类水平的表现。这是由于实时战斗游戏固有的困难，包括巨大的动作空间、动作依赖和不完善的信息。 我们克服了这些挑战，并为商业游戏“Blade &amp; Soul”制作了1v1战斗AI代理”。 经过训练的代理与五名职业玩家竞争，取得了62%的胜率。</p>
-<p>​    本文提出了一种实用的强化学习方法，包括一种新的self-play curriculum和data  skipping技术。通过curriculum，通过奖励塑造创造了三种不同风格的代理，并相互训练。 此外本文还提出了data  skipping技术，可以提高数据效率，促进在巨大空间探索。</p>
-<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    强化学习(RL)正在将其边界扩展到各种游戏类型。在PVE（玩家与环境）环境中，例如在Atari2600游戏中发现的环境，使用各种方法，RL代理已经超过了人类水平的性能。 同样在PVP（玩家对玩家）环境中，神经网络与基于搜索的方法相结合在两个玩家的回合游戏中击败了最好的人类玩家，比如围棋和国际象棋。最近，游戏中的RL研究已经转移到更复杂的PVP电子游戏中，例如StarCraft2 ，Quake3 和Dota2。</p>
-<p>​    战斗游戏作为最具代表性的复杂PVP游戏之一，一直是在这一领域取得进展的多项研究的重点。例如，基于MCTS的方法已应用于游戏平台“FightingICE”,这是一个为战斗游戏AI竞争而制作的游戏平台。然而当应用于巨大的现代游戏引擎时，查询时间较长，很难满足实时条件。此外，在Little Fighter 2(LF2)中一种深度强化学习基础代理通过一个基于规则的固定对手训练。 然而由于对手的决定是未知的，通过基于规则训练的AI不能泛化到看不见的对手。我们的方法在很大程度上类似于self-play RL方法被应用在“Super Smash Bros. Melee (SSBM)”。然而与我们具有复杂游戏规则的3D环境相比，状态和动作空间的复杂性受到了显著的限制。 我们通过新颖的基于self-play  RL，为实时战斗游戏““Blade &amp; Soul (B&amp;S)  Arena Battle”创建了专业水平的人工智能代理。</p>
-<p>​    B&amp;S是一款商业化的大型多人在线角色扮演游戏，它支持两名玩家之间的决斗，称为“B&amp;S Arena Battles (BABs)”。如表1所示，与其他作品中考虑的游戏相比，BAB是一种更现代的战斗游戏；因此，它具有更复杂的游戏动力学和更大的游戏引擎。此外，大量的人玩BAB和它有更活跃的专业场景比其他战斗游戏。与专门为研究目的而设计的FightingICE相比，BAB有更多的活跃专业场景。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/tabel1.png" alt></p>
-<p>​    图1显示了一个来自BAB的场景。 BAB是一个两人零和游戏。 在BAB中，两名玩家互相对抗，以在三分钟内将对手的HP（血量）降低到零。 要掌握BAB，代理必须能够应对多种挑战。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/figure1.png" alt></p>
-<p>​    首先，代理必须管理巨大的动作和状态空间。代理必须同时进行技能、移动和目标决策，从而产生许多可能的组合。 粗略估计，每个时间步有144个潜在动作：8(avg. # of avail. skills)<script type="math/tex">*</script>9（8 directional + no  move)<script type="math/tex">*</script>2(facing opponent or moving direction）。 由于平均游戏长度为1200个时间步长(120s)，许多场景是可能的,而不是考虑对手的动作。</p>
-<p>​    此外，代理必须考虑技能之间的依赖关系：例如在使用另一种技能之后，一种技能只能在短时间内可用。 因此，在总共45种技能中（including “no-op”），技能随着时间不断的变化。 代理还必须考虑每种技能的特性，因为它们具有不同的冷却时间（重用技能所需的间隔）和SP（技能点）消耗，并服务于五种不同的功能中的一种或多种： 攻击，群体控制(功能使对手无能力；缩写CC)，抵抗(功能使玩家免疫或抵抗CC技能)，逃跑和冲刺。</p>
-<p>​    最后，代理必须处理不完善的信息设置。 因为BAB是一个实时游戏，两个玩家同时做出决定。 这表明代理人必须在不知道对手的决定或策略的情况下作出决定。 因此，BAB可以被认为是一系列石头剪刀游戏。例如当玩家使用抵抗技能，而对手同时使用群体控制技能时，玩家比对手获得优势。 因此，问题的本质是逼近纳什均衡策略，使代理能够对任何相反的策略作出适当的反应。为了应对这些挑战，我们通过多样化对手池对普通的self-play算法进行了改进和通过数据跳过技术来促进探索。 这项工作的主要贡献如下：</p>
-<ul>
-<li>我们设计了一个新的self-play 课程和不同风格的代理。 课程使这些代理人相互竞争，同时加强代理人，使代理人能够处理各种对手。 我们的经验证明，我们的课程优于普通的自我游戏方法。</li>
-<li>我们通过奖励塑造)来多样化游戏AI的战斗风格。 我们创造了三种类型的代理，具有不同的战斗风格：好斗型、防御型、平衡型。 我们预计它将应用于游戏开发，包括水平设计和自动平衡。</li>
-<li>我们引入了数据跳过技术来增强在广阔空间中的探索。 这些通常可以应用于任何两人实时战斗游戏。</li>
-<li>我们通过在2018年B&amp;S World Championship  Blind Match中与专业球员对位来评估我们的代理。 我们的人工智能代理赢得了七场比赛中的三场，而其中一个好斗的代理在现场比赛和预试中击败了所有专业玩家。</li>
-</ul>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h3><h3 id="实时两人游戏"><a href="#实时两人游戏" class="headerlink" title="实时两人游戏"></a>实时两人游戏</h3><p>​    在一个实时的两个玩家游戏中，有两个玩家，即代理和对手。 两者同时向环境发送一个动作。 让我们把代理人的策略表示为<script type="math/tex">\pi ^{ag}</script>，把对手的策略表示为<script type="math/tex">\pi ^{op}</script>。 每一步都从自己的策略中采样一个动作。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/sample_action.png" alt></p>
-<p>​    然后，环境通过联合考虑这两个动作来进行状态转换。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/state_trans.png" alt></p>
-<p>​    在这里，MDP可以表示为{S,<script type="math/tex">A ^{ag}</script>,<script type="math/tex">A ^{op}</script>,P,R,<script type="math/tex">\gamma</script>}。 如果<script type="math/tex">\pi ^{op}</script>是固定的，那么我们可以通过边缘化对手的策略来将对手视为环境的一部分。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/fix_policy.png" alt></p>
-<p>​    然后，MDP表达式变成一个更简单的形式{S,<script type="math/tex">A ^{ag}</script>,<script type="math/tex">P^{'}</script>,<script type="math/tex">R^{'}</script>,<script type="math/tex">\gamma</script>}。 这个表达式与一个玩家MDP是一致的。 因此，原始MDP的任何方法也在这种形式下工作。 然而<script type="math/tex">\pi ^{op}</script>在一般情况下是不固定的，我们的代理人不知道它将面临哪些<script type="math/tex">\pi ^{op}</script>。 我们在下面的章节中提出了一种具有多样化<script type="math/tex">\pi ^{op}</script>池的self play curriculum。</p>
-<h3 id="作为MDP的BAB"><a href="#作为MDP的BAB" class="headerlink" title="作为MDP的BAB"></a>作为MDP的BAB</h3><p>​    如果我们假设<script type="math/tex">\pi ^{op}</script>或<script type="math/tex">\pi ^{op}</script>池是固定的，则BAB可以表示为MDP。图2说明了BAB中的代理-环境框架。基于LSTM的代理与作为环境的BAB模拟器交互。对于每一个具有0.1秒间隔的时间步长，状态<script type="math/tex">s_{t}</script>是从观测历史<script type="math/tex">H_{t}=</script>{<script type="math/tex">o_{1},o_{2},...,o_{t}</script>}构造的。 具体来说，<script type="math/tex">s_{t}</script>是由人类在游戏中可以访问的任何信息组成的，如HP、SP、与对手的距离、与竞技场墙的距离、当前位置、剩余的游戏时间、所有44种技能的剩余冷却时间、代理的状态信息(半空、眩晕、下跪等等。 然后，代理决定每一个时间步骤的动作<script type="math/tex">a_{t}=\left ( a_{t}^{skill},a_{t}^{move,target} \right )</script>。 请注意，目标动作空间最初是连续的。 我们将它离散为两个（面对对手或当前移动方向），并与移动的决定一起考虑它。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/agent-environment.png" alt></p>
-<p>​    在此之后，该操作将被发送到环境中，并相应地发生状态转换。 在这里，确切的奖励也应该确定。 奖励与BAB的高性能密切相关。 我们提供了<script type="math/tex">r_{t}^{WIN}</script>，这是赢得一场比赛的奖励和<script type="math/tex">r_{t}^{HP}</script>是血量变化的奖励。 这些奖励是基于这样的假设设计出来的，一个玩家赢的越多，剩下的血量越多，玩家的表现就越好。<script type="math/tex">r_{t}^{WIN}</script>在每轮的最后一步给出，胜利为10，失败为-10。 <script type="math/tex">r_{t}^{HP}</script>可能发生在每一个时间步骤时，代理人对对手造成损害，反之亦然。 由于HP被归一化为[0,10]，<script type="math/tex">r_{t}^{WIN}</script>和 <script type="math/tex">r_{t}^{HP}</script>具有相同的规模。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/reward.png" alt></p>
-<p>​    这些是基本的奖励，指导战斗风格的额外奖励将在下一节中描述。 γ的值设为0.995，接近1.0，因为BAB中的所有事件都在1800个时间步（=3分钟)后被迫终止）。</p>
-<h2 id="多风格Self-Play-Curriculum"><a href="#多风格Self-Play-Curriculum" class="headerlink" title="多风格Self-Play Curriculum"></a>多风格Self-Play Curriculum</h2><p>​    现有的自我游戏方法 通常使用对手池进行训练。 在训练期间，网络的参数定期存储，以创建一个过去的自我池。 然后从这个池中取样对手。</p>
-<p>​    虽然RL的自我游戏方法提供了一种学习纳什均衡策略的方法，但策略空间的高覆盖率对于有效地找到策略空间是必不可少的。 普通的自我游戏本身并不能保证足够的覆盖范围对于有大问题空间的游戏。 为了解决这个问题，Alphastar通过模仿不同的人类策略，引入三种不同匹配方案的代理，使对手池多样化。 扑克AI，Pluribus在基本蓝图策略之上手工调整了三种不同的策略。 这三种策略分别偏向于加注、跟进和弃牌。</p>
-<p>​    同时，我们设计了一种新颖的自我游戏课程。 我们通过引入一系列不同的战斗风格来加强代理策略的多样性，并使不同风格的代理相互竞争。</p>
-<h3 id="通过奖励塑造指导战斗风格"><a href="#通过奖励塑造指导战斗风格" class="headerlink" title="通过奖励塑造指导战斗风格"></a>通过奖励塑造指导战斗风格</h3><p>​    最值得注意的战斗风格之一是侵略性的程度。 我们使用奖励的三个维度来控制攻击性的程度。 第一个维度是“时间惩罚”。 侵略性的代理每一步都会受到更大的惩罚，这促使它在更短的时间内完成比赛。 第二个维度是代理的HP对对手的HP的相对重要性。 侵略性的代理会试图减少对手的HP，而不是保持自己的HP，而防守w玩家往往采取相反的方式。 最后一个维度是“距离惩罚”。 防守型玩家倾向于确保与对手的一定距离，以适当地应对攻击，而攻击性玩家则倾向于接近对手并无情地攻击。 为了实现这些特性，与自身与其对手之间的距离相比，攻击性代理受到了更大的惩罚。每个样式使用的具体奖励权重如表2所示。 请注意，这三个维度中的每一个都可以取连续值。 这意味着有可能创建一系列不同的战斗风格。然而，为了有效地证明这种方法的可行性，我们限制了这种方法战斗风格的数量为三种。 通过使用任何类型的附加奖励信号以及<script type="math/tex">r_{t}^{WIN}</script>和<script type="math/tex">r_{t}^{HP}</script>，该方法可以应用于一般的其他战斗游戏，以创建具有不同战斗风格的代理。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/reward_weight.png" alt></p>
-<h3 id="Our-Self-Play-Curriculum"><a href="#Our-Self-Play-Curriculum" class="headerlink" title="Our Self-Play Curriculum"></a>Our Self-Play Curriculum</h3><p>​    图3显示了三种不同类型代理的自我游戏课程的概述。 每种类型的代理都有自己的学习过程，所有三种代理类型都是以并发的方式进行训练。</p>
-<p>​    每个学习过程由一个学习者和多个模拟器组成。 学习者和模拟器异步工作。 在模拟器中，代理不断地与来自共享池的随机抽样对手进行对弈。 每种样式的最近k个模型被均匀地选择，总概率质量为p，而其他模型被均匀地选择概率1-p。随着训练的进行，p从0.8到0.1线性退火。 较高的p有助于快速适应最新的对手，而较低的p通过减轻灾难性遗忘来稳定学习过程。 每个模拟器在每次匹配结束时向学习者发送匹配日志，并使用从学习者收到的最新参数更新其代理。 同样的程序继续通过后续游戏使用。</p>
-<p>​    学习者使用从多个模拟器收集的日志以off-policy的方式训练其代理，并根据请求将最新的网络参数发送给模拟器。 此外，学习者将其网络参数发送到共享池的每一个C步(例如C=10,000)更新。 因此，池子具有不同的策略，这些策略来自不同风格的不同学习过程。 这些模型参数作为每个学习过程的对手提供。通过共享一个池，每个学习代理在训练中遇到每种风格的对手，并学习如何处理他们。 因此，通过我们的自我游戏课程培训的代理最终可以学习如何面对不同战斗风格的对手，同时保持自己的战斗风格。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/selfplay.png" alt></p>
-<h2 id="数据跳过技术"><a href="#数据跳过技术" class="headerlink" title="数据跳过技术"></a>数据跳过技术</h2><p>​    在本节中，我们详细介绍了数据跳过技术，它是指在训练和评估过程中丢弃某些数据的过程。</p>
-<h3 id="丢弃没合法动作的数据"><a href="#丢弃没合法动作的数据" class="headerlink" title="丢弃没合法动作的数据"></a>丢弃没合法动作的数据</h3><p>​    “no-op”表示不做任何行动。</p>
-<p>​    在战斗游戏中，使用技能通常消耗资源，如SP和冷却时间。 因此，如果玩家过度使用某一技能，它将无法在实际需要的时候使用。 因此，玩家应该战略性地使用和保留他们的技能，以确保他们在需要时的可用性。 为了考虑到这一点，我们将“no-op”操作连接到策略网络的输出，允许代理选择“no-op”，并在必要时在一定时期内不做任何事情。 这意味着我们的行动空间有44种技能，加上额外的“no-op”行动。 这一点很重要，因为BAB的人类游戏日志表明，“no-op”动作占人类玩家技能使用的最大比例。</p>
-<p>​    “no-op”决策可分为被动使用和主动使用。 被动使用“no-op”意味着代理选择“no-op”，因为没有可用的技能。 例如，当代理耗尽资源或被对手的CC技能击中时，代理别无选择，只能选择“no-op”。 积极使用“no-op”意味着代理从战略上选择“no-op”，即使其他技能可以使用。</p>
-<p>​    我们从训练和评估阶段丢弃了被动的“no-op”数据，因为被动的“no-op”不是由代理故意使用的。 此外，该方法使LSTM能够反映较长时间层的表示，因为数据没有提供给网络。 我们在实验部分表明，跳过被动“no-op”大大提高了学习效率。 请注意，这种方法通常适用于其他领域，其中可用的技能不断变化，“no-op”操作是一个有效的选择。</p>
-<h3 id="保持移动行动"><a href="#保持移动行动" class="headerlink" title="保持移动行动"></a>保持移动行动</h3><p>​    虽然单个技能决策可以对后续状态产生实质性影响，但单个移动决策的效果相对有限。 原因是一个角色在一个时间步长(0.1s)中移动的距离很短，考虑到它的速度。 为了使任何移动决策产生有意义的效果，代理应该做出相同连续移动的决定。 这允许代理从字面上“move”，并导致后续状态和奖励的变化。 因此，很难从初始策略中训练具有随机移动决策的移动策略。 由于一项随机政策连续作出相同决定的机会很低，探索是极其有限的。 因此我们建议维持固定时间步骤的移动决定。</p>
-<p>​    图4显示了该方法如何与示例一起工作。 如果代理选择移动操作，则会跳过以下n-1时间步骤的移动决策。 这意味着代理总共对n个步骤保持相同的移动决策。 请注意，我们的方法与帧跳过技术有不同的目的(在Atari领域。 为了提高模拟器的效率，引入了跳帧技术。 然而，我们不能仅仅跳过框架，因为技能决策仍然必须进行。 虽然我们不能享受模拟器的效率优势，但保持移动仍然有利于训练，这仅仅是因为保持移动决策会增加单个移动决策的影响，正如我们将通过实验证实的那样。 从这个意义上说，保持移动可以被看作是“放大优势”。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/move_decisions.png" alt></p>
-<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><p>​    该网络由基于LSTM的体系结构组成，该体系结构有四个头部，具有共享状态表示层。 每个头由<script type="math/tex">\pi_{skill}</script>，<script type="math/tex">Q_{skill}</script>，<script type="math/tex">\pi_{move,target}</script>和<script type="math/tex">Q_{move,target}</script>组成。 <script type="math/tex">Q_{skill}</script>和<script type="math/tex">Q_{move,target}</script>分别用于<script type="math/tex">\pi_{skill}</script>和<script type="math/tex">\pi_{move,target}</script>的梯度更新。 在网络输出进入Softmax层之前，一个布尔向量表示技能是否可用，使不可用技能的输出变为负无穷大。</p>
-<h4 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h4><p>​    我们使用了actor-critic 离线策略学习算法。 它使我们能够通过截断重要性抽样处理模拟器和学习器之间的policy lag。此外，我们还可以利用随机策略的优点，它由于平稳的策略更新而更稳定地响应环境的变化，并且在诸如石头剪刀布这样的游戏领域中工作得很好，因为确定性策略很容易被找到漏洞。 对于这种特定的算法，无论是<script type="math/tex">\pi_{skill}</script>的还是<script type="math/tex">\pi_{move,target}</script>都是以以下梯度交替更新的：</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/update_gradient.png" alt></p>
-<h4 id="学习系统"><a href="#学习系统" class="headerlink" title="学习系统"></a>学习系统</h4><p>​    总共有三个学习过程，每个学习过程由一个学习者和100个模拟器组成。 每个学习过程在很大程度上类似于Horgan等人提出的学习过程。(Horgan <em>et al</em>. (2018). ）。 最后的代理训练两周，相当于四年的游戏。</p>
-<h3 id="三种风格的Self-Play-Curriculum的效果"><a href="#三种风格的Self-Play-Curriculum的效果" class="headerlink" title="三种风格的Self-Play Curriculum的效果"></a>三种风格的Self-Play Curriculum的效果</h3><p>​    为了证明所提出的自我游戏课程的效果，我们训练了有和没有self-play curriculum的代理。 一个基线代理使用普通的self-play训练，没有任何风格相关的奖励（只包括win reward和HP reward），并使用了一个过去的自我池。 同时利用我们提出的共享池，对三个不同风格的代理进行了Self-Play Curriculum的训练。 我们的侵略性，平衡和防御的代理分别和基线代理打了1000场比赛，以衡量表现。 如表3所示，证明我们的self-play curriculum的代理的表现优于基线代理。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/table3.png" alt></p>
-<p>​    接下来，我们进行了一项消融研究（类似于控制变量法），以观察共享池如何帮助泛化。 我们想确认一个代理是否能够对付没有见过的风格的对手，当他在训练中只经历了有限范围的对手。 因此，我们创建了三种风格的代理，以完全相同的方式训练，除了他们有自己的独立对手池。 我们表示使用共享池作为<script type="math/tex">\pi_{sh}^{agg}</script>,<script type="math/tex">\pi_{sh}^{bal}</script>,<script type="math/tex">\pi_{sh}^{def}</script>的三种类型的代理，以及使用独立池作为<script type="math/tex">\pi_{ind}^{agg}</script>,<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>的三种类型的代理。 所有6个代理都接受了5M步的训练(相当于6天）。</p>
-<p>​    我们的假设是使用共享池训练的代理在面对从未遇到的对手时更健壮。 因此，我们比较了<script type="math/tex">\pi_{sh}^{agg}</script>和{<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>}的胜率与<script type="math/tex">\pi_{ind}^{agg}</script>和{<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>}的胜率。 这个实验设置是基于三个关键的想法。 首先，<script type="math/tex">\pi_{sh}^{agg}</script>和<script type="math/tex">\pi_{ind}^{agg}</script>有相同的训练设置，除了共享池。 第二，<script type="math/tex">\pi_{sh}^{agg}</script>和<script type="math/tex">\pi_{ind}^{agg}</script>是针对相同的对手进行评价的。 最后，虽然<script type="math/tex">\pi_{sh}^{agg}</script>从其池中遇到了其他样式，但它没有遇到{<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>}，因为它们是使用独立的对手池进行训练的。 如果我们的假设是正确的，<script type="math/tex">\pi_{sh}^{agg}</script>应该有更高的获胜率。 值得注意的是，<script type="math/tex">\pi_{ind}^{bal}</script>和<script type="math/tex">\pi_{ind}^{def}</script>不是一个单一的模型，而是10个模型，每个模型从它们的池中以相同的固定间隔采样。 然后，我们对其余两种样式进行了相同的实验；结果如表4所示。 如表所示，使用共享池培训的代理的性能优于同行。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/tabel4.png" alt></p>
-<p>​    根据表4中的数据，在侵略性代理的情况下，使用共享池的效果是很小的。 它表明，无论是否提供不同的对手，进行训练的策略空间是相似的。 这与战斗游戏的性质有关，如果另一方接近并发起一场战斗，其中一方应该反击。 因此，在一个攻击性的代理人的情况下，攻击始终如一，有一点不同的经验，无论对手的战斗风格的多样性。</p>
-<h3 id="丢弃没合法动作的数据的效果"><a href="#丢弃没合法动作的数据的效果" class="headerlink" title="丢弃没合法动作的数据的效果"></a>丢弃没合法动作的数据的效果</h3><p>​    正如上一节所讨论的那样，“no-op”决定可以是主动的，也可以是被动的。 我们进行了一个实验，以研究从学习中丢弃这种被动的“no-op”数据的效果。 实验的训练伙伴是内置的BAB AI，其水平与前20%的玩家相当。 我们测量了代理学会击败它的速度，结果如图5(a)所示)。 如果从学习数据中丢弃“no-op”，则在70k步后，获胜率达到80%，而当包含“no-op”数据时，则需要170k步。 当跳过被动的“no-op”数据时，达到90%赢率所需的时间步长减少到一半。本实验证实，通过从学习数据中丢弃被动“no-op”，提高了训练性能。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/no_op_test.png" alt></p>
-<h3 id="保持移动的效果"><a href="#保持移动的效果" class="headerlink" title="保持移动的效果"></a>保持移动的效果</h3><p>​    为了研究保持移动的效果，我们开发了两个学习过程，这两个过程都涉及到self-play学习。 一个进程在每个时间步骤中做出移动决策，而另一个进程做出移动决策，并连续发送相同的决策9次。 我们测量了移动策略的熵来观察效果。 给定状态<script type="math/tex">s_{t}</script>的移动策略的熵如下。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/move_policy_entropy.png" alt></p>
-<p>​    一般来说，随着学习的进展，熵逐渐减少。 图5(B)显示，如果应用该技术，熵下降得更快。 在所学的运动质量方面也有明显的差异。 在应用该技术之前，该代理没有从随机运动中得到任何改进，但它学会了使用data skip来接近和后退。</p>
-<p>​    决策被重复的时间越长，代理的反应就越不那么直接，但代理的行动更一致。 在这种情况下，我们测试了1，3，5，10保持时间。 10（相当于1秒）的性能最好。</p>
-<h2 id="玩家评估"><a href="#玩家评估" class="headerlink" title="玩家评估"></a>玩家评估</h2><p>​    本节将讨论预赛和盲赛的结果，以及确保人类选手公平的条件。</p>
-<h3 id="公平的条件"><a href="#公平的条件" class="headerlink" title="公平的条件"></a>公平的条件</h3><h4 id="反应时间"><a href="#反应时间" class="headerlink" title="反应时间"></a>反应时间</h4><p>​    当人类在实时战斗游戏中面对人工智能时，影响结果的最重要因素是反应时间。 人类需要一些时间来识别对手使用的技能，并通过移动他的手按下按钮。一个人工智能的决定要反映在游戏中我们应用平均230毫秒的延迟，这样人工智能就没有优势了。 这一延迟量对应于BAB中职业玩家的平均反应时间。</p>
-<h4 id="种类和技能"><a href="#种类和技能" class="headerlink" title="种类和技能"></a>种类和技能</h4><p>​    在B&amp;S中有11个种类，每个种类都有独特的特点。 由于类之间存在相对优势，我们将AI和职业玩家的类固定为“Destroyer”。 “Destroyer”是一个有内讧风格的种类，并稳步出现在B&amp;S世界锦标赛。 此外，AI和职业玩家的技能被设置为相同的，以确保公平的匹配。 根据BAB用户统计数据，选择大多数用户所选择的技能。</p>
-<h3 id="评价结果"><a href="#评价结果" class="headerlink" title="评价结果"></a>评价结果</h3><p>​    我们邀请了两位著名的职业玩家，Yuntae Son (GC  Busan, Winner of 2017 B&amp;S World Championship), and  </p>
-<p>Shingyeom Kim (GC Busan, Winner of 2015 and 2016 B&amp;S  World Championship)，在盲赛前测试我们的代理。 请注意，每个样式所玩的游戏总数是不同的，因为测试人员可以为每个样式玩尽可能多的游戏。 经过预赛，我们参加了2018年世界锦标赛的盲赛。 我们的代理与三名职业玩家进行了比赛： Nicholas Parkinson  </p>
-<p>(EU), Shen Haoran (CHN), and Sungjin Choi (KOR).。 游戏精彩片段的录像可以在<a target="_blank" rel="noopener" href="https://goo.gl/7VUTzV">录像链接</a>找到。</p>
-<p>​    预测和盲赛的结果见表5。 从表格中可以看出，攻击性的代理主导了游戏，而其他两种类型的代理则有相当激烈的游戏。 根据预赛后的采访，我们发现这部分是因为人类玩家之间经常需要一些休息，但攻击代理不允许人类在战斗之间休息；相反，攻击是持续的。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/final_test.png" alt></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    利用深度强化学习，我们创建了AI代理，在3D实时战斗游戏中与专业玩家战斗。 为了实现这一点，我们提出了一个用奖励塑造来指导战斗风格的方法。 采用三种代理风格，引入了一种新的自我游戏课程，以提高泛化性能。 我们还提出了数据跳过技术，以提高数据效率，并使有效的探索。 因此，我们的代理能够与世界上最好的BAB玩家竞争。 提出的训练方法一般适用于其他格斗游戏。</p>
-<h2 id="阅读总结"><a href="#阅读总结" class="headerlink" title="阅读总结"></a>阅读总结</h2><ul>
-<li>本文提出了一种实用的强化学习方法，包括一种新的self-play curriculum和data  skipping技术。通过curriculum，通过奖励塑造创造了三种不同风格的代理，并相互训练。</li>
-<li>通过reward shaping来创建不同风格的代理。</li>
-<li>在self-play过程中，同时训练不同风格的代理，并指定训练步数更新参数到agent pool中，用作对手训练。</li>
-<li>通过数据跳过技术来促进探索。</li>
-<li>跳过合法动作数量为0的数据，即被控制不能放出技能的数据等。通过实验证明能加速训练过程，达到90%的训练步数减少到一半。</li>
-<li>使用移动的相关动作时，同时连续做几个相同的移动动作，因为当个移动距离很短。</li>
-<li>网络结构输出mask掉不合法的动作</li>
-</ul>
-<p>​    </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1407,7 +1331,7 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

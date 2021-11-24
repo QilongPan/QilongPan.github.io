@@ -160,6 +160,84 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Mastering Complex Control in MOBA Games with Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-11-24 21:34:37 / Modified: 23:16:03" itemprop="dateCreated datePublished" datetime="2021-11-24T21:34:37+08:00">2021-11-24</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    本文从系统和算法角度提出了一个深度强化学习框架用于解决1v1战斗场景中复杂动作控制的问题。系统具有低耦合和高可伸缩性，这使大规模的高效探索成为可能。算法包括几种新的策略，包括 control dependency decoupling, action mask, target attention, and dual-clip PPO，提出的actor-critic网络可以在系统中得到有效的训练。在王者荣耀中测试，训练的智能体可以在1v1游戏中击败顶级职业人类玩家。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    本文对构建MOBA 1v1游戏AI(需要高度复杂的动作控制)进行了系统而深入的研究。在系统方面，开发了一个深度强化学习框架，提供可扩展的off-policy训练。在算法方面，actor-critic神经网络用于动作控制。我们的网络采用多标签近端策略算法(PPO)目标进行优化，并具有控制依赖的解耦、注意机制用于目标选择、action mask用于有效探索、用于学习技能组合的LSTM，以及一个改进版本的PPO，称为dual-clip PPO，以确保训练收敛。</p>
+<p>​    在王者荣耀游戏中进行大量的测试，表明训练过的AI可以使用不同的英雄类型击败顶级职业人类玩家。</p>
+<h1 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h1><p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/figure1.png" alt></p>
+<p>系统包含如下四个模块：</p>
+<ul>
+<li><p>AI Server</p>
+<p>AI Server涵盖了游戏环境与AI模型之间的交互逻辑。AI Server通过使用镜像策略self-play生成游戏片段(Silver et al. 2017)。对手的策略采样类似于 (Bansal et al. 2017)。基于从游戏状态中提取的特征，利用玻尔兹曼探索法预测英雄动作(Cesa-Bianchi et al. 2017)，即基于softmax分布的抽样。然后将采样的动作转发到游戏核心进行执行。执行后，游戏核心连续返回相应的奖励值和下一个状态。在使用中，一台AI Server将绑定一个CPU核心。由于游戏逻辑是在cpu上运行的，所以我们也在cpu上运行模型推理，以节省IO成本。为了有效地生成片段，我们构建了一个快速推理库<a target="_blank" rel="noopener" href="https://github.com/Tencent/FeatherCNN">FeatherCNN</a>的CPU版本。FeatherCNN可以自动将从Tensorflow和Caffe等主流工具训练出来的AI模型转换为定制的推理格式。</p>
+</li>
+<li><p>Dispatch Module</p>
+<p> 每个Dispatch Module都与同一台机器上的几个AI服务器绑定。它从AI Server中收集数据样本，包括奖励、特征、行动概率等。这些样本首先被压缩和打包，然后发送到Memory Pool。</p>
+</li>
+<li><p>Memory Pool</p>
+<p>Memory Pool也是一个服务器。它的内部被实现为数据存储高效的循环队列。它支持不同长度的样本，并基于生成的时间进行数据采样。</p>
+</li>
+<li><p>RL Learner</p>
+<p>RL Learner 是一个分布式训练环境。 为了加速策略更新使用large batch size，集成多个 RL Learner 从相同数量的内存池中并行获取数据。 RL Learner 中的梯度通过 ring allreduce 算法 (Sergeev and Balso 2018)进行平均。 为了降低 IO 成本，RL Learner 使用共享内存而不是 socket 与 Memory Pools 通信，这可以提供 2-3 倍的速度提升。 来自 RL Learner的训练模型以点对点的方式快速同步到AI Servers。</p>
+</li>
+</ul>
+<p>在我们的系统中，经验的生成与参数的学习相解耦。这种灵活的机制使AI Server和RL Learner具有高吞吐量的可扩展性。为了避免learners和actors之间的通信成本瓶颈，我们训练过的模型通过我们的主RL Learner的点对点与AI Server同步。为了平滑数据的存储和传输，我们设计了两个中介服务器，即Dispatch服务器和Memory Pool服务器。在实践中，我们可以毫不费力地扩展到数百万个CPU内核和数千个gpu。请注意，这种设计不同于现有的系统设计，如IMPALA (Espeholt et al. 2018)。在IMPALA中，参数分布在整个学习者中，参与者同时从所有学习者中检索参数。</p>
+<h1 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h1>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/11/Attention-Is-All-You-Need/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -183,10 +261,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-08-11 21:04:01 / Modified: 21:08:46" itemprop="dateCreated datePublished" datetime="2021-08-11T21:04:01+08:00">2021-08-11</time>
+              <time title="Created: 2021-08-11 21:04:01" itemprop="dateCreated datePublished" datetime="2021-08-11T21:04:01+08:00">2021-08-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-21 10:21:56" itemprop="dateModified" datetime="2021-08-21T10:21:56+08:00">2021-08-21</time>
+              </span>
 
           
 
@@ -199,7 +283,22 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    主导序列转导模型基于复杂的循环或卷积神经网络，包括编码器和解码器。 性能最好的模型还通过注意力机制连接编码器和解码器。 我们提出了一种新的简单网络架构，即 Transformer，它完全基于注意力机制，完全消除了递归和卷积。 在两个机器翻译任务上的实验表明，这些模型在质量上更胜一筹，同时更可并行化并且需要更少的训练时间。 我们的模型在 WMT 2014 英德翻译任务上达到了 28.4 BLEU，比现有的最佳结果（包括集成）提高了 2 BLEU。 在 WMT 2014 英语到法语翻译任务中，我们的模型在 8 个 GPU 上训练 3.5 天后建立了一个新的单模型最先进的 BLEU 分数 41.0，这是最好的训练成本的一小部分文献中的模型。</p>
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​     主要的序列转换模型基于复杂的循环或卷积神经网络，包括编码器和解码器。 性能最好的模型还通过注意力机制连接编码器和解码器。 我们提出了一种新的简单网络架构，即 Transformer，它完全基于注意力机制，完全消除了递归和卷积。 在两个机器翻译任务上的实验表明，这些模型在质量上更胜一筹，同时更可并行化并且需要更少的训练时间。 我们的模型在 WMT 2014 英德翻译任务上达到了 28.4 BLEU，比现有的最佳结果（包括集成）提高了 2 BLEU。 在 WMT 2014 英语到法语翻译任务中，我们的模型在 8 个 GPU 上训练 3.5 天后建立了一个新的单模型最先进的 BLEU 分数 41.0，这是最好的训练成本的一小部分文献中的模型。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    RNN输入需要上一个隐藏状态，这种固有的顺序特性导致在训练中不能使用并行化。在除少数情况下，注意机制与循环网络一起使用。在这项工作中，我们提出了Transformer，一个避免递归的模型架构，而是完全依赖于一个注意机制来绘制输入和输出之间的全局依赖关系。Transformer允许更多的并行化，在8个P100 gpu上训练了短短12个小时后，可以达到翻译质量的新水平。</p>
+<h1 id="模型架构"><a href="#模型架构" class="headerlink" title="模型架构"></a>模型架构</h1><p>​    大多数具有竞争力的神经序列转换模型都具有encoder-decoder结构。 在这里，encoder将符号表示的输入序列 <script type="math/tex">\left ( x_{1},...,x_{n} \right )</script> 映射到连续表示的序列<script type="math/tex">z= \left ( z_{1},...,z_{n} \right )</script>。 给定<script type="math/tex">z</script>，decoder然后生成一个符号的输出序列<script type="math/tex">\left ( y_{1},...,y_{n} \right )</script>，一次一个元素。 在每一步，模型都是自回归的，在生成下一个时，将先前生成的符号作为附加输入使用。</p>
+<p>​    Transformer 遵循这种整体架构，使用堆叠的self-attention和point-wise、完全连接的encoder和decoder层，分别如图 1 的左半部分和右半部分所示。</p>
+<p><img src="/2021/08/11/Attention-Is-All-You-Need/figure1.png" alt></p>
+<h2 id="Encoder-and-Decoder-Stacks"><a href="#Encoder-and-Decoder-Stacks" class="headerlink" title="Encoder and Decoder Stacks"></a>Encoder and Decoder Stacks</h2><ul>
+<li><p>Encoder:编码器由<script type="math/tex">N=6</script>个相同层组成。每一层都有两个子层。第一个是multi-head self-attention mechanism，第二个是一个简单的position-wise全连接的前馈网络。我们在两个子层周围使用一个残差连接，然后是层归一化。即每个子层的输出都是<script type="math/tex">LayerNorm(x+Sublayer(x))</script>，其中<script type="math/tex">Sublayer(x)</script>是由子层本身实现的函数。为了方便这些残差连接，模型中的所有子层以及嵌入层都会产生了维度<script type="math/tex">d_{model}=512</script>的输出。</p>
+</li>
+<li><p>Decoder:该解码器还由<script type="math/tex">N=6</script>个相同层的堆栈组成。除了每个编码器层中的两个子层外，解码器还插入第三子层，该子层对编码器堆栈的输出执行multi-head attention。与编码器类似，我们在每个子层周围使用残差连接，然后进行层归一化。我们还修改了解码器堆栈中的self-attention 子层，以防止位置关注后续位置。这种掩蔽，再加上输出嵌入被一个位置偏移的事实，确保了对位置<script type="math/tex">i</script>的预测只能依赖于小于<script type="math/tex">i</script>的位置的已知输出。</p>
+</li>
+</ul>
+<h2 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h2><p>​    注意函数可以描述为将query和一组key-value对映射到输出，其中query、keys、values和output都是向量。输出计算为values的加权和，其中分配给每个value的权重由query与相应key的兼容性函数计算。</p>
+<h3 id="Scaled-Dot-Product-Attention"><a href="#Scaled-Dot-Product-Attention" class="headerlink" title="Scaled Dot-Product Attention"></a>Scaled Dot-Product Attention</h3><p>​    我们将我们的特别attention称为“Scaled Dot-Product Attention”（图 2）。 输入包括维度<script type="math/tex">d_{k}</script>的queries和keys，以及维度<script type="math/tex">d_{v}</script>的values。 我们使用query和所有keys的点积，将每个除以<script type="math/tex">\sqrt{d_{k}}</script>，然后应用 softmax 函数来获得value上的权重。</p>
+<p><img src="/2021/08/11/Attention-Is-All-You-Need/figure2.png" alt></p>
+<p>​    在实践中，我们同时计算一组queries上的attention function，并打包到一个矩阵<script type="math/tex">Q</script>中。keys和values也被打包在矩阵<script type="math/tex">k</script>和<script type="math/tex">V</script>中。我们计算的输出矩阵如下：</p>
+<p><img src="/2021/08/11/Attention-Is-All-You-Need/formula1.png" alt></p>
 
       
     </div>
@@ -839,7 +938,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-10 22:14:17" itemprop="dateModified" datetime="2021-08-10T22:14:17+08:00">2021-08-10</time>
+                <time title="Modified: 2021-08-25 23:13:43" itemprop="dateModified" datetime="2021-08-25T23:13:43+08:00">2021-08-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -869,68 +968,11 @@
           <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    我们研究了具有单个联合奖励信号的协作多智能体强化学习问题。 这类学习问题很困难，因为通常有很大的组合动作和观察空间。 在完全中心化和去中心化的方法中，我们发现了虚假奖励的问题和一种我们称之为“lazy agent”问题的现象，这是由于部分可观察性引起的。 我们通过使用新颖的价值分解网络架构训练单个代理来解决这些问题，该架构学习将团队价值函数分解为agent-wise价值函数。 我们对一系列部分可观察的多智能体领域进行了实验评估，并表明学习这种价值分解会带来卓越的结果，尤其是在与权重共享、角色信息和信息渠道相结合时。</p>
 <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    我们提出了一个简单的实验，在这个实验中，集中的方法通过学习低效的策略，另一个代理是“lazy”的策略而失败。当一个代理学习了一个有用的策略时，但另一个代理不愿学习，因为它的探索会阻碍第一个代理，并导致更糟糕的团队奖励（例如，想象一个使用目标数作为球队奖励信号的RL训练2人足球队。假设一个球员成为了比另一个球员更好的得分手。当较差的玩家投篮时，结果平均要糟糕得多，而较弱的玩家学会了避免投篮）。</p>
 <p>​    另一种方法是训练独立的学习者，以优化团队奖励。一般来说，每个代理都面临一个非平稳的学习问题，因为其环境的动态随着队友改变学习的行为而有效地发生变化。</p>
-<p>​    提高独立学习者表现的一种方法是设计个体奖励函数，更直接地与个体主体观察相关。然而，即使在单代理的情况下，奖励塑造也是困难的，只有一小类形状的奖励函数被保证保持最优的w.r.t。真正的目标(Ng等人，1999年；Devlin等人，2014年；Eck等人，2016年)。本文的目标是更一般的自治解，其中学习团队值函数的分解。</p>
+<p>​    提高独立学习者表现的一种方法是设计个体奖励函数，更直接地与个体主体观察相关。然而，即使在单代理的情况下，奖励塑造也是困难的，只有一小类形状的奖励函数被保证保持最优的w.r.t。真正的目标。本文的目标是更一般的自治解，其中学习团队值函数的分解。</p>
+<p>​    我们介绍了一种新的在单个代理<strong>learned additive value-decomposition</strong>。值分解网络的目的是通过代表单个分量值函数，通过深度神经网络，从团队奖励信号中学习最优线性值分解。这种加性值分解是通过避免在纯粹独立的学习者中出现的虚假奖励信号而特别驱动的。每个代理学习到的隐式值函数只依赖于局部观测，因此更容易学习。我们的解决方案还改善了克劳斯和布蒂尔（1998）中强调的独立学习的协调问题，因为它在训练时以集中的方式有效学习，而代理可以单独部署。</p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/66571753">Dec-POMDP</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/Louiii/ValueDecomposition">案例code</a></p>
 
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/21/Multi-Agent-Actor-Critic-for-Mixed-Cooperative-Competitive-Environments/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/21/Multi-Agent-Actor-Critic-for-Mixed-Cooperative-Competitive-Environments/" class="post-title-link" itemprop="url">Multi-Agent Actor-Critic for Mixed Cooperative-Competitive Environments</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-07-21 20:08:57 / Modified: 20:10:41" itemprop="dateCreated datePublished" datetime="2021-07-21T20:08:57+08:00">2021-07-21</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1>
       
     </div>
 
@@ -1014,7 +1056,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">42</span>
+          <span class="site-state-item-count">43</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
