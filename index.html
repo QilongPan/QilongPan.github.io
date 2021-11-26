@@ -160,6 +160,69 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/" class="post-title-link" itemprop="url">Mastering the Game of Go with Deep Neural Networks and Tree Search</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-11-26 21:58:21 / Modified: 22:54:22" itemprop="dateCreated datePublished" datetime="2021-11-26T21:58:21+08:00">2021-11-26</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://www.nature.com/articles/nature16961?MRK_CMPG_SOURCE=sm_tw_pp">paper</a></p>
+<p>本文提出了将监督学习与self-play强化学习相结合，首次在围棋中击败职业选手。</p>
+<p>将棋盘位置作为<script type="math/tex">19\times19</script>的图像传入，使用卷积层来构建位置的表示。我们使用value network和policy network来减少搜索树的有效深度和广度：使用value network评估位置，并使用policy对动作进行采样。神经网络的训练流程和架构如Figure1所示。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure1.png" alt></p>
+<p>首先使用人类专家的走步数据通过监督学习训练policy network<script type="math/tex">(p_{\sigma })</script>,同时采用<strong>Computing Elo ratings of move patterns in the game of Go</strong>和<strong>Fuego — an open-source framework for board games and Go engine based on Monte-Carlo tree search</strong>两篇论文类似的方法训练了<script type="math/tex">p_{\pi}</script>用于rollout时快速采样动作。接下来训练RL policy network <script type="math/tex">p_{\rho }</script>，它通过优化self-play的最终结果来改进监督学习策略网络。这将调整策略，以达到赢得游戏的正确目标，而不是最大化预测的准确性。最后训练价值网络<script type="math/tex">v_{\theta}</script>用于预测RL policy network对抗自己时游戏的获胜者。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -939,90 +1002,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/31/Value-Decomposition-Networks-For-Cooperative-Multi-Agent-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/31/Value-Decomposition-Networks-For-Cooperative-Multi-Agent-Learning/" class="post-title-link" itemprop="url">Value-Decomposition Networks For Cooperative Multi-Agent Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-07-31 11:16:55" itemprop="dateCreated datePublished" datetime="2021-07-31T11:16:55+08:00">2021-07-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-25 23:13:43" itemprop="dateModified" datetime="2021-08-25T23:13:43+08:00">2021-08-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/" itemprop="url" rel="index"><span itemprop="name">多智能体</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    我们研究了具有单个联合奖励信号的协作多智能体强化学习问题。 这类学习问题很困难，因为通常有很大的组合动作和观察空间。 在完全中心化和去中心化的方法中，我们发现了虚假奖励的问题和一种我们称之为“lazy agent”问题的现象，这是由于部分可观察性引起的。 我们通过使用新颖的价值分解网络架构训练单个代理来解决这些问题，该架构学习将团队价值函数分解为agent-wise价值函数。 我们对一系列部分可观察的多智能体领域进行了实验评估，并表明学习这种价值分解会带来卓越的结果，尤其是在与权重共享、角色信息和信息渠道相结合时。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    我们提出了一个简单的实验，在这个实验中，集中的方法通过学习低效的策略，另一个代理是“lazy”的策略而失败。当一个代理学习了一个有用的策略时，但另一个代理不愿学习，因为它的探索会阻碍第一个代理，并导致更糟糕的团队奖励（例如，想象一个使用目标数作为球队奖励信号的RL训练2人足球队。假设一个球员成为了比另一个球员更好的得分手。当较差的玩家投篮时，结果平均要糟糕得多，而较弱的玩家学会了避免投篮）。</p>
-<p>​    另一种方法是训练独立的学习者，以优化团队奖励。一般来说，每个代理都面临一个非平稳的学习问题，因为其环境的动态随着队友改变学习的行为而有效地发生变化。</p>
-<p>​    提高独立学习者表现的一种方法是设计个体奖励函数，更直接地与个体主体观察相关。然而，即使在单代理的情况下，奖励塑造也是困难的，只有一小类形状的奖励函数被保证保持最优的w.r.t。真正的目标。本文的目标是更一般的自治解，其中学习团队值函数的分解。</p>
-<p>​    我们介绍了一种新的在单个代理<strong>learned additive value-decomposition</strong>。值分解网络的目的是通过代表单个分量值函数，通过深度神经网络，从团队奖励信号中学习最优线性值分解。这种加性值分解是通过避免在纯粹独立的学习者中出现的虚假奖励信号而特别驱动的。每个代理学习到的隐式值函数只依赖于局部观测，因此更容易学习。我们的解决方案还改善了克劳斯和布蒂尔（1998）中强调的独立学习的协调问题，因为它在训练时以集中的方式有效学习，而代理可以单独部署。</p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/66571753">Dec-POMDP</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Louiii/ValueDecomposition">案例code</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1092,7 +1071,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

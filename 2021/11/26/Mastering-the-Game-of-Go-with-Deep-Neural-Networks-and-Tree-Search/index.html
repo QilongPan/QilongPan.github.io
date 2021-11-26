@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="图神经网络">
+  <meta name="description" content="paper 本文提出了将监督学习与self-play强化学习相结合，首次在围棋中击败职业选手。 将棋盘位置作为19\times19的图像传入，使用卷积层来构建位置的表示。我们使用value network和policy network来减少搜索树的有效深度和广度：使用value network评估位置，并使用policy对动作进行采样。神经网络的训练流程和架构如Figure1所示。  首先使用人类">
 <meta property="og:type" content="article">
-<meta property="og:title" content="graph_network_study">
-<meta property="og:url" content="http://example.com/2021/05/17/graph-network-study/index.html">
+<meta property="og:title" content="Mastering the Game of Go with Deep Neural Networks and Tree Search">
+<meta property="og:url" content="http://example.com/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/index.html">
 <meta property="og:site_name" content="潘其龙">
-<meta property="og:description" content="图神经网络">
+<meta property="og:description" content="paper 本文提出了将监督学习与self-play强化学习相结合，首次在围棋中击败职业选手。 将棋盘位置作为19\times19的图像传入，使用卷积层来构建位置的表示。我们使用value network和policy network来减少搜索树的有效深度和广度：使用value network评估位置，并使用policy对动作进行采样。神经网络的训练流程和架构如Figure1所示。  首先使用人类">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-05-17T14:50:56.000Z">
-<meta property="article:modified_time" content="2021-06-15T14:31:27.139Z">
+<meta property="og:image" content="http://example.com/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure1.png">
+<meta property="article:published_time" content="2021-11-26T13:58:21.000Z">
+<meta property="article:modified_time" content="2021-11-26T14:54:22.080Z">
 <meta property="article:author" content="QilongPan">
-<meta property="article:tag" content="deep learning">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure1.png">
 
-<link rel="canonical" href="http://example.com/2021/05/17/graph-network-study/">
+<link rel="canonical" href="http://example.com/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>graph_network_study | 潘其龙</title>
+  <title>Mastering the Game of Go with Deep Neural Networks and Tree Search | 潘其龙</title>
   
 
 
@@ -166,7 +167,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/17/graph-network-study/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -179,7 +180,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          graph_network_study
+          Mastering the Game of Go with Deep Neural Networks and Tree Search
         </h1>
 
         <div class="post-meta">
@@ -188,16 +189,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-05-17 22:50:56" itemprop="dateCreated datePublished" datetime="2021-05-17T22:50:56+08:00">2021-05-17</time>
+              <time title="Created: 2021-11-26 21:58:21 / Modified: 22:54:22" itemprop="dateCreated datePublished" datetime="2021-11-26T21:58:21+08:00">2021-11-26</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-15 22:31:27" itemprop="dateModified" datetime="2021-06-15T22:31:27+08:00">2021-06-15</time>
-              </span>
 
           
 
@@ -210,7 +205,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="图神经网络"><a href="#图神经网络" class="headerlink" title="图神经网络"></a>图神经网络</h1>
+        <p><a target="_blank" rel="noopener" href="https://www.nature.com/articles/nature16961?MRK_CMPG_SOURCE=sm_tw_pp">paper</a></p>
+<p>本文提出了将监督学习与self-play强化学习相结合，首次在围棋中击败职业选手。</p>
+<p>将棋盘位置作为<script type="math/tex">19\times19</script>的图像传入，使用卷积层来构建位置的表示。我们使用value network和policy network来减少搜索树的有效深度和广度：使用value network评估位置，并使用policy对动作进行采样。神经网络的训练流程和架构如Figure1所示。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure1.png" alt></p>
+<p>首先使用人类专家的走步数据通过监督学习训练policy network<script type="math/tex">(p_{\sigma })</script>,同时采用<strong>Computing Elo ratings of move patterns in the game of Go</strong>和<strong>Fuego — an open-source framework for board games and Go engine based on Monte-Carlo tree search</strong>两篇论文类似的方法训练了<script type="math/tex">p_{\pi}</script>用于rollout时快速采样动作。接下来训练RL policy network <script type="math/tex">p_{\rho }</script>，它通过优化self-play的最终结果来改进监督学习策略网络。这将调整策略，以达到赢得游戏的正确目标，而不是最大化预测的准确性。最后训练价值网络<script type="math/tex">v_{\theta}</script>用于预测RL policy network对抗自己时游戏的获胜者。</p>
+
     </div>
 
     
@@ -218,9 +218,6 @@
     
 
       <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/deep-learning/" rel="tag"># deep learning</a>
-          </div>
 
         
 
@@ -228,13 +225,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/05/12/docker-study/" rel="prev" title="docker study">
-      <i class="fa fa-chevron-left"></i> docker study
+    <a href="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/" rel="prev" title="Mastering Complex Control in MOBA Games with Deep Reinforcement Learning">
+      <i class="fa fa-chevron-left"></i> Mastering Complex Control in MOBA Games with Deep Reinforcement Learning
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/05/20/Soft-Actor-Critic/" rel="next" title="Soft Actor-Critic">
-      Soft Actor-Critic <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -293,7 +287,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">图神经网络</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

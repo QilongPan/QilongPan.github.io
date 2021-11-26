@@ -160,6 +160,107 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/" class="post-title-link" itemprop="url">IMPALA:Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-07 20:10:31" itemprop="dateCreated datePublished" datetime="2021-05-07T20:10:31+08:00">2021-05-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-07-12 23:58:43" itemprop="dateModified" datetime="2021-07-12T23:58:43+08:00">2021-07-12</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在这项工作中，我们的目标是使用一个具有单组参数的强化学习代理来解决大量的任务集合。一个关键的挑战是如何处理不断增加的数据量和不断延长的训练时间。我们开发了一种新的分布式代理 IMPALA (Importance Weighted Actor-Learner Architecture)，它不仅在单机训练中更有效地使用资源，而且在不牺牲数据效率或资源利用率的情况下还可以扩展到数千台机器。我们通过将解耦的actor和learner与一种新的off-policy的V-trace校正方法相结合，实现了高吞吐量的稳定学习。我们在DMLab-30和Atari-57上演示了IMPALA在多任务强化学习中的有效性。我们的结果表明，IMPALA能够获得比以前的代理更好的性能，并且由于它的多任务方法，关键是在任务之间表现出积极的转移。源代码可在github.com/deepmind/scalable agent。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    我们感兴趣的是开发能够同时掌握各种任务集的新方法，以及适合评估这些方法的环境。训练单个代理同时完成多个任务的主要挑战之一是可伸缩性。由于目前最先进的方法，如A3C或 UNREAL可能需要10亿帧和多天时间来掌握单个领域，同时在数十个领域上进行训练太慢，难以实现。</p>
+<p>​    我们提出了图1所示的Importance Weighted Actor-Learner Architecture (IMPALA) 。IMPALA能够扩展到数千台机器，而无需牺牲训练的稳定性或数据效率。与流行的基于a3c的代理不同，workers将策略参数的梯度传递给中心参数服务器，IMPALA actor将经验轨迹传递给集中learner（sequences of states, actions, and rewards）。由于IMPALA的learner可以获得完整的经验轨迹，因此我们使用GPU对小批量的轨迹进行更新，同时积极地并行化所有时间独立的操作。这种类型的解耦架构可以实现非常高的吞吐量。然而由于用于生成轨迹的策略在梯度计算时可能落后于learner的几次更新，学习变得off-policy。因此，我们引入了 <strong>V-trace off-policy actor-critic</strong>算法来纠正这种有害的差异。</p>
+<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/figure1.png" alt></p>
+<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><ul>
+<li>distributed asynchronous SGD (Dean et al., 2012)</li>
+<li>distributed A3C (Mnih et al., 2016)</li>
+<li>Gorila (Nair et al., 2015)</li>
+<li>a distributed version of Deep Q-Networks (Mnih et al., 2015)</li>
+<li>distributed BA3C (Adamski et al., 2018) </li>
+<li>Ape-X (Horgan et al., 2018)</li>
+<li>batched A2C (Clemente et al., 2017)</li>
+</ul>
+<p>通过利用GPU来扩大强化学习。最简单的方法之一是batched A2C(Clemente et al., 2017)。在每个步骤中，batched A2C都会生成一批操作，并将其应用于一批环境。因此，每个批处理中最慢的环境决定了执行整个批处理步骤所需的时间（见图2a和图2b）。换句话说，环境速度的高方差会严重限制性能。batched A2C在Atari环境中工作得特别好，因为与强化学习代理执行的昂贵的张量操作相比，渲染和游戏逻辑在计算上非常便宜。然而，视觉或物理上更复杂的环境模拟速度可能更慢，并且在每个步骤所需的时间上可能有很大的方差。环境也可能具有可变长度episode，在初始化episode时导致放缓。</p>
+<p>​    以前关于off-policy RL的相关工作包括e (Precup et al., 2000; 2001; Wawrzynski, 2009; Geist &amp; Scherrer, 2014; O’Donoghue et al., 2017) and (Harutyunyan et al., 2016)。最接近我们的工作是<strong>Retrace</strong>算法（(Munos et al., 2016) ，它引入了针对multi-step RL的off-policy校正，并已在多个代理架构中使用 (Wang et al., 2017; Gruslys et al., 2018)。<strong>Retrace</strong>需要学习状态动作值函数<script type="math/tex">Q</script>，才能进行off-policy校正。然而许多actor-critic方法，如A3C学习状态值函数<script type="math/tex">V</script>而不是状态动作值函数<script type="math/tex">Q</script>。<strong>V-trace</strong>是基于状态值函数的。</p>
+<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/figure2.png" alt></p>
+<h1 id="IMPALA"><a href="#IMPALA" class="headerlink" title="IMPALA"></a>IMPALA</h1><p>​    <strong>IMPALA</strong>（图1）使用actor-critic来学习策略<script type="math/tex">\pi</script>和baseline函数<script type="math/tex">V^\pi</script>。生成经验的过程与学习<script type="math/tex">\pi</script>和<script type="math/tex">V^\pi</script>的参数相解耦。该架构由一组actors、重复生成经验轨迹和一个或多个learners组成，他们使用从actors发送的经验来学习off-policy的<script type="math/tex">\pi</script>。</p>
+<p>​    在每个轨迹的开始时，actor将自己的本地策略<script type="math/tex">\mu</script>更新为最新的learner策略<script type="math/tex">\pi</script>，并在其环境中运行<script type="math/tex">n</script>步。经过<script type="math/tex">n</script>步后，actor将 states, actions and rewards <script type="math/tex">x_{1},a_{1},r_{1},...,x_{n},a_{n},r_{n}</script>以及相应的策略分布<script type="math/tex">\mu \left ( a_{t}|x_{t} \right )</script>和初始LSTM状态通过队列发送给learner。然后learner不断在批次轨迹上更新其策略 <script type="math/tex">\pi</script> ，每个轨迹从许多actor那里收集。这种简单的架构使learner能够使用GPU和actor轻松地分布在许多机器上进行加速。但是learner策略 <script type="math/tex">\pi</script> 可能比actor策略<script type="math/tex">\mu</script>领先几次更新，因此actor和learner之间存在<strong>policy-lag</strong>。<strong>V-trace</strong> 纠正了这种滞后，以在保持数据效率的同时实现极高的数据吞吐量。 使用 actor-learner 架构，提供类似于分布式 A3C 的容错能力，但通常具有较低的通信开销，因为 actor 发送观察而不是参数/梯度。</p>
+<p>​    随着非常深入的模型架构的引入，单个GPU的速度通常是训练过程中的限制因素。<strong>IMPALA</strong>可以与分布式learner一起有效地训练大型神经网络，如图1所示。参数分布在learner中，actor并行地从所有learner中检索参数，同时只将观察结果发送给单个learner。 IMPALA 使用同步参数更新(<strong>Revisiting Distributed Synchronous SGDChen</strong> et al., 2016)，这对于在扩展到多台机器时保持数据效率至关重要。</p>
+<h2 id="Efficiency-Optimisations"><a href="#Efficiency-Optimisations" class="headerlink" title="Efficiency Optimisations"></a>Efficiency Optimisations</h2><p>​    GPU和多核CPU 可以从运行少数大型、可并行化操作而不是许多小型操作中受益匪浅。 由于 IMPALA 中的learner对全部的批轨迹执行更新，因此与 A3C 等在线代理相比，它能够并行化更多的计算。 例如，典型的深度强化学习代理具有卷积网络， Long Short-Term Memory (LSTM) (Hochreiter &amp; Schmidhuber, 1997) 和 LSTM 之后的全连接输出层。 IMPALA learner通过将时间维度折叠到批次维度中，将卷积网络并行应用于所有输入。 同样，一旦计算出所有 LSTM 状态，它也会将输出层并行应用于所有时间步。 这种优化将有效批量大小增加到数千。 通过利用网络结构依赖性和操作融合，基于 LSTM 的代理还可以显着提高学习器的速度 (Appleyard et al., 2016)。</p>
+<p>​    最后，我们还利用了TensorFlow中可用的一些现成的优化 (Abadi et al., 2017) ，例如在仍执行计算时为 learner准备下一批数据，使用XLA（a TensorFlow Just-In-Time compiler)编译部分计算图，以及优化数据格式以从CuDNN框架获得最大性能(Chetlur et al., 2014)。</p>
+<h1 id="V-trace"><a href="#V-trace" class="headerlink" title="V-trace"></a>V-trace</h1><p>​    Off-policy在解耦的分布式actor-learner架构中很重要，因为当actor生成行为和当learner估计梯度之间存在滞后。为此，我们为learner引入了一种新的off-policy  actor-critic算法，称为<strong>V-trace</strong>。</p>
+<p>​    首先，让我们介绍一下一些符号。研究了马尔可夫决策过程(MDP)中的无限视野RL问题( (Puterman, 1994; Sutton &amp; Barto, 1998)。其中目标是找到一个策略<script type="math/tex">\pi</script>，使未来折扣奖励的预期总和最大化：<script type="math/tex">V^{\pi }\left ( x \right )= E_{\pi }\left [ \sum_{t\geq 0}^{}\gamma ^{t}r_{t} \right ]</script>，其中<script type="math/tex">\gamma \in \left [ 0,1 \right )</script>是折扣因子，<script type="math/tex">r_{t}=r\left ( x_{t},a_{t} \right )</script>是时间 t 的奖励，<script type="math/tex">x_{t}</script>是时间 <script type="math/tex">t</script>的状态（ 初始化在<script type="math/tex">x_{0}=x</script>) 和<script type="math/tex">a_{t}\sim \pi \left ( \cdot |x_{t} \right )</script>是通过遵循一些策略 <script type="math/tex">\pi</script> 生成的动作。</p>
+<p>​    Off-policy RL算法的目标是使用由一些策略<script type="math/tex">\mu</script>生成的轨迹，称为行为策略，来学习另一个策略<script type="math/tex">\pi</script>(可能不同于<script type="math/tex">\mu</script>)的值函数<script type="math/tex">V^{\pi}</script>，称为目标策略。</p>
+<h2 id="V-trace-target"><a href="#V-trace-target" class="headerlink" title="V-trace target"></a>V-trace target</h2><p>​    考虑由actor按照某些策略<script type="math/tex">\mu</script>生成的轨迹<script type="math/tex">\left ( x_{t},a_{t},r_{t} \right )_{t=s}^{t=s+n}</script>。 我们为<script type="math/tex">V\left ( x_{s} \right )</script>定义 n-step V-trace 目标，我们在状态 <script type="math/tex">x_{s}</script>处的值近似为：</p>
+<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/formula1.png" alt></p>
+<p>其中<script type="math/tex">\delta _{t}V= \rho _{t}\left ( r_{t}+\gamma V\left ( x_{t+1} \right )-V\left ( x_{t} \right ) \right )</script>是<script type="math/tex">V</script>的时间差分，<script type="math/tex">\rho _{t}= min\left ( \bar{\rho },\frac{\pi \left ( a_{t}|x_{t} \right )}{\mu \left ( a_{t}|x_{t} \right )} \right )</script>，<script type="math/tex">c_{i}=min\left ( \bar{c},\frac{\pi \left ( a_{i}|x_{i} \right )}{\mu \left ( a_{i}|x_{i} \right )} \right )</script>是截断的重要性采样 (IS) 权重（对于<script type="math/tex">s=t</script>，我们使用符号<script type="math/tex">\prod_{i=s}^{t-1}c_{i}=1</script>）。 此外我们假设截断水平使得 <script type="math/tex">\bar{\rho }\geq \bar{c}</script>。请注意，在 on-policy 情况下（当<script type="math/tex">\pi = \mu</script>时），并且假设<script type="math/tex">\bar{c}\geq 1</script>，则所有<script type="math/tex">c_{i}= 1</script>和<script type="math/tex">\rho _{t}= 1</script>，因此（1）重写为</p>
+<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/formula2.png" alt></p>
+<p>​    这是 on-policy n-steps Bellman 目标。 因此，在 on-policy 情况下，V-trace 退化到 on-policy n-step Bellman 更新。 这一特性（Retrace (Munos et al., 2016）没有）允许人们对off-和on-policy数据使用相同的算法。</p>
+<p>​    请注意，（截断的)重要性采样权重<script type="math/tex">c_{i}</script>和<script type="math/tex">\rho _{t}</script>扮演不同的角色。 权重<script type="math/tex">\rho _{t}</script>出现在时间差分<script type="math/tex">\delta _{t}V</script>的定义中，并定义了此更新规则的不动点。 在可以完美表示函数的表格情况下，此更新的不动点（即当对于所有状态当<script type="math/tex">V\left ( x_{s} \right )= v_{s}</script>时），特征为在<script type="math/tex">\mu</script>下<script type="math/tex">\delta _{t}V</script>期望值为零，是某些策略<script type="math/tex">\pi_{ \bar{\rho }}</script>的值函数<script type="math/tex">V^{\pi_{\bar{\rho }} }</script>，定义为</p>
+<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/formula3.png" alt></p>
+<p>​    （见附录 A 中的分析）。 所以当 <script type="math/tex">\bar{\rho }</script>是无限的（即没有截断<script type="math/tex">\rho_{t}</script>），那么这就是目标策略的价值函数<script type="math/tex">V^{ \pi}</script>。 然而，如果我们选择截断级别<script type="math/tex">\bar{\rho }< \infty</script>，我们的固定点是策略<script type="math/tex">\pi_{ \bar{\rho }}</script>的价值函数<script type="math/tex">V^{\pi_{\bar{\rho }} }</script>，它介于<script type="math/tex">\mu</script>和<script type="math/tex">\pi</script>之间。 在<script type="math/tex">\bar{\rho }</script>接近于零的限制下，我们得到行为策略<script type="math/tex">V^{\mu}</script>的价值函数。 在附录 A 中，我们证明了相关 V-trace 算子的收缩和相应在线 V-trace 算法的收敛性。</p>
+<p>​    权重<script type="math/tex">c_{i}</script>类似于 Retrace 中的“trace cutting”系数。 他们的产品 <script type="math/tex">c_{s}...c_{t-1}</script>测量在时间<script type="math/tex">t</script>观察到的时间差异<script type="math/tex">\delta _{t}V</script>对先前时间<script type="math/tex">s</script>的价值函数更新的影响。 <script type="math/tex">\pi</script>和 <script type="math/tex">\mu</script>越不相似（我们越off-policy），这个乘积的方差就越大。 我们使用截断级别<script type="math/tex">\bar{c}</script> 作为方差减少技术。 但是请注意，这种截断不会影响我们收敛到的解决方案（仅以<script type="math/tex">\bar{\rho }</script>为特征）。</p>
+<p>​    因此，我们看到截断级别<script type="math/tex">\bar{c}</script>和<script type="math/tex">\bar{\rho }</script>代表算法的不同特征：<script type="math/tex">\bar{\rho }</script>影响我们收敛到的价值函数的性质，而 <script type="math/tex">\bar{c}</script>影响我们收敛到这个函数的速度。</p>
+<p><strong>Remark 1</strong> V-trace目标可以递归计算：</p>
+<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/formula4.png" alt></p>
+<p><strong>Remark 2</strong> 就像在Retrace(<script type="math/tex">\lambda</script>)中一样，我们也可以通过设置<script type="math/tex">c_{i}=\lambda min\left ( \bar{c},\frac{\pi \left ( a_{i}|x_{i} \right )}{\mu \left ( a_{i}|x_{i} \right )} \right )</script>在 V-trace 的定义中考虑额外的折扣参数<script type="math/tex">\lambda \in \left [ 0,1 \right ]</script>。在on-policy情况下，当<script type="math/tex">n= \infty</script>，V-trace然后退化为<script type="math/tex">TD(\lambda)</script>。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1183,85 +1284,6 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Playing Atari with Deep Reinforcement Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-13 22:44:52" itemprop="dateCreated datePublished" datetime="2021-01-13T22:44:52+08:00">2021-01-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-04-24 14:15:28" itemprop="dateModified" datetime="2021-04-24T14:15:28+08:00">2021-04-24</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    我们提出了第一个深度学习模型，利用强化学习直接从高维感知输入中学习控制策略。 该模型是一个卷积神经网络，使用Q学习的变体进行训练，其输入是原始像素，其输出是估计未来回报的值函数。 我们将我们的方法应用于7个Atari2600游戏，从Arcade Learning Environment,，没有调整架构或学习算法。 我们发现，在六场比赛中，它的表现优于以往的所有方法，并超过了人类专家在其中三场比赛中的表现。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​        学习直接从视觉和语言等高维感知输入控制代理是强化学习(RL)的长期挑战之一。 在这些领域操作成功的大多数的RL应用程序都依赖于手工制作的特征以及线性值函数或策略表示。 显然，这些系统的性能在很大程度上取决于特征表示的质量。</p>
-<p>​        最近深度学习的进展使得从原始感官数据中提取高层次特征成为可能，从而导致计算机视觉和语音识别的突破。 这些方法利用了一系列神经网络结构，包括卷积网络、多层感知器、受限波尔兹曼机和递归神经网络，并利用了监督学习和非监督学习。 似乎很自然地问，类似的技术是否也可以有益于RL与感知数据。</p>
-<p>​        然而，强化学习从深度学习的角度提出了几个挑战。 首先，迄今为止最成功的深度学习应用程序需要大量的手工标记训练数据。 另一方面，RL算法必须能够从频繁稀疏、噪声和延迟的标量奖励信号中学习。 与监督学习中发现的投入和目标之间的直接联系相比，行动和结果奖励之间的延迟（可能是数千个时间步长）似乎特别令人望而生畏。 另一个问题是，大多数深度学习算法假设数据样本是独立的，而在强化学习中，通常会遇到高度相关状态的序列。 此外，在RL中数据分布随着算法学习新行为而变化，这对于假设固定底层分布的深度学习方法来说可能是有问题的。</p>
-<p>​        本文证明了卷积神经网络可以克服这些挑战，从复杂的RL环境中的原始视频数据中学习成功的控制策略。 采用Q-learning算法的变体对网络进行训练，采用随机梯度下降来更新权值。 为了缓解相关数据和非平稳分布的问题，我们使用了一种经验重放机制它随机采样以前的转换，从而平滑训练分布在许多过去的行为。</p>
-<p>​        我们将我们的方法应用于一系列Atari2600游戏，在Arcade学习环境(ALE)中实现。 Atari2600是一个具有挑战性的RL测试集，它提供了高维视觉输入(210×160RGB video at 60Hz)和一组多样化有趣的任务，这些任务被设计成对人类玩家来说是困难的。 我们的目标是创建一个单一的神经网络代理，能够成功地学习尽可能多的游戏。 该网络没有提供任何特定于游戏的信息或手工设计的视觉特征，也没有与模拟器的内部状态相关；它从视频输入、奖励和终端信号以及一组可能的操作中学习到，就像人类玩家一样。 此外，网络体系结构和所有用于训练的超参数在整个游戏中保持不变。 到目前为止，在我们尝试过的七场比赛的六场比赛中，网络的水平已经超过了所有以前的RL算法，并在其中三场比赛中超过了一名职业玩家。 图1提供了用于训练的五个游戏的示例截图。</p>
-<p><img src="/2021/01/13/Playing-Atari-with-Deep-Reinforcement-Learning/screen_shoot.png" alt></p>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>​        我们考虑代理与环境<script type="math/tex">\varepsilon</script>交互的任务，在这种情况下，Atari模拟器，按照一系列的actions、observations和rewards。 在每个时间步骤中，代理从一组合法游戏操作中选择一个动作，A={1，…，K}。 动作传递给仿真器，并修改其内部状态和游戏得分。通常可能是随机的。 模拟器的内部状态不被代理观察到；相反，它从模拟器中观察到一个图像<script type="math/tex">x_{t}\in  \mathbb{R}^{d}</script>，它是表示当前屏幕的原始像素值的向量。 此外，它还收到一个奖励<script type="math/tex">r_{t}</script>，代表游戏分数的变化。 请注意，通常游戏分数可能取决于整个先前的动作和观察顺序；关于一个行动的反馈只有在几千个时间步骤过去之后才能收到。</p>
-<p>​    由于代理只观察当前屏幕的图像，任务被部分观察到，许多模拟器状态被感知混叠。即不可能仅从当前屏幕<script type="math/tex">x_{t}</script>中完全理解当前的情况。因此，我们考虑动作和观察序列<script type="math/tex">s_{t}=x_{1},a_{1},x_{2},...,a_{t-1},x_{t}</script>,并依赖这些序列学习游戏策略。假设模拟器中的所有序列都在有限数量的时间步长中终止。这种形式产生了一个大的但有限的马尔可夫决策过程(MDP)，其中每个序列都是一个不同的状态。因此，我们可以应用标准的强化学习方法，简单地使用完整的序列<script type="math/tex">s_{t}</script>作为时间<script type="math/tex">t</script>时的状态表示。</p>
-<p>​    代理的目标是通过选择动作，以最大化未来回报的方式来与模拟器交互。我们做了标准的假设，未来奖励每个时间步通过<script type="math/tex">\gamma</script>折现，并将时间<script type="math/tex">t</script>的未来折扣回报定义为<script type="math/tex">R_{t} = \sum _{t^{'}=t}^{T}\gamma^{t^{'}-t}r_{t^{'}}</script>，其中T是游戏结束的时间步长。我们将最优动作值函数<script type="math/tex">Q^{*}(s,a)</script>定义为遵循任何策略在看到一些序列后，然后采取一些动作<script type="math/tex">a</script>，<script type="math/tex">Q^{*}(s,a)=max_{\pi }E[R_{t}|s_{t}=s,a_{t}=a,\pi ]</script>，其中<script type="math/tex">\pi</script>是一个策略映射序列到动作（或动作的分布）。</p>
-<h1 id="阅读总结"><a href="#阅读总结" class="headerlink" title="阅读总结"></a>阅读总结</h1><ul>
-<li>缓解相关性数据和非平稳分布的问题，采用经验重复。</li>
-<li>该方法在尝试过的七场比赛的六场比赛中，网络的性能已经超过了所有以前的RL算法，并在其中三场比赛中超过了一名专家人类球员</li>
-<li></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1331,7 +1353,7 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

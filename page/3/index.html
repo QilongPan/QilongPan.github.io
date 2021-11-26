@@ -160,6 +160,178 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">DouZero:Mastering DouDizhu with Self-Play Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-22 21:51:20" itemprop="dateCreated datePublished" datetime="2021-06-22T21:51:20+08:00">2021-06-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-23 22:52:30" itemprop="dateModified" datetime="2021-06-23T22:52:30+08:00">2021-06-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    游戏是现实世界的抽象，在那里人造的代理学会与其他代理竞争和合作。尽管在各种完美和不完美信息游戏中取得了重大成就，但三人纸牌游戏斗地主（又名斗地主）仍未解决。斗地主是一个非常具有挑战性的领域，竞争、协作、信息不完善、状态空间大，尤其是大量可能的行为（合法行为在不同回合之间差异很大）。不幸的是，现代强化学习算法主要关注简单和小的动作空间，毫不奇怪，在斗地主上没有取得令人满意的进展。在这项工作中，我们提出了一个概念上简单但有效的斗地主 AI 系统，即 DouZero，它通过深度神经网络、动作编码和并行actor增强了传统的蒙特卡洛方法。从零开始，在单台四颗GPU的服务器上，训练天数超过了所有现有的斗地主AI程序，在344个AI代理中在Botzone排行榜中名列第一。通过构建 DouZero，我们展示了经典的 Monte-Carlo 方法可以在具有复杂动作空间的硬领域中提供强大的结果。发布了代码和在线演示<a target="_blank" rel="noopener" href="https://github.com/kwai/DouZero">repo</a>，希望这种见解可以激发未来的工作。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    游戏通常作为 AI 的基准，因为它们是许多现实世界问题的抽象。在完全信息博弈方面取得了显著成果。例如，AlphaGo (Silver et al., 2016)、AlphaZero (Silver et al., 2018) 和 MuZero (Schrittwieser et al., 2020) 已经在围棋游戏中取得了最先进的性能。最近的研究已经发展到更具挑战性的不完美信息游戏，其中代理在部分可观察的环境中与其他人竞争或合作。双人游戏中取得了鼓舞人心的进展，例如简单的 Leduc Hold’em and limit/no-limit Texas Hold’em (Zinkevich et al., 2008; Heinrich &amp; Silver, 2016; Moravck et al., 2017; Brown &amp; Sandholm, 2018)，多人游戏，例如多人Texas hold’em (Brown &amp; Sandholm, 2019b)、 Starcraft (Vinyals et al., 2019), DOTA (Berner et al., 2019), Hanabi (Lerer  et al., 2020), Mahjong (Li et al., 2020a), Honor of Kings (Ye et al., 2020b;a), and No-Press Diplomacy (Gray et al., 2020)。</p>
+<p>​    这项工作旨在为斗地主（又名斗地主）构建人工智能程序，斗地主是中国最受欢迎的纸牌游戏，每天有数亿活跃玩家。斗地主有两个有趣的特性，它们对人工智能系统构成了巨大的挑战。首先，斗地主中的玩家需要在一个部分可观察的环境中与其他人竞争和合作，交流有限。具体来说，两名农民玩家将组队对抗地主玩家。扑克游戏的流行算法，例如 Counterfactual Regret Minimization (CFR) (Zinkevich et al., 2008)）及其变体，在这种复杂的三人游戏环境中通常没有声音。其次，斗地主拥有大量平均大小非常大的信息集，并且由于卡片的组合而具有非常复杂和庞大的动作空间，多达<script type="math/tex">10^{4}</script>个可能的动作（Zha et al., 2019a）。与德州扑克不同，斗地主中的动作不容易抽象，这使得搜索计算量大且常用的强化学习算法效果不佳。由于高估问题，Deep Q-Learning(DQN) (Mnih et al., 2015) 在非常大的动作空间中存在问题 (Zahavy et al., 2018)；策略梯度方法，例如 A3C (Mnih et al., 2016)，无法利用斗地主中的动作特征，因此无法像 DQN 那样自然地泛化不可见的动作 (Dulac-Arnold et al., 2015)。毫不奇怪，之前的工作表明，DQN 和 A3C 在斗地主上并没有取得令人满意的进展。在 (You et al., 2019) 中，即使经过 20 天的训练，DQN 和 A3C 对抗简单的基于规则的代理的胜率也低于 20%； (Zha et al., 2019a)中的 DQN 仅比均匀采样合法移动的随机代理略好。</p>
+<p>​    之前已经做了一些努力，通过将人类启发式学习和搜索相结合来构建斗地主 AI。Combination Q-Network (CQN) (You et al., 2019)建议通过将动作解耦为分解选择和最终移动选择来减少动作空间。然而，分解依赖于人类启发式，并且非常缓慢。在实践中，经过二十天的训练，CQN 甚至无法击败简单的启发式规则。DeltaDou (Jiang et al., 2019)是第一个与顶级人类玩家相比达到人类水平表现的人工智能程序。它通过使用贝叶斯方法来推断隐藏信息并根据他们自己的策略网络对其他玩家的行为进行采样，从而实现了类似于 AlphaZero 的算法。为了抽象动作空间，DeltaDou 基于启发式规则预训练了一个kicker network(选择带牌，三带一，四带二等)。然而，kicker在斗地主中扮演着重要的角色，不能轻易抽象。kicker的错误选择可能会直接导致输掉比赛，因为它可能会破坏其他一些卡片类别，例如单顺。此外，贝叶斯推理和搜索在计算上是昂贵的。即使在使用监督回归启发式算法初始化网络时，训练 DeltaDou 也需要两个多月的时间(Jiang et al., 2019)。因此，现有的斗地主 AI 程序在计算上很昂贵，并且可能是次优的，因为它们高度依赖于人类知识的抽象。</p>
+<p>​    在这项工作中，我们展示了 DouZero，这是一个概念上简单但有效的斗地主 AI 系统，没有抽象状态/动作空间或任何人类知识。 DouZero 使用深度神经网络、动作编码和并行actor增强了传统的蒙特卡罗方法 (Sutton &amp; Barto, 2018)。 DouZero 有两个可取的特性。首先，与 DQN 不同，它不容易受到高估偏差的影响。其次，通过将动作编码到 card matrices（卡片矩阵）中，它可以自然地泛化在整个训练过程中不常见的动作。这两个属性对于处理斗地主庞大而复杂的动作空间都至关重要。与许多树搜索算法不同，DouZero 基于采样，这使我们能够使用复杂的神经架构并在计算资源相同的情况下每秒生成更多数据。与之前许多依赖特定领域抽象的扑克 AI 研究不同，DouZero 不需要任何领域知识或底层动态知识。在只有 48 个内核和 4 个 1080Ti GPU 的单台服务器上从头开始训练，DouZero 在半天之内就超过了 CQN 和启发式规则，在两天内击败了我们的内部监督代理，并在 10 天内超越了 DeltaDou。广泛的评估表明，DouZero是迄今为止最强的斗地主人工智能系统。</p>
+<p>​    通过构建 DouZero 系统，我们证明了经典的 Monte-Carlo 方法可以在需要推理巨大状态和动作空间上的竞争和合作的大型复杂纸牌游戏中取得出色的结果。我们注意到，一些工作还发现蒙特卡罗方法可以实现有竞争力的表现 (Mania et al., 2018; Zha et al., 2021a)并有助于稀疏奖励设置 (Guo et al., 2018; Zha et al.,  2021b)。与这些专注于简单和小型环境的研究不同，我们展示了蒙特卡洛方法在大型纸牌游戏中的强大性能。希望这一见解可以促进未来对解决多智能体学习、稀疏奖励、复杂动作空间和不完美信息的研究，我们发布了我们的环境和训练代码。与许多需要数千个 CPU 进行训练的扑克 AI 系统不同，例如 DeepStack (Moravcık et al., 2017)和 Libratus (Brown &amp; Sandholm, 2018)，DouZero 实现了合理的实验管道，只需要几天的训练大多数研究实验室都负担得起的单个 GPU 服务器。我们希望它可以激发该领域的未来研究并作为强大的基线。</p>
+<h1 id="斗地主背景"><a href="#斗地主背景" class="headerlink" title="斗地主背景"></a>斗地主背景</h1><p>​    斗地主是一款流行的三人纸牌游戏，易学难精。 它在中国吸引了数亿玩家，每年举办许多比赛。 这是一个shedding-type（脱落类型）的游戏，玩家的目标是在其他玩家之前清空自己手中的所有牌。 两名农民玩家组队与另一位地主玩家作战。 如果农民玩家中的任何一个是第一个没有剩余牌的，则农民获胜。 每场比赛都有一个叫牌阶段，玩家根据手牌的强弱来竞标地主，还有一个打牌阶段，玩家轮流打牌。 我们在附录 A 中提供了详细介绍。</p>
+<p>​    DouDizhu 仍然是多智能体强化学习的未解决基准 (Zha et al., 2019a; Terry et al., 2020)。两个有趣的特性使得斗地主特别难于解决。首先，农民需要合作对抗地主。例如，图10显示了一个典型的情况，底部的农民可以选择打一个小单张来帮助右边的农民获胜。其次，斗地主因卡牌组合而具有复杂而庞大的动作空间。有 27, 472种可能的组合，其中这些组合的不同子集对于不同的手牌是合法的。图1是一手牌的例子，它有391种合法组合，包括Solo（单牌）、Pair(对子)、Trio（三张）、Bomb（炸弹）、Plane（飞机）、Quad等。 动作空间不能轻易抽象，因为不正确的打牌可能会打破其他类别并直接导致在输掉一场比赛中。因此，构建斗地主AI具有挑战性，因为斗地主中的玩家需要在巨大的动作空间上进行竞争和合作的推理。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/fiture1.png" alt></p>
+<h1 id="Deep-Monte-Carlo"><a href="#Deep-Monte-Carlo" class="headerlink" title="Deep Monte-Carlo"></a>Deep Monte-Carlo</h1><p>​    在本节中，我们重新审视Monte-Carlo (MC) 方法并介绍Deep Monte-Carlo (DMC)，它将 MC 与深度神经网络泛化为函数逼近。 然后我们将 DMC 与策略梯度方法（例如 A3C）和 DQN 进行讨论和比较，这些方法在斗地主中被证明是失败的 (You et al., 2019; Zha et al., 2019a)。</p>
+<h2 id="Monte-Carlo-Methods-with-Deep-Neural-Networks"><a href="#Monte-Carlo-Methods-with-Deep-Neural-Networks" class="headerlink" title="Monte-Carlo Methods with Deep Neural Networks"></a>Monte-Carlo Methods with Deep Neural Networks</h2><p>​    蒙特卡洛 (MC) 方法是基于平均样本回报的传统强化学习算法 (Sutton &amp; Barto, 2018)。 MC 方法是为episodic任务设计的，其中experiences可以分为episodes并且所有episodes最终都终止。 为了优化策略<script type="math/tex">\pi</script>，每次访问 MC 可用于通过迭代执行以下过程来估计 Q-table <script type="math/tex">Q(s, a)</script>：</p>
+<ol>
+<li>使用<script type="math/tex">\pi</script>生成episode。</li>
+<li>对于每个<script type="math/tex">s,a</script>出现在episode中，计算并更新<script type="math/tex">Q(s, a)</script>，并使用关于<script type="math/tex">s,a</script>的所有样本的平均回报。</li>
+<li>对episode中的每个<script type="math/tex">s</script>，<script type="math/tex">\pi \left ( s \right )\leftarrow arg max_{a}Q\left ( s,a \right )</script>。</li>
+</ol>
+<p>​    Step 2 中的平均回报通常是通过折现累积奖励获得的。 与依赖bootstrapping的 Q-learning 不同，MC 方法直接逼近目标 Q 值。 在步骤 1 中，我们可以使用 epsilon-greedy 来平衡探索和利用。 上述过程可以与深度神经网络自然结合，从而导致深度蒙特卡罗（DMC）。 具体来说，我们可以用神经网络替换 Q 表，并在步骤 2 中使用均方误差 (MSE) 更新 Q 网络。</p>
+<p>​    虽然 MC 方法被批评不能处理不完整的episode，并且由于高方差而被认为效率低下 (Sutton &amp; Barto, 2018)，但 DMC 非常适合斗地主。 首先，斗地主是一个episode任务，所以我们不需要处理不完整的episode。 其次，DMC 可以很容易地并行化，以每秒有效地生成许多样本，以缓解高方差问题。</p>
+<h2 id="Comparison-with-Policy-Gradient-Methods"><a href="#Comparison-with-Policy-Gradient-Methods" class="headerlink" title="Comparison with Policy Gradient Methods"></a>Comparison with Policy Gradient Methods</h2><p>​    策略梯度方法，例如REINFORCE (Williams, 1992), A3C (Mnih et al., 2016), PPO (Schulman et al., 2017),  and IMPALA (Espeholt et al., 2018)，在强化学习中非常流行.他们的目标是直接使用梯度下降来建模和优化策略。在策略梯度方法中，我们经常使用类似分类器的函数逼近器，其中输出随动作数量线性缩放。虽然策略梯度方法在大动作空间中运行良好，但它们不能使用动作特征来推理以前未见过的动作 (Dulac-Arnold et al., 2015)。在实践中斗地主中的动作可以自然地编码成卡片矩阵，这对推理至关重要。例如，如果智能体因为选择了一个不错的kicker而获得了动作<script type="math/tex">3KKK</script>的奖励，它也可以将这些知识推广到未来看不见的动作，例如 <script type="math/tex">3JJJ</script>。此属性对于处理非常大的动作空间和加速学习至关重要，因为许多动作在模拟数据中并不常见。</p>
+<p>​    DMC 可以通过将动作特征作为输入来自然地利用动作特征来概括看不见的动作。 虽然如果动作规模较大，执行复杂度可能会很高，但在斗地主的大多数状态下，只有一部分动作是合法的，因此我们不需要迭代所有动作。 因此，DMC 总体上是一种有效的斗地主算法。 虽然可以将动作特征引入到 actor-critic 框架中（例如，通过使用 Q 网络作为critic），但类分类器的 actor 仍然会受到大动作空间的影响。 我们的初步实验证实，这种策略不是很有效（见图 7）。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure7.png" alt></p>
+<h2 id="Comparison-with-Deep-Q-Learning"><a href="#Comparison-with-Deep-Q-Learning" class="headerlink" title="Comparison with Deep Q-Learning"></a>Comparison with Deep Q-Learning</h2><p>​    最流行的基于值的算法是 Deep Q-Learning (DQN) (Mnih et al., 2015)，这是一种 bootstrapping方法，根据下一步中的Q 值更新Q 值。 虽然 DMC 和 DQN 都近似于 Q-values，但 DMC 在斗地主中有几个优点。</p>
+<p>​    首先，在使用函数逼近时，由逼近 DQN 中的最大动作值引起的高估偏差难以控制（Thrun &amp; Schwartz 1993；Hasselt，2010），并且在动作空间非常大时变得更加明显 (Zahavy et al., 2018) . 虽然一些技术，例如double Q-learning (van Hasselt et al., 2016) 和experience replay (Lin, 1992)，可能会缓解这个问题，但我们在实践中发现 DQN 非常不稳定，并且经常在斗地主中发散。 然而蒙特卡洛估计不易受到偏差的影响，因为它无 bootstrapping即可直接逼近真实值 (Sutton &amp; Barto, 2018)。</p>
+<p>​    其次，斗地主是一项具有长视野和稀疏奖励的任务，即智能体需要在没有反馈的情况下通过很长的状态链，并且只有在游戏结束时才会产生非零奖励。 这可能会减慢 Q-learning 的收敛速度，因为估计当前状态的 Q 值需要等到下一个状态的值接近其真实值 (Szepesvari, 2009; Beleznay et al., 1999)。与 DQN 不同，蒙特卡罗估计的收敛性不受episode长度的影响，因为它直接接近真实的目标值。</p>
+<p>​    第三，由于动作空间大且可变，不方便在斗地主中高效实施 DQN。 具体来说，DQN 在每个更新步骤中的最大操作将导致高计算成本，因为它需要在非常昂贵的深度 Q 网络上迭代所有合法操作。 而且不同状态下的合法动作不同，这使得批量学习不方便。 结果我们发现 DQN 在 wall-clock time（现实时间）方面太慢了。 虽然蒙特卡洛方法可能存在高方差 (Sutton &amp; Barto, 2018)，这意味着它可能需要更多样本才能收敛，但它可以轻松并行化以每秒生成数千个样本，以缓解高方差问题并加速训练。 我们发现 DMC 的高方差被它提供的可扩展性大大抵消了，而且 DMC 在wall-clock time上非常有效。</p>
+<h1 id="DouZero-System"><a href="#DouZero-System" class="headerlink" title="DouZero System"></a>DouZero System</h1><p>​    在本节中，我们通过首先描述state/action表示和神经架构来介绍 DouZero 系统，然后详细说明我们如何将 DMC 与多个进程并行化以稳定和加速训练。</p>
+<h2 id="Card-Representation-and-Neural-Architecture"><a href="#Card-Representation-and-Neural-Architecture" class="headerlink" title="Card Representation and Neural Architecture"></a>Card Representation and Neural Architecture</h2><p>​    我们使用one-hot <script type="math/tex">4\times 15</script> 矩阵对每个卡片组合进行编码（图 2）。 由于花色在斗地主中是无关紧要的，我们用每一行来代表牌值（rank 和joker）。 图 3 显示了 Q-network的架构。 对于状态，我们提取几个卡片矩阵来表示手牌、其他玩家手牌的并集和最近的动作，以及一些one-hot向量来表示其他玩家的手牌数量和到目前为止炸弹的数量。 同样，我们使用一张卡片矩阵来编码动作。 对于神经架构，LSTM 用于对历史动作进行编码，并将输出与其他 state/action特征连接起来。 最后我们使用隐藏大小为 512 的六层 MLP 来生成Q-values。 我们在附录 C.1 中提供了更多详细信息。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure2.png" alt></p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure3.png" alt></p>
+<h2 id="Parallel-Actors"><a href="#Parallel-Actors" class="headerlink" title="Parallel Actors"></a>Parallel Actors</h2><p>​    我们将 Landlord(地主)表示为 L，将在 Landlord 之前移动的玩家（上家）表示为 U，将在 Landlord 之后移动的玩家（下家）表示为 D。我们将 DMC 与多个actor进程和一个learner进程并行化，分别在<strong>Algorithm1</strong>和<strong>Algorithm2</strong>中进行了总结。 学习器为三个位置维护三个全局Q-network，并使用 MSE 损失更新网络，以根据actor进程提供的数据来近似目标值。 每个参与者维护三个本地Q-network，它们定期与全局网络同步。 actor将重复从游戏引擎中采样轨迹并计算每个state-action对的累积奖励。 learner和actor的交流是通过三个共享缓冲区实现的。 每个缓冲区被分成几个条目，其中每个条目由几个数据实例组成。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/algorithm1.png" alt></p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/algorithm2.png" alt></p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>​    这些实验旨在回答以下研究问题。 RQ1：DouZero 与现有的 DouDizhu 程序相比如何，例如基于规则的策略、监督学习、基于 RL 的方法和基于 MCTS 的解决方案（第 5.2 节）？ RQ2：如果我们考虑叫分阶段（第 5.3 节），DouZero 的表现如何？ RQ3：DouZero 的训练效率如何（第 5.4 节）？ RQ4：DouZero 与bootstrapping和actor critic方法（第 5.5 节）相比如何？ RQ5：DouZero 学习的打牌策略是否符合人类知识（第 5.6 节）？ RQ6：与现有程序（第 5.7 节）相比，DouZero 在推理方面是否具有计算效率？ RQ7：DouZero的两个农民能学会互相合作吗（5.8节）？</p>
+<h2 id="实验装置"><a href="#实验装置" class="headerlink" title="实验装置"></a>实验装置</h2><p>​    扑克游戏中常用的策略强度衡量标准是可利用性(Johanson et al., 2011)。 但是在斗地主中，由于斗地主拥有巨大的状态/动作空间，并且有三个玩家，因此计算可利用性本身就很棘手。 为了评估性能，在 (Jiang et al., 2019)之后，我们发起了包括地主和农民两个对手的锦标赛。 我们通过对每一副牌打两次来减少差异。 具体来说，对于两个相互竞争的算法 A 和 B，对于给定的牌组，它们将首先分别扮演地主和农民的位置。 然后他们换边，即A占农民位置，B占地主位置，再次玩同一副牌。 为了模拟真实环境，在第 5.3 节中，我们进一步训练了一个带有监督学习的 bidding network（叫分网络），代理将根据手牌的强度在每场比赛中对地主进行叫分（更多细节见附录 C.2）。 我们考虑以下竞争算法。</p>
+<ul>
+<li><p><strong>DeltaDou:</strong>一个强大的人工智能程序，它使用贝叶斯方法来推断隐藏信息并使用 MCTS 搜索动作（Jiang 等，2019）。 我们使用作者提供的代码和预训练模型。 该模型经过两个月的训练，并显示出与顶级人类玩家相当的表现。</p>
+</li>
+<li><p><strong>CQN:</strong>Combinational Q-Learning (You et al., 2019) 是一个基于卡片分解和 Deep Q-Learning的程序。 我们使用开源代码和作者提供的预训练模型<a target="_blank" rel="noopener" href="https://github.com/qq456cvb/doudizhu-C">github</a>。</p>
+</li>
+<li><p><strong>SL:</strong> 监督学习基线。 我们在我们的斗地主游戏手机应用程序中内部收集了 226230 场来自联赛最高级别玩家的人类行家比赛。 然后我们使用与 DouZero 相同的状态表示和神经架构来训练监督代理，其中包含从这些数据生成的 49990075 个样本。 有关详细信息，请参阅附录 C.2。</p>
+</li>
+<li><p><strong>Rule-Based Programs:</strong>我们收集了一些基于启发式的开源程序，包括 RHCP4<a target="_blank" rel="noopener" href="https://blog.csdn.net/sm9sun/article/ details/70787814">link</a>，一个称为 RHCP-v2<a target="_blank" rel="noopener" href="https://github.com/deecamp2019-group20/">link</a></p>
+<p>的改进版本，以及 RLCard 包中的规则模型<a target="_blank" rel="noopener" href="https://github.com/datamllab/rlcard">link</a> (Zha et al., 2019a)。 此外我们考虑了一个 Random 程序，它可以均匀地采样合法的移动。</p>
+</li>
+</ul>
+<p><strong>Metrics</strong>下面 (Jiang et al., 2019)，给定算法 A 和对手 B，我们使用两个指标来比较 A 和 B 的性能：</p>
+<ul>
+<li><strong>WP</strong> (Winning Percentage):A赢的局数除以总局数。</li>
+<li><strong>ADP</strong> (Average Difference in Points):A 和 B 之间每场比赛得分的平均差异。基础分数为 1。每个炸弹将使得分翻倍。</li>
+</ul>
+<p>我们在实践中发现这两个指标鼓励不同风格的策略。 例如如果使用 ADP 作为奖励，agent 往往会非常谨慎地出炸弹，因为出炸弹是有风险的，可能会导致更大的 ADP 损失。 相比之下，以 WP 为目标，agent 往往会积极地出炸弹，即使它会失败，因为炸弹不会影响 WP。 我们观察到，就 ADP 而言，使用 ADP 训练的代理的性能略好于使用 WP 训练的代理，反之亦然。 接下来，我们分别以 ADP 和 WP 为目标来训练和报告两个 DouZero 代理的结果（对于 WP，我们根据智能体是赢了还是输了游戏，对最后的时间步长给出了 +1 或 -1 的奖励。 对于 ADP，我们直接使用 ADP 作为奖励。 DeltaDou 和 CQN 分别以 ADP 和 WP 为目标进行训练）。 附录 D.2 中提供了对这两个目标的更多讨论。</p>
+<p>​    我们首先通过让每对算法玩 10,000 副套牌来启动预赛。 然后，我们通过玩 100,000 副套牌来计算前 3 种算法的 Elo 评分，以进行更可靠的比较，即 DouZero、DeltaDou 和 SL。 如果算法在该套牌上进行的两场比赛中获得更高的 WP 或 ADP，则该算法将赢得该套牌。 我们用不同的随机采样套牌重复这个过程五次，并报告 Elo 分数的平均值和标准差。 对于叫分阶段的评估，每副牌打六次，不同位置的 DouZero、DeltaDou 和 SL 有不同的扰动。 我们用 100,000 副牌报告结果。</p>
+<p><strong>Implementation Details.</strong>我们在具有 48 个 Intel(R) Xeon(R) Silver 4214R CPU @ 2.40GHz 处理器和四个 1080 Ti GPU 的服务器上运行所有实验。 我们使用 45个actor，这些actor分布在三个 GPU 上。 我们在剩余的 GPU 中运行一个学习器来训练Q-networks。 我们的实现基于TorchBeast framework (Kuttler et al., 2019)。 详细的训练曲线在附录 D.5 中提供。 每个共享缓冲区有 <script type="math/tex">B = 50</script>个条目，大小 <script type="math/tex">S = 100</script>，批量大小<script type="math/tex">M = 32</script> ，并且 <script type="math/tex">\epsilon= 0.01</script>。 我们设置折扣因子 <script type="math/tex">\gamma = 1</script>，因为斗地主只有一个非零的奖励在最后一个时间步，并且早期的动作非常重要。 我们使用 ReLU 作为 MLP 每一层的激活函数。 我们采用 RMSprop 优化器，其学习率 <script type="math/tex">\psi = 0.0001</script>，平滑常数为 0.99 且 <script type="math/tex">\epsilon = 10−5</script>。 我们训练 DouZero 30 天。</p>
+<h2 id="Performance-against-Existing-Programs"><a href="#Performance-against-Existing-Programs" class="headerlink" title="Performance against Existing Programs"></a>Performance against Existing Programs</h2><p>​    为了回答 RQ1，我们将 DouZero 与离线基线进行比较，并在Botzone (Zhou et al., 2018)上报告其结果，这是一个 DouDizhu 比赛的在线平台（更多细节在附录 E 中提供）。</p>
+<p>​    表 1 总结了 DouZero 和所有基线之间头对头完成的 WP 和 ADP。我们提出三点意见。首先，DouZero 主导了所有基于规则的策略和监督学习，这证明了在 DouDizhu 中采用强化学习的有效性。其次，DouZero 的性能明显优于 CQN。回想一下，CQN 类似地使用动作分解和 DQN 训练 Q 网络。 DouZero 的优越性表明 DMC 确实是在 DouDizhu 中训练 Q-networks 的有效方法。第三，DouZero优于DeltaDou，这是文献中最强的Doudizhu AI。我们注意到斗地主有很高的方差，即赢得一场比赛依赖于初始手牌的强度，这高度依赖于运气。因此，0.586 的 WP 和 0.258 的 ADP 表明对 DeltaDou 的显着改进。此外，DeltaDou 需要在训练和测试时进行搜索。而 DouZero 不做搜索，这验证了 DouZero 学习的 Q-networks 非常强大。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/table1.png" alt></p>
+<p>​    图 4 的左侧显示了 DouZero、DeltaDou 和 SL 在玩 100, 000 副套牌时的 Elo 评分。 我们观察到 DouZero 在 WP 和 ADP 方面都明显优于 DeltaDou 和 SL。 这再次证明了DouZero的强劲表现。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure4.png" alt></p>
+<p>​    图 4 的右侧说明了 DouZero 在 Botzone 排行榜上的表现。 我们注意到 Botzone 采用了不同的评分机制。 除了 WP 之外，它还为一些特定的卡片类别提供了额外的奖励，例如 Chain of Pair 和 Rocket（详见附录 E）。 如果以 Botzone 的评分机制为目标，DouZero 很有可能获得更好的性能，但我们直接上传了以 WP 为目标训练的 DouZero 的预训练模型。 我们观察到这个模型足够强大，可以击败其他机器人。</p>
+<h2 id="Comparison-with-Bidding-Phase"><a href="#Comparison-with-Bidding-Phase" class="headerlink" title="Comparison with Bidding Phase"></a>Comparison with Bidding Phase</h2><p>​    为了研究 RQ2，我们使用人类专家数据训练一个具有监督学习的叫分网络。 我们将排名前 3 的算法，即 DouZero、DeltaDou 和 SL，放入 DouDizhu 游戏的三个席位。 在每场比赛中，我们随机选择第一个叫分者，并使用预先训练的叫分网络模拟叫分阶段。 为了公平比较，所有三种算法都使用相同的出价网络。 结果总结在表 2 中。虽然 DouZero 是在没有叫分网络的情况下在随机生成的牌组上训练的，但我们观察到 DouZero 在 WP 和 ADP 中都主导其他两种算法。 这证明了 DouZero 在需要考虑投标阶段的现实世界比赛中的适用性。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/table2.png" alt></p>
+<h2 id="Analysis-of-Learning-Progress"><a href="#Analysis-of-Learning-Progress" class="headerlink" title="Analysis of Learning Progress"></a>Analysis of Learning Progress</h2><p>​    为了研究 RQ3，我们在图 5 中可视化了 DouZero 的学习进度。我们使用 SL 和 DeltaDou 作为对手来绘制 WP 和 ADP随着训练天数的变化。我们做出以下两点观察。首先，DouZero 在 WP 和 ADP 方面分别在一天和两天的训练中优于 SL。我们注意到 DouZero 和 SL 使用完全相同的神经架构进行训练。因此，我们将 DouZero 的优越性归功于自我对弈强化学习。虽然 SL 也表现良好，但它依赖于大量数据，不灵活并且可能限制其性能。其次，DouZero 在 WP 和 ADP 方面分别在 3 天和 10 天的训练中优于 DeltaDou。我们注意到 DeltaDou 是用启发式的监督学习初始化的，并且训练了两个多月。而 DouZero 从零开始，只需要几天的训练就可以击败 DeltaDou。这表明没有搜索的无模型强化学习在斗地主中确实有效。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure5.png" alt></p>
+<p>​    我们进一步分析了使用不同数量的actor时的学习速度。 图 6 报告了使用 15、30 和 45 个 actor 时针对 SL 的性能。 我们观察到，使用更多的 actor 可以加速wall-clock time的训练。 我们还发现所有三种设置都显示出相似的样本效率。 未来，我们将探索在多台服务器上使用更多actor的可能性，以进一步提高训练效率。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure6.png" alt></p>
+<h2 id="Comparison-with-SARSA-and-Actor-Critic"><a href="#Comparison-with-SARSA-and-Actor-Critic" class="headerlink" title="Comparison with SARSA and Actor-Critic"></a>Comparison with SARSA and Actor-Critic</h2><p>​    为了回答 RQ4，我们实现了两个基于 DouZero 的变体。 首先，我们用Temporal-Difference (TD)  目标替换 DMC 目标。 这导致了SARSA的深度版本。 其次，我们实现了一个具有动作特征的 Actor-Critic 变体。 具体来说，我们使用 Q-network 作为具有动作特征的critic，并训练策略作为具有动作掩码的演员来消除非法动作。</p>
+<p>​    图 7 显示了 SARSA 和 Actor-Critic 单次运行的结果。 首先，我们没有观察到使用 TD 学习的明显好处。 我们观察到 DMC 在wall-clock time和样本效率方面的学习速度略快于 SARSA。 可能的原因是 TD 学习在稀疏奖励设置中不会有太大帮助。 我们相信需要更多的研究来了解 TD 学习何时会有所帮助。 其次，我们观察到 Actor-Critic 失败了。 这表明简单地向评论家添加动作特征可能不足以解决复杂的动作空间问题。 未来，我们将研究是否可以将动作特征有效地融入到Actor-Critic框架中。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure7.png" alt></p>
+<h2 id="Analysis-of-DouZero-on-Expert-Data"><a href="#Analysis-of-DouZero-on-Expert-Data" class="headerlink" title="Analysis of DouZero on Expert Data"></a>Analysis of <strong>DouZero</strong> on Expert Data</h2><p>​    对于 RQ5，我们在整个训练过程中计算 DouZero 在人类数据上的准确性。 我们将使用 ADP 训练的模型报告为客观模型，因为收集人类数据的游戏应用程序也采用 ADP。 图 8 显示了结果。 我们做了以下两个有趣的观察。 首先，在早期阶段，即训练的前五天，准确率不断提高。 这表明智能体可能已经学会了一些与人类专业知识相一致的策略，纯粹是自我游戏。 其次，经过五天的训练，准确率急剧下降。 我们注意到 ADP 对 SL 的影响在五天后仍在改善。 这表明智能体可能已经发现了一些人类无法轻易发现的新颖更强的策略，这再次验证了自我对弈强化学习的有效性。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure8.png" alt></p>
+<h2 id="Comparison-of-Inference-Time"><a href="#Comparison-of-Inference-Time" class="headerlink" title="Comparison of Inference Time"></a>Comparison of Inference Time</h2><p>​    为了回答 RQ6，我们在图 9 中报告了每一步的平均推理时间。为了公平比较，我们在 CPU上评估了所有算法。 我们观察到 DouZero 比 DeltaDou、CQN、RHCP 和 RHCP-v2 快几个数量级。 这是意料之中的，因为 DeltaDou 需要执行大量的蒙特卡罗模拟，而 CQN、RHCP 和 RHCP-v2 需要昂贵的卡片分解。 而 DouZero 在每一步只执行一次神经网络的前向传递。 DouZero 的高效推理使我们能够每秒生成大量样本用于强化学习。 它还使得在实际应用程序中部署模型变得经济实惠。</p>
+<h2 id="Case-Study"><a href="#Case-Study" class="headerlink" title="Case Study"></a>Case Study</h2><p>​    为了调查 RQ7，我们进行了案例研究以了解 DouZero 所做的决定。 我们从 Botzone 转储比赛日志，并用预测的 Q 值可视化最重要的动作。 我们在附录 F 中提供了大部分案例研究，包括好的和坏的案例。</p>
+<p>​    图 10 显示了两个农民合作击败地主的典型案例。 右边的农民只剩下一张牌了。 在这里，最底层的农民可以玩一个小Solo来帮助其他农民获胜。 在研究 DouZero 预测的前三个动作时，我们进行了两个有趣的观察。 首先，我们发现DouZero 输出的所有top动作都是小Solo，有很高的取胜信心，说明DouZero 的两个Peasant可能已经学会了合作。 其次，动作 4 的预测 Q 值 (0.808) 远低于动作 3 (0.971) 的 Q 值。 一个可能的解释是仍然有一个 4，所以玩 4 可能不一定有助于农民获胜。 在实践中，在这种特定情况下，其他农民的唯一牌的等级不高于 4。 总的来说，在这种情况下，行动 3 确实是最好的举措。</p>
+<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure10.png" alt></p>
+<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><p>​    <strong>Search for Imperfect-Information Games.</strong>Counterfactual Regret Minimization (CFR) (Zinkevich et al., 2008)是一种领先的扑克游戏迭代算法，有许多变体 (Lanctot et al., 2009; Gibson et al., 2012; Bowling et al., 2015; Moravcık et al., 2017; Brown &amp; Sandholm, 2018; 2019a; Brown et al., 2019; Lanctot et al., 2019; Li et al., 2020b)。 然而，遍历斗地主的博弈树是计算密集型的，因为它有一棵巨大的树，有很大的分支因子。 此外，大多数先前的研究都集中在零和设置上。 虽然已经做出了一些努力来解决合作环境，例如blueprint policy (Lerer et al., 2020)，但对竞争和合作的推理仍然具有挑战性。 因此，斗地主还没有看到有效的类似 CFR 的解决方案。</p>
+<p>​    <strong>RL for Imperfect-Information Games.</strong>最近的研究表明，强化学习 (RL) 可以在扑克游戏中获得有竞争力的表现 (Heinrich et al., 2015; Heinrich &amp; Silver, 2016; Lanctot et al., 2017)。 与 CFR 不同，强化学习基于采样，因此可以轻松推广到大型游戏。 RL 已成功应用于一些复杂的不完美信息游戏，例如Starcraft (Vinyals et al., 2019), DOTA (Berner et al., 2019) and Mahjong (Li et al., 2020a)）。 最近，RL+search 被探索并证明在扑克游戏中是有效的 (Brown et al., 2020)。 DeltaDou 采用了类似的思路，首先推断隐藏信息，然后使用 MCTS 将 RL 与n DouDizhu中的搜索结合起来（Jiang et al., 2019）。 然而，DeltaDou 的计算成本很高，并且严重依赖于人类的专业知识。 在实践中，即使没有搜索，我们的 DouZero 在几天的训练中也优于 DeltaDou。</p>
+<h1 id="总结和未来工作"><a href="#总结和未来工作" class="headerlink" title="总结和未来工作"></a>总结和未来工作</h1><p>​    这项工作为斗地主提供了一个强大的人工智能系统。 一些独特的特性使得斗地主特别难以解决，例如，巨大的状态/动作空间以及关于竞争和合作的推理。 为了应对这些挑战，我们通过深度神经网络、动作编码和并行actor增强了经典的蒙特卡洛方法。 这导致了一个纯 RL 解决方案，即 DouZero，它在概念上简单但有效且高效。 广泛的评估表明，DouZero是迄今为止斗地主最强的人工智能程序。 我们希望简单的蒙特卡洛方法可以在如此困难的领域产生强大的策略的见解将激励未来的研究。</p>
+<p>​    对于未来的工作，我们将探索以下方向。 首先，我们计划尝试其他神经架构，例如卷积神经网络和 ResNet (He et al., 2016)。 其次，我们将在强化学习的循环中参与叫分。 第三，我们将在训练和/或测试时将 DouZero 与搜索相结合 (Brown et al., 2020)，并研究如何平衡 RL 和搜索。 第四，探索off-policy学习，提高训练效率。 具体来说，我们将研究是否以及如何通过经验回放来提高wall-clock time和样本效率(Lin, 1992; Zhang &amp; Sutton, 2017; Zha et al., 2019b; Fedus et al., 2020)。 第五，我们将尝试对农民的合作进行明确建模（ (Panait &amp; Luke, 2005; Foerster et al., 2016; Raileanu et al., 2018; Lai et al., 2020)。 第六，我们计划尝试可扩展的框架，例如 SEED RL (Espeholt et al., 2019)。 最后但并非最不重要的一点是，我们将测试 Monte-Carlo 方法在其他任务上的适用性。</p>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h1 id="CQN-代码阅读记录doudizhu-c"><a href="#CQN-代码阅读记录doudizhu-c" class="headerlink" title="CQN 代码阅读记录doudizhu-c"></a>CQN 代码阅读记录doudizhu-c</h1><h2 id="TensorPack"><a href="#TensorPack" class="headerlink" title="TensorPack"></a>TensorPack</h2><h3 id="AutoEncoder"><a href="#AutoEncoder" class="headerlink" title="AutoEncoder"></a>AutoEncoder</h3><h4 id="main-py"><a href="#main-py" class="headerlink" title="main.py"></a>main.py</h4><p>训练编码解码器，将onehot60的走步编码为</p>
+<h3 id="MA-Hierachical-Q"><a href="#MA-Hierachical-Q" class="headerlink" title="MA_Hierachical_Q"></a>MA_Hierachical_Q</h3><h4 id="env-py"><a href="#env-py" class="headerlink" title="env.py"></a>env.py</h4><h5 id="Env"><a href="#Env" class="headerlink" title="Env"></a>Env</h5><p>包含所有只能体的历史出牌，手牌，地主，地主牌，当前玩家等信息。</p>
+<ul>
+<li>get_state_prob：返回剩余牌分别属于另外两个玩家的概率</li>
+</ul>
+<h4 id="expreplay-py"><a href="#expreplay-py" class="headerlink" title="expreplay.py"></a>expreplay.py</h4><p>产生数据放入缓冲区中，进行经验回放。</p>
+<p><strong>ReplayMemory</strong></p>
+<p>缓冲区，用于存储训练数据。具有添加数据、取数据等方法。</p>
+<p><strong>ExpReplay</strong></p>
+<ul>
+<li>get_combinations：手牌大于10张时：1 通过舞蹈链算法得到手中牌能组成的所有组合。2 找出手中牌能得到的所有合法走步（大过上家牌） 3 从所有组合中挑选出具有第二步中合法走步的组合。被动出牌时，_fine_mask是一个长度为一个组合的最大走步数量的值（MAX_NUM_GROUPS = 21）,如果组合中对应下标的走步能管上上家牌则为True，否则为False。主动出牌时fine_mask为空。当手牌小于等于10张时，采取另一种方式，详情见代码。fine_mask的大小为(comb数量，MAX_NUM_GROUPS )</li>
+<li>get_state_and_action_spaces：首先通过get_combinations得到所有的组合情况。当组合情况数量大于指定的数量时（MAX_NUM_COMBS = 100），进行采样出最大数量组合。然后得到所有组合情况中的走步，然后通过encoding进行编码为state。当得到的组合情况下于MAX_NUM_COMBS 时，需要将最后一个组合重复多次，达到MAX_NUM_COMBS 。最后的state的大小为(MAX_NUM_COMBS ,MAX_NUM_GROUPS ,)</li>
+<li>_populate_exp:返回值old_s表示状态,get_state_and_action_spaces的结果，act表示动作下标，reward表示奖励，isOver表示游戏是否结束，_comb_mask游戏结束为True，未结束为False。fine_mask表示与get_combinations解释一样。</li>
+</ul>
+<h4 id="DQNModel-py"><a href="#DQNModel-py" class="headerlink" title="DQNModel.py"></a>DQNModel.py</h4><p>总共分为两层模型。</p>
+<p>第一层模型输入：手牌、上家牌、下家牌、其它两家每张牌的概率prob_state、当前手牌的所有组合、当前手牌所有组合中合法走步对应的fine_mask，输出最好的组合下标。</p>
+<p>第二层模型输入：输入第一层模型输出的最好组合下标所对应的state，重复很多次作为输入。输出为最好的action所对应的下标。</p>
+<h4 id="predictor-py"><a href="#predictor-py" class="headerlink" title="predictor.py"></a>predictor.py</h4><ul>
+<li>predict通过模型输出最好走步，预测步骤同上DQNModel.py。</li>
+</ul>
+<h2 id="模型设计"><a href="#模型设计" class="headerlink" title="模型设计"></a>模型设计</h2><ul>
+<li>经验回放采用prioritized replay dqn的方式</li>
+</ul>
+<h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><ul>
+<li>模拟采取的方式是把其它两个玩家的牌混合在一起，然后提前发好牌，然后当作明牌进行模拟。上面这个过程会进行指定次数，而不是只进行一次。并且在模拟的过程中会设置一个提前结束的阈值，即达到该阈值后提前退出。在探索利用的过程使用的是UCT公式。</li>
+<li>将doudizhu_base所得到得.so动态库放入每个项目build文件夹中</li>
+<li>第一个模型传入所有的组合（一个组合有很多走步），通过模型选择出最好的拆分方式。通过手牌等历史信息再通过第二个模型选择最优走步。</li>
+<li>模型配置在core/table.py里面</li>
+<li>训练：python  main.py  —gpu 0 —load /home/pc/doudizhu-C-master/TensorPack/MA_Hierarchical_Q/train_log/DQN-60-MA-SELF_PLAY/checkpoint</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1372,107 +1544,6 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/" class="post-title-link" itemprop="url">IMPALA:Scalable Distributed Deep-RL with Importance Weighted Actor-Learner Architectures</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-05-07 20:10:31" itemprop="dateCreated datePublished" datetime="2021-05-07T20:10:31+08:00">2021-05-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-12 23:58:43" itemprop="dateModified" datetime="2021-07-12T23:58:43+08:00">2021-07-12</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在这项工作中，我们的目标是使用一个具有单组参数的强化学习代理来解决大量的任务集合。一个关键的挑战是如何处理不断增加的数据量和不断延长的训练时间。我们开发了一种新的分布式代理 IMPALA (Importance Weighted Actor-Learner Architecture)，它不仅在单机训练中更有效地使用资源，而且在不牺牲数据效率或资源利用率的情况下还可以扩展到数千台机器。我们通过将解耦的actor和learner与一种新的off-policy的V-trace校正方法相结合，实现了高吞吐量的稳定学习。我们在DMLab-30和Atari-57上演示了IMPALA在多任务强化学习中的有效性。我们的结果表明，IMPALA能够获得比以前的代理更好的性能，并且由于它的多任务方法，关键是在任务之间表现出积极的转移。源代码可在github.com/deepmind/scalable agent。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    我们感兴趣的是开发能够同时掌握各种任务集的新方法，以及适合评估这些方法的环境。训练单个代理同时完成多个任务的主要挑战之一是可伸缩性。由于目前最先进的方法，如A3C或 UNREAL可能需要10亿帧和多天时间来掌握单个领域，同时在数十个领域上进行训练太慢，难以实现。</p>
-<p>​    我们提出了图1所示的Importance Weighted Actor-Learner Architecture (IMPALA) 。IMPALA能够扩展到数千台机器，而无需牺牲训练的稳定性或数据效率。与流行的基于a3c的代理不同，workers将策略参数的梯度传递给中心参数服务器，IMPALA actor将经验轨迹传递给集中learner（sequences of states, actions, and rewards）。由于IMPALA的learner可以获得完整的经验轨迹，因此我们使用GPU对小批量的轨迹进行更新，同时积极地并行化所有时间独立的操作。这种类型的解耦架构可以实现非常高的吞吐量。然而由于用于生成轨迹的策略在梯度计算时可能落后于learner的几次更新，学习变得off-policy。因此，我们引入了 <strong>V-trace off-policy actor-critic</strong>算法来纠正这种有害的差异。</p>
-<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/figure1.png" alt></p>
-<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><ul>
-<li>distributed asynchronous SGD (Dean et al., 2012)</li>
-<li>distributed A3C (Mnih et al., 2016)</li>
-<li>Gorila (Nair et al., 2015)</li>
-<li>a distributed version of Deep Q-Networks (Mnih et al., 2015)</li>
-<li>distributed BA3C (Adamski et al., 2018) </li>
-<li>Ape-X (Horgan et al., 2018)</li>
-<li>batched A2C (Clemente et al., 2017)</li>
-</ul>
-<p>通过利用GPU来扩大强化学习。最简单的方法之一是batched A2C(Clemente et al., 2017)。在每个步骤中，batched A2C都会生成一批操作，并将其应用于一批环境。因此，每个批处理中最慢的环境决定了执行整个批处理步骤所需的时间（见图2a和图2b）。换句话说，环境速度的高方差会严重限制性能。batched A2C在Atari环境中工作得特别好，因为与强化学习代理执行的昂贵的张量操作相比，渲染和游戏逻辑在计算上非常便宜。然而，视觉或物理上更复杂的环境模拟速度可能更慢，并且在每个步骤所需的时间上可能有很大的方差。环境也可能具有可变长度episode，在初始化episode时导致放缓。</p>
-<p>​    以前关于off-policy RL的相关工作包括e (Precup et al., 2000; 2001; Wawrzynski, 2009; Geist &amp; Scherrer, 2014; O’Donoghue et al., 2017) and (Harutyunyan et al., 2016)。最接近我们的工作是<strong>Retrace</strong>算法（(Munos et al., 2016) ，它引入了针对multi-step RL的off-policy校正，并已在多个代理架构中使用 (Wang et al., 2017; Gruslys et al., 2018)。<strong>Retrace</strong>需要学习状态动作值函数<script type="math/tex">Q</script>，才能进行off-policy校正。然而许多actor-critic方法，如A3C学习状态值函数<script type="math/tex">V</script>而不是状态动作值函数<script type="math/tex">Q</script>。<strong>V-trace</strong>是基于状态值函数的。</p>
-<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/figure2.png" alt></p>
-<h1 id="IMPALA"><a href="#IMPALA" class="headerlink" title="IMPALA"></a>IMPALA</h1><p>​    <strong>IMPALA</strong>（图1）使用actor-critic来学习策略<script type="math/tex">\pi</script>和baseline函数<script type="math/tex">V^\pi</script>。生成经验的过程与学习<script type="math/tex">\pi</script>和<script type="math/tex">V^\pi</script>的参数相解耦。该架构由一组actors、重复生成经验轨迹和一个或多个learners组成，他们使用从actors发送的经验来学习off-policy的<script type="math/tex">\pi</script>。</p>
-<p>​    在每个轨迹的开始时，actor将自己的本地策略<script type="math/tex">\mu</script>更新为最新的learner策略<script type="math/tex">\pi</script>，并在其环境中运行<script type="math/tex">n</script>步。经过<script type="math/tex">n</script>步后，actor将 states, actions and rewards <script type="math/tex">x_{1},a_{1},r_{1},...,x_{n},a_{n},r_{n}</script>以及相应的策略分布<script type="math/tex">\mu \left ( a_{t}|x_{t} \right )</script>和初始LSTM状态通过队列发送给learner。然后learner不断在批次轨迹上更新其策略 <script type="math/tex">\pi</script> ，每个轨迹从许多actor那里收集。这种简单的架构使learner能够使用GPU和actor轻松地分布在许多机器上进行加速。但是learner策略 <script type="math/tex">\pi</script> 可能比actor策略<script type="math/tex">\mu</script>领先几次更新，因此actor和learner之间存在<strong>policy-lag</strong>。<strong>V-trace</strong> 纠正了这种滞后，以在保持数据效率的同时实现极高的数据吞吐量。 使用 actor-learner 架构，提供类似于分布式 A3C 的容错能力，但通常具有较低的通信开销，因为 actor 发送观察而不是参数/梯度。</p>
-<p>​    随着非常深入的模型架构的引入，单个GPU的速度通常是训练过程中的限制因素。<strong>IMPALA</strong>可以与分布式learner一起有效地训练大型神经网络，如图1所示。参数分布在learner中，actor并行地从所有learner中检索参数，同时只将观察结果发送给单个learner。 IMPALA 使用同步参数更新(<strong>Revisiting Distributed Synchronous SGDChen</strong> et al., 2016)，这对于在扩展到多台机器时保持数据效率至关重要。</p>
-<h2 id="Efficiency-Optimisations"><a href="#Efficiency-Optimisations" class="headerlink" title="Efficiency Optimisations"></a>Efficiency Optimisations</h2><p>​    GPU和多核CPU 可以从运行少数大型、可并行化操作而不是许多小型操作中受益匪浅。 由于 IMPALA 中的learner对全部的批轨迹执行更新，因此与 A3C 等在线代理相比，它能够并行化更多的计算。 例如，典型的深度强化学习代理具有卷积网络， Long Short-Term Memory (LSTM) (Hochreiter &amp; Schmidhuber, 1997) 和 LSTM 之后的全连接输出层。 IMPALA learner通过将时间维度折叠到批次维度中，将卷积网络并行应用于所有输入。 同样，一旦计算出所有 LSTM 状态，它也会将输出层并行应用于所有时间步。 这种优化将有效批量大小增加到数千。 通过利用网络结构依赖性和操作融合，基于 LSTM 的代理还可以显着提高学习器的速度 (Appleyard et al., 2016)。</p>
-<p>​    最后，我们还利用了TensorFlow中可用的一些现成的优化 (Abadi et al., 2017) ，例如在仍执行计算时为 learner准备下一批数据，使用XLA（a TensorFlow Just-In-Time compiler)编译部分计算图，以及优化数据格式以从CuDNN框架获得最大性能(Chetlur et al., 2014)。</p>
-<h1 id="V-trace"><a href="#V-trace" class="headerlink" title="V-trace"></a>V-trace</h1><p>​    Off-policy在解耦的分布式actor-learner架构中很重要，因为当actor生成行为和当learner估计梯度之间存在滞后。为此，我们为learner引入了一种新的off-policy  actor-critic算法，称为<strong>V-trace</strong>。</p>
-<p>​    首先，让我们介绍一下一些符号。研究了马尔可夫决策过程(MDP)中的无限视野RL问题( (Puterman, 1994; Sutton &amp; Barto, 1998)。其中目标是找到一个策略<script type="math/tex">\pi</script>，使未来折扣奖励的预期总和最大化：<script type="math/tex">V^{\pi }\left ( x \right )= E_{\pi }\left [ \sum_{t\geq 0}^{}\gamma ^{t}r_{t} \right ]</script>，其中<script type="math/tex">\gamma \in \left [ 0,1 \right )</script>是折扣因子，<script type="math/tex">r_{t}=r\left ( x_{t},a_{t} \right )</script>是时间 t 的奖励，<script type="math/tex">x_{t}</script>是时间 <script type="math/tex">t</script>的状态（ 初始化在<script type="math/tex">x_{0}=x</script>) 和<script type="math/tex">a_{t}\sim \pi \left ( \cdot |x_{t} \right )</script>是通过遵循一些策略 <script type="math/tex">\pi</script> 生成的动作。</p>
-<p>​    Off-policy RL算法的目标是使用由一些策略<script type="math/tex">\mu</script>生成的轨迹，称为行为策略，来学习另一个策略<script type="math/tex">\pi</script>(可能不同于<script type="math/tex">\mu</script>)的值函数<script type="math/tex">V^{\pi}</script>，称为目标策略。</p>
-<h2 id="V-trace-target"><a href="#V-trace-target" class="headerlink" title="V-trace target"></a>V-trace target</h2><p>​    考虑由actor按照某些策略<script type="math/tex">\mu</script>生成的轨迹<script type="math/tex">\left ( x_{t},a_{t},r_{t} \right )_{t=s}^{t=s+n}</script>。 我们为<script type="math/tex">V\left ( x_{s} \right )</script>定义 n-step V-trace 目标，我们在状态 <script type="math/tex">x_{s}</script>处的值近似为：</p>
-<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/formula1.png" alt></p>
-<p>其中<script type="math/tex">\delta _{t}V= \rho _{t}\left ( r_{t}+\gamma V\left ( x_{t+1} \right )-V\left ( x_{t} \right ) \right )</script>是<script type="math/tex">V</script>的时间差分，<script type="math/tex">\rho _{t}= min\left ( \bar{\rho },\frac{\pi \left ( a_{t}|x_{t} \right )}{\mu \left ( a_{t}|x_{t} \right )} \right )</script>，<script type="math/tex">c_{i}=min\left ( \bar{c},\frac{\pi \left ( a_{i}|x_{i} \right )}{\mu \left ( a_{i}|x_{i} \right )} \right )</script>是截断的重要性采样 (IS) 权重（对于<script type="math/tex">s=t</script>，我们使用符号<script type="math/tex">\prod_{i=s}^{t-1}c_{i}=1</script>）。 此外我们假设截断水平使得 <script type="math/tex">\bar{\rho }\geq \bar{c}</script>。请注意，在 on-policy 情况下（当<script type="math/tex">\pi = \mu</script>时），并且假设<script type="math/tex">\bar{c}\geq 1</script>，则所有<script type="math/tex">c_{i}= 1</script>和<script type="math/tex">\rho _{t}= 1</script>，因此（1）重写为</p>
-<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/formula2.png" alt></p>
-<p>​    这是 on-policy n-steps Bellman 目标。 因此，在 on-policy 情况下，V-trace 退化到 on-policy n-step Bellman 更新。 这一特性（Retrace (Munos et al., 2016）没有）允许人们对off-和on-policy数据使用相同的算法。</p>
-<p>​    请注意，（截断的)重要性采样权重<script type="math/tex">c_{i}</script>和<script type="math/tex">\rho _{t}</script>扮演不同的角色。 权重<script type="math/tex">\rho _{t}</script>出现在时间差分<script type="math/tex">\delta _{t}V</script>的定义中，并定义了此更新规则的不动点。 在可以完美表示函数的表格情况下，此更新的不动点（即当对于所有状态当<script type="math/tex">V\left ( x_{s} \right )= v_{s}</script>时），特征为在<script type="math/tex">\mu</script>下<script type="math/tex">\delta _{t}V</script>期望值为零，是某些策略<script type="math/tex">\pi_{ \bar{\rho }}</script>的值函数<script type="math/tex">V^{\pi_{\bar{\rho }} }</script>，定义为</p>
-<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/formula3.png" alt></p>
-<p>​    （见附录 A 中的分析）。 所以当 <script type="math/tex">\bar{\rho }</script>是无限的（即没有截断<script type="math/tex">\rho_{t}</script>），那么这就是目标策略的价值函数<script type="math/tex">V^{ \pi}</script>。 然而，如果我们选择截断级别<script type="math/tex">\bar{\rho }< \infty</script>，我们的固定点是策略<script type="math/tex">\pi_{ \bar{\rho }}</script>的价值函数<script type="math/tex">V^{\pi_{\bar{\rho }} }</script>，它介于<script type="math/tex">\mu</script>和<script type="math/tex">\pi</script>之间。 在<script type="math/tex">\bar{\rho }</script>接近于零的限制下，我们得到行为策略<script type="math/tex">V^{\mu}</script>的价值函数。 在附录 A 中，我们证明了相关 V-trace 算子的收缩和相应在线 V-trace 算法的收敛性。</p>
-<p>​    权重<script type="math/tex">c_{i}</script>类似于 Retrace 中的“trace cutting”系数。 他们的产品 <script type="math/tex">c_{s}...c_{t-1}</script>测量在时间<script type="math/tex">t</script>观察到的时间差异<script type="math/tex">\delta _{t}V</script>对先前时间<script type="math/tex">s</script>的价值函数更新的影响。 <script type="math/tex">\pi</script>和 <script type="math/tex">\mu</script>越不相似（我们越off-policy），这个乘积的方差就越大。 我们使用截断级别<script type="math/tex">\bar{c}</script> 作为方差减少技术。 但是请注意，这种截断不会影响我们收敛到的解决方案（仅以<script type="math/tex">\bar{\rho }</script>为特征）。</p>
-<p>​    因此，我们看到截断级别<script type="math/tex">\bar{c}</script>和<script type="math/tex">\bar{\rho }</script>代表算法的不同特征：<script type="math/tex">\bar{\rho }</script>影响我们收敛到的价值函数的性质，而 <script type="math/tex">\bar{c}</script>影响我们收敛到这个函数的速度。</p>
-<p><strong>Remark 1</strong> V-trace目标可以递归计算：</p>
-<p><img src="/2021/05/07/IMPALA-Scalable-Distributed-Deep-RL-with-Importance-Weighted-Actor-Learner-Architectures/formula4.png" alt></p>
-<p><strong>Remark 2</strong> 就像在Retrace(<script type="math/tex">\lambda</script>)中一样，我们也可以通过设置<script type="math/tex">c_{i}=\lambda min\left ( \bar{c},\frac{\pi \left ( a_{i}|x_{i} \right )}{\mu \left ( a_{i}|x_{i} \right )} \right )</script>在 V-trace 的定义中考虑额外的折扣参数<script type="math/tex">\lambda \in \left [ 0,1 \right ]</script>。在on-policy情况下，当<script type="math/tex">n= \infty</script>，V-trace然后退化为<script type="math/tex">TD(\lambda)</script>。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1542,7 +1613,7 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
