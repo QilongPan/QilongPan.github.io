@@ -183,9 +183,28 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-11-26 21:58:21 / Modified: 22:54:22" itemprop="dateCreated datePublished" datetime="2021-11-26T21:58:21+08:00">2021-11-26</time>
+              <time title="Created: 2021-11-26 21:58:21" itemprop="dateCreated datePublished" datetime="2021-11-26T21:58:21+08:00">2021-11-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-27 11:23:18" itemprop="dateModified" datetime="2021-11-27T11:23:18+08:00">2021-11-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/model-based/" itemprop="url" rel="index"><span itemprop="name">model based</span></a>
+                </span>
             </span>
 
           
@@ -200,10 +219,40 @@
 
       
           <p><a target="_blank" rel="noopener" href="https://www.nature.com/articles/nature16961?MRK_CMPG_SOURCE=sm_tw_pp">paper</a></p>
-<p>本文提出了将监督学习与self-play强化学习相结合，首次在围棋中击败职业选手。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>本文提出了将监督学习与self-play强化学习相结合，首次在围棋中击败职业选手。</p>
 <p>将棋盘位置作为<script type="math/tex">19\times19</script>的图像传入，使用卷积层来构建位置的表示。我们使用value network和policy network来减少搜索树的有效深度和广度：使用value network评估位置，并使用policy对动作进行采样。神经网络的训练流程和架构如Figure1所示。</p>
 <p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure1.png" alt></p>
 <p>首先使用人类专家的走步数据通过监督学习训练policy network<script type="math/tex">(p_{\sigma })</script>,同时采用<strong>Computing Elo ratings of move patterns in the game of Go</strong>和<strong>Fuego — an open-source framework for board games and Go engine based on Monte-Carlo tree search</strong>两篇论文类似的方法训练了<script type="math/tex">p_{\pi}</script>用于rollout时快速采样动作。接下来训练RL policy network <script type="math/tex">p_{\rho }</script>，它通过优化self-play的最终结果来改进监督学习策略网络。这将调整策略，以达到赢得游戏的正确目标，而不是最大化预测的准确性。最后训练价值网络<script type="math/tex">v_{\theta}</script>用于预测RL policy network对抗自己时游戏的获胜者。</p>
+<h1 id="监督学习策略网络"><a href="#监督学习策略网络" class="headerlink" title="监督学习策略网络"></a>监督学习策略网络</h1><p>通过已有的专家数据进行训练，网络由卷积层和非线性激活函数组成，最后一层为softmax，输出合法动作的概率。训练数据为随机采样的state-action对<script type="math/tex">(s,a)</script>，网络的输入<script type="math/tex">s</script>表示如表extend data table2所示。使用随机梯度上升来最大限度地提高人类在状态s中移动a的可能性。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula1.png" alt></p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/extend_data_table2.png" alt></p>
+<p>训练结果extend data table 3所示,Symmetrics含义可以看paper的Method章节。准确度的微小提高可以使比赛强度巨大提高，如Figure2 a所示。更大的网络可以获得更好的精度，但在搜索过程中评估速度较慢。同时还训练了一个更快但更不准确的rollout policy <script type="math/tex">p_{\pi}(a|s)</script>，使用权重为<script type="math/tex">\pi</script>的一个linear softmax of small pattern features（如extend data table 4所示），达到了24.2%的准确率，只使用<script type="math/tex">\mu s</script>来选择一个动作，而不是策略网络的<script type="math/tex">3ms</script>。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/extend_data_table3.png" alt></p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/extend_data_table4.png" alt></p>
+<h1 id="强化学习策略网络"><a href="#强化学习策略网络" class="headerlink" title="强化学习策略网络"></a>强化学习策略网络</h1><p>​    使用policy gradient 强化学习方法提升策略网络。强化学习策略网络和监督学习策略网络使用相同的结构，并使用监督学习网络参数初始化强化学习网络。为了防止过拟合，训练过程中会把迭代的网络模型放入对手池中，每次从池子中随机选择一个模型与当前策略对战。使用的reward function为当游戏未结束时reward为0，如果最终胜利reward为1，最终失败为-1。在每个时间步<script type="math/tex">t</script>，通过随机梯度上升，向预期结果最大化的方向更新权重。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula2.png" alt></p>
+<p>其中<script type="math/tex">z_{t}</script>表示游戏reward。最终RL policy network对战监督学习策略网络达到了80%的胜率，对战Pachi（open-source Go program）达到了85%的胜率，以前最先进的监督学习网络只有11%的胜率。</p>
+<h1 id="强化学习值网络"><a href="#强化学习值网络" class="headerlink" title="强化学习值网络"></a>强化学习值网络</h1><p>该网络用于位置评估，估计一个值函数<script type="math/tex">v^p(s)</script>，该函数预测在位置<script type="math/tex">s</script>处开始使用策略<script type="math/tex">p</script>对战到游戏结束的结果。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula3.png" alt></p>
+<p>理想情况下，我们想知道完美对战下的最优值函数<script type="math/tex">v^{\ast }\left ( s \right )</script>；实际上使用RL策略网络<script type="math/tex">p_{\rho}</script>来估计我们最强策略的值函数<script type="math/tex">v^{p_{\rho}}</script>。我们使用一个值网络<script type="math/tex">v_{\theta}(s)</script>来近似值函数,<script type="math/tex">v_{\theta }\left ( s \right )\approx v^{p_{\rho }}\left ( s \right )\approx v^{\ast }\left ( s \right )</script>。该神经网络具有与策略网络相似的结构，但输出一个预测值，而不是一个概率分布。我们用state-outcome (s，z)作为训练集，使用随机梯度下降来最小化预测值<script type="math/tex">v_{\theta }\left ( s \right )</script>和相应的结果<script type="math/tex">z</script>之间的均方误差(MSE)。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula4.png" alt></p>
+<p>从由完整游戏组成的数据中预测游戏结果的方法会导致过拟合。问题是连续的位置是密切相关，只差一步，但回归目标是共享的。当以这种方式在数据集上进行训练时，价值网络记忆了游戏结果，而不是推广到新的位置。为了缓解这个问题，生成了一个新的self-play数据集，由3000万个不同的position组成，每个position都从一个单独的游戏中采样。每个游戏都在RL策略网络和它自身之间进行，直到游戏结束。图2b显示了值网络的位置评价精度，与MCTS使用policy <script type="math/tex">p_{\pi}</script> rollout 相比，值函数始终更准确。</p>
+<h1 id="使用策略网络和价值网络搜索"><a href="#使用策略网络和价值网络搜索" class="headerlink" title="使用策略网络和价值网络搜索"></a>使用策略网络和价值网络搜索</h1><p>AlphaGo将策略和价值网络结合在一个MCTS算法中，如Figure3所示。Mcts具有select、expansion、evaluation、bacckup四部分。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure3.png" alt></p>
+<p>从当前状态<script type="math/tex">s_{t}</script>通过公式5选择<script type="math/tex">a_{t}</script></p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula5.png" alt></p>
+<p>其中的<script type="math/tex">u\left ( s,a \right )\propto \frac{P\left ( s,a \right )}{1+N\left ( s,a \right )}</script>是为了鼓励探索，最终采用的<script type="math/tex">u(s,a)</script>见Method章节，<script type="math/tex">P(s,a)</script>为先验概率（可以由策略网络输出），<script type="math/tex">N(s,a)</script>为当前<script type="math/tex">s</script>的访问次数。</p>
+<p>​    当遍历到达step <script type="math/tex">L</script>的叶节点<script type="math/tex">S_{L}</script>时，可以expand该叶节点。叶节点<script type="math/tex">S_{L}</script>仅由SL策略网络<script type="math/tex">p_{\sigma }</script>处理一次输出每个合法动作的概率<script type="math/tex">P</script>,<script type="math/tex">P(s,a)=p_{\sigma}(a|s)</script>。叶节点以两种非常不同的方式进行评估：第一种通过值网络<script type="math/tex">v_{\theta}(S_{L})</script>输出；第二种使用rollout policy <script type="math/tex">p_{\pi}</script>对战到游戏终局获得结果。使用混合参数<script type="math/tex">\lambda</script>将这些评估组合形成新的评估方式<script type="math/tex">V(S_{L})</script></p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula6.png" alt></p>
+<p>在每次模拟结束时，更新所有遍历边的action value (<script type="math/tex">Q(s,a)</script>)和visit count (<script type="math/tex">N(s,a)</script>)。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula7.png" alt></p>
+<p><script type="math/tex">S_{L}^{i}</script>表示第<script type="math/tex">i</script>次模拟时的叶子节点，<script type="math/tex">1(s,a,i)</script>表示第<script type="math/tex">i</script>次模拟是否经过边<script type="math/tex">(s,a)</script>。当搜索完成，算法将从root position选择访问量最多的动作。在AlphaGo中使用值函数<script type="math/tex">v_{\theta }\left ( s \right )\approx v^{p_{\rho }}\left ( s \right )</script> （RL policy network）比<script type="math/tex">v_{\theta }\left ( s \right )\approx v^{p_{\sigma  }}\left ( s \right )</script> (SL policy network 监督学习)更好。</p>
+<p>为了有效地将MCTS与深度神经网络结合起来，AlphaGo使用异步多线程搜索，在cpu上执行模拟，并在gpu上并行计算策略和值网络。AlphaGo的最终版本使用了40个搜索线程、48个cpu和8个gpu。还实现了一个AlphaGo的分布式版本，在Method章节会详细讲。</p>
+<h1 id="AlphaGo评估"><a href="#AlphaGo评估" class="headerlink" title="AlphaGo评估"></a>AlphaGo评估</h1><p>对战结果Figure4 a</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure4.png" alt></p>
+<p>评估了AlphaGo的变体，这些变体仅使用价值网络<script type="math/tex">\lambda=0</script>或仅使用rollout（<script type="math/tex">\lambda=1</script>）来评估位置(见图4b)。即使没有rollout，AlphaGo的性能也超过了所有其他Go程序，这表明价值网络为蒙特卡罗评估提供了一个可行的替代方案。然而，混合评价（<script type="math/tex">\lambda=0.5</script>）表现最好，与其他变体对战达到了95%以上的胜率。这说明这两种位置评估机制是互补的：价值网络近似于强者<script type="math/tex">p_{\rho}</script>所玩的游戏的结果，而rollout可以精确地评分和评估较弱但较快的rollout <script type="math/tex">p_{\pi}</script>所玩游戏的结果。</p>
+<h1 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h1><p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula9.png" alt></p>
+<p>具体方法的实现细节可以看paper</p>
 
       
     </div>
@@ -1078,7 +1127,7 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
