@@ -160,6 +160,217 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/" class="post-title-link" itemprop="url">Open-ended Learning in Symmetric Zero-sum Games</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-30 20:06:18" itemprop="dateCreated datePublished" datetime="2021-06-30T20:06:18+08:00">2021-06-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-07-05 20:37:10" itemprop="dateModified" datetime="2021-07-05T20:37:10+08:00">2021-07-05</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    零和游戏，如国际象棋和扑克，抽象上是评估代理对的功能，例如将它们标记为“赢家”和“输家”。如果博弈是近似传递的，那么自我博弈会生成强度不断增加的代理序列。然而，非传递博弈，如石头剪刀布，可以表现出战略循环，并且不再有明确的目标——我们希望代理人增加实力，但不清楚和谁对战。在本文中，我们引入了一个几何框架，用于在零和游戏中制定代理目标，以构建产生开放式学习的自适应目标序列。该框架使我们能够对非传递博弈中的群体表现进行推理，并能够开发一种新算法（rectifified Nash response，<script type="math/tex">PSRO_{rN}</script>），使用博弈论的利基来构建不同的有效代理群体，产生比现有算法更强大的代理集。我们将<script type="math/tex">PSRO_{rN}</script> 应用于两个高度非传递性的资源分配游戏，发现<script type="math/tex">PSRO_{rN}</script>始终优于现有的替代方案。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    有一个故事，19 世纪中叶的一位剑桥导师曾宣称：“我教的是英国最聪明的男孩。” 他的同事反驳说：“我在教最好的考生。” 根据故事的版本，第一个男孩要么是Lord Kelvin，要么是 James Clerk Maxwell。 第二个男孩，在剑桥中得分最高，早已被遗忘了。</p>
+<p>​    现代学习算法是优秀的测试者：一旦将问题打包成合适的目标，深度（强化）学习算法通常会找到好的解决方案。 然而，在许多多智能体领域，采取什么测试或优化什么目标的问题并不明确。 本文提出的算法可以自适应地不断提出新的有用目标，从而在两人零和游戏中实现开放式学习。 此设置的应用范围很广，并且足够通用，可以将函数优化作为特例。</p>
+<p>​    在游戏中的学习通常被保守地表述为训练代理，平均打平或击败一套固定的对手。然而，双重的任务，即产生有用的对手来训练和评估，被研究不足。打败你所知道的特工是不够的；产生更好的对手也很重要，他们会表现出你不知道的行为。</p>
+<p>​    有一些非常成功的例子通过自我游戏提出并解决一系列日益困难的问题(Silver et al., 2018; Jaderberg et al., 2018; Bansal et al., 2018; Tesauro, 1995)。不幸的是，很容易遇到nontransitive非传递游戏，在这些游戏中，自我游戏通过代理循环而不提高整体代理强度——同时对一个对手改进，对另一个对手恶化。在本文中，我们开发了一个分析非传递博弈的数学框架，并提出了系统地揭示和解决嵌入在博弈中的潜在问题的算法。</p>
+<h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>​    本文从第 2 部分开始，介绍了函数形式博弈 (FFG) 作为参数化代理（如神经网络）所玩零和博弈的新数学模型。 定理 1 将任何 FFG 分解为传递分量和循环分量的总和。 传递博弈和密切相关的单调博弈是self-play的自然设置，但非传递博弈中存在的循环组件需要更复杂的算法，这激发了本文的其余部分。</p>
+<p>​    处理非传递性博弈（不一定有最佳代理）的主要问题是理解目标应该是什么。 在第 3 节中，我们根据游戏场景（编码游戏中代理之间的交互的凸多边形）来制定全局目标。 如果游戏是可传递的或单调的，那么游戏场景就会退化为一维场景。 在非传递游戏中，游戏场景可以是高维的，因为针对一个智能体的训练可能与针对另一个智能体的训练有着根本的不同。</p>
+<p>​    在非传递博弈中，衡量个体代理的表现是一件很烦恼的事情。 因此，在第 3 节中，我们开发了分析代理群体的工具，包括群体水平的性能度量defifinition 3。群体水平性能的一个重要特性是它随着游戏场景多面体在非传递游戏中的扩展而传递性增加。 因此，我们重新制定了从寻找最佳代理到扩大游戏景观的游戏学习问题。 为此，我们考虑了两种方法，一种与绩效直接相关，另一种侧重于多样性的度量defifinition 4。至关重要的是，该度量量化了不同的有效行为——我们对不会导致结果差异的策略差异不感兴趣，也对以新的和令人惊讶的方式失败的代理人不感兴趣。</p>
+<p>​    第4节介绍了两种算法，一种是旧算法，另一种是新算法，用于扩大游戏场景。这些算法可以看作是在Lanctot et al. (2017)中引入的 policy space response oracle(PSRO)的专门化。第一个算法是Nash response (<script type="math/tex">PSRO_{N}</script>)，它是McMahan et al. (2003)对 double oracle algorithm的函数形式对策的扩展。给定一个种群，Nash response通过平均纳什均衡创造了一个训练的目标。纳什服务可作为“best agent”的代理，这种概念不能保证在一般的零和博弈中存在。第二种互补算法是rectifified Nash response(<script type="math/tex">PSRO_{rN}</script>)。该算法通过自适应地构建博弈论利基，鼓励代理“发挥优势，忽略弱点”来放大代理群体的战略多样性。</p>
+<p>​    最后，在第5节中，我们研究了这些算法在 Colonel Blotto (Borel, 1921; Tukey, 1949; Roberson, 2006)中的性能和一个可微模拟，我们称为differentiable Lotto。Blotto-style games涉及到分配有限的资源，并且是高度不可传递的。我们发现<script type="math/tex">PSRO_{rN}</script>的性能优于<script type="math/tex">PSRO_{N}</script>，这两者在这些领域都大大优于self-play。我们还与一种响应均匀分布<script type="math/tex">PSRO_{U}</script>的算法进行了比较，它的性能与<script type="math/tex">PSRO_{N}</script>差不多。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>​    有大量关于新奇搜索、开放进化和好奇心novelty search, open-ended evolution, and curiosity的文献，这些文献的目的是不断拓展代理中游戏知识的前沿(Lehman &amp; Stanley, 2008; Taylor et al., 2016; Banzhaf et al., 2016; Brant &amp; Stanley, 2017; Pathak et al., 2017; Wang et al., 2019)。一个共同的线索是自适应目标，它迫使代理不断改进。例如，在novelty search中，目标会不断变化，因此不能简化为一个固定的目标进行一次性优化。</p>
+<p>​    我们在游戏学习方面大量借鉴了前人的研究成果，尤其是Heinrich et al. (2015); Lanctot et al. (2017) ，下文将对此进行讨论。我们的设置类似于多目标优化 (Fonseca &amp; Fleming, 1993; Miettinen, 1998)。然而与多目标优化不同的是，我们同时关注目标的生成和优化。生成性对抗网络 (Goodfellow et al., 2014) 是零和博弈，由于缺乏对称性，不属于本文的研究范围，见附录？？。</p>
+<h2 id="符号"><a href="#符号" class="headerlink" title="符号"></a>符号</h2><p>​    向量为列。0和1的常数向量为<strong>0</strong>和<strong>1</strong>。我们有时使用<script type="math/tex">p\left [ i \right ]</script>来表示向量<script type="math/tex">p</script>的第<script type="math/tex">i</script>条目。证明在附录中。</p>
+<h1 id="Functional-form-games-FFGs"><a href="#Functional-form-games-FFGs" class="headerlink" title="Functional-form games (FFGs)"></a>Functional-form games (<strong>FFG</strong>s)</h1><p>​    假设，给定任意一对代理，我们可以计算出在围棋、国际象棋或星际争霸等游戏中一个打败对方的概率。我们将设置形式化如下。</p>
+<h2 id="Definition-1"><a href="#Definition-1" class="headerlink" title="Definition 1"></a>Definition 1</h2><p>​    设W是一组由神经网络的权值参数化的代理。对称零和函数形式博弈<strong>symmetric zero-sum functional-form game</strong>(FFG)是一个反对称函数<script type="math/tex">\varnothing \left ( v,w \right )=-\varnothing  \left ( w,v \right )</script>，它评估一对代理</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula1.png" alt></p>
+<p>​    较高的<script type="math/tex">\varnothing \left ( v,w \right )</script>，代理<script type="math/tex">v</script>就越好。对于<script type="math/tex">v</script>我们将<script type="math/tex">\varnothing > 0, \varnothing < 0, \varnothing = 0</script>称为赢、输和平手。</p>
+<p>​    请注意<script type="math/tex">(i)</script>FFG中的策略是参数化的代理，<script type="math/tex">(ii)</script>代理的参数化被折叠到<script type="math/tex">\varnothing</script>中，因此游戏是代理的架构和环境本身的组合。</p>
+<p>​    假设<script type="math/tex">v</script>击败<script type="math/tex">w</script>的概率，表示为<script type="math/tex">P\left ( v\succ w \right )</script>，可以计算或估计。赢/输概率可以通过<script type="math/tex">\varnothing \left ( v,w \right ):=P\left ( v\succ w \right )-\frac{1}{2}</script>或<script type="math/tex">\varnothing \left ( v,w \right ):=log\frac{P\left ( v\succ w \right )}{P\left ( v\prec w \right )}</script>呈现为反对称形式。  <script type="math/tex">\succ</script>可以表示偏好的意思。</p>
+<h2 id="Tools-for-FFGs"><a href="#Tools-for-FFGs" class="headerlink" title="Tools for FFGs"></a>Tools for FFGs</h2><p>​        解决FFGs需要不同的方法来解决正常形式的游戏(Shoham &amp; Leyton-Brown, 2008) ，因为它们的连续性质。因此，我们开发了以下基本工具。</p>
+<p>​    首先，<strong>curry</strong> operator将一个双人游戏转换为一个从代理到目标的函数</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula2.png" alt>    </p>
+<p>​    其次，一个 <strong>approximate best-response oracle</strong> ，给定代理<script type="math/tex">v</script>和目标<script type="math/tex">\varnothing _{w}\left ( \bullet  \right )</script>，如果可能，返回一个新的代理<script type="math/tex">v^{'}:=oracle\left ( v,\varnothing _{w}\left ( \bullet  \right ) \right )</script>和<script type="math/tex">\varnothing _{w}\left ( v^{'} \right ) > \varnothing _{w}\left ( v \right )+\epsilon</script>,oracle可以使用梯度、强化学习或进化算法。</p>
+<p>​    第三，给定一个由<script type="math/tex">n</script>个代理组成的总体<script type="math/tex">\ss</script>（指图中的特殊符号），则<script type="math/tex">n \times n</script>反对称评价矩阵为</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula3.png" alt></p>
+<p>​    第四，我们将在<script type="math/tex">A_{\ss }</script>指定的零和矩阵对策上使用（不一定是唯一的）纳什均衡。</p>
+<p>​    最后，我们使用下面的博弈分解。假设<script type="math/tex">W</script>是一个具有概率测量的compact set紧集。然后<script type="math/tex">W</script>上的可积反对称函数集形成了一个向量空间。附录D显示了如下内容：</p>
+<pre><code>## Theorem 1(博弈分解)
+</code></pre><p>​    每个FFG都会分解成一个传递博弈和循环博弈的和。</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula4.png" alt></p>
+<p>相对于一个适当定义的内积。</p>
+<p>​    下面讨论了传递性对策和循环对策。很少有游戏是纯粹的传递的或循环的。然而理解这些情况很重要，因为一般算法至少应该在这两种特殊情况下都起作用。</p>
+<h2 id="Transitive-games"><a href="#Transitive-games" class="headerlink" title="Transitive games"></a>Transitive games</h2><p>​    如果游戏有一个“rating function” <script type="math/tex">f</script>，因此游戏的性能就是ratings的差异，那么游戏就是过渡的：</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula5.png" alt></p>
+<p>​    换句话说，如果<script type="math/tex">\varnothing</script>允许“减法因式分解”。</p>
+<p><strong>Optimization (training against a fifixed opponent)</strong>解决一个Transitive的游戏被简化为发现</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula6.png" alt></p>
+<p>​    至关重要的是，对对手<script type="math/tex">w</script>的选择对解决方案没有任何区别。因此最简单的学习算法是对固定对手进行训练，请参见算法1。</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/alg1.png" alt></p>
+<p><strong>Monotonic games</strong>一般的transitive games。如果有一个单调的函数<script type="math/tex">\sigma</script>，那么FFG是单调的</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula7.png" alt></p>
+<p>例如，Elo（1978）模拟了一个代理击败另一个代理的概率</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula8.png" alt></p>
+<p>对于一些<script type="math/tex">\sigma > 0</script>，其中<script type="math/tex">f</script>将Elo评级分配给代理。该模型在国际象棋、围棋等游戏中得到了广泛的应用。</p>
+<p>在单调的游戏中，优化对抗固定对手的表现很差。具体地说，如果Elo的模型成立，那么对更弱的对手的训练就不会产生学习信号，因为一旦当<script type="math/tex">f\left ( v_{t} \right )> > f\left ( w \right )</script>，sigmoid饱和时，梯度<script type="math/tex">\bigtriangledown _{v}\varnothing \left ( v_{t},w \right )\approx 0</script>就会消失。</p>
+<p><strong>Self-play (algorithm 2)</strong> 生成一系列的对手。对一系列强度增强的对手进行训练可以防止梯度因较大的技能差异而导致梯度消失，因此自我发挥非常适合由等式(1)建模的游戏。self-play在国际象棋、围棋和其他游戏中已被证明有效 (Silver et al., 2018; Al-Shedivat et al., 2018)。</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula9.png" alt></p>
+<p>Self-play是一种开放式的学习算法：它提出和掌握了一系列的目标，而不是优化一个预先指定的目标。然而，self-play假设了传递性：本地改进(<script type="math/tex">v_{t+1}</script>击败了<script type="math/tex">v_{t}</script>)意味着全局改进(<script type="math/tex">v_{t+1}</script>beats <script type="math/tex">v_{1},v_{2},...,v_{t}</script>)。这个假设在非传递游戏中失败了，比如下面的nontransitive游戏。由于性能是不可传递的，对一个代理的改进并不能保证对其他代理的改进。</p>
+<h2 id="Cyclic-games"><a href="#Cyclic-games" class="headerlink" title="Cyclic games"></a>Cyclic games</h2><p>​    一个游戏是循环的，如果</p>
+<p><img src="/2021/06/30/Open-ended-Learning-in-Symmetric-Zero-sum-Games/formula10.png" alt></p>
+<p>换句话说，对一些代理人的胜利必然与他人的损失相平衡。当agent同时玩移动或不完美的信息游戏，如石头剪刀布，扑克，或星际争霸时，通常会出现策略循环。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Opponent Modeling in Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-06-23 19:57:45 / Modified: 20:13:51" itemprop="dateCreated datePublished" datetime="2021-06-23T19:57:45+08:00">2021-06-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在多智能体设置中，对手建模是必要的，其中具有竞争目标的二级智能体也会调整他们的策略，但它仍然具有挑战性，因为策略之间会相互作用并发生变化。 以前的大部分工作都侧重于为特定应用开发概率模型或参数化策略。 受到深度强化学习最近成功的启发，我们提出了基于神经的模型，可以共同学习策略和对手的行为。 我们没有明确预测对手的动作，而是将对手的观察编码到deep Q-Network（DQN）中； 然而，我们使用多任务处理保留显式建模（如果需要）。 通过使用 Mixture-of-Experts 架构，我们的模型无需额外监督即可自动发现对手的不同策略模式。 我们在模拟足球比赛和流行的trivia游戏上评估我们的模型，显示出优于 DQN 及其变体的性能。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    在战略环境（例如协作或竞争任务）中工作的智能代理必须预测其他代理的行为并推断他们的意图。 这很重要，因为所有活跃的代理都会影响世界的状态。 例如，如果多人游戏 AI 可以预测他们的坏动作，它就可以利用次优玩家； 谈判代理人如果知道对方的底线，可以更快地达成协议； 自动驾驶汽车必须通过预测汽车和行人的去向来避免事故。 对手建模中的两个关键问题是要建模的变量以及如何使用预测信息。 然而，答案在很大程度上取决于具体的应用程序，而且之前的大多数工作 (Billings et al., 1998a; Southey et al.,2005; Ganzfried &amp; Sandholm, 2011)都专注于需要大量领域知识的扑克游戏。</p>
+<p>​    我们的目标是在强化学习环境中建立一个通用的对手建模框架，使代理能够利用各种对手的特质。 首先，为了解释不断变化的行为，我们对对手策略的不确定性进行建模，而不是将其归类为一组刻板印象。 其次，当预测对手与学习世界动态分开时，通常需要领域知识。 因此，我们共同学习策略并概率性地对对手建模。</p>
+<p>​    我们基于在第 3 节中最近的深度 Q 网络（Mnih et al. (2015, DQN)开发了一个新模型 DRON(Deep Reinforcement Opponent Network)。 DRON 有一个预测 Q 值的策略学习模块和一个推断对手策略的对手学习模块（Code and data: <a target="_blank" rel="noopener" href="https://github.com/hhexiy/opponent）。DRON">https://github.com/hhexiy/opponent）。DRON</a> 不是明确预测对手属性，而是根据过去的观察和 使用它（除了状态信息之外）来计算自适应响应。 更具体地说，我们提出了两种架构，一种使用简单的串联来组合两个模块，一种基于 Mixture-of-Experts 网络。 虽然我们隐式地模拟对手，但可以通过多任务处理添加额外的监督（例如采取的行动或策略）。</p>
+<p>​    与之前专门用于特定应用的模型相比，DRON 的设计具有通用性，不需要了解可能的（参数化）游戏策略。</p>
+<p>​    第二个贡献是在多代理设置中学习的 DQN 代理。 深度强化学习在各种任务中都表现出竞争力：arcade games (Mnih et al., 2015), object recognition (Mnih et al., 2014), and robot navigation (Zhang et al., 2015)。 然而，它主要应用于具有固定环境的单代理决策理论设置。 一个例外是Tampuu et al.(2015)，其中由独立 DQN 控制的两个代理在协作和竞争奖励下进行交互。 虽然他们的重点是具有已知控制器的多代理系统的集体行为，但我们从单个代理的角度进行研究，该代理必须在充满未知对手的随机环境中学习反应策略。</p>
+<p>​    我们在第 4 节中针对两个任务评估了我们的方法：网格世界中模拟的两人足球游戏，以及针对在线玩家的真实问答游戏。 两款游戏的对手都采用不同的策略，需要不同的反制策略。 我们的模型始终比 DQN 基线取得更好的结果。 此外，我们展示了我们的方法对非平稳策略更稳健； 成功识别对手策略并做出相应反应。</p>
+<h1 id="Deep-Q-Learning"><a href="#Deep-Q-Learning" class="headerlink" title="Deep Q-Learning"></a>Deep Q-Learning</h1><h1 id="Deep-Reinforcement-Opponent-Network"><a href="#Deep-Reinforcement-Opponent-Network" class="headerlink" title="Deep Reinforcement Opponent Network"></a>Deep Reinforcement Opponent Network</h1><p>​    在多代理设置中，环境受到所有代理的联合动作的影响。 从一个智能体的角度来看，一个动作在给定状态下的结果不再是稳定的，而是依赖于其他智能体的动作。 在本节中，我们首先分析多个代理对 Q-learning 框架的影响； 然后我们介绍 DRON 及其多任务变体。</p>
+<h2 id="Q-Learning-with-Opponents"><a href="#Q-Learning-with-Opponents" class="headerlink" title="Q-Learning with Opponents"></a>Q-Learning with Opponents</h2><p>​    在 MDP 术语中，联合动作空间由<script type="math/tex">A^{M}=A_{1}\times A_{2} \times ...\times A_{n}</script> 定义, 其中 n 是代理的总数。 我们使用 a 表示我们控制的代理（主要代理）的动作，使用 o 表示所有其他代理（二级代理）的联合动作，例如 <script type="math/tex">\left ( a,o \right )\in A^{M}</script>。 类似地，转移概率变为<script type="math/tex">\tau ^{M}\left ( s,a,o,s^{'} \right )=Pr\left ( s^{'}|s,a,o \right )</script>，新的奖励函数为<script type="math/tex">R^{M}\left ( s,a,o,s^{'} \right )</script>。 我们的目标是在与次要代理的联合策略<script type="math/tex">\pi ^{0}</script>交互的情况下为主要代理学习最佳策略。</p>
+<p>​    如果<script type="math/tex">\pi ^{0}</script>是固定的，那么多智能体 MDP 就简化为单智能体 MDP：对手可以被认为是世界的一部分。 因此，他们重新定义了转换和奖励：</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula1.png" alt></p>
+<p>​    因此，一个代理可以忽略其他代理，标准 Q 学习就足够了。</p>
+<p>​    然而，假设对手使用固定策略通常是不现实的。 其他代理也可能正在学习或适应以最大化奖励。 例如在策略游戏中，玩家可能会在开始时伪装自己的真实策略来愚弄对手； 获胜的球员通过防守来保护他们的领先优势； 输球的球员打得更积极。 在这些情况下，我们面对的对手的策略<script type="math/tex">\pi _{t}^{o}</script>会随着时间而变化。</p>
+<p>​    考虑到其他代理的影响，第 2 节中最优策略的定义不再适用——有效性策略现在取决于次要的代理的策略。因此，我们定义了相对于对手联合策略的最优 Q 函数：<script type="math/tex">Q^{*|\pi ^{o}}=max_{\pi }Q^{\pi |\pi ^{o}}\left ( s,a \right )</script>  <script type="math/tex">\forall _{s}\in S</script>和 <script type="math/tex">\forall _{a}\in A</script>。 Q 值之间的循环关系成立：</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula2.png" alt></p>
+<h2 id="DQN-with-Opponent-Modeling"><a href="#DQN-with-Opponent-Modeling" class="headerlink" title="DQN with Opponent Modeling"></a>DQN with Opponent Modeling</h2><p>​    给定等式 1，我们可以继续应用 Q-learning 并通过随机更新来估计转移函数和对手的策略。 然而，将对手视为世界的一部分会减缓对适应性对手的反应  (Uther &amp; Veloso, 2003)，因为行为的变化被世界的动态所掩盖。</p>
+<p>​    为了明确地编码对手的行为，我们提出了联合<script type="math/tex">Q^{.|\pi ^{o}}</script> 和<script type="math/tex">\pi ^{o}</script>建模的Deep Reinforcement Opponent Network (DRON)。 DRON 是一个 Q 网络（<script type="math/tex">N_{Q}</script>），它评估一个状态和一个学习<script type="math/tex">\pi ^{o}</script>表示的对手网络(<script type="math/tex">N_{o}</script>)的动作。。 剩下的问题是如何结合两个网络以及使用什么监督信号。 为了回答第一个问题，我们研究了两种网络架构：连接<script type="math/tex">N_{Q}</script>和 <script type="math/tex">N_{o}</script>的 DRON-concat，以及应用 Mixture-of-Experts 模型的 DRON-MOE。</p>
+<p>​    为了回答第二个问题，我们考虑两种设置：（a）仅预测 Q 值，因为我们的目标是最好的奖励而不是准确地模拟对手； (b) 还可以预测有关对手的额外信息（例如，他们的策略类型）。</p>
+<h3 id="DRON-concat"><a href="#DRON-concat" class="headerlink" title="DRON-concat"></a>DRON-concat</h3><p>​    我们从状态 (<script type="math/tex">\phi ^{s}</script> 和对手 (<script type="math/tex">\phi ^{o}</script>) 中提取特征，然后使用带有整流(线性整流函数Relu)或卷积神经网络（<script type="math/tex">N_{Q}</script>和 <script type="math/tex">N_{o}</script>）的线性层将它们嵌入到单独的隐藏空间 (<script type="math/tex">h^{s}</script>和 <script type="math/tex">h^{o}</script>）。 为了将<script type="math/tex">\pi ^{o}</script>的知识整合到 Q 网络中，我们连接了状态和对手的表示（图 1a）然后联合预测 Q 值。 因此，神经网络的最后一层负责理解对手和 Q 值之间的交互。 由于只有一个 Q-Network，该模型需要对手的更具辨别力的表示来学习自适应策略。 为了缓解这种情况，我们的第二个模型基于等式 1 对对手的行为与 Q 值之间的关系进行了更强的先验编码。</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/figure1.png" alt></p>
+<h3 id="DRON-MOE"><a href="#DRON-MOE" class="headerlink" title="DRON-MOE"></a>DRON-MOE</h3><p>​    等式 1 的右边部分可以写成 <script type="math/tex">\sum _{o_{t}}\pi _{t}^{o}\left ( o_{t}|s_{t} \right )Q^{\pi }\left ( s_{t},a_{t},o_{t} \right )</script>，这是对不同对手行为的期望。 我们使用  Mixture-of-Experts network (Jacobs et al., 1991)将对手动作明确建模为隐藏变量并对其进行边缘化（图 1b）。 通过组合来自多个专家网络的预测获得预期 Q 值：</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula3.png" alt></p>
+<p>​    每个专家网络预测当前状态下可能的奖励。 基于对手表示的门控网络计算组合权重（专家分布）：</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/formula4.png" alt></p>
+<p>​    这里 <script type="math/tex">f\left ( . \right )</script>是一个非线性激活函数（所有实验都是 ReLU），W 代表线性变换矩阵，b 是偏置项。</p>
+<p>​    与 DRON-concat 忽略世界和对手行为之间的相互作用不同，DRON-MOE 知道 Q 值根据<script type="math/tex">\phi ^{o}</script>有不同的分布； 每个专家网络捕获一种类型的对手策略。</p>
+<h3 id="Multitasking-with-DRON"><a href="#Multitasking-with-DRON" class="headerlink" title="Multitasking with DRON"></a>Multitasking with DRON</h3><p>​    前两个模型仅预测 Q 值，因此通过来自 Q 值的反馈间接学习对手表示。 关于对手的额外信息可以直接监督 <script type="math/tex">N_{o}</script>。许多游戏除了在游戏结束时显示最终奖励外，还会显示其他信息。 至少代理已经观察到对手在过去状态中采取的行动； 有时他们的私人信息，例如扑克中的隐藏牌。 更高级的信息包括抽象的计划或策略。 这些信息反映了对手的特征，有助于策略学习。</p>
+<p>​    与之前学习单独模型来预测对手的这些信息的工作不同 (Davidson, 1999;Ganzfried &amp; Sandholm, 2011; Schadd et al., 2007)，我们应用多任务学习并使用观察作为额外监督来学习共享对手表示<script type="math/tex">h^o</script>。 图 2 展示了多任务 DRON 的架构，其中监督是 yo 。 与显式对手建模相比，多任务处理的优势在于它使用了游戏和对手的高级知识，同时对不足的对手数据和 Q 值建模错误保持鲁棒性。 在第 4 节中，我们使用两种类型的监督信号评估多任务 DRON：未来行动和对手的整体策略。</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/figure2.png" alt></p>
+<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>​    在本节中，我们在两个任务上评估我们的模型，soccer game和quiz bowl。 这两项任务都有两个玩家互相对抗，对手表现出不同的行为。 我们将 DRON 模型与 DQN 进行比较，并分析它们对不同类型对手的反应。</p>
+<p>​    所有系统都在相同的 Q-learning 框架下进行训练。 除非另有说明，实验具有以下配置：折扣因子<script type="math/tex">\gamma</script>为 0.9，参数由 AdaGrad  (Duchi et al., 2011) 优化，学习率为 0.0005，mini-batch大小为 64。我们使用<script type="math/tex">\epsilon</script>-greddy在训练期间探索，从探索率 0.3 开始，在 500,000 步内线性衰减到 0.1。 我们将所有模型训练 50 个 epoch。 交叉熵用作多任务学习中的损失。</p>
+<h2 id="Soccer"><a href="#Soccer" class="headerlink" title="Soccer"></a>Soccer</h2><p>​    我们的第一个测试平台是在之前的多人游戏工作之后的soccer变体(Littman, 1994; Collins, 2007; Uther &amp; Veloso, 2003)。 比赛由 A 和 B 两名球员在<script type="math/tex">6\times 9</script>格子（图 3）上进行(尽管游戏是在网格世界中进行的，但我们并没有像以前的工作那样以表格形式表示 Q 函数。 因此它可以推广到更复杂的基于像素的设置)。比赛开始时 A 和 B 在左右半场（球门除外）的随机方格中，球传给其中之一。 玩家从五个动作中选择：移动 N、S、W、E 或站着不动（图 3（1））。 如果一个动作将玩家带到一个阴影方块或边界外，则该动作无效。 如果两个玩家移动到同一个方格，移动前拥有球的玩家将球输给对手（图 3（2）），移动不会发生。</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/figure3.png" alt></p>
+<p>​    如果玩家将球带到对手的球门（图 3（3）、（4）），则游戏结束，则该玩家得分一分。 如果双方在一百步内都没有进球，则比赛以零-零平局结束。</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>​    我们设计了一个基于规则的两种模式代理作为对手图 3（右）。 在进攻模式下，代理总是优先考虑进攻而不是防守。 在与随机代理的 5000 场比赛中，它获胜的时间为 99.86%，平均episode长度为 10.46。 在防守模式下，代理只专注于捍卫自己的目标。 结果它赢得了 31.80% 的比赛，并58.40% 的比赛平局； 平均episode长度为81.70。 很容易找到在任一模式下击败对手的策略，但是该策略不适用于两种模式，如表 2 所示。因此，智能体在每个游戏中随机选择两种模式来创建不同的策略。</p>
+<p><img src="/2021/06/23/Opponent-Modeling-in-Deep-Reinforcement-Learning/table2.png" alt></p>
+<p>​    输入状态是一个<script type="math/tex">1\times 15</script>的向量，表示agent、对手、场地的轴边界、球门区域的位置和控球权的坐标。 我们通过五种情况来定义玩家的移动：接近代理、避开代理、接近代理球门、接近自己球门和静止不动。 对手特征包括观察到的对手移动的频率、其最近的移动和动作以及将球丢给对手的频率。</p>
+<p>​    基线 DQN 有两个隐藏层，都有 50 个隐藏单元。 我们称这个模型为 DQN-world：对手被建模为世界的一部分。 DRON 中对手网络的隐藏层也有 50 个隐藏单元。 对于多任务处理，我们试验了两个监督信号，当前状态下的对手动作（+action）和对手模式（+type）。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1413,137 +1624,6 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/17/graph-network-study/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/17/graph-network-study/" class="post-title-link" itemprop="url">graph_network_study</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-05-17 22:50:56" itemprop="dateCreated datePublished" datetime="2021-05-17T22:50:56+08:00">2021-05-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-15 22:31:27" itemprop="dateModified" datetime="2021-06-15T22:31:27+08:00">2021-06-15</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="图神经网络"><a href="#图神经网络" class="headerlink" title="图神经网络"></a>图神经网络</h1>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/12/docker-study/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/12/docker-study/" class="post-title-link" itemprop="url">docker study</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-05-12 21:00:59" itemprop="dateCreated datePublished" datetime="2021-05-12T21:00:59+08:00">2021-05-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-01 23:28:12" itemprop="dateModified" datetime="2021-06-01T23:28:12+08:00">2021-06-01</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/koktlzz/p/14105026.html#%E4%BB%80%E4%B9%88%E6%98%AF%E5%AE%B9%E5%99%A8%E6%95%B0%E6%8D%AE%E5%8D%B7%EF%BC%9F">狂神docker</a></p>
-<p>docker run -it -v /home/pql/company_code/tmp:/root/repos/tmp hub.digi-sky.com/aid/aicloud:dante-1.8.0-cuda11.1-cudnn8-runtime /bin/bash</p>
-<p>使用-v挂载文件夹时，假如docker容器里已存在挂载的文件夹，并且宿主主机也存在挂载文件夹，宿主主机的文件夹内容会覆盖docker容器里的内容。如果宿主主机不存在挂载文件夹，会新建文件夹，并让docker容器里的文件夹同步（删除之前的内容）。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1613,7 +1693,7 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

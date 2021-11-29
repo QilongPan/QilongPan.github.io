@@ -160,6 +160,160 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/" class="post-title-link" itemprop="url">Curiosity-driven Exploration by Self-supervised Prediction</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-27 20:55:03" itemprop="dateCreated datePublished" datetime="2021-11-27T20:55:03+08:00">2021-11-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-29 23:30:00" itemprop="dateModified" datetime="2021-11-29T23:30:00+08:00">2021-11-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在许多现实世界中，代理外部的奖励是非常稀疏的，或者完全没有。在这种情况下，好奇心可以作为一种内在的奖励信号，使智能体能够探索其环境，并学习可能在以后的生活中有用的技能。我们将好奇心表示为一个代理在self-supervised逆动力学模型学习的视觉特征空间中预测其自身行为的结果的能力的误差。我们的公式可以扩展到图像等高维连续状态空间，绕过了直接预测像素的困难，而且忽略了环境中不能影响代理的方面。该方法在两种环境下进行了评估：VizDoom和Super Mario Bros。研究了三种广泛的情况：1)稀疏的外部奖励，好奇心允许与环境的互动更少，以达到目标；2)没有外部奖励的探索，好奇心推动智能体更有效地探索；3)推广到看不见的场景（例如，同一游戏的新关卡），从早期经验中获得的知识有助于主体探索。</p>
+<h1 id="Curiosity-Driven-Exploration"><a href="#Curiosity-Driven-Exploration" class="headerlink" title="Curiosity-Driven Exploration"></a>Curiosity-Driven Exploration</h1><p>​    我们的代理由两个子系统组成：一个奖励生成器，它输出一个好奇心驱动的内在奖励信号和一个输出一系列行动来最大化奖励信号的策略。除了内在奖励外，主体还从可以选择性的从环境中获得一些外在奖励。智能体在时间<script type="math/tex">t</script>产生的内在好奇心奖励为<script type="math/tex">r_{t}^{i}</script>，外在奖励<script type="math/tex">r_{t}^{e}</script>。策略子系统被训练，使这两种奖励的总和<script type="math/tex">r_{t}= r_{t}^{i}+r_{t}^{e}</script>最大化，大多数情况<script type="math/tex">r_{t}^{e}</script>为零。</p>
+<p>​    我们用一个参数为<script type="math/tex">\theta_{P}</script>的深度神经网络来表示策略<script type="math/tex">\pi \left ( s_{t}:\theta _{P} \right )</script>。给定智能体状态为<script type="math/tex">s_{t}</script>，它执行从策略中采样的动作<script type="math/tex">a_{t}\sim \pi \left ( s_{t}:\theta _{P} \right )</script>。<script type="math/tex">\theta_{P}</script>使用最大化预期的奖励总和进行优化。</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula1.png" alt></p>
+<p>​    在本文讨论的实验中，我们使用asynchronous advantage actor critic策略梯度(A3C)进行策略学习。</p>
+<h2 id="Prediction-error-as-curiosity-reward"><a href="#Prediction-error-as-curiosity-reward" class="headerlink" title="Prediction error as curiosity reward"></a>Prediction error as curiosity reward</h2><p>​    在原始感觉空间(例如，当<script type="math/tex">s_{t}</script>对应于图像时)进行预测是不可取的，不仅因为很难直接预测像素，而且因为不清楚预测像素是否是优化的正确目标。假如使用像素空间中的预测误差作为好奇心的奖励，想象一下这样一个场景，代理在微风中观察树叶的运动。由于微风天生很难建模，因此甚至很难预测每个叶子的像素位置。这意味着像素预测误差将保持很高，并且代理将始终对叶子保持好奇。但是叶子的运动对代理是无关紧要的，因此它对它们的持续好奇心是不可取的。潜在的问题是，代理没有意识到状态空间的某些部分根本无法被建模，因此代理可能会陷入一个人为的好奇心陷阱，阻碍其探索。以表格形式记录被访问状态的数量（或它们对连续状态空间的扩展）的寻求新奇的探索方案也存在这个问题。在过去，测量学习进步而不是预测误差已经被提出作为一种解决方案(Schmidhuber, 1991)。不幸的是，目前还没有已知的计算上可行的机制来衡量学习进展。</p>
+<p>​    如果不是原始的观测空间，那么什么是正确的特征空间来进行预测，从而使预测误差提供了一个很好的好奇心测量方法呢？为了回答这个问题，让我们将所有可以修改代理观察结果的源分为三种情况：（1）可以由代理控制的东西；（2）代理无法控制但会影响代理（例如由另一个代理驾驶的车辆）（3）超出代理控制而不影响代理的东西（例如正在移动的树叶）。一个很好的好奇心特性空间应该建模（1）和（2），并且不受（3）的影响。后者是因为，如果有一个对代理来说无关紧要的变异源，那么代理就没有动机去知道它。</p>
+<h2 id="Self-supervised-prediction-for-exploration"><a href="#Self-supervised-prediction-for-exploration" class="headerlink" title="Self-supervised prediction for exploration"></a>Self-supervised prediction for exploration</h2><p>​    我们的目标是不需要手工设计每个环境的特征表示，而是提出一种学习特征表示的一般机制，使学习特征空间中的预测误差提供一个很好的内在奖励信号。我们提出可以通过具有两个子模块的深度神经网络训练的特征空间：第一个子模块编码原始状态<script type="math/tex">s_{t}</script>成一个特征向量<script type="math/tex">\phi \left ( s_{t} \right )</script>和第二个子模块作为输入时间<script type="math/tex">t</script>和<script type="math/tex">t+1</script>的特征编码<script type="math/tex">\phi \left ( s_{t} \right )</script>，<script type="math/tex">\phi \left ( s_{t+1} \right )</script>，预测使状态从<script type="math/tex">s_{t}</script>到<script type="math/tex">s_{t+1}</script>的动作。训练这个神经网络相当于学习函数<script type="math/tex">g</script>，定义为：</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula2.png" alt></p>
+<p>其中<script type="math/tex">\hat{a}_{t}</script>为对动作的预测估计，并对神经网络参数<script type="math/tex">\theta _{I}</script>进行优化</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula3.png" alt></p>
+<p>其中<script type="math/tex">L_{I}</script>是衡量预测行动和实际行动之间差异的损失函数。在<script type="math/tex">a_{t}</script>是离散的情况下，<script type="math/tex">g</script>的输出是所有可能动作的soft-max分布，最小化<script type="math/tex">L_{I}</script>相当于多项分布下<script type="math/tex">\theta _{I}</script>的最大似然估计。学习到的函数<script type="math/tex">g</script>也被称为逆动力学模型，当代理使用其当前的策略<script type="math/tex">\pi(s)</script>与环境交互时，可以获得学习<script type="math/tex">g</script>所需的元组<script type="math/tex">(s_{t},a_{t},s_{t+1})</script>。</p>
+<p>​    除了逆动力学模型，我们还训练了另一个神经网络，以<script type="math/tex">a_{t}</script>和<script type="math/tex">\phi \left ( s_{t} \right )</script>作为输入，并预测时间步<script type="math/tex">t+1</script>状态的特征编码。</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula4.png" alt></p>
+<p>其中，<script type="math/tex">\hat\phi \left ( s_{t+1} \right )</script>)为<script type="math/tex">\phi \left ( s_{t+1} \right )</script>的预测估计值，通过最小化损失函数<script type="math/tex">L_{F}</script>来优化神经网络参数<script type="math/tex">\theta_{F}</script>：</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula5.png" alt></p>
+<p>学习到的函数<script type="math/tex">f</script>也被称为前向动力学模型。内在奖励信号<script type="math/tex">r_{t}^{i}</script>的计算方法为</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula6.png" alt></p>
+<p>其中，<script type="math/tex">\eta > 0</script>是一个缩放因子。为了生成基于好奇心的内在奖励信号，我们分别共同优化了公式3和公式5中所描述的正向动力学损失和逆动力学损失。逆模型学习一个特征空间，该特征空间只编码与预测代理行为相关的信息，而前向模型在该特征空间中进行预测。我们将好奇心公式定义为Intrinsic Curiosity Module (ICM)。由于该特征空间没有动机对任何不受代理行为影响的环境特征进行编码，因此我们的代理将不会因达到本质上不可预测的环境状态而获得奖励，其探索策略具有鲁棒性。</p>
+<p>训练结构如Figure2所示</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/figure2.png" alt></p>
+<p>学习智能体的总体优化可以写成</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula7.png" alt></p>
+<p>其中<script type="math/tex">0\leq \beta \leq 1</script>是一个衡量逆模型损失与正向模型损失的标量，而<script type="math/tex">\lambda > 0</script>是一个衡量策略梯度损失的重要性与学习内在奖励信号的重要性的标量。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/27/Mastering-the-game-of-Go-without-human-knowledge/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/27/Mastering-the-game-of-Go-without-human-knowledge/" class="post-title-link" itemprop="url">Mastering the game of Go without human knowledge</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-27 11:25:26" itemprop="dateCreated datePublished" datetime="2021-11-27T11:25:26+08:00">2021-11-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -849,208 +1003,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/08/The-Surprising-Effectiveness-of-PPO-in-Cooperative-Multi-Agent-Games/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/08/The-Surprising-Effectiveness-of-PPO-in-Cooperative-Multi-Agent-Games/" class="post-title-link" itemprop="url">The Surprising Effectiveness of PPO in Cooperative Multi-Agent Games</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-08 11:39:12" itemprop="dateCreated datePublished" datetime="2021-08-08T11:39:12+08:00">2021-08-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-10 22:13:12" itemprop="dateModified" datetime="2021-08-10T22:13:12+08:00">2021-08-10</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/" itemprop="url" rel="index"><span itemprop="name">多智能体</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    近端策略优化(PPO)是一种流行的on-policy强化学习算法，但在多代理环境中的利用率明显低于off-policy学习算法。这通常是由于认为在多代理环境中，on-policy的样本效率明显低于off-policy的方法。在这项工作中，我们研究了Multi-Agent PPO(MAPPO)，这是PPO的一种变体，专门用于多代理环境。使用1-GPU台式电脑，我们展示了MAPPO在三种流行的多代理测试台上（the particle-world environments, the Starcraft multi-agent challenge, and the Hanabi challenge）以极少的超参数调整，并且没有任何特定领域的算法修改或架构实现了惊人的强大性能。在大多数环境中，我们发现与off-policy 基线相比，MAPPO取得了很强的结果，同时显示出相当的样本效率。最后通过消融研究，我们提出了对MAPPO实际性能影响最大的实现和算法因素。</p>
-<p><img src="/2021/08/08/The-Surprising-Effectiveness-of-PPO-in-Cooperative-Multi-Agent-Games/figure1.png" alt></p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    我们专注于完全合作的任务，以便直接比较我们的结果与最先进的代理的性能。此外我们只使用一台具有1个GPU和1台多核CPU的台式机进行训练。</p>
-<p>​    本文的贡献总结如下：</p>
-<ul>
-<li>我们证明，Multi-Agent PPO(MAPPO)，通过极小的超参数调整，并且没有任何特定领域的算法更改或架构，在三个普遍存在的基准：Particle World, Starcraft and Hanabi上实现了与各种off-policy方法相当的最终性能。</li>
-<li>我们证明了MAPPO获得了这些强大的结果，同时经常使用与许多off-policy方法相当数量的样本。</li>
-<li>我们分析了控制MAPPO实际性能的5个实现和算法因素，并在<a target="_blank" rel="noopener" href="https://sites.google.com/view/mappo-neurips">https://sites.google.com/view/mappo-neurips</a>上发布了我们的源代码。</li>
-</ul>
-<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><p>​    我们考虑多智能体游戏，并调查那些在现有文献中很大程度上被忽略，或对多智能体设置完全唯一的因素。尽管我们的多代理基准测试与MuJoCo等单代理环境有显著不同的动态，但我们确实发现了一些以前的建议，如输入归一化、层归一化、值剪辑、正交初始化和梯度剪切，这很有帮助，并将它们包含在我们的实现中。</p>
-<h1 id="Multi-Agent-PPO-MAPPO"><a href="#Multi-Agent-PPO-MAPPO" class="headerlink" title="Multi-Agent PPO(MAPPO)"></a>Multi-Agent PPO(MAPPO)</h1><p><img src="/2021/08/08/The-Surprising-Effectiveness-of-PPO-in-Cooperative-Multi-Agent-Games/algorithm1.png" alt></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/" class="post-title-link" itemprop="url">QMIX:Monotonic Value Function Factorisation for Deep Multi-Agent Reinforcement Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-05 20:55:47" itemprop="dateCreated datePublished" datetime="2021-08-05T20:55:47+08:00">2021-08-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-10 22:14:30" itemprop="dateModified" datetime="2021-08-10T22:14:30+08:00">2021-08-10</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/" itemprop="url" rel="index"><span itemprop="name">多智能体</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在许多现实世界中，一组代理必须以分散的方式行事的同时协调他们的行为。同时，通常可以在模拟或实验室环境中以集中方式训练代理，其中全局状态信息可用并且通信限制被解除。学习以额外状态信息为条件的联合行动值是一种利用集中学习的有吸引力的方式，但提取分散策略的最佳策略尚不清楚。我们的解决方案是 QMIX，这是一种新颖的基于价值的方法，可以在集中的端到端时尚中训练分散的策略。 QMIX 采用了一个网络，该网络将联合动作值估计为仅以局部观察为条件的每个代理值的复杂非线性组合。我们在结构上强制每个代理值中的联合动作值是单调的，这允许在离策略学习中实现联合动作值的最大化，并保证集中和分散策略之间的一致性。我们在一组具有挑战性的星际争霸 II 微观管理任务上评估 QMIX，并表明 QMIX 显着优于现有的基于价值的多智能体强化学习方法。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    强化学习(RL)对于帮助解决各种合作的多主体问题具有相当大的前景，如机器人群的协调 (Huttenrauch et al.,2017)和自动驾驶汽车(Cao et al., 2012)。</p>
-<p>​    在许多这样的设置中，部分可观察性和/或通信限制需要学习分散的策略，这只以每个代理的本地操作观察历史为条件。分散化的策略也自然地减弱了联合动作空间随着代理数量呈指数级增长的问题，这往往使传统的单代理RL方法的应用不切实际。</p>
-<p>​    幸运的是，分散的政策通常可以在模拟或实验室设置中以集中的方式学习。这通常授予对其他状态信息的访问，否则对代理隐藏，并删除代理间通信约束。具有分散执行的集中培训范式 (Oliehoek et al., 2008; Kraemer &amp; Banerjee, 2016)最近引起了RL社区的关注(Jorge et al., 2016; Foerster et al., 2018)。然而，围绕如何最好地利用集中式训练的许多挑战仍然存在。</p>
-<p>​    其中一个挑战是如何表示和使用大多数RL方法所学习的动作值函数。一方面，正确捕获代理操作的影响需要一个集中的动作值函数Qtot，它以全局状态和联合动作为条件。另一方面，当有许多代理时，这种函数很难学习，即使可以学习，也没有提供明显的方法来提取分散的策略，允许每个代理只基于单个观察选择单个操作。</p>
-<p>​    最简单的选择是放弃一个集中的动作值函数，让每个代理独立学习单个动作值函数Qa，如独立的Q学习(IQL) (Tan, 1993)。然而，这种方法不能明确地表示代理之间的相互作用，也可能不会收敛，因为每个代理的学习都被其他代理的学习和探索所混淆。</p>
-<p>​    在另一个极端，我们可以学习一个完全集中的状态操作值函数<script type="math/tex">Q_{tot}</script>，然后使用它来指导参与者-批评框架中的分散策略的优化，反事实多代理(COMA)策略梯度(Foerster et al., 2018)，以及Gupta et al. (2017)等人的工作。然而，这需要关于政策学习，这可能是样本效率低下的，当有多个代理时，训练完全集中的批评者就变得不切实际。</p>
-<p>​    在这两个极端之间，我们可以学习一个集中但被分解的<script type="math/tex">Q_{tot}</script>，这是一种由值分解网络(VDN)采用的方法(Sunehag et al., 2017)。通过将<script type="math/tex">Q_{tot}</script>表示为单个值函数<script type="math/tex">Q_{a}</script>的和，只影响单个观察和动作，一个分散的策略仅仅从每个代理贪婪地选择动作而产生。然而，VDN严重限制了可以表示的集中动作值函数的复杂性，并忽略了训练期间可用的任何额外的状态信息。</p>
-<p>​    在本文中，我们提出了一种名为QMIX的新方法，它像VDN一样，位于IQL和COMA的极端之间，但可以代表更丰富的操作值函数。我们的方法的关键是，VDN的完全因式分解不必要提取去中心策略。相反，我们只需要确保在<script type="math/tex">Q_{tot}</script>上执行的全局argmax就会产生与在每个<script type="math/tex">Q_{a}</script>上执行的一组单个argmax操作相同的结果。为此，对<script type="math/tex">Q_{tot}</script>和每个<script type="math/tex">Q_{a}</script>之间的关系实施单调性约束就足够了：</p>
-<p><img src="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula1.png" alt></p>
-<p>​    QMIX由代表每个<script type="math/tex">Q_{a}</script>的代理网络和一个将它们组合成<script type="math/tex">Q_{tot}</script>的混合网络组成，不像在VDN中那样是一个简单的和，而是以一种复杂的非线性方式，确保集中和分散策略之间的一致性。同时，它通过限制混合网络具有正权值来加强（1）的约束。因此，QMIX可以用一个分解的表示来表示复杂的集中动作值函数，该函数可以扩展代理数量，并允许通过线性时间单个argmax操作轻松提取分散的策略。</p>
-<p>​    我们在星际争霸 II中构建的一系列单元微管理任务上评估 QMIX (Vinyals et al., 2017)。 我们的实验表明，QMIX 在绝对性能和学习速度方面都优于 IQL 和 VDN。 特别是，我们的方法在具有异构代理（系统内智能体的动力学不完全一致）<a target="_blank" rel="noopener" href="http://cdmd.cnki.com.cn/Article/CDMD-10487-1019616494.htm#:~:text=%E5%BC%82%E6%9E%84%E6%8C%87%E7%9A%84%E6%98%AF%E7%B3%BB%E7%BB%9F%E5%86%85%E6%99%BA%E8%83%BD%E4%BD%93%E7%9A%84%E5%8A%A8%E5%8A%9B%E5%AD%A6%E4%B8%8D%E5%AE%8C%E5%85%A8%E4%B8%80%E8%87%B4%2C%E6%98%BE%E7%84%B6%E8%BF%99%E4%B8%80%E7%89%B9%E6%80%A7%E5%9C%A8%E4%BC%97%E5%A4%9A%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E7%B3%BB%E7%BB%9F%E4%B8%AD%E9%83%BD%E6%98%AF%E5%AD%98%E5%9C%A8%E7%9A%84%2C%E4%BD%86%E6%97%B6%E5%B8%B8%E5%BF%BD%E7%95%A5%E4%BA%86%E6%99%BA%E8%83%BD%E4%BD%93%E9%97%B4%E7%9A%84%E5%B7%AE%E5%BC%82%E6%80%A7%E3%80%82,%E5%BC%82%E6%9E%84%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E7%B3%BB%E7%BB%9F%E7%9A%84%E4%B8%80%E4%B8%AA%E5%85%B8%E5%9E%8B%E4%BE%8B%E5%AD%90%E6%98%AF%E7%94%B1%E6%97%A0%E4%BA%BA%E6%9C%BA%E5%92%8C%E6%97%A0%E4%BA%BA%E8%89%87%E7%BB%84%E6%88%90%E7%9A%84%E6%B7%B7%E5%90%88%E7%BC%96%E9%98%9F%E3%80%82%20%E6%9C%AC%E6%96%87%E7%A0%94%E7%A9%B6%E4%BA%86%E4%B8%80%E7%B1%BB%E5%BC%82%E6%9E%84%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98%2C%E6%8F%90%E5%87%BA%E4%BA%86%E6%9C%89%E6%95%88%E7%9A%84%E5%90%8C%E6%AD%A5%E7%AD%96%E7%95%A5%2C%E5%BE%97%E5%87%BA%E4%BA%86%E5%AE%9E%E7%8E%B0%E5%90%8C%E6%AD%A5%E7%9A%84%E5%85%85%E5%88%86%E5%92%8C%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6%2C%E5%B9%B6%E9%87%8F%E5%8C%96%E4%BA%86%E5%90%8C%E6%AD%A5%E9%80%9F%E7%8E%87%E3%80%82">异构代理</a>的任务上显示出可观的性能提升。 此外，我们的消融显示了对状态信息进行调节的必要性和代理 Q 值的非线性混合，以便在任务之间实现一致的性能。</p>
-<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><p>​    最近在多代理RL方面的工作已经开始从表格方法(Yang &amp; Gu, 2004; Busoniu et al., 2008)转向能够处理高维状态和动作空间的深度学习方法(Tampuu et al., 2017; Foerster et al.,2018; Peng et al., 2017)。在本文中，我们重点关注合作设置。</p>
-<p>​    一方面，为多智能体系统查找策略的一种自然方法是直接学习分散的值函数或策略。独立的Q-学习 (Tan, 1993)使用Q-学习 (Watkins, 1989)为每个代理训练独立的动作价值函数。(Tammuu等人，2017)使用DQN将该方法扩展到深度神经网络(Mnih et al., 2015)。虽然这些方法只是实现了分散化，但它们容易出现由于同时学习和探索代理所引起的环境的非平稳性而引起的不稳定性。Omidshafiei et al. (2017) and Foerster et al. (2017)在一定程度上解决了学习稳定问题，但仍然学习了分散的值函数，不允许在培训期间包含额外的状态信息。</p>
-<p>​    另一方面，联合行动的集中学习可以自然地处理协调问题，避免非平稳性，但随着联合行动空间的扩大，代理数量呈指数增长。可扩展集中学习的经典方法包括coordination graphs (Guestrin et al., 2002)，它通过将全局奖励函数分解为 agent-local项的和来利用代理之间的条件独立性。Sparse cooperative Q-learning (Kok &amp; Vlassis, 2006)是一种表格q学习算法，它只在需要这种协调的状态下学习协调一组协作代理的动作，将这些依赖关系编码在coordination graph中。这些方法要求预先提供代理之间的依赖关系，而我们不需要这样的先验知识。相反，我们假设每个代理总是对全局奖励有贡献，并学习其在每个状态下的贡献的大小。</p>
-<p>​    最近的集中学习方法在执行过程中需要更多的通信： CommNet(Sukhbaatar et al., 2016)使用集中的网络体系结构在代理之间交换信息。BicNet(Pengetal.，2017)使用双向rnn在行为者-批评者环境中在代理之间交换信息。这种方法还需要估计个体代理的奖励。</p>
-<p>​    一些工作已经开发了混合方法，利用完全分散执行的集中学习设置。COMA(Foersteretal.，2018)使用一个集中的批评者来培训分散的参与者，估计每个代理的反事实优势函数，以解决多代理的信用分配。同样地，Gupta et al. (2017)提出了一个集中的参与者批评算法，该算法随代理的数量而扩展，但减轻了集中化的优势。Lowe et al. (2017)为每个代理学习一个集中的批评者，并将其应用于具有连续动作空间的竞争游戏。这些方法采用策略上的策略梯度学习，其样本效率较低，容易陷入次优局部最小值。</p>
-<p>​    Sunehag et al. (2017)提出了价值分解网络(VDN)，它允许具有分散执行的集中价值函数学习。他们的算法将一个中心状态动作值函数分解为单个代理项的和。这对应于使用一个退化的完全不连通的协调图。VDN在训练期间不使用额外的状态信息，只能代表有限的集中动作值函数。</p>
-<p>​    许多论文已经在星际争霸中建立了单位微管理，作为深度多代理RL的基准。Usunier et al. (2017)提出了一种使用集中贪婪MDP和一阶优化的算法。Peng et al. (2017)也评估了他们在星际争霸上的方法。然而，两者都不需要分散的执行。与我们的设置类似的是Foerster et al. (2017)的工作，他评估了IQL对最多5名特工的战斗场景的重放稳定方法。Foerster et al. (2018)也会使用此设置。在本文中，我们构建了StarCraft II Learning Environment(SC2LE)中(Vinyalsetal.，2017)的单元微管理任务，因为它得到了游戏开发者的积极支持，SC2LE提供了一个更稳定的测试环境。</p>
-<p>​    QMIX依赖于一个神经网络来将集中状态转换为另一个神经网络的权值，以一种让人想起hypernetworks (Ha et al., 2017)的方式。第二个神经网络通过保持其权重为正，限制其输入是单调的。Dugas et al. (2009)研究了神经网络的这种功能限制。</p>
-<h1 id="QMIX"><a href="#QMIX" class="headerlink" title="QMIX"></a>QMIX</h1><p>​    在本节中，我们提出了一种名为QMIX的新方法，它和VDN一样，位于IQL和集中q学习的极端之间，但可以代表更丰富的动作值函数。</p>
-<p>​    我们的方法的关键是，为了能够提取与集中对应策略完全一致的分散策略，VDN是不必完全分解的。相反，为了保持一致性，我们只需要确保在<script type="math/tex">Q_{tot}</script>上执行的全局argmax就会产生与在每个<script type="math/tex">Q_{a}</script>上执行的一组单个argmax操作相同的结果：</p>
-<p><img src="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula4.png" alt></p>
-<p>​    这允许每个代理a只通过对其<script type="math/tex">Q_{a}</script>选择贪婪的行动来参与一个分散的执行。作为一个副作用，如果满足（4），那么获取策略外学习更新所需的<script type="math/tex">Q_{tot}</script>的argmax是非常易于处理的。</p>
-<p>​    VDN 的表示足以满足（4）。 然而，QMIX 基于这样的观察，即这种表示可以推广到更大的单调函数族，这些单调函数也足以满足（4）但不是必需的。 可以通过对 Qtot 和每个 Qa 之间关系的约束来强制执行单调性</p>
-<p><img src="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula5.png" alt></p>
-<p>​    为了强制执行（5），QMIX使用由agent networks, a mixing network, and a setof hypernetworks (Ha et al., 2017)。图2说明了整个设置。</p>
-<p>​    对于每个代理a，都有一个代理网络代表其单个值函数<script type="math/tex">Q_{a}\left ( \tau ^{a},u^{a} \right )</script>。我们将代理网络表示为drqn，在每个时间步长接收当前的个体观察<script type="math/tex">o_{t}^{a}</script>和最后一个动作<script type="math/tex">u_{t-1}^{a}</script>作为输入，如图2c所示。</p>
-<p>​    混合网络是一个前馈神经网络，它将代理网络的输出作为输入，并单调地混合，产生<script type="math/tex">Q_{tot}</script>的值，如图2a所示。为了加强（5)的单调性约束，混合网络的权值(而不是偏差）被限制为非负的。这允许混合网络任意紧密地逼近任何单调函数(Dugas et al., 2009)。</p>
-<p>​        混合网络的权值由单独的超网络产生的。每个超网络以状态s作为输入，生成一层混合网络的权值。每个超网络由一个线性层组成，然后是一个绝对激活函数，以确保混合网络的权值是非负的。超网络的输出是一个向量，它被重新塑造成一个适当大小的矩阵。bias以同样的方式产生，但不限于非负性。最终的偏差是由一个具有ReLU非线性的2层超网络产生的。图2a说明了混合网络和超网络。</p>
-<p><img src="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/figure2.png" alt></p>
-<p>​    状态由超网络使用，而不是直接传递到混合网络，因为<script type="math/tex">Q_{tot}</script>可以以非单调方式依赖于额外的状态信息。 因此，将 s 的某些函数与每个代理的值一起通过单调网络传递会受到过度约束。 相反，超网络的使用可以以任意方式调节单调网络在 s 上的权重，从而尽可能灵活地将完整状态 s 集成到联合动作值估计中。</p>
-<p>​    QMIX经过端到端培训，以尽量减少以下损失：</p>
-<p><img src="/2021/08/05/QMIX-Monotonic-Value-Function-Factorisation-for-Deep-Multi-Agent-Reinforcement-Learning/formula6.png" alt></p>
-<p>​    其中b是从重放缓冲区采样的转换的批大小,<script type="math/tex">y^{tot}=r+\gamma max_{u^{'}}Q_{tot}\left ( \tau ^{'},u^{'},s^{'};\theta ^{-} \right )</script>,<script type="math/tex">\theta ^{-}</script>是目标网络的参数，如DQN中（6)类似于(2）的标准DQN损失。由于（4）成立，我们可以在代理数量上以时间线性地执行<script type="math/tex">Q_{tot}</script>的最大化（而不是在最坏情况下按指数缩放）。</p>
-<h1 id="表示复杂性"><a href="#表示复杂性" class="headerlink" title="表示复杂性"></a>表示复杂性</h1><p>​    可用QMIX表示的值函数类包括任何值函数，在完全可观测的设置中，它们可以分解为代理的单个值函数的非线性单调组合。这扩展了由VDN可表示的线性单调值函数。然而，（5）中的约束阻止了QMIX表示不以这种方式分解的值函数。</p>
-<p>​    直观地说，一个代理的最佳操作依赖于其他代理在同一时间步长的动作的任何值函数都不会适当地因式分解，因此不能用QMIX完美地表示。然而，QMIX可以比VDN更准确地近似这些值函数。此外，它可以利用训练过程中可用的额外状态信息，我们通过经验证明。关于表示复杂性的更详细的讨论可在补充材料中找到。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1120,7 +1072,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="摘要​    在许多现实世界中，代理外部的奖励是非常稀疏的，或者完全没有。在这种情况下，好奇心可以作为一种内在的奖励信号，使智能体能够探索其环境，并学习可能在以后的生活中有用的技能。我们将好奇心表示为一个代理在self-supervised逆动力学模型学习的视觉特征空间中预测其自身行为的结果的能力的误差。我们的公式可以扩展到图像等高维连续状态空间，绕过了直接预测像素的困难，而且忽略了环境中不能影响">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Curiosity-driven Exploration by Self-supervised Prediction">
+<meta property="og:url" content="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/index.html">
+<meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="摘要​    在许多现实世界中，代理外部的奖励是非常稀疏的，或者完全没有。在这种情况下，好奇心可以作为一种内在的奖励信号，使智能体能够探索其环境，并学习可能在以后的生活中有用的技能。我们将好奇心表示为一个代理在self-supervised逆动力学模型学习的视觉特征空间中预测其自身行为的结果的能力的误差。我们的公式可以扩展到图像等高维连续状态空间，绕过了直接预测像素的困难，而且忽略了环境中不能影响">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula1.png">
+<meta property="og:image" content="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula2.png">
+<meta property="og:image" content="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula3.png">
+<meta property="og:image" content="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula4.png">
+<meta property="og:image" content="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula5.png">
+<meta property="og:image" content="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula6.png">
+<meta property="og:image" content="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/figure2.png">
+<meta property="og:image" content="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula7.png">
+<meta property="article:published_time" content="2021-11-27T12:55:03.000Z">
+<meta property="article:modified_time" content="2021-11-29T15:30:00.737Z">
+<meta property="article:author" content="QilongPan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula1.png">
+
+<link rel="canonical" href="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Curiosity-driven Exploration by Self-supervised Prediction | 潘其龙</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">潘其龙</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Curiosity-driven Exploration by Self-supervised Prediction
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-27 20:55:03" itemprop="dateCreated datePublished" datetime="2021-11-27T20:55:03+08:00">2021-11-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-29 23:30:00" itemprop="dateModified" datetime="2021-11-29T23:30:00+08:00">2021-11-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在许多现实世界中，代理外部的奖励是非常稀疏的，或者完全没有。在这种情况下，好奇心可以作为一种内在的奖励信号，使智能体能够探索其环境，并学习可能在以后的生活中有用的技能。我们将好奇心表示为一个代理在self-supervised逆动力学模型学习的视觉特征空间中预测其自身行为的结果的能力的误差。我们的公式可以扩展到图像等高维连续状态空间，绕过了直接预测像素的困难，而且忽略了环境中不能影响代理的方面。该方法在两种环境下进行了评估：VizDoom和Super Mario Bros。研究了三种广泛的情况：1)稀疏的外部奖励，好奇心允许与环境的互动更少，以达到目标；2)没有外部奖励的探索，好奇心推动智能体更有效地探索；3)推广到看不见的场景（例如，同一游戏的新关卡），从早期经验中获得的知识有助于主体探索。</p>
+<h1 id="Curiosity-Driven-Exploration"><a href="#Curiosity-Driven-Exploration" class="headerlink" title="Curiosity-Driven Exploration"></a>Curiosity-Driven Exploration</h1><p>​    我们的代理由两个子系统组成：一个奖励生成器，它输出一个好奇心驱动的内在奖励信号和一个输出一系列行动来最大化奖励信号的策略。除了内在奖励外，主体还从可以选择性的从环境中获得一些外在奖励。智能体在时间<script type="math/tex">t</script>产生的内在好奇心奖励为<script type="math/tex">r_{t}^{i}</script>，外在奖励<script type="math/tex">r_{t}^{e}</script>。策略子系统被训练，使这两种奖励的总和<script type="math/tex">r_{t}= r_{t}^{i}+r_{t}^{e}</script>最大化，大多数情况<script type="math/tex">r_{t}^{e}</script>为零。</p>
+<p>​    我们用一个参数为<script type="math/tex">\theta_{P}</script>的深度神经网络来表示策略<script type="math/tex">\pi \left ( s_{t}:\theta _{P} \right )</script>。给定智能体状态为<script type="math/tex">s_{t}</script>，它执行从策略中采样的动作<script type="math/tex">a_{t}\sim \pi \left ( s_{t}:\theta _{P} \right )</script>。<script type="math/tex">\theta_{P}</script>使用最大化预期的奖励总和进行优化。</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula1.png" alt></p>
+<p>​    在本文讨论的实验中，我们使用asynchronous advantage actor critic策略梯度(A3C)进行策略学习。</p>
+<h2 id="Prediction-error-as-curiosity-reward"><a href="#Prediction-error-as-curiosity-reward" class="headerlink" title="Prediction error as curiosity reward"></a>Prediction error as curiosity reward</h2><p>​    在原始感觉空间(例如，当<script type="math/tex">s_{t}</script>对应于图像时)进行预测是不可取的，不仅因为很难直接预测像素，而且因为不清楚预测像素是否是优化的正确目标。假如使用像素空间中的预测误差作为好奇心的奖励，想象一下这样一个场景，代理在微风中观察树叶的运动。由于微风天生很难建模，因此甚至很难预测每个叶子的像素位置。这意味着像素预测误差将保持很高，并且代理将始终对叶子保持好奇。但是叶子的运动对代理是无关紧要的，因此它对它们的持续好奇心是不可取的。潜在的问题是，代理没有意识到状态空间的某些部分根本无法被建模，因此代理可能会陷入一个人为的好奇心陷阱，阻碍其探索。以表格形式记录被访问状态的数量（或它们对连续状态空间的扩展）的寻求新奇的探索方案也存在这个问题。在过去，测量学习进步而不是预测误差已经被提出作为一种解决方案(Schmidhuber, 1991)。不幸的是，目前还没有已知的计算上可行的机制来衡量学习进展。</p>
+<p>​    如果不是原始的观测空间，那么什么是正确的特征空间来进行预测，从而使预测误差提供了一个很好的好奇心测量方法呢？为了回答这个问题，让我们将所有可以修改代理观察结果的源分为三种情况：（1）可以由代理控制的东西；（2）代理无法控制但会影响代理（例如由另一个代理驾驶的车辆）（3）超出代理控制而不影响代理的东西（例如正在移动的树叶）。一个很好的好奇心特性空间应该建模（1）和（2），并且不受（3）的影响。后者是因为，如果有一个对代理来说无关紧要的变异源，那么代理就没有动机去知道它。</p>
+<h2 id="Self-supervised-prediction-for-exploration"><a href="#Self-supervised-prediction-for-exploration" class="headerlink" title="Self-supervised prediction for exploration"></a>Self-supervised prediction for exploration</h2><p>​    我们的目标是不需要手工设计每个环境的特征表示，而是提出一种学习特征表示的一般机制，使学习特征空间中的预测误差提供一个很好的内在奖励信号。我们提出可以通过具有两个子模块的深度神经网络训练的特征空间：第一个子模块编码原始状态<script type="math/tex">s_{t}</script>成一个特征向量<script type="math/tex">\phi \left ( s_{t} \right )</script>和第二个子模块作为输入时间<script type="math/tex">t</script>和<script type="math/tex">t+1</script>的特征编码<script type="math/tex">\phi \left ( s_{t} \right )</script>，<script type="math/tex">\phi \left ( s_{t+1} \right )</script>，预测使状态从<script type="math/tex">s_{t}</script>到<script type="math/tex">s_{t+1}</script>的动作。训练这个神经网络相当于学习函数<script type="math/tex">g</script>，定义为：</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula2.png" alt></p>
+<p>其中<script type="math/tex">\hat{a}_{t}</script>为对动作的预测估计，并对神经网络参数<script type="math/tex">\theta _{I}</script>进行优化</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula3.png" alt></p>
+<p>其中<script type="math/tex">L_{I}</script>是衡量预测行动和实际行动之间差异的损失函数。在<script type="math/tex">a_{t}</script>是离散的情况下，<script type="math/tex">g</script>的输出是所有可能动作的soft-max分布，最小化<script type="math/tex">L_{I}</script>相当于多项分布下<script type="math/tex">\theta _{I}</script>的最大似然估计。学习到的函数<script type="math/tex">g</script>也被称为逆动力学模型，当代理使用其当前的策略<script type="math/tex">\pi(s)</script>与环境交互时，可以获得学习<script type="math/tex">g</script>所需的元组<script type="math/tex">(s_{t},a_{t},s_{t+1})</script>。</p>
+<p>​    除了逆动力学模型，我们还训练了另一个神经网络，以<script type="math/tex">a_{t}</script>和<script type="math/tex">\phi \left ( s_{t} \right )</script>作为输入，并预测时间步<script type="math/tex">t+1</script>状态的特征编码。</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula4.png" alt></p>
+<p>其中，<script type="math/tex">\hat\phi \left ( s_{t+1} \right )</script>)为<script type="math/tex">\phi \left ( s_{t+1} \right )</script>的预测估计值，通过最小化损失函数<script type="math/tex">L_{F}</script>来优化神经网络参数<script type="math/tex">\theta_{F}</script>：</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula5.png" alt></p>
+<p>学习到的函数<script type="math/tex">f</script>也被称为前向动力学模型。内在奖励信号<script type="math/tex">r_{t}^{i}</script>的计算方法为</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula6.png" alt></p>
+<p>其中，<script type="math/tex">\eta > 0</script>是一个缩放因子。为了生成基于好奇心的内在奖励信号，我们分别共同优化了公式3和公式5中所描述的正向动力学损失和逆动力学损失。逆模型学习一个特征空间，该特征空间只编码与预测代理行为相关的信息，而前向模型在该特征空间中进行预测。我们将好奇心公式定义为Intrinsic Curiosity Module (ICM)。由于该特征空间没有动机对任何不受代理行为影响的环境特征进行编码，因此我们的代理将不会因达到本质上不可预测的环境状态而获得奖励，其探索策略具有鲁棒性。</p>
+<p>训练结构如Figure2所示</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/figure2.png" alt></p>
+<p>学习智能体的总体优化可以写成</p>
+<p><img src="/2021/11/27/Curiosity-driven-Exploration-by-Self-supervised-Prediction/formula7.png" alt></p>
+<p>其中<script type="math/tex">0\leq \beta \leq 1</script>是一个衡量逆模型损失与正向模型损失的标量，而<script type="math/tex">\lambda > 0</script>是一个衡量策略梯度损失的重要性与学习内在奖励信号的重要性的标量。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/27/Mastering-the-game-of-Go-without-human-knowledge/" rel="prev" title="Mastering the game of Go without human knowledge">
+      <i class="fa fa-chevron-left"></i> Mastering the game of Go without human knowledge
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Curiosity-Driven-Exploration"><span class="nav-number">2.</span> <span class="nav-text">Curiosity-Driven Exploration</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Prediction-error-as-curiosity-reward"><span class="nav-number">2.1.</span> <span class="nav-text">Prediction error as curiosity reward</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Self-supervised-prediction-for-exploration"><span class="nav-number">2.2.</span> <span class="nav-text">Self-supervised prediction for exploration</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">QilongPan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">QilongPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
