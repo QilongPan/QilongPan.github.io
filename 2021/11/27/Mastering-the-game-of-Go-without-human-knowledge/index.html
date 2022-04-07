@@ -20,15 +20,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="article">
+  <meta name="description" content="摘要​    最近，AlphaGo成为第一个在围棋比赛中击败世界冠军的项目。在AlphaGo中进行的树形搜索使用深度神经网络来评估位置和选择移动。这些神经网络是通过对人类专家动作的监督学习和对自我游戏的强化学习来训练的。这里我们介绍了一种仅基于强化学习的算法，没有游戏之外的人类数据、指导或领域知识规则。AlphaGo成为了它自己的老师：一个神经网络被训练来预测AlphaGo自己的移动选择以及Alp">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Mastering the game of Go without human knowledge">
 <meta property="og:url" content="http://example.com/2021/11/27/Mastering-the-game-of-Go-without-human-knowledge/index.html">
 <meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="摘要​    最近，AlphaGo成为第一个在围棋比赛中击败世界冠军的项目。在AlphaGo中进行的树形搜索使用深度神经网络来评估位置和选择移动。这些神经网络是通过对人类专家动作的监督学习和对自我游戏的强化学习来训练的。这里我们介绍了一种仅基于强化学习的算法，没有游戏之外的人类数据、指导或领域知识规则。AlphaGo成为了它自己的老师：一个神经网络被训练来预测AlphaGo自己的移动选择以及Alp">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/11/27/Mastering-the-game-of-Go-without-human-knowledge/figure1.png">
+<meta property="og:image" content="http://example.com/2021/11/27/Mastering-the-game-of-Go-without-human-knowledge/figure2.png">
 <meta property="article:published_time" content="2021-11-27T03:25:26.000Z">
-<meta property="article:modified_time" content="2021-11-27T03:25:26.317Z">
+<meta property="article:modified_time" content="2021-12-13T15:36:19.211Z">
 <meta property="article:author" content="QilongPan">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/11/27/Mastering-the-game-of-Go-without-human-knowledge/figure1.png">
 
 <link rel="canonical" href="http://example.com/2021/11/27/Mastering-the-game-of-Go-without-human-knowledge/">
 
@@ -188,6 +193,13 @@
 
               <time title="Created: 2021-11-27 11:25:26" itemprop="dateCreated datePublished" datetime="2021-11-27T11:25:26+08:00">2021-11-27</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-12-13 23:36:19" itemprop="dateModified" datetime="2021-12-13T23:36:19+08:00">2021-12-13</time>
+              </span>
 
           
 
@@ -200,7 +212,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    最近，AlphaGo成为第一个在围棋比赛中击败世界冠军的项目。在AlphaGo中进行的树形搜索使用深度神经网络来评估位置和选择移动。这些神经网络是通过对人类专家动作的监督学习和对自我游戏的强化学习来训练的。这里我们介绍了一种仅基于强化学习的算法，没有游戏之外的人类数据、指导或领域知识规则。AlphaGo成为了它自己的老师：一个神经网络被训练来预测AlphaGo自己的移动选择以及AlphaGo游戏的获胜者。该神经网络提高了树状搜索的强度，从而产生了更高质量的移动选择和在下一次迭代中更强的self-play。从白板开始，我们的新程序AlphaGo Zero取得了超人的表现，以100-0战胜了之前发表的冠军AlphaGo。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    我们的程序，AlphaGoZero，在几个重要方面不同于AlphaGo。首先，它是完全通过self-play强化学习进行训练，从随机游戏开始，没有任何监督或使用人类数据。其次，它只使用棋盘上的黑白棋子作为输入特征。第三，它使用了一个单一的神经网络，而不是单独的策略和价值网络。最后，它使用了一个更简单的树形搜索，它依赖于这个单一的神经网络来评估位置和采样动作，而不执行任何Monte Carlo rollouts。为了实现这些结果，我们引入了一种新的强化学习算法，该算法在训练循环中引入了前瞻搜索，从而实现了快速改进和精确稳定的学习。Methods章节进一步描述了搜索算法、训练过程和网络结构的的技术差异。</p>
+<h1 id="Reinforcement-learning-in-AlphaGo-Zero"><a href="#Reinforcement-learning-in-AlphaGo-Zero" class="headerlink" title="Reinforcement learning in AlphaGo Zero"></a>Reinforcement learning in AlphaGo Zero</h1><p>​    我们的新方法使用了一个参数为<script type="math/tex">\theta</script>的深度神经网络<script type="math/tex">f_{\theta}</script>。该神经网络将位置及其历史的棋盘表示<script type="math/tex">s</script>作为输入，并输出移动概率和一个值<script type="math/tex">\left ( p,v \right )=f_{\theta }\left ( s \right )</script>。移动概率的向量<script type="math/tex">p</script>表示选择每个move <script type="math/tex">a</script>（包括pass）,<script type="math/tex">p_{a}= Pr\left ( a|s \right )</script>的概率。值<script type="math/tex">v</script>是一个标量评估，估计当前玩家从状态<script type="math/tex">s</script>中获胜的概率。这个神经网络将策略网络和价值网络的作用结合成一个单一的体系结构。该神经网络由卷积层的许多残差块组成，具有批处理归一化和非线性激活函数（见Methods章节）。</p>
+<p>​    AlphaGo Zero中的神经网络是通过一种新的强化学习算法从self-play游戏中训练出来的。在每个位置<script type="math/tex">s</script>，在神经网络<script type="math/tex">f_{\theta}</script>的引导下执行MCTS搜索。MCTS搜索输出每个move的概率<script type="math/tex">\pi</script>。神经网络<script type="math/tex">f_{\theta}</script>通常选择比原始移动概率<script type="math/tex">p</script>好得多的move；因此，MCT可被视为一个强有力的policy improvement操作。使用改进的基于MCTS的策略选择每一步，然后使用游戏赢家<script type="math/tex">z</script>作为值的样本进行搜索，可将其视为强大的policy evaluation操作。我们的强化学习算法的主要思想是在策略迭代过程中重复使用这些搜索操作。更新神经网络的参数，使移动概率和值<script type="math/tex">(p,v)=f_{\theta}(s)</script>更接近改进的搜索概率和self-play的赢家<script type="math/tex">(\pi,z)</script>；这些新参数将在下一次的self-play迭代中使用，使搜索更强。图1展示了自我游戏的训练流程。</p>
+<p><img src="/2021/11/27/Mastering-the-game-of-Go-without-human-knowledge/figure1.png" alt></p>
+<p>​    MCTS使用神经网络<script type="math/tex">f_{\theta}</script>来指导其模拟(见图2)。搜索树中的每个边<script type="math/tex">(s,a)</script>都存储先验概率<script type="math/tex">P(s,a)</script>、访问计数<script type="math/tex">N(s,a)</script>和动作值<script type="math/tex">Q(s,a)</script>。每次模拟都从根状态开始，并迭代地选择使置信上限<script type="math/tex">Q(s,a)+U(s,a)</script>能够最大化的移动，其中<script type="math/tex">U(s,a)\propto P(s,a)/(1+N(s,a))</script>，直到遇到一个叶子节点<script type="math/tex">s^{'}</script>。这个叶子的位置只被网络expanded和evaluated一次，以生成先验概率和评估<script type="math/tex">(P(s^{'},\cdot ),V(s^{'})=f_{\theta}(s^{'})</script>。模拟经过每条边<script type="math/tex">(s,a)</script>更新增加其访问数<script type="math/tex">N(s,a)</script>， 并将其动作值更新为这些模拟的平均值评估<script type="math/tex">Q(s,a)=1/N(s,a)\sum _{s^{'}|s,a\rightarrow s^{'}}V(s^{'})</script>，其中<script type="math/tex">s,a\rightarrow s^{'}</script>表明模拟从<script type="math/tex">s</script>采取动作<script type="math/tex">a</script>后最终达到<script type="math/tex">s^{'}</script>。</p>
+<p><img src="/2021/11/27/Mastering-the-game-of-Go-without-human-knowledge/figure2.png" alt></p>
+<p>​    MCTS可以被视为一种self-play算法，给定神经网络参数<script type="math/tex">\theta</script>和根位置<script type="math/tex">s</script>，计算搜索概率向量<script type="math/tex">\pi=\alpha_{\theta}(s)</script>，与每次移动的访问次数指数成比例，<script type="math/tex">\pi _{a}\propto N\left ( s,a \right )^{1/\tau }</script>，其中τ是一个温度参数。    </p>
+<p>​    神经网络由一个self-play强化学习算法来训练，该算法使用MCTS来选择每个动作。首先将神经网络初始化为随机权值<script type="math/tex">\theta_{0}</script>。在随后的每次迭代<script type="math/tex">i\geq 1</script>中，都生成self-play(图1a)。在每个时间步长<script type="math/tex">t</script>中，使用神经网络fθi−1的上一次迭代来执行一个MCTS搜索π=αθ−()tti1，并通过对搜索概率πt进行采样来执行一个动作。当两个玩家都通过游戏，当搜索值低于辞职阈值或游戏超过最大长度时，游戏在步骤T步结束；然后对游戏进行评分，给予rT∈{−1，+1}的最终奖励（详见方法）。每个时间步t的数据存储为(st，πt，zt)，其中zt=±从t步当前玩家的角度来看是游戏赢家。并行地(图。1b)，从自游戏(s)最后一次迭代的所有时间步长中均匀采样的数据(s、π、z)中训练新的网络参数θi。对神经网络=θpvfs（，）(i)进行调整，使预测值v与自玩赢家z之间的误差最小化，并使神经网络移动概率p与搜索概率的相似性最大化</p>
+
     </div>
 
     
@@ -280,6 +301,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reinforcement-learning-in-AlphaGo-Zero"><span class="nav-number">3.</span> <span class="nav-text">Reinforcement learning in AlphaGo Zero</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -293,7 +315,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-count">47</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -333,7 +355,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

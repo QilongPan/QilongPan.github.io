@@ -160,6 +160,102 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/09/Revisiting-Rainbow-Promoting-more-Insightful-and-Inclusive-Deep-Reinforcement-Learning-Research/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/09/Revisiting-Rainbow-Promoting-more-Insightful-and-Inclusive-Deep-Reinforcement-Learning-Research/" class="post-title-link" itemprop="url">Revisiting Rainbow:Promoting more Insightful and Inclusive Deep Reinforcement Learning Research</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-08-09 19:53:36" itemprop="dateCreated datePublished" datetime="2021-08-09T19:53:36+08:00">2021-08-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-10 22:17:36" itemprop="dateModified" datetime="2021-08-10T22:17:36+08:00">2021-08-10</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/dqn%E7%B3%BB%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">dqn系列</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://github.com/JohanSamir/revisiting rainbow">code</a></p>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    自引入DQN以来，绝大多数的强化学习研究都集中在以深度神经网络作为函数近似器的强化学习上。新方法通常在一组现在已经成为标准的环境上进行评估，比如Atari 2600游戏。虽然这些基准有助于标准化评估，但它们的计算成本有一个不幸的副作用，即扩大了那些有充足机会获取计算资源和那些没有计算资源的人之间的差距。在这项工作中，我们认为，尽管社区强调大规模环境，但传统的小规模环境仍然可以产生有价值的科学见解，并可以帮助减少底层社区进入的障碍。为了证实我们的主张，我们通过经验回顾了介绍Rainbow算法的论文 (Hessel et al., 2018)，并对Rainbow使用的算法提出了一些新的见解。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><ul>
+<li>Double Q-learning</li>
+<li>Prioritized experience replay</li>
+<li>Dueling networks</li>
+<li>Multi-step learning</li>
+<li>Distributional RL</li>
+<li>Noisy nets</li>
+</ul>
+<h1 id="Revisiting-Rainbow"><a href="#Revisiting-Rainbow" class="headerlink" title="Revisiting Rainbow"></a>Revisiting Rainbow</h1><h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>​    我们遵循了与Hessel等人（2018）类似的过程。在评估上述各种算法变体时：我们研究了在原始DQN代理上添加每个算法的影响，以及从最终的Rainbow代理中删除每个算法的影响，横扫每个代理的学习率。</p>
+<p>​    实验环境为CartPole, Acrobot, LunarLander, and MountainCar。在这些实验中，我们使用了多层感知器(MLP)，两个多层感知器每层512个单元。这些代理都在CPU上接受了训练；值得注意的是，在这些环境中，训练时间最长的环境（LunarLander）仍然能在不到两个小时内完成训练。</p>
+<p>​    为了加强Rainbow Connection，我们还在MinAtar环境(Young and Tian, 2019)上进行了一组实验，这是五款ALE游戏(Asterix, Breakout, Freeway, Seaquest, and SpaceInvaders)的小型化版本。这些环境比以前探索过的四种经典控制环境要大得多，但它们的训练速度要比常规的ALE环境要快得多。具体来说，训练其中一种智能体，使用P100GPU大约需要12-14小时。在这些实验中，我们遵循了Young and Tian (2019)使用的网络架构，由一个单个卷积层和一个线性层组成。</p>
+<h2 id="实证评价"><a href="#实证评价" class="headerlink" title="实证评价"></a>实证评价</h2><p>​    在恒定的超参数设置下（详见附录），我们在 classic control environments（图1）和Minatar（图2）上评估了每个算法组件添加到DQN中和从整个Rainbow代理中删除。</p>
+<p>​    我们在第3节中提出的前两个问题的背景下分析我们的结果：如果Hessel等人在一组小规模实验上进行实验，他们会得出同样的定性结论吗？Hessel等人的结果是否能很好地推广到非ALE环境，或者他们的结果是否过度特定于所选基准。</p>
+<p>​    我们发现，不同组件的性能在所有环境中都不是一致的；这一发现与Hessel等人观察到的结果一致。然而，如果我们建议使用一个单一的代理来平衡不同算法组件的权衡，我们的分析将与Hessel等人的分析相一致：组合所有组件可以产生更好的整体代理。</p>
+<p>​    然而，在不同算法组件的变化中有一些重要的细节，值得进行更彻底的研究。我们工作的一个重要发现是，当将distributional RL单独添加到DQN中时，实际上可能会损害性能（如Acrobot and Freeway)；类似地，当distributional RL从Rainbow中移除时，性能有时会提高（如MountainCar和 Seaquest）。这与Hessel等人在ALE实验中的发现形成了对比，值得进一步研究。正如Lyle et al. (2019) 注意到的一样，在非线性函数近似器下(正如我们在这些实验中使用的那样），使用 distributional RL通常会产生与non-distributional变体不同的结果，但这些差异并不总是正的。</p>
+<p><img src="/2021/08/09/Revisiting-Rainbow-Promoting-more-Insightful-and-Inclusive-Deep-Reinforcement-Learning-Research/figure1.png" alt></p>
+<p><img src="/2021/08/09/Revisiting-Rainbow-Promoting-more-Insightful-and-Inclusive-Deep-Reinforcement-Learning-Research/figure2.png" alt></p>
+<h1 id="Beyond-the-Rainbow"><a href="#Beyond-the-Rainbow" class="headerlink" title="Beyond the Rainbow"></a>Beyond the Rainbow</h1>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/08/The-Surprising-Effectiveness-of-PPO-in-Cooperative-Multi-Agent-Games/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -920,71 +1016,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/06/%E6%9D%8E%E5%AE%8F%E6%AF%85%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/06/%E6%9D%8E%E5%AE%8F%E6%AF%85%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">李宏毅机器学习笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-07-06 22:46:32" itemprop="dateCreated datePublished" datetime="2021-07-06T22:46:32+08:00">2021-07-06</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-11 22:41:06" itemprop="dateModified" datetime="2021-07-11T22:41:06+08:00">2021-07-11</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Wv411h7kN?p=40">视频地址</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1054,7 +1085,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-count">47</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1094,7 +1125,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2021</span>
+  <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
