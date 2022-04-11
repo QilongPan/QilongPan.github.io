@@ -20,15 +20,41 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="article">
+  <meta name="description" content="方法Perfect information distillation是一个使用完全信息训练，不完全信息执行（perfect-training-imperfect-execution (PTIE)）的actor-critic框架，类似于集中式训练分布式执行，critic利用完全信息（全局信息），actor利用不完全信息（局部信息）。Actor-critic是一个策略梯度(PG)方法的模板，通过一个具">
+<meta property="og:type" content="article">
 <meta property="og:title" content="PerfectDou:Dominating DouDizhu with Perfect Information Distillation">
 <meta property="og:url" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/index.html">
 <meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="方法Perfect information distillation是一个使用完全信息训练，不完全信息执行（perfect-training-imperfect-execution (PTIE)）的actor-critic框架，类似于集中式训练分布式执行，critic利用完全信息（全局信息），actor利用不完全信息（局部信息）。Actor-critic是一个策略梯度(PG)方法的模板，通过一个具">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/formula1.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/formula2.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure1.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure2.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table1.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table6.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure11.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table7.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure3.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/formula4.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure4.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table8.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table2.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table3.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure12.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table4.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure5.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table5.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure6.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure7.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure8.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure9.png">
+<meta property="og:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure10.png">
 <meta property="article:published_time" content="2022-04-07T13:32:23.000Z">
-<meta property="article:modified_time" content="2022-04-07T13:32:23.984Z">
+<meta property="article:modified_time" content="2022-04-11T12:04:41.167Z">
 <meta property="article:author" content="QilongPan">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/formula1.png">
 
 <link rel="canonical" href="http://example.com/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/">
 
@@ -188,6 +214,13 @@
 
               <time title="Created: 2022-04-07 21:32:23" itemprop="dateCreated datePublished" datetime="2022-04-07T21:32:23+08:00">2022-04-07</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-11 20:04:41" itemprop="dateModified" datetime="2022-04-11T20:04:41+08:00">2022-04-11</time>
+              </span>
 
           
 
@@ -200,7 +233,74 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p><strong>Perfect information distillation</strong>是一个使用完全信息训练，不完全信息执行（perfect-training-imperfect-execution (PTIE)）的actor-critic框架，类似于集中式训练分布式执行，critic利用完全信息（全局信息），actor利用不完全信息（局部信息）。Actor-critic是一个策略梯度(PG)方法的模板，通过一个具有价值函数的PG来最大化策略函数的预期回报：</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/formula1.png" alt></p>
+<p>其中s表示RL问题中的一个状态，Q是由一个函数逼近器学习到的state-action值函数，通常称为critic。请注意，critic扮演的角色是只在训练时评估在特定情况下采取的行动的良好程度。当智能体被部署到推理中时，只能使用策略<script type="math/tex">\pi</script>(actor)来获取可行的动作。因此，对于不完全信息游戏，我们可以提供关于玩家的额外信息通过self-play来训练critic，只要actor不使用这些信息来进行决策。直观地说，就是把完全的信息提炼成不完全的策略。可以将公式1重写为：</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/formula2.png" alt></p>
+<p><script type="math/tex">h</script>表示为局部信息构成的状态，<script type="math/tex">D(h)</script>（包括额外的信息比如其它玩家手中的牌）表示为全局信息构成的状态。</p>
+<p>PTIE是训练不完美信息游戏代理的一种通用方法。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure1.png" alt></p>
+<h2 id="PerfectDou系统设计"><a href="#PerfectDou系统设计" class="headerlink" title="PerfectDou系统设计"></a>PerfectDou系统设计</h2><h3 id="card-representation"><a href="#card-representation" class="headerlink" title="card representation"></a>card representation</h3><p>使用<script type="math/tex">12 \times 15</script>的矩阵来表示各种可行的牌的组合，如图2所示。使用<script type="math/tex">4 \times 15</script> 的矩阵来表示牌的数值及数量，列对应15种不同的牌值，第1-4行中每列对应的1的数量表示玩家手牌中该牌值对应的数量。将手牌的合法组合进行编码，合法组合见table6。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure2.png" alt></p>
+<p>特征的设计如table1所示，分别给出了不完全特征设计（actor网络使用）和完全的特征设计（critic网络使用）。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table1.png" alt></p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table6.png" alt></p>
+<h3 id="网络结构和动作表示"><a href="#网络结构和动作表示" class="headerlink" title="网络结构和动作表示"></a>网络结构和动作表示</h3><p>​    PerfectDou使用PPO作为学习算法。对于价值网络，使用MLP来处理编码的特性。</p>
+<p>​    期望价值函数（critic）能够利用全局信息来评估玩家的现状的，可以向critic提供智能体不允许看到的额外信息。如图11所示，价值网络（critic）的不完全特征采用策略网络(actor)中的共享网络进行编码，此外还对策略在博弈过程中无法观察到的完全特征进行了编码。然后将编码的向量连接到一个简单的MLP上，以得到Value。</p>
+<p>​    对于策略网络，首先使用LSTM对所有设计的特性进行编码；为了鼓励代理注意特定的卡牌类型，所提出的网络结构将把所有可用的动作编码为特征向量，如table7所示。然后利用动作和游戏特征计算合法动作概率的输出，如图3所示。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure11.png" alt></p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table7.png" alt></p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure3.png" alt></p>
+<h3 id="reward-design"><a href="#reward-design" class="headerlink" title="reward design"></a>reward design</h3><p>​    如果只关心游戏结束时的结果，那么奖励相当稀疏；此外玩家只能在游戏中使用不完全的信息来估计他们赢得游戏的优势，这可能是不准确和波动的。为此，我们提出了一个在每个状态上的增强奖励函数。我们不是让玩家单独评估优势，而是使用一个公式来评估每个玩家，特别是出完所有牌所需的最小步骤，这可以被视为对获胜距离的简单估计。奖励函数被定义为由两个阵营在两个连续时间步中获胜的相对距离计算出的优势差。在时间<script type="math/tex">t</script>，奖励函数是：</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/formula4.png" alt></p>
+<p>其中<script type="math/tex">l</script>是一个比例因子，<script type="math/tex">N_{t}</script>是在时间步长<script type="math/tex">t</script>上出完所有牌的最小步骤。</p>
+<p>​    例如在一局中，在时间戳t，地主获胜的距离是5，两个农民的距离是3和7，这意味着农民有较大的优势，因为农民的相对距离是2，地主是-2。如果地主出牌好，所有农民都不能压制，由于地主的相对距离减少，即从2到1，地主就会得到积极的奖励。相应地，随着农民相对距离的增大，农民会得到负奖励。相反，如果距离为3的农民只是压制房东的牌手，其他农民pass，两个阵营的奖励都是0。这种奖励功能可以鼓励农民之间的合作，因为获胜距离是由双方的最小步数定义的。在实现中，奖励的计算是在一局游戏后进行的，从而提高训练效率。</p>
+<h3 id="分布训练细节"><a href="#分布训练细节" class="headerlink" title="分布训练细节"></a>分布训练细节</h3><p>​    为了进一步加快训练过程，设计了一个如图4所示的分布式训练系统。具体来说，该系统包含一组rollout worker，用于收集self-play经验数据并将其发送到gpu池；这些gpu异步接收数据并将其存储到本地缓冲区中。然后，每个学习者从自己的缓冲区中随机抽取小批量样本，并分别计算梯度，然后在所有gpu上同步平均，并反向传播以更新神经网络。在每一轮更新后，新的参数将被发送给每个rollout worker。每个worker将在24步（每个玩家8步后）加载最新的模型。这种解耦的训练采样结构将使PerfectDou能够扩展到大规模的实验中。我们的分布式系统设计大量借鉴了IMPALA它还维持了一组rollout workers来接收更新的模型与环境交互，并将rollout轨迹发送给学习者。主要的区别来自学习算法，本文使用PPO而不是V-trace。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure4.png" alt></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><p>​    使用880个cpu核心和8个gpu构建了一个小型的分布式训练集群。Horovod用于同步GPU之间的梯度，总的batch size 为1024，每个GPU的批处理大小为128。在早期训练阶段，总奖励函数将是一个基本的奖励(WP或ADP)，使用公式4中的奖励来增强，帮助收敛。在后期阶段，增强的奖励将被删除。实验的超参数如table8所示。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table8.png" alt></p>
+<p>给定两种算法A对B，我们计算：</p>
+<ul>
+<li>WP（获胜率）：在一些比赛中A获胜的比例。</li>
+<li>ADP（平均得分差）：A和B之间每场比赛的平均得分差。基础得分是1，每个炸弹使得分翻倍。这是一个评估斗地主AI系统的更合理的指标。</li>
+</ul>
+<p>​    在DouZero中，他们更关注比赛的输赢结果，而不太关心分数。然而，在真正的比赛中，玩家必须玩大量的游戏，并根据他们获胜的分数进行排名。这就是为什么我们认为ADP是评估AI人工智能系统的更好指标，因为一个糟糕的人工智能玩家可以用很少的分数赢得游戏，但失去更多的分数。</p>
+<p>​    具体来说，在每个游戏中，地主和农民的基础得分分别是2和1。当游戏中出现炸弹时，每个玩家的分数都会加倍。例如，一个农民玩家首先出一个4的炸弹，然后地主玩家用火箭压制它，然后每个农民的基础分数变成4，地主变成8。玩家在赢得比赛后将赢得所有的分数，或者输掉所有的分数。</p>
+<p>​    <strong><em>在我们的实验中，我们选择ADP作为基本奖励，在早期训练阶段，用公式4中提出的奖励信号来增强。</em></strong></p>
+<p>​    每两个智能体会测试10000局，忽略了叫分阶段，主要考虑出牌阶段。所有的游戏都是随机生成的，每局游戏将进行两次，即每个竞争算法被分配为地主或农民一次。我们分别使用WP和ADP作为基本奖励来比较所有评估方法的这两个指标，测试结果如table2所示。</p>
+<p>​    总体而言，PerfectDou击败了所有现有的人工智能程序，无论是基于规则还是基于学习的算法，在WP和ADP上都具有显著优势。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table2.png" alt></p>
+<p>​    与DouZero的训练效率比较如table3所示。可以看出PerfectDou使用1e9个样本训练出的模型强于DouZero使用1e10训练出的模型。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table3.png" alt></p>
+<p>​    图12显示了PerfectDou在训练过程中与DouZero最终模型对战的WP和ADP变化。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure12.png" alt></p>
+<h3 id="消融实验"><a href="#消融实验" class="headerlink" title="消融实验"></a>消融实验</h3><p>​    进一步研究PerfectDou成功的关键。具体来说是为了分析特征设计和训练框架是如何帮助PerfectDou主宰斗地竹锦标赛的。为此评估了PerfectDou的不同变体和之前的SoTA AI系统(DouZero)，包括：</p>
+<ul>
+<li>ImperfectDouZero:DouZero与本文提出的不完全信息特征结合</li>
+<li>ImperfectDou：PerfectDou只有不完全的特征作为值函数的输入</li>
+<li>RewardlessDou：PerfectDou不使用公式4中的增强reward</li>
+<li>Vanilla PPO：简单的actor-critic训练，只具有不完全的特征，而且没有公式4中额外的奖励。</li>
+</ul>
+<p>结果如table4所示。即使只有不完全的特征，PerfectDou仍然可以用同样的训练步骤轻松击败DouZero；然而DouZero用更多的训练数据来扭转结果。此外，我们提出的特征似乎不适合DouZero获得比原始设计更好的结果。此外在没有公式4的奖励的情况下，PerfectDou仍然以更高的WP击败了DouZero(尽管牺牲了大量的ADP)，这表明了增强奖励在训练中的有效性，如果没有它，就会冒着失去分数赢得一场比赛的风险。最后，如果没有公式4中的增强奖励和完全特征设计用于价值网络，简单的PPO根本不能很好地执行。因此可以得出结论，基于actor-critic的算法和PTIE训练在我们的特征设计下提供了较高的样本效率，并且增强奖励有利于我们的人工智能的合理性。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table4.png" alt></p>
+<h3 id="运行时间分析"><a href="#运行时间分析" class="headerlink" title="运行时间分析"></a>运行时间分析</h3><p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure5.png" alt></p>
+<p>​    DouZero的平均推理时间为2毫秒，而PerfectDou的平均推理时间为6毫秒。而PerfectDou比DouZero慢一点的原因可能是因为更复杂的特征处理过程。以上分析表明，PerfectDou适用于高级游戏人工智能等现实世界的应用。</p>
+<h3 id="深入统计分析"><a href="#深入统计分析" class="headerlink" title="深入统计分析"></a>深入统计分析</h3><p>​    我们对DouZero和PerfectDou之间的游戏进行了深入的分析和收集了统计数据。特别是我们组织了PerfectDou和DouZero之间的游戏，在每个设置的10万局游戏中扮演不同的角色。由于在我们的实验中，角色是分配而不是选择，而且地主有额外的三张牌和有更高的基础分数（例如农民基础分为1，地主基础分为2），从table5中显示的统计数据中可以看出扮演地主总是一个低劣的选择，导致负的adp。扮演地主时，PerfectDou倾向于控制游戏，甚至农民出更多的炸弹；(ii)两个农民可以更好地合作，减少地主的控制时间和玩炸弹的机会。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/table5.png" alt></p>
+<h3 id="案例研究：对比DouZero与PerfectDou的行为"><a href="#案例研究：对比DouZero与PerfectDou的行为" class="headerlink" title="案例研究：对比DouZero与PerfectDou的行为"></a>案例研究：对比DouZero与PerfectDou的行为</h3><p>​    DouZero更有侵略性，但考虑更少。第一个观察结果是，DouZero在不考虑剩下手牌的情况下非常具有攻击性。 例如，如图6所示，在一开始DouZero选择了一个单打链，但留下了一对3，这可能是危险的，因为这对3是最小的牌之一，不能压制任何牌; 图7是另一个有力的例子，在图7中，DouZero选择了单顺来压制对手，而不考虑手中留下许多单牌的后果。 相反，PerfectDou则更加保守和稳健。 我们认为提出的完全信息蒸馏机制有助于PerfectDou以更合理的方式推断全局信息。  </p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure6.png" alt></p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure7.png" alt></p>
+<p>​    PerfectDou更善于猜测和压制。我们观察到在PTIE框架中使用完全的信息蒸馏，通过提前压制对手，会有很大的好处。在图8中显示了当队友出一对10的情况下，DouZero选择通过；相反，PerfectDou选择一对Q压制，刚好是地主的最小对。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure8.png" alt></p>
+<p>​    PerfectDou更擅长牌组合。在图9所示的战斗中，PerfectDou在组合牌策略上表现出更好的能力。具体来说，PerfectDou选择分割飞机(999，101010，因为它认为还有一个单顺(910JQK)。然而DouZero只采取了三带一，这将很容易被对手压制。这得益于牌表示的正确设计和PerfectDou的动作特征。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure9.png" alt></p>
+<p>​    PerfectDou更冷静。图10描绘了一个典型而有趣的场景，PerfectDou展示了它对全局的冷静和仔细的考虑。在游戏中，上家地主出了单2，手中只剩下8张牌。DouZero似乎很害怕，并分裂了火箭炸弹；然而PerfectDou受益于优势奖励设计，考虑到保留炸弹可以以更高的分数赢得比赛。</p>
+<p><img src="/2022/04/07/PerfectDou-Dominating-DouDizhu-with-Perfect-Information-Distillation/figure10.png" alt></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    在本文中，我们提出了一个最强的斗地主AI系统。PerfectDou利用了完全信息训练-不完全信息执行的训练方式，并在分布式训练框架内进行训练。在实验中，我们广泛地研究了PefectDou如何以及为什么能够通过以合理的战略行动击败所有现有的人工智能程序来实现SoTA的性能。</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ul>
+<li>没有谈到合法动作作为特征时如何处理每次手牌合法动作数量不一致的问题，会导致网络结构的输入不一样。在实现时是设置了最大合法动作数量？</li>
+</ul>
+
     </div>
 
     
@@ -277,6 +377,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PerfectDou%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.</span> <span class="nav-text">PerfectDou系统设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#card-representation"><span class="nav-number">2.1.</span> <span class="nav-text">card representation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84%E5%92%8C%E5%8A%A8%E4%BD%9C%E8%A1%A8%E7%A4%BA"><span class="nav-number">2.2.</span> <span class="nav-text">网络结构和动作表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reward-design"><span class="nav-number">2.3.</span> <span class="nav-text">reward design</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E5%B8%83%E8%AE%AD%E7%BB%83%E7%BB%86%E8%8A%82"><span class="nav-number">2.4.</span> <span class="nav-text">分布训练细节</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">3.1.</span> <span class="nav-text">实现细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C"><span class="nav-number">3.2.</span> <span class="nav-text">消融实验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4%E5%88%86%E6%9E%90"><span class="nav-number">3.3.</span> <span class="nav-text">运行时间分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90"><span class="nav-number">3.4.</span> <span class="nav-text">深入统计分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E7%A0%94%E7%A9%B6%EF%BC%9A%E5%AF%B9%E6%AF%94DouZero%E4%B8%8EPerfectDou%E7%9A%84%E8%A1%8C%E4%B8%BA"><span class="nav-number">3.5.</span> <span class="nav-text">案例研究：对比DouZero与PerfectDou的行为</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">问题</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
