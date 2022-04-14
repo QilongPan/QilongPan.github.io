@@ -160,6 +160,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/10/Nature-DQN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/10/Nature-DQN/" class="post-title-link" itemprop="url">Nature DQN</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2021-08-10 21:12:29 / Modified: 22:17:20" itemprop="dateCreated datePublished" datetime="2021-08-10T21:12:29+08:00">2021-08-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/dqn%E7%B3%BB%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">dqn系列</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><img src="/2021/08/10/Nature-DQN/algorithm1.png" alt></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/09/Revisiting-Rainbow-Promoting-more-Insightful-and-Inclusive-Deep-Reinforcement-Learning-Research/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -950,72 +1022,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/10/Distributed-Prioritized-Experience-Replay/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/10/Distributed-Prioritized-Experience-Replay/" class="post-title-link" itemprop="url">Distributed Prioritized Experience Replay</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-07-10 13:11:31 / Modified: 18:49:56" itemprop="dateCreated datePublished" datetime="2021-07-10T13:11:31+08:00">2021-07-10</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    我们提出了一种用于大规模深度强化学习的分布式架构，它使代理能够从比以前更多的数量级的数据中有效地学习。 该算法将actor与learner解耦：actor通过根据共享神经网络选择动作与自己的环境实例进行交互，并将由此产生的经验积累在共享经验回放记忆中； learner重放经验样本并更新神经网络。 该架构依赖于优先经验重放，以只关注actor生成的最重要的数据。 我们的架构大大提高了在Arcade Learning Environment的水平，通过短时间训练实现了更好的最终性能。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    深度学习的广泛趋势是将更多计算与更强大的模型和大型数据集相结合可产生更令人印象深刻的结果，强化学习也类似。在本文中描述了一种通过生成更多数据并以优先级方式进行选择来扩大深度强化学习的方法。我们使用这种分布式体系结构来扩展DQN和DDPG的变体。通过允许代理从策略以前版本生成的数据中学习，经验重放也有助于防止过度拟合。</p>
-<h1 id="Ape-X"><a href="#Ape-X" class="headerlink" title="Ape-X"></a>Ape-X</h1><p>​    在本文中，我们将优先级的经验重放prioritized experience replay扩展到分布式中，并表明这是一种高度可伸缩的深度强化学习方法，并且我们将我们的方法称为Ape-X。</p>
-<p><img src="/2021/07/10/Distributed-Prioritized-Experience-Replay/architecture.png" alt></p>
-<p><img src="/2021/07/10/Distributed-Prioritized-Experience-Replay/algorithm1.png" alt></p>
-<p><img src="/2021/07/10/Distributed-Prioritized-Experience-Replay/algorithm2.png" alt></p>
-<p>​    多个actor，每个actor都有自己的环境实例生成经验，将其添加到共享的经验重放内存中，并计算数据的初始优先级。（单个）learner从此内存中获取样本，并更新网络和内存中经验的优先级。使用learner提供的最新网络参数定期更新actor的网络。</p>
-<p>​    原则上，actor和learner都可以分布在多个worker之间。在我们的实验中，数百个actor在CPU上运行以生成数据，而一个learner采样最有用的经验在GPU上运行。更新的网络参数会定期从learner那里传达给actor。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1085,20 +1091,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-count">48</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
