@@ -160,6 +160,346 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Genetic State-Grouping Algorithm for Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-26 21:10:23" itemprop="dateCreated datePublished" datetime="2021-04-26T21:10:23+08:00">2021-04-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-27 00:00:49" itemprop="dateModified" datetime="2021-04-27T00:00:49+08:00">2021-04-27</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning"><a href="#Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning" class="headerlink" title="Genetic State-Grouping Algorithm for Deep Reinforcement Learning"></a>Genetic State-Grouping Algorithm for Deep Reinforcement Learning</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>​    虽然强化学习已经被认为是机器学习中最重要和最著名的技术之一，但由于其较长的初始学习时间和学习不稳定，它在现实问题中的适用性仍然有限。特别是在实时约束下，大量分支因子的问题仍然无法克服，这需要一种针对下一代强化学习的新方法。本文提出了基于深度强化学习的Genetic State-Grouping Algorithm。其核心思想是将整个状态集划分为几个状态组。每一组都由相互相似的状态组成，从而代表了它们的共同特征。然后使用遗传优化器来处理状态组，从而发现杰出的操作。这些步骤有助于深度Q网络避免过度的探索，从而导致不能显著减少初始学习时间。对实时战斗电子游戏(FightingICE)的实验证明了该方法的有效性。</p>
+<p>关键词：强化学习，遗传算法，混合方法，蒙特卡罗技术</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    强化学习方法(RL)击败了世界上最好的人类围棋玩家之一，引起了专家们的认真关注。它的基于试验和错误的迭代而不是大量的预定义数据集进行培训的性质在全世界引起了热烈的讨论和兴趣。然而，除了强化学习的所有成就外，它还暴露了许多技术困难，如学习不稳定和进入局部最优。具体地说，很难定义一个找到复杂问题中的全局解的奖励函数，它比其他类型的机器学习需要更多的计算资源和初始学习时间。之前的研究提出了各种解决这些缺点的解决方案，有些是利用实时视频游戏环境与现实世界相似，表明它们适合RL对内存和时间的苛刻需求。然而，这些研究的主要贡献仅限于只有几个分支因素的问题，因为提高它们的数量会呈指数级地增加所需的计算资源数量。</p>
+<p>​    本文介绍了通过深度强化学习增强的Genetic State-Grouping Algorithm (GSGA)。它是遗传算法和State Grouping的集成，我们真正的方法，以追求提高深度强化学习在时间和资源效率方面的学习效率。我们展示了它在FightingICE中的表现，这是一个实时战斗视频游戏，由IEEE CoG完成。我们认为它是一个适当的试验场来验证我们提出的结构的有效性，因为它包含了各种类似于现实世界的环境因素。</p>
+<p>​    FightingICE由 Intelligent Computer Entertainment Lab in Ritsumeikan University, Japan开发。因为它是一个为构建通用战斗游戏ai而设计的环境，所以在属性和风格方面，它是一种相当典型的类型。在每一轮中，两个玩家代理在二维空间中相互战斗，他们之间实例化一个物理距离。游戏向每个代理提供多达56个可执行操作。此外，根据交战规则，每个玩家被允许一次只使用一个线程，以复制真实世界的问题条件，这需要大量使用计算资源。总的来说,FightingICE玩家只利用单个线程在16.67ms的每个时间帧内必须考虑多达3136个动作状态。游戏中的物理空间由<script type="math/tex">960\times 640</script>像素组成，分为5像素大小的房间，每个代理都可以放置在里面。因此，每个代理总共有<script type="math/tex">192\times128</script>的状态空间来重新定位。</p>
+<p>​    本文的排列格式如下：第二章我们介绍了一些与本文主要思想有关的研究。在第三章中，我们介绍了我们的技术的核心理论，以及关于电子游戏环境的细节。第4章介绍了我们的模型及其竞争对手的过程和实验结果，第五章提供了我们对模型整体性能的评论和关注。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>​    在强化学习过程中，人们多次尝试减少长初始学习时间，稳定整体学习的过程。Justesen等人提出一种强化学习代理，有效解决实时问题的时间划分和对抗环境，Langford提出一种有效的探索方法。一些研究选择通过增强学习稳定性来降低结构复杂性，尽管他们的方法对涉及多个分支因素的问题缺乏足够的适用性，但在这些问题中，环境高度复杂，或者为代理提供了大量的操作选择。此外，(Justesen等人，2016)提出了一个解决在线进化的巨大分支因素的解决方案，尽管它几乎不适用于实时视频游戏。在具有多变量的实时问题中，大量的分支因素特别吓人，其中分支的数量增长得非常快。尽管RL具有探索和经验学习的性质，适合于开发实时自适应AI，但在现实世界中常见的多分支因子问题中，RL的学习效率会大大降低。</p>
+<p>​    其他几项研究采用蒙特卡罗树搜索（MCTS），结合进化算法，作为强化学习的补充在开发视频游戏AI时，证明了其在足够时间内找到最佳解决方案的能力。尽管如此，在大多数方面强化学习需要大量计算资源和时间的本质仍然是不可妥协的。</p>
+<h2 id="提出的方法"><a href="#提出的方法" class="headerlink" title="提出的方法"></a>提出的方法</h2><p>​    强化学习是一种机器学习技术，它在代理与未知环境交互时为他们找到最佳的学习策略。这种过程通常被形式化为马尔可夫决策过程(MDPs)，它可以由4个元素<script type="math/tex">(S,A,P,R)</script>来定义。在每个时间戳<script type="math/tex">t</script>，agent观察一组状态<script type="math/tex">s_{t}\in S</script>，并采取一组操作<script type="math/tex">a_{t}\in A</script>。与转换函数<script type="math/tex">P</script>相关联，所有状态都为马尔可夫的环境，决定奖励<script type="math/tex">r_{t}\sim R(s_{t},a_{t})</script>和后续或以下状态<script type="math/tex">s_{t+1}\sim P(s_{t},a_{t})</script>。我们将根据一阶马尔可夫假设来解释所提出的方法。</p>
+<p>​    图1从概念上表示了我们提议的GSGA的总体结构。它由三个主体组成：1）state grouping，2） genetic optimizer，和3) deep Q network。其详细的程序描述如下。</p>
+<p><img src="/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/figure1.png" alt></p>
+<p>​        State Grouping(SG)是一种技术，通过将相似的状态结合在一起，压缩状态线的大小，包括物理距离。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/26/Reinforcement-Study-Notes/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/26/Reinforcement-Study-Notes/" class="post-title-link" itemprop="url">Reinforcement Study Notes</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-26 20:53:20" itemprop="dateCreated datePublished" datetime="2021-04-26T20:53:20+08:00">2021-04-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-21 21:42:18" itemprop="dateModified" datetime="2021-06-21T21:42:18+08:00">2021-06-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="论文下载"><a href="#论文下载" class="headerlink" title="论文下载"></a>论文下载</h1><p>sci-hub</p>
+<p>根据 DOI全称数字对象唯一标识符(Digital Object Unique Identifier-DOI) 查询下载</p>
+<p><a target="_blank" rel="noopener" href="https://www.douban.com/group/topic/144179135/">https://www.douban.com/group/topic/144179135/</a></p>
+<p><a target="_blank" rel="noopener" href="https://gfsoso.99lb.net/sci-hub.html">https://gfsoso.99lb.net/sci-hub.html</a></p>
+<h1 id="李宏毅视频笔记"><a href="#李宏毅视频笔记" class="headerlink" title="李宏毅视频笔记"></a>李宏毅视频笔记</h1><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1UE411G78S?from=search&amp;seid=9027506742489609557">视频地址</a></p>
+<h2 id="lesson1"><a href="#lesson1" class="headerlink" title="lesson1"></a>lesson1</h2><h3 id="强化学习难点"><a href="#强化学习难点" class="headerlink" title="强化学习难点"></a>强化学习难点</h3><ul>
+<li>Reward delay</li>
+<li>Agent’s actions affect the subsequent data it receives</li>
+</ul>
+<h3 id="强化学习方法"><a href="#强化学习方法" class="headerlink" title="强化学习方法"></a>强化学习方法</h3><p>policy-based :   Learning an Actor</p>
+<p>value-based:    Learning a Critic</p>
+<p>model-based</p>
+<p>Three Steps for Deep Learning</p>
+<ul>
+<li>Neural Network as Actor</li>
+</ul>
+<p>Input of neural network:the observation of machine represented as a vector or a matrix</p>
+<p>Output neural network:each action corresponds to a neuron in output layer</p>
+<ul>
+<li>goodness of function</li>
+</ul>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic1.png" alt></p>
+<p>Actor的好坏。通过actor玩游戏算reward期望</p>
+<p>An episode is considered as a trajectory </p>
+<p>$\tau = \left \{ s_{1},a_{1},r_{1},s_{2},a_{2},r_{2},…,s_{T},a_{T},r_{T} \right \}$</p>
+<p>$R_{\tau } = \sum_{n=1}^{N}r_{n}$</p>
+<p>If you use an actor to play the game,each <script type="math/tex">\tau</script> has a probability to be sampled. The probability depends on actor parameter <script type="math/tex">\theta</script>:$P(\tau|\theta)$</p>
+<p>Use <script type="math/tex">\pi_{\theta}</script> to play the game N times,obtain <script type="math/tex">\left \{ \tau^{1},\tau^{2},...,\tau^{N} \right \}</script> </p>
+<p>Sampling <script type="math/tex">\tau</script> from <script type="math/tex">P(\tau|\theta)</script> N times.</p>
+<script type="math/tex; mode=display">\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})</script><p>Gradient Ascent</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic2.png" alt></p>
+<p>Problem statement</p>
+<script type="math/tex; mode=display">\theta ^{*} = argmax \bar{R_{\theta}}</script><script type="math/tex; mode=display">\bar{R_{\theta}}=\sum_{\tau}R(\tau)P(\tau|\theta)$$\
+
+Start with $$\theta^{0}</script><script type="math/tex; mode=display">\theta ^{1}\leftarrow \theta ^{0}+\eta \bigtriangledown \bar{R_{\theta ^{0}}}</script><script type="math/tex; mode=display">\theta ^{2}\leftarrow \theta ^{1}+\eta \bigtriangledown \bar{R_{\theta ^{1}}}</script><script type="math/tex; mode=display">...</script><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic3.png" alt></p>
+<script type="math/tex; mode=display">\bigtriangledown \bar{R_{\theta }}=\sum_{\tau}R(\tau)\bigtriangledown P(\tau|\theta) =\sum_{\tau}R(\tau)P(\tau|\theta)\frac{\bigtriangledown P(\tau|\theta)}{P(\tau|\theta)} =\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta)</script><script type="math/tex; mode=display">\frac{dlog(f(x))}{dx}=\frac{1}{f(x)}\frac{df(x)}{dx}</script><script type="math/tex; mode=display">\sum_{\tau}R(\tau)P(\tau|\theta)\bigtriangledown log P(\tau|\theta) \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)$$,Because $$\bar{R_\theta}=\sum_{\tau}R(\tau)P(\tau|\theta)\approx \frac{1}{N}\sum_{n=1}^{N}R(\tau^{n})$$.
+
+![](./Reinforcement-Study-Notes/pic4.png)
+
+Use $$\pi_{\theta}$$ to play the game N times,obtain $$\left \{ \tau^{1},\tau^{2},...,\tau^{N} \right \}</script><script type="math/tex; mode=display">R(\tau)$$ do not have to be differentiable It can even be a black box.
+
+$$P(\tau|\theta) = p(s_{1})p(a_{1}|s_{1},\theta)p(r_{1},s_{2}|s_{1},a_{1})p(a_{2}|s_{2},\theta)p(r_{2},s_{3}|s_{2},a_{2})... = p(s_{1})\prod_{t=1}^{T}p(a_{t}|s_{t},\theta)p(r_{t},s_{t+1}|s_{t},a_{t})$$ ![](./Reinforcement-Study-Notes/pic5.png)
+
+$$p(a_{1}|s_{1},\theta)$$取决于策略，$$p(r_{1},s_{2}|s_{1},a_{1})$$取决于游戏。$$p(s_{1})$$ and $$p(r_{t},s_{t+1}|s_{t},a_{t})$$ not releated to your actor
+
+$$logP(\tau|\theta) = logp(s_{1}) + \sum_{t=1}^{T}logp(a_{t}|s_{t},\theta) + logp(r_{t},s_{t+1}|s_{t},a_{t})</script><p>Ignore the terms not related to <script type="math/tex">\theta</script></p>
+<script type="math/tex; mode=display">\bigtriangledown logP(\tau|\theta) = \sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta)</script><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic6.png" alt></p>
+<p>finally:</p>
+<script type="math/tex; mode=display">\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\bigtriangledown logP(\tau^{n}|\theta)= \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) = \frac{1}{N}\sum_{n=1}^{N}R(\tau ^{n})\sum_{t=1}^{T}\bigtriangledown logp(a_{t}|s_{t},\theta) =\frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}R(\tau ^{n})\bigtriangledown logp(a_{t}|s_{t},\theta)</script><script type="math/tex; mode=display">\theta^{new}\leftarrow \theta^{old} + \eta \bigtriangledown \bar{R_{\theta ^{old}}}</script><p>If in <script type="math/tex">\tau^{n}</script> machine takes  <script type="math/tex">a_{t}^{n}</script> when seeing <script type="math/tex">s_{t}^{n}</script> in </p>
+<script type="math/tex; mode=display">R(\tau^{n})$$ is positive  -------> Tuning  $$\theta$$ to increase  $$p(a_{t}^{n})|s_{t}^{n})</script><script type="math/tex; mode=display">R(\tau^{n})$$ is negative  -------> Tuning  $$\theta$$ to decrease $$p(a_{t}^{n})|s_{t}^{n})</script><p>It is very important to consider the cumulative reward <script type="math/tex">R(\tau^{n})</script> of the whole trajectory <script type="math/tex">\tau^{n}</script> instead of immediate reward <script type="math/tex">r_{t}^{n}</script>(是用整个trajectory的累加reward而不是用某一时刻的reward去乘)</p>
+<p>如果使用的是某一时刻的reward去乘，只会让那一个动作的概率增加，而不会让其它动作概率增加</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic7.png" alt></p>
+<p><strong>为什么要使用<script type="math/tex">\bigtriangledown logP(\tau^{n}|\theta)</script>,而不用<script type="math/tex">\frac{\bigtriangledown P(a_{t}^{n}|s_{t}^{n},\theta)}{ P(a_{t}^{n}|s_{t}^{n},\theta)}</script></strong></p>
+<p>e.g. in the sampling data… s has been seen in <script type="math/tex">\tau^{13},\tau^{15},\tau^{17},\tau^{33}</script></p>
+<p>In <script type="math/tex">\tau^{13}</script> ,take action a <script type="math/tex">R(\tau^{13})=2</script></p>
+<p>In <script type="math/tex">\tau^{15}</script> ,take action b <script type="math/tex">R(\tau^{15})=1</script></p>
+<p>In <script type="math/tex">\tau^{17}</script> ,take action b <script type="math/tex">R(\tau^{17})=1</script></p>
+<p>In <script type="math/tex">\tau^{33}</script> ,take action b <script type="math/tex">R(\tau^{33})=1</script></p>
+<p>因为求期望是rewad乘以概率的累加，所以因为b出现次数较多，所以会导致虽然b的单次reward不如a高，但是由于其出现次数多，会使b的概率大于a。所以需要divided by <script type="math/tex">P(a_{t}^{n}|s_{t}^{n},\theta)</script>,相当于进行normalize</p>
+<p><strong>Add a Baseline</strong></p>
+<p>It is possible that <script type="math/tex">R(\tau^{n})</script> is always positive.</p>
+<p>假如有动作a没有被sample，其它动作<script type="math/tex">R(\tau^{n})</script>为正，所以概率会增加，相对的动作a的概率就是减小</p>
+<p>The probability of the actions not sampled will decrease.</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/add_baseline.png" alt></p>
+<script type="math/tex; mode=display">\bigtriangledown \bar{R_{\theta }} \approx \frac{1}{N}\sum_{n=1}^{N}\sum_{t=1}^{T_{n}}(R(\tau ^{n}) - b)\bigtriangledown logp(a_{t}|s_{t},\theta)</script><p>大于baseline才增加概率，小于baseline减小概率</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic24.png" alt></p>
+<p>假设游戏只有三步，从图中可以看出第一个episode得了3分，但是每个action的贡献都不一样，<script type="math/tex">a_{1}</script>贡献了5分，<script type="math/tex">a_{3}</script>贡献了-3分，但是训练的时候反而会增加<script type="math/tex">a_{3}</script>的概率。如果sample的episode够多，能够得到一个期望分数，或许能够忽略这个问题，比如第二个episode的情况下，<script type="math/tex">a_{3}</script>的reward为负的。为了解决这个问题，可以讲公式中的<script type="math/tex">R(\tau^{n})</script>(整个episode的reward和)换成只从当前action开始的reward和，因为之前的reward和当前action无关，公式如图所示。</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic25.png" alt></p>
+<p>由于未来的reward不确定性大，所以在计算reward和时会加入衰减，公式如图所示。</p>
+<script type="math/tex; mode=display">R(\tau^{n}) - b$$是状态独立的，为Advantage Function,表示该状态采取该动作有多好，这个是相对的。Advantage Function有多种形式，这里只是其中一种。
+
+**Critic**
+
+- A critic does not determine the action.
+- Given an actor,it evaluates the how good the actor is
+
+- pick the best function  
+
+## lesson2
+
+该部分通俗解释policy gradient的公式
+
+![](./Reinforcement-Study-Notes/pic8.png)
+
+![](./Reinforcement-Study-Notes/pic9.png)
+
+![](./Reinforcement-Study-Notes/pic10.png)
+
+$$R(\tau^{1})$$可以看成是增加其对应数据的样本
+
+## lesson3
+
+![](./Reinforcement-Study-Notes/pic11.png)
+
+![](./Reinforcement-Study-Notes/pic12.png)
+
+![](./Reinforcement-Study-Notes/pic13.png)
+
+![](./Reinforcement-Study-Notes/pic14.png)
+
+TD approach 不用等到游戏结束就可以train，只需要一段时间就可以。
+
+![](./Reinforcement-Study-Notes/pic15.png)
+
+dqn、dueling dqn、rainbow
+
+![](./Reinforcement-Study-Notes/pic16.png)
+
+![](./Reinforcement-Study-Notes/pic17.png)
+
+每个actor复制global parameters，然后和环境进行交互，计算gradients，然后传回global network
+
+![](./Reinforcement-Study-Notes/pic18.png)
+
+![](./Reinforcement-Study-Notes/pic19.png)
+
+![](./Reinforcement-Study-Notes/pic20.png)
+
+很多情况下是不知道reward function的，所以需要根据专家的历史trajectory来推出reward function，然后可以进行强化学习。
+
+![](./Reinforcement-Study-Notes/pic21.png)
+
+![](./Reinforcement-Study-Notes/pic22.png)
+
+![](./Reinforcement-Study-Notes/pic23.png)
+
+## lesson4
+
+### Proximal Policy Optimization(PPO)
+
+**From on-policy to off-policy**
+
+![](./Reinforcement-Study-Notes/pic26.png)
+
+![](./Reinforcement-Study-Notes/pic27.png)
+
+![](./Reinforcement-Study-Notes/pic28.png)如如果$$p(x)$$与$$q(x)$$相差太大，会导致方差大
+
+![](./Reinforcement-Study-Notes/pic29.png)
+
+![](./Reinforcement-Study-Notes/pic30.png)
+
+![](./Reinforcement-Study-Notes/pic31.png)
+
+![](./Reinforcement-Study-Notes/pic32.png)
+
+![](./Reinforcement-Study-Notes/pic33.png)
+
+![](./Reinforcement-Study-Notes/pic34.png)
+
+## lesson5
+
+### Q-Learning
+
+![](./Reinforcement-Study-Notes/pic35.png)
+
+![](./Reinforcement-Study-Notes/pic36.png)
+
+这种方法每次需要计算cumulated reward，需要游戏结束
+
+![](./Reinforcement-Study-Notes/pic38.png)
+
+不是预测$$V^{\pi}$$,而是预测$$V^{\pi}(s_{t})-V^{\pi}(s_{t+1})=r_{t}</script><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic39.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic40.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic41.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic42.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic43.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic44.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic45.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic46.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic47.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic48.png" alt></p>
+<h2 id="lesson6"><a href="#lesson6" class="headerlink" title="lesson6"></a>lesson6</h2><h3 id="Tips-of-Q-Learning"><a href="#Tips-of-Q-Learning" class="headerlink" title="Tips of Q-Learning"></a>Tips of Q-Learning</h3><ul>
+<li><p>Nature DQN</p>
+<p>Nature DQN做了一个改进，就是增加Target Q网络。也就是我们在计算目标Q值时使用专门的一个目标Q网络来计算，而不是直接使用预更新的Q网络。这样做的目的是为了减少目标计算与当前值的相关性。  原来NIPS版本的DQN目标Q网络是动态变化的，跟着Q网络的更新而变化，这样不利于计算目标Q值，导致目标Q值和当前的Q值相关性较大。因此提出单独使用一个目标Q网络。那么目标Q网络的参数如何来呢？还是从Q网络中来，只不过是延迟更新。也就是每次等训练了一段时间再将当前Q网络的参数值复制给目标Q网络。 </p>
+</li>
+<li><p>Double DQN</p>
+</li>
+</ul>
+<p>Q value is usually over-estimated</p>
+<ul>
+<li>Dueling DQN</li>
+</ul>
+<p>修改network架构</p>
+<ul>
+<li>Prioritized Reply</li>
+<li>Multi-step</li>
+</ul>
+<p>Balance between MC and TD</p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic49.png" alt></p>
+<ul>
+<li><p>Noisy Net</p>
+</li>
+<li><p>Distributional Q-function</p>
+</li>
+<li><p>Rainbow</p>
+</li>
+</ul>
+<h2 id="lesson7"><a href="#lesson7" class="headerlink" title="lesson7"></a>lesson7</h2><h3 id="Q-Learning-for-Continuous-Actions"><a href="#Q-Learning-for-Continuous-Actions" class="headerlink" title="Q-Learning for Continuous Actions"></a>Q-Learning for Continuous Actions</h3><p><img src="/2021/04/26/Reinforcement-Study-Notes/pic50.png" alt></p>
+<p><img src="/2021/04/26/Reinforcement-Study-Notes/pic51.png" alt></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/17/TLeague/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -948,76 +1288,10 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/06/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/06/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-06 23:50:44" itemprop="dateCreated datePublished" datetime="2021-01-06T23:50:44+08:00">2021-01-06</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1083,7 +1357,7 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1182,6 +1456,61 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 

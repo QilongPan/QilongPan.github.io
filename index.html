@@ -160,6 +160,180 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/" class="post-title-link" itemprop="url">Enhanced Rolling Horizon Evolution Algorithm with Opponent Model Learning Results for the Fighting Game AI Competition</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-04-15 22:30:07 / Modified: 22:33:06" itemprop="dateCreated datePublished" datetime="2022-04-15T22:30:07+08:00">2022-04-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the"><a href="#Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the" class="headerlink" title="Enhanced Rolling Horizon Evolution Algorithm with Opponent Model Learning: Results for the"></a>Enhanced Rolling Horizon Evolution Algorithm with Opponent Model Learning: Results for the</h2><p>Fighting Game AI Competition</p>
+<p>格斗游戏是一项极具挑战的<strong>双人实时对抗人工智能博弈任务，常具有组合动作空间规模大、角色属性风格多样、实时性计算要求高等特点，</strong>受到了研究人员的广泛关注。对此，日本立命馆大学发布了<strong>双人格斗游戏AI实时对抗平台FightingICE</strong> ，其已成为IEEE Conference on Games（游戏人工智能旗舰会议）的格斗游戏AI竞赛赛道的指定专用测试平台。FightingICE要求参赛算法必须自主适应三种不同类型的格斗角色属性，在有限时间内通过控制本方智能体的格斗动作，快速击败对方算法控制的智能体。不同于回合制双人零和博弈问题，实时双人零和博弈问题属于非完美信息博弈，在同步决策的过程中无法准确获取对方正要采取的动作行为，进而影响智能体的有效决策行为。</p>
+<p>此外，我们提出的基于策略梯度的对手模型的机器人是唯一一个没有使用Monte-Carlo树搜索(MCTS)在2019年的竞争中获得第二名的前五名机器人，同时使用的领域知识比赢家少得多。</p>
+<p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/fightingIcescreenshot.png" alt></p>
+<p>​    针对上述存在的问题与挑战，我们提出了一种新型的<strong>基于自适应对手建模的增强型滚动时域演化算法</strong>，并且将滚动时域演化算法首次应用到格斗游戏AI领域。同时，提出了一系列监督强化式对手模型优化方法（包括交叉熵型、Q学习型和策略梯度型等）用于优化对手模型的预测有效性。具体实现为根据格斗对抗时生成的历史交战信息作为训练数据源，通过在线优化的方式滚动更新对手模型参数，增强前向模型推理规划的可靠有效性，从而进一步增强滚动时域演化算法的博弈推理表现性能。</p>
+<h3 id="RHEA"><a href="#RHEA" class="headerlink" title="RHEA"></a>RHEA</h3><p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/rhea.png" alt></p>
+<p>Population由多个代表不同动作序列的个体组成。该序列中的每个动作都被视为一个gene。你会根据合适的fitnesses(适应度)来选择一定数量的个体。然后，这些个体被分配到交叉的过程中，并且有可能发生突变，从而产生更多的潜在后代或更强大的后代。然后，将个体作为动作序列展开，并将动作序列有序地输入到正向模型中，以推断未来的状态。用score function对未来的状态进行评估，以获得新的适应度。将重复上述优化过程，直到消耗完时间预算。</p>
+<p>在我们实现RHEA时，每个个体中的动作序列都是随机初始化的。 初始化后，创建一组长度相同的个体，每个个体都由适应度函数进行评估。</p>
+<p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/fitness_function.png" alt></p>
+<p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/fitness_func_explain.png" alt></p>
+<p><script type="math/tex">f_{sco}</script>是当前状态的价值进行评估。源码中实现了两种方式，一种是采用MC rollout评估，一种是启发式评估。</p>
+<p><script type="math/tex">f_{div}</script>是用于探索。<script type="math/tex">f_{count}</script>是计算每个基因在总的基因里对应的频率，出现次数越多<script type="math/tex">f_{count}</script>越大。<script type="math/tex">\sum_{j=1}^{l}f_{count}(\vec{z}^{l}(j)))</script>表示个体每个基因出现频率的和。<script type="math/tex">n</script>为个体数量,<script type="math/tex">l</script>为个体基因长度</p>
+<p><script type="math/tex">f_{FM}</script>是前向推理模型，从一个状态到下一个状态</p>
+<p><script type="math/tex">\lambda</script>是平衡状态价值和diversity。类似于利用和探索</p>
+<h3 id="RHEAOM"><a href="#RHEAOM" class="headerlink" title="RHEAOM"></a>RHEAOM</h3><p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/rheaom.png" alt></p>
+<p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/nextgeneration.png" alt></p>
+<p>假设我们在当前这一代中总共有<script type="math/tex">n</script>个个体。得分最高的<script type="math/tex">k</script>个人被选为精英，并保存在下一代。剩下的<script type="math/tex">n-k</script>个体进化通过与精英进行交叉，父母分别从精英和剩下的个体中随机抽取。然后，从个体中随机选择一个基因，并通过均匀分布变异成另一个有效基因。最后，通过fitness function(适应度函数)来重新评估这些最新的个体。如果还有时间预算，请为下一代选择前n个排序的个体，然后再次重复上述演变。否则，从排序最高的个体执行第一个操作。算法1给出了基于对手模型的滚平演化算法的整个过程。</p>
+<p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/rheaom_fig.png" alt></p>
+<h3 id="Opponent-Model"><a href="#Opponent-Model" class="headerlink" title="Opponent Model"></a>Opponent Model</h3><p>网络结构需要简单,只有输入输出层，没有隐藏层</p>
+<p>此外，其他更复杂的网络架构，如多层感知器和长期短期内存网络，已经进行了测试，但其性能比简单的架构要差。</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>使用不同对手模型的测试结果</p>
+<p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/result1.png" alt></p>
+<p>RHEA(%)表示对手不做任何动作,-R对手随机，-SL对手模型使用监督学习,-Q对手模型使用Q-learning，-PG对手使用policy gradient。</p>
+<p>和其它对手的对打测试结果</p>
+<p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/winrate_other_agent.png" alt></p>
+<p>RHEA和MCTS结合对手模型对打测试</p>
+<p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/rhea_vs_mcts.png" alt></p>
+<p>RHEA与对手模型结合比MCTS要好，并且MCTS结合对手模型比单纯使用MCTS要好</p>
+<p>2019年FightingICE比赛结果</p>
+<p><img src="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/match_result_2019.png" alt></p>
+<p>进化算法的目标与强化学习优化的目标都是预期奖励。但是，强化学习是将噪声注入动作空间并使用反向传播来计算参数更新，而进化策略则是直接向参数空间注入噪声。换个说话，强化学习是在「猜测然后检验」动作，而进化策略则是在「猜测然后检验」参数。因为我们是在向参数注入噪声，所以就有可能使用确定性的策略（而且我们在实验中也确实是这么做的）。也有可能同时将噪声注入到动作和参数中，这样就有可能实现两种方法的结合。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/15/%E8%BF%9B%E5%8C%96%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/15/%E8%BF%9B%E5%8C%96%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">进化算法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-04-15 22:24:40 / Modified: 22:28:29" itemprop="dateCreated datePublished" datetime="2022-04-15T22:24:40+08:00">2022-04-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="进化算法"><a href="#进化算法" class="headerlink" title="进化算法"></a>进化算法</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>进化算法是模拟生物在自然界中的进化。达尔文的进化论指出“<strong>物竞天择，适者生存</strong>”。进化论几乎可以解释一切“为什么这种生物是这样的？”这一类的问题。那些更加适应环境的生物，更加容易留下自己的<strong>染色体</strong>。于是，在计算机中，我们模拟生物中的交叉，变异，选择；</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010451580/article/details/51178225">遗传算法</a></p>
+<h2 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a>适用场景</h2><ul>
+<li>不知道如何解决一个问题时。列出约束条件。</li>
+<li>问题是不断变化的，需要一个自适应的解。比如预测股市。</li>
+<li>需要搜索大量的或者无限的可能解，来找到最好的或足够好的解。本质上进化算法可以看成搜索算法搜索一组可能的解，来寻找最好的或最适合的解。</li>
+<li><p>可以接受足够好的解</p>
+</li>
+<li><p>可用于解决数值优化、组合优化、机器学习、智能控制、人工生命、图像处理、模式识别等领域的问题。</p>
+</li>
+</ul>
+<p>进化算法包括遗传算法、进化程序设计、进化规划和进化策略等等，进化算法的基本框架还是简单遗传算法所描述的框架，但在进化的方式上有较大的差异，选择、交叉、变异、种群控制等有很多变化。</p>
+<p>比如需要得到字符全为1的字符串，比如”1111”，个体可以理解为候选解，比如“1001”；种群可以理解为候选解的集合{“1001”,”1101”……..}</p>
+<p><img src="/2022/04/15/%E8%BF%9B%E5%8C%96%E7%AE%97%E6%B3%95/基本术语.png" alt></p>
+<p>交叉:它是生物繁殖的模拟。<a target="_blank" rel="noopener" href="https://blog.csdn.net/ztf312/article/details/82793295">交叉算子</a></p>
+<p>变异:新的遗传信息添加到基因组中的过程。<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_30239361/article/details/101686764">变异算子</a></p>
+<h2 id="算法过程"><a href="#算法过程" class="headerlink" title="算法过程"></a>算法过程</h2><p>一般遗传算法过程</p>
+<p><img src="/2022/04/15/%E8%BF%9B%E5%8C%96%E7%AE%97%E6%B3%95/遗传算法过程.png" alt></p>
+<p>遗传算法参数：</p>
+<ul>
+<li>变异率是在解的染色体中，特定基因将要变异的概率。较高的变异率允许种群中有更多的遗传多样性，有助于算法避免局部最优。同样也会导致每一代之间太多的遗传变异，导致失去以前种群中良好的解。变异率低算法可能用过长时间在搜索空间中移动，妨碍找到满意解的能力。</li>
+<li>种群规模：遗传算法中任意一代种群的个体数；较大的种群规模算法可以在搜索空间中取样更多，这将有助于将它导向更准确、全局最优解的方向。小的种群规模通常会导致该算法在搜索空间的局部最优区域发现不太理想的解，但是它们每一代需要的计算资源较少；</li>
+<li>交叉率。高交叉率在交叉阶段会产生许多新的、潜在优越的解。较低的交叉率有助于保持较适应个体的基因信息在下一代中不受破坏。</li>
+<li>精英数量</li>
+</ul>
+<h2 id="简单实现案例"><a href="#简单实现案例" class="headerlink" title="简单实现案例"></a>简单实现案例</h2><p>该案例是用于生成指定长度的全1字符串，比如”1111111”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br></pre></td><td class="code"><pre><span class="line">import random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">使用进化算法生成全是1的字符串，比如&quot;1111111111&quot;。最开始字符串是随机的0或者1组成，通过算法得到全1的字符串</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">class Individual(object):</span><br><span class="line"></span><br><span class="line">    def __init__(self,chromosomeLength):</span><br><span class="line">        self.fitness &#x3D; -1</span><br><span class="line">        self.choromosome &#x3D; [ 0 for i in range(chromosomeLength)]</span><br><span class="line">        for gene_index in range(chromosomeLength):</span><br><span class="line">            if (0.5 &lt; random.random()):</span><br><span class="line">                self.setGene(gene_index,1)</span><br><span class="line">            else:</span><br><span class="line">                self.setGene(gene_index,0)</span><br><span class="line">    </span><br><span class="line">    def getChromosome(self):</span><br><span class="line">        return self.choromosome</span><br><span class="line">    </span><br><span class="line">    def getChromosomeLength(self):</span><br><span class="line">        return len(self.choromosome)</span><br><span class="line"></span><br><span class="line">    def setGene(self,offset,gene):</span><br><span class="line">        self.choromosome[offset] &#x3D; gene</span><br><span class="line"></span><br><span class="line">    def getGene(self,offset):</span><br><span class="line">        return self.choromosome[offset]</span><br><span class="line"></span><br><span class="line">    def setFitness(self,fitness):</span><br><span class="line">        self.fitness &#x3D; fitness</span><br><span class="line">    </span><br><span class="line">    def getFitness(self):</span><br><span class="line">        return self.fitness</span><br><span class="line"></span><br><span class="line">    def __str__(self):</span><br><span class="line">        output &#x3D; &quot;&quot;</span><br><span class="line">        for i in range(len(self.choromosome)):</span><br><span class="line">            output +&#x3D; str(self.choromosome[i])</span><br><span class="line">        return output</span><br><span class="line"></span><br><span class="line">class Population(object):</span><br><span class="line"></span><br><span class="line">    def __init__(self,populationSize,chromosomeLength &#x3D; -1):</span><br><span class="line">        self.populationFitness &#x3D; -1</span><br><span class="line">        self.population &#x3D; []</span><br><span class="line">        if chromosomeLength &#x3D;&#x3D; -1:</span><br><span class="line">            pass</span><br><span class="line">        else:</span><br><span class="line">            for i in range(populationSize):</span><br><span class="line">                self.population.append(Individual(chromosomeLength))</span><br><span class="line">    </span><br><span class="line">    def getIndividuals(self):</span><br><span class="line">        return self.population</span><br><span class="line">    </span><br><span class="line">    def getFittest(self,offset):</span><br><span class="line">        self.population.sort(key &#x3D; lambda ele:ele.getFitness(),reverse&#x3D;True)</span><br><span class="line">        return self.population[offset]</span><br><span class="line"></span><br><span class="line">    def setPopulationFitness(self,fitness):</span><br><span class="line">        self.populationFitness &#x3D; fitness</span><br><span class="line">    </span><br><span class="line">    def getPopulationFitness(self):</span><br><span class="line">        return self.populationFitness</span><br><span class="line"></span><br><span class="line">    def size(self):</span><br><span class="line">        return len(self.population)</span><br><span class="line"></span><br><span class="line">    def setIndividual(self,offset,individual):</span><br><span class="line">        self.population[offset] &#x3D; individual </span><br><span class="line">    </span><br><span class="line">    def getIndividual(self,offset):</span><br><span class="line">        return self.population[offset]</span><br><span class="line"></span><br><span class="line">    def shuffle(self):</span><br><span class="line">        for i in range(len(self.population)-1,-1,-1):</span><br><span class="line">            index &#x3D; random.randint(i)</span><br><span class="line">            individual_tmp &#x3D; self.population[index]</span><br><span class="line">            self.population[index] &#x3D; self.population[i]</span><br><span class="line">            self.population[i] &#x3D; individual_tmp</span><br><span class="line"></span><br><span class="line">class GeneticAlgorithm(object):</span><br><span class="line"></span><br><span class="line">    def __init__(self,populationSize,mutationRate,crossoverRate,elitismCount):</span><br><span class="line">        self.populationSize &#x3D; populationSize</span><br><span class="line">        self.mutationRate &#x3D; mutationRate</span><br><span class="line">        self.crossoverRate &#x3D; crossoverRate</span><br><span class="line">        self.elitismCount &#x3D; elitismCount</span><br><span class="line"></span><br><span class="line">    def initPopulation(self,chromosomeLength):</span><br><span class="line">        population &#x3D; Population(self.populationSize,chromosomeLength)</span><br><span class="line">        return population</span><br><span class="line">    </span><br><span class="line">    def calcFitness(self,individual):</span><br><span class="line">        correctGenes &#x3D; 0</span><br><span class="line">        for i in range(individual.getChromosomeLength()):</span><br><span class="line">            if individual.getGene(i) &#x3D;&#x3D; 1:</span><br><span class="line">                correctGenes +&#x3D; 1</span><br><span class="line">        fitness &#x3D; correctGenes &#x2F; individual.getChromosomeLength()</span><br><span class="line">        individual.setFitness(fitness)</span><br><span class="line">        return fitness</span><br><span class="line"></span><br><span class="line">    def evalPopulation(self,population):</span><br><span class="line">        populationFitness &#x3D; 0</span><br><span class="line">        for individual in population.getIndividuals():</span><br><span class="line">            populationFitness +&#x3D; self.calcFitness(individual)</span><br><span class="line">        population.setPopulationFitness(populationFitness)</span><br><span class="line"></span><br><span class="line">    def isTerminationConditionMet(self,population):</span><br><span class="line">        for individual in population.getIndividuals():</span><br><span class="line">            if individual.getFitness() &#x3D;&#x3D; 1:</span><br><span class="line">                return True </span><br><span class="line">        return False </span><br><span class="line"></span><br><span class="line">    def selectParent(self,population):</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        根据每个个体的适应度权重进行选择</span><br><span class="line">        &quot;&quot;&quot;</span><br><span class="line">        individuals &#x3D; population.getIndividuals()</span><br><span class="line">        populationFitness &#x3D; population.getPopulationFitness()</span><br><span class="line">        rouletteWheelPosition &#x3D; random.random() * populationFitness</span><br><span class="line">        spinWheel &#x3D; 0</span><br><span class="line">        for individual in individuals:</span><br><span class="line">            spinWheel +&#x3D; individual.getFitness()</span><br><span class="line">            if spinWheel &gt;&#x3D; rouletteWheelPosition:</span><br><span class="line">                return individual</span><br><span class="line">        return individuals[population.size() - 1]</span><br><span class="line">    </span><br><span class="line">    def crossoverPopulation(self,population):</span><br><span class="line">        newPopulation &#x3D; Population(population.size())</span><br><span class="line">        for populationIndex in range(population.size()):</span><br><span class="line">            parent1 &#x3D; population.getFittest(populationIndex)</span><br><span class="line">            if self.crossoverRate &gt; random.random() and populationIndex &gt; self.elitismCount:</span><br><span class="line">                offspring &#x3D; Individual(parent1.getChromosomeLength())</span><br><span class="line">                parent2 &#x3D; self.selectParent(population)</span><br><span class="line">                for geneIndex in range(parent1.getChromosomeLength()):</span><br><span class="line">                    if 0.5 &gt; random.random():</span><br><span class="line">                        offspring.setGene(geneIndex,parent1.getGene(geneIndex))</span><br><span class="line">                    else:</span><br><span class="line">                        offspring.setGene(geneIndex,parent2.getGene(geneIndex))</span><br><span class="line">                newPopulation.population.append(offspring)</span><br><span class="line">            else:</span><br><span class="line">                newPopulation.population.append(parent1)</span><br><span class="line">        return newPopulation</span><br><span class="line"></span><br><span class="line">    def mutatePopulation(self,population):</span><br><span class="line">        newPopulation &#x3D; Population(self.populationSize)</span><br><span class="line">        for populationIndex in range(population.size()):</span><br><span class="line">            individual &#x3D; population.getFittest(populationIndex)</span><br><span class="line">            for geneIndex in range(individual.getChromosomeLength()):</span><br><span class="line">                if populationIndex &gt;&#x3D; self.elitismCount:</span><br><span class="line">                    if self.mutationRate &gt; random.random():</span><br><span class="line">                        newGene &#x3D; 1</span><br><span class="line">                        if individual.getGene(geneIndex) &#x3D;&#x3D; 1:</span><br><span class="line">                            newGene &#x3D; 0</span><br><span class="line">                        individual.setGene(geneIndex,newGene)</span><br><span class="line">            newPopulation.append(individual)</span><br><span class="line">        return newPopulation</span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &quot;__main__&quot;:</span><br><span class="line">    ga &#x3D; GeneticAlgorithm(100,0.5,0.95,30)</span><br><span class="line">    population &#x3D; ga.initPopulation(200)</span><br><span class="line">    ga.evalPopulation(population)</span><br><span class="line">    generation &#x3D; 1</span><br><span class="line">    while not ga.isTerminationConditionMet(population):</span><br><span class="line">        print(f&quot;Best solution &#123;population.getFittest(0)&#125;&quot;)</span><br><span class="line">        population &#x3D; ga.crossoverPopulation(population)</span><br><span class="line">        ga.evalPopulation(population)</span><br><span class="line">        generation +&#x3D; 1</span><br><span class="line">    print(f&quot;Found solution in &#123;generation&#125; generations&quot;)</span><br><span class="line">    print(f&quot;Best solution &#123;population.getFittest(0)&#125;&quot;)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -987,154 +1161,10 @@ G=\left \langle S,U,P,r,Z,O,n,\gamma  \right \rangle</script><p>其中<script ty
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/10/Deep-Reinforcement-Learning-with-Double-Q-learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/10/Deep-Reinforcement-Learning-with-Double-Q-learning/" class="post-title-link" itemprop="url">Deep Reinforcement Learning with Double Q-learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-08-10 21:58:54 / Modified: 22:10:11" itemprop="dateCreated datePublished" datetime="2021-08-10T21:58:54+08:00">2021-08-10</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/dqn%E7%B3%BB%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">dqn系列</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="/2021/08/10/Deep-Reinforcement-Learning-with-Double-Q-learning/formula4.png" alt></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/10/Prioritized-Experience-Replay/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/10/Prioritized-Experience-Replay/" class="post-title-link" itemprop="url">Prioritized Experience Replay</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-08-10 21:48:34 / Modified: 22:16:43" itemprop="dateCreated datePublished" datetime="2021-08-10T21:48:34+08:00">2021-08-10</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/dqn%E7%B3%BB%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">dqn系列</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="/2021/08/10/Prioritized-Experience-Replay/algorithm1.png" alt></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1200,7 +1230,7 @@ G=\left \langle S,U,P,r,Z,O,n,\gamma  \right \rangle</script><p>其中<script ty
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">49</span>
+          <span class="site-state-item-count">51</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
