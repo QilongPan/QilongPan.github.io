@@ -160,6 +160,89 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/17/TLeague/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/17/TLeague/" class="post-title-link" itemprop="url">TLeague</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-03-17 21:12:44" itemprop="dateCreated datePublished" datetime="2021-03-17T21:12:44+08:00">2021-03-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-03-18 22:38:20" itemprop="dateModified" datetime="2021-03-18T22:38:20+08:00">2021-03-18</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Tleague-A-Framework-for-Competitive-Self-Play-based-Distributed-Multi-Agent-Reinforcement-Learning"><a href="#Tleague-A-Framework-for-Competitive-Self-Play-based-Distributed-Multi-Agent-Reinforcement-Learning" class="headerlink" title="Tleague:A Framework for Competitive Self-Play based Distributed Multi-Agent Reinforcement Learning"></a>Tleague:A Framework for Competitive Self-Play based Distributed Multi-Agent Reinforcement Learning</h1><p>多智能体强化学习需要大量的数据，为了解决这个问题实现了TLeague框架。TLeague的目标是实现大规模训练以及主流的Competitive Self-Play (CSP)算法。训练可以在单机和多机。在 StarCraft II, ViZDoom and Pommerman中展示了它的效率和有效性。<a target="_blank" rel="noopener" href="https://github.com/tencent-ailab/tleague_projpage">code</a></p>
+<p>该框架用于多智能体竞争self-play的学习。框架如下图所示</p>
+<p><img src="/2021/03/17/TLeague/framework.png" alt></p>
+<ul>
+<li>Learner</li>
+</ul>
+<p>每个Learner从与之对应的Actor接收trajectories进行学习。每个Learner对应一个ReplayMem和DataServer，进行数据预处理和存储在ReplayMem中。学习开始时会从LeagueMgr接收到task，可以从中知道需要学习的策略。在学习过程中也会更新策略到ModelPool中。</p>
+<ul>
+<li>InfServer</li>
+</ul>
+<p>从不同的Actor中收集一批observation进行预测，并返回给对应的Actor；</p>
+<ul>
+<li>ModelPool</li>
+</ul>
+<p>存储策略参数作为对手模型池。Actor和Learner会读取和写入策略参数。</p>
+<ul>
+<li>LeagueMgr</li>
+</ul>
+<p>用于协调其它模块。GameMgr有不同的对手选取算法。HyperMgr进行超参数的管理。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/20/Sample-Factory-Egocentric-3D-Control-from-Pixels-at-100000-FPS-with-Asynchronous-Reinforcement-Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1000,7 +1083,7 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

@@ -160,6 +160,78 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/10/Accelerated-Methods-For-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/07/10/Accelerated-Methods-For-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Accelerated Methods For Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-07-10 19:01:30" itemprop="dateCreated datePublished" datetime="2021-07-10T19:01:30+08:00">2021-07-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-07-11 14:03:13" itemprop="dateModified" datetime="2021-07-11T14:03:13+08:00">2021-07-11</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    深度强化学习(RL)最近取得了许多新的成功，但实验周转时间仍然是研究和实践中的一个关键瓶颈。我们研究如何优化现代计算机的深度RL算法，特别是CPU和GPU的组合。我们证实了策略梯度和Q-value学习算法都可以适应于使用许多并行模拟器实例的学习。我们进一步发现，可以使用比标准尺寸大得多的批量大小进行训练，而不会对样本复杂度或最终性能产生负面影响。我们利用这些事实来建立一个统一的并行化框架，这极大地加速了这两种算法的实验。所有的神经网络计算都使用GPU，加速了数据的收集和训练。我们的结果包括使用整个DGX-1在雅达利游戏上在几分钟内的学习成功策略，使用同步和异步算法。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    本文的贡献是一个并行深度RL的框架，包括推理和训练的GPU加速的新技术。</p>
+<h1 id="Parallel-Accelerated-RL-Fraework"><a href="#Parallel-Accelerated-RL-Fraework" class="headerlink" title="Parallel,Accelerated RL Fraework"></a>Parallel,Accelerated RL Fraework</h1><p>​    我们考虑使用深度神经网络的基于 CPU 的模拟器环境和策略。 我们在这里描述了一套完整的深度强化学习并行化技术，这些技术在采样和优化期间都实现了高吞吐量。 我们对 GPU 一视同仁； 每个都执行相同的采样学习过程。 此策略可直接扩展到各种数量的 GPU。</p>
+<h2 id="Synchronized-Sampling同步采样"><a href="#Synchronized-Sampling同步采样" class="headerlink" title="Synchronized Sampling同步采样"></a>Synchronized Sampling同步采样</h2><p>​    我们首先将多个 CPU 内核与单个 GPU 相关联。 多个模拟器在多个CPU核上并行运行，这些进程以同步方式执行环境步骤。 在每一步，所有单独的observation都被收集到一个批处理中进行推理，在提交最后一个观察后在 GPU 上调用。 一旦动作返回，模拟器就会再次步进，依此类推。 系统共享内存数组提供actor-server和模拟器进程之间的快速通信。</p>
+<p>​    由于落后者效应，同步采样可能会变慢—在每一步等待最慢的进程。 step时间的差异源于不同模拟器状态的不同计算负载和其他随机波动。 随着并行进程数量的增加，落后者效应会恶化，但我们通过为每个进程堆叠多个独立的模拟器实例来减轻它。 对于每个推理批次，每个进程都会（按顺序）执行其所有模拟器。 这种安排还允许推理的批量大小增加到超过进程数（即 CPU 内核）。 示意图如图 1(a) 所示。 可以通过仅在优化暂停期间重置来避免长时间环境重置导致的减速。</p>
+<p><img src="/2021/07/10/Accelerated-Methods-For-Deep-Reinforcement-Learning/figurea.png" alt></p>
+<p>​    如果模拟和推理负载达到平衡，每个组件将有一半的时间空闲，所以我们组成两个交替的模拟器进程组。当一个组等待下一个操作时，另一个步骤和GPU在为每个组之间交替服务。交替保持了高利用率，并进一步隐藏了两者中最快的计算量的执行时间。</p>
+<p>​    我们通过重复模板来组织多个GPU，均匀地分配可用的CPU核心。我们发现固定每个模拟器进程的CPU分配是有益的，并保留一个核心来运行每个GPU。实验部分包含了采样速度的测量值，采样速度随着环境实例数量的增加而增加。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/10/Distributed-Prioritized-Experience-Replay/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1540,76 +1612,6 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/21/Deterministic-Policy-Gradient-Algorithms/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/05/21/Deterministic-Policy-Gradient-Algorithms/" class="post-title-link" itemprop="url">Deterministic Policy Gradient Algorithms</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-05-21 19:31:21" itemprop="dateCreated datePublished" datetime="2021-05-21T19:31:21+08:00">2021-05-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-05-22 11:36:08" itemprop="dateModified" datetime="2021-05-22T11:36:08+08:00">2021-05-22</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在本文中，我们考虑了确定性策略梯度算法，用于连续动作的强化学习。 确定性策略梯度具有特别吸引人的形式：它是动作值函数的期望梯度。 这种简单的形式意味着可以比通常的随机策略梯度更有效地估计确定性策略梯度。 为了确保进行充分的探索，我们引入了一种off-policy的行为者批评算法，该算法从探索行为策略中学习确定性目标策略。 我们证明，确定性策略梯度算法在高维操作空间中可以明显胜过其随机对应算法。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    策略梯度算法广泛应用于连续动作空间的强化学习问题。基本思想是用参数化的概率分布<script type="math/tex">\pi _{\theta }(a|s)=\mathbb{P}\left [ a|s;\theta  \right ]</script>，根据参数向量<script type="math/tex">\theta</script>随机选择状态中的动作a来表示策略。策略梯度算法通常通过对这个随机策略进行采样，并调整策略参数，以获得更大的累积奖励。</p>
-<p>​    在本文中，我们将考虑确定性策略<script type="math/tex">a=\mu _{\theta }\left ( s \right )</script>。很自然会想，是否可以与随机策略遵循同样的方法：按照策略梯度的方向调整策略参数。以前认为确定性策略梯度不存在，或者只能在使用模型时获得。然而，我们证明了确定性策略梯度确实存在，而且它有一个简单的model-free形式，简单地遵循action-value函数的梯度。另外我们表明，由于策略方差趋于零，因此确定性策略梯度是随机策略梯度的极限情况。</p>
-<p>​    从实际的角度来看，随机策略梯度和确定性策略梯度之间有一个关键的区别。在随机情况下，策略梯度同时在状态空间和动作空间上集成，而在确定性情况下，它只在状态空间上集成。因此，计算随机策略梯度可能需要更多的样本，特别是当动作空间有很多维数时。</p>
-<p>​    为了探索完整的状态和动作空间，通常需要一个随机策略。为了确保我们的确定性策略梯度算法继续令人满意地探索，我们引入了一种off-policy学习算法。基本思想是根据随机行为策略选择行动（确保充分的探索)，但了解确定性目标策略(利用确定性策略梯度的效率）。我们使用确定性策略梯度推导出一个off-policy actor-critic算法，该算法使用可微函数近似器估计动作值函数，然后沿近似action-value梯度的方向更新策略参数。我们还引入了一个确定性策略梯度的compatiable function近似的概念，以确保该近似不会对策略梯度造成偏差。</p>
-<p>我们将确定性行动者批评算法应用于以下几个基准问题：高维bandit； 低维动作空间的几个标准基准强化学习任务； 和控制章鱼手臂的高维任务。 我们的结果表明，相对于随机策略梯度，使用确定性策略梯度具有明显的性能优势，特别是在高维任务中。 此外，我们的算法比以前的方法不需要更多的计算：每次更新的计算成本在操作维度和策略参数数量上都是线性的。 最后，在许多应用程序中（例如在机器人技术中）提供了可微分的控制策略，但没有将噪声注入控制器的功能。 在这些情况下，随机策略梯度是不适用的，而我们的方法可能仍然有用。</p>
-<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1679,7 +1681,7 @@ Padding运算作用于输入向量的每一维，每一维的操作都是一致�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

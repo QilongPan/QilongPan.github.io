@@ -160,6 +160,76 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/21/Deterministic-Policy-Gradient-Algorithms/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/21/Deterministic-Policy-Gradient-Algorithms/" class="post-title-link" itemprop="url">Deterministic Policy Gradient Algorithms</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-21 19:31:21" itemprop="dateCreated datePublished" datetime="2021-05-21T19:31:21+08:00">2021-05-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-22 11:36:08" itemprop="dateModified" datetime="2021-05-22T11:36:08+08:00">2021-05-22</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    在本文中，我们考虑了确定性策略梯度算法，用于连续动作的强化学习。 确定性策略梯度具有特别吸引人的形式：它是动作值函数的期望梯度。 这种简单的形式意味着可以比通常的随机策略梯度更有效地估计确定性策略梯度。 为了确保进行充分的探索，我们引入了一种off-policy的行为者批评算法，该算法从探索行为策略中学习确定性目标策略。 我们证明，确定性策略梯度算法在高维操作空间中可以明显胜过其随机对应算法。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    策略梯度算法广泛应用于连续动作空间的强化学习问题。基本思想是用参数化的概率分布<script type="math/tex">\pi _{\theta }(a|s)=\mathbb{P}\left [ a|s;\theta  \right ]</script>，根据参数向量<script type="math/tex">\theta</script>随机选择状态中的动作a来表示策略。策略梯度算法通常通过对这个随机策略进行采样，并调整策略参数，以获得更大的累积奖励。</p>
+<p>​    在本文中，我们将考虑确定性策略<script type="math/tex">a=\mu _{\theta }\left ( s \right )</script>。很自然会想，是否可以与随机策略遵循同样的方法：按照策略梯度的方向调整策略参数。以前认为确定性策略梯度不存在，或者只能在使用模型时获得。然而，我们证明了确定性策略梯度确实存在，而且它有一个简单的model-free形式，简单地遵循action-value函数的梯度。另外我们表明，由于策略方差趋于零，因此确定性策略梯度是随机策略梯度的极限情况。</p>
+<p>​    从实际的角度来看，随机策略梯度和确定性策略梯度之间有一个关键的区别。在随机情况下，策略梯度同时在状态空间和动作空间上集成，而在确定性情况下，它只在状态空间上集成。因此，计算随机策略梯度可能需要更多的样本，特别是当动作空间有很多维数时。</p>
+<p>​    为了探索完整的状态和动作空间，通常需要一个随机策略。为了确保我们的确定性策略梯度算法继续令人满意地探索，我们引入了一种off-policy学习算法。基本思想是根据随机行为策略选择行动（确保充分的探索)，但了解确定性目标策略(利用确定性策略梯度的效率）。我们使用确定性策略梯度推导出一个off-policy actor-critic算法，该算法使用可微函数近似器估计动作值函数，然后沿近似action-value梯度的方向更新策略参数。我们还引入了一个确定性策略梯度的compatiable function近似的概念，以确保该近似不会对策略梯度造成偏差。</p>
+<p>我们将确定性行动者批评算法应用于以下几个基准问题：高维bandit； 低维动作空间的几个标准基准强化学习任务； 和控制章鱼手臂的高维任务。 我们的结果表明，相对于随机策略梯度，使用确定性策略梯度具有明显的性能优势，特别是在高维任务中。 此外，我们的算法比以前的方法不需要更多的计算：每次更新的计算成本在操作维度和策略参数数量上都是线性的。 最后，在许多应用程序中（例如在机器人技术中）提供了可微分的控制策略，但没有将噪声注入控制器的功能。 在这些情况下，随机策略梯度是不适用的，而我们的方法可能仍然有用。</p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/20/Continuous-Control-With-Deep-Reinforcement-Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1129,89 +1199,6 @@ dqn、dueling dqn、rainbow
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/17/TLeague/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/03/17/TLeague/" class="post-title-link" itemprop="url">TLeague</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-03-17 21:12:44" itemprop="dateCreated datePublished" datetime="2021-03-17T21:12:44+08:00">2021-03-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-03-18 22:38:20" itemprop="dateModified" datetime="2021-03-18T22:38:20+08:00">2021-03-18</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Tleague-A-Framework-for-Competitive-Self-Play-based-Distributed-Multi-Agent-Reinforcement-Learning"><a href="#Tleague-A-Framework-for-Competitive-Self-Play-based-Distributed-Multi-Agent-Reinforcement-Learning" class="headerlink" title="Tleague:A Framework for Competitive Self-Play based Distributed Multi-Agent Reinforcement Learning"></a>Tleague:A Framework for Competitive Self-Play based Distributed Multi-Agent Reinforcement Learning</h1><p>多智能体强化学习需要大量的数据，为了解决这个问题实现了TLeague框架。TLeague的目标是实现大规模训练以及主流的Competitive Self-Play (CSP)算法。训练可以在单机和多机。在 StarCraft II, ViZDoom and Pommerman中展示了它的效率和有效性。<a target="_blank" rel="noopener" href="https://github.com/tencent-ailab/tleague_projpage">code</a></p>
-<p>该框架用于多智能体竞争self-play的学习。框架如下图所示</p>
-<p><img src="/2021/03/17/TLeague/framework.png" alt></p>
-<ul>
-<li>Learner</li>
-</ul>
-<p>每个Learner从与之对应的Actor接收trajectories进行学习。每个Learner对应一个ReplayMem和DataServer，进行数据预处理和存储在ReplayMem中。学习开始时会从LeagueMgr接收到task，可以从中知道需要学习的策略。在学习过程中也会更新策略到ModelPool中。</p>
-<ul>
-<li>InfServer</li>
-</ul>
-<p>从不同的Actor中收集一批observation进行预测，并返回给对应的Actor；</p>
-<ul>
-<li>ModelPool</li>
-</ul>
-<p>存储策略参数作为对手模型池。Actor和Learner会读取和写入策略参数。</p>
-<ul>
-<li>LeagueMgr</li>
-</ul>
-<p>用于协调其它模块。GameMgr有不同的对手选取算法。HyperMgr进行超参数的管理。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1281,7 +1268,7 @@ dqn、dueling dqn、rainbow
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

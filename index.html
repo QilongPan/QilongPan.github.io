@@ -160,6 +160,160 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">多智能体强化学习算法总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2022-04-15 22:12:57 / Modified: 22:21:16" itemprop="dateCreated datePublished" datetime="2022-04-15T22:12:57+08:00">2022-04-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/" itemprop="url" rel="index"><span itemprop="name">多智能体</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>​    强化学习的核心思想是“试错”（trial-and-error）：智能体通过与环境的交互，根据获得的反馈信息迭代地优化。在 RL 领域，待解决的问题通常被描述为<strong>马尔科夫决策过程</strong></p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/concept_1.png" alt></p>
+<p>​    当同时存在多个智能体与环境交互时，整个系统就变成一个多智能体系统（multi-agent system）。每个智能体仍然是遵循着强化学习的目标，也就是是最大化能够获得的累积回报，而此时环境全局状态的改变就和所有智能体的联合动作（joint action）相关了。因此在智能体策略学习的过程中，需要考虑联合动作的影响。</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/concept_2.png" alt></p>
+<p>马尔科夫决策过程拓展到多智能体系统，被定义为马尔科夫博弈。在马尔科夫博弈中，所有智能体根据当前的环境状态（或者是观测值）来同时选择并执行各自的动作，该各自动作带来的联合动作影响了环境状态的转移和更新，并决定了智能体获得的奖励反馈。它可以通过元组 <script type="math/tex">\left \langle S,A_{1},...,A_{N},T,R_{1},...,R_{n} \right \rangle</script>来表示，其中<script type="math/tex">S</script>表示状态集合，<script type="math/tex">A_{i}</script>和<script type="math/tex">R_{i}</script>分别表示智能体<script type="math/tex">i</script>的动作集合和奖励集合，T 表示环境状态转移概率。</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/concept_3.png" alt></p>
+<p>​    一个完全合作式的多智能体任务(我们有<script type="math/tex">n</script>个智能体，这<script type="math/tex">n</script>个智能体需要相互配合以获取最大奖励)可以描述为<strong>去中心化的部分可观测马尔可夫决策模型</strong>(<code>Dec-POMDP</code>)，通常用一个元组<img src="https://www.zhihu.com/equation?tex=G" alt="[公式]">来表示：</p>
+<script type="math/tex; mode=display">
+G=\left \langle S,U,P,r,Z,O,n,\gamma  \right \rangle</script><p>其中<script type="math/tex">s\in S</script>表示环境的真实状态信息。在每一个时间步，对于每个智能体<script type="math/tex">a\in A\equiv \left \{ 1,...,n \right \}</script>都需要去选择一个动作去<script type="math/tex">u^{a}\in U</script>组成一个联合动作<script type="math/tex">u\in U\equiv U^{n}</script>这个联合动作给到环境中去进行状态转移:<script type="math/tex">P\left ( s^{'}|s,u \right ):S\times U\times S\rightarrow \left [ 0,1 \right ]</script>。之后，所有的智能体都会收到一个相同的奖励:<script type="math/tex">r\left ( s,u \right ):S\times U\rightarrow \mathbb{R}</script>。与单智能体一样<script type="math/tex">\gamma</script>表示折扣因子。</p>
+<p>对于每个单智能体<script type="math/tex">a</script>来说，它接收的是一个独立的部分可观测的状态<script type="math/tex">z \in Z</script>，不同的智能体<script type="math/tex">a</script>具备不同的观测，但是所有的观测都来自环境的真实状态信息，所以可以用函数表示为：<script type="math/tex">O\left ( s,a \right ):S\times A\rightarrow Z</script>。对于每个智能体<script type="math/tex">a</script>它都有一个动作观测历史<script type="math/tex">\tau ^{a}\in T\equiv \left ( Z\times U \right )^{*}</script>，基于这个动作-观测的历史来构建随机策略函数<script type="math/tex">\pi ^{a}\left ( u^{a}|\tau ^{a} \right ):T\times U\rightarrow \left [ 0,1 \right ]</script>。联合动作策略<script type="math/tex">\pi</script>是基于状态信息<script type="math/tex">s_{t}</script>构建的联合动作值函数<script type="math/tex">Q^{\pi }\left ( s_{t},u_{t} \right )= E_{s_{t+1}:\infty ,u_{t+1}:\infty }\left [ R_{t}|s_{t},u_{t} \right ]</script>其中<script type="math/tex">R_{t}= \sum_{i=0}^{\infty }\gamma ^{i}r_{t+i}</script>是折扣回报。</p>
+<h2 id="传统RL算法在协同任务中的不足"><a href="#传统RL算法在协同任务中的不足" class="headerlink" title="传统RL算法在协同任务中的不足"></a>传统RL算法在协同任务中的不足</h2><p>若使用传统的RL算法来解决多智能体的问题，则会存在以下三个不足之处：</p>
+<ul>
+<li><p>输入的 action space 应该是所有 agent 的 <strong>联合动作空间</strong>（joint action space），这个空间会随着 agent 数量增加而增加。</p>
+</li>
+<li><p>由于部分可观测性（即单个agent在某一时刻只能观测到部分环境的信息，无法获得全局信息，比如一个小兵只能看到视野范围内的地图信息，视野外的地图信息是无法观测的），使得 agent 在做决策时只能依照自己当前的部分观测信息（local observation），没有与其他 agent 进行信息共享的能力。</p>
+</li>
+<li><p>使用联合动作空间获得的 reward 是来自所有 agent 采取的所有 action 共同得到的reward，这就很难知道每一个 agent 的 action 应该得到的多少子回报。</p>
+</li>
+</ul>
+<h2 id="IQL"><a href="#IQL" class="headerlink" title="IQL"></a>IQL</h2><p>IQL算法中将其余智能体直接看作环境的一部分，也就是对于每个智能体<script type="math/tex">a</script>都是在解决一个单智能体任务，很显然，由于环境中存在智能体，因此环境是一个非稳态的，这样就无法保证收敛性了，并且智能体会很容易陷入无止境的探索中，但是在工程实践上，效果还是比较可以的。</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/vdn_2.png" alt></p>
+<p>是否可以关闭经验回放</p>
+<p>使用循环神经网络处理部分可观察</p>
+<h2 id="VDN"><a href="#VDN" class="headerlink" title="VDN"></a>VDN</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>​    本文是考虑协作任务的多智能体强化学习问题，即所有的智能体共享同一个奖励值，VDN是一种基于值函数的方法。智能体共享团队奖励会带来“credit assignment ” 问题，即利用该团队奖励拟合出的值函数不能评价每个智能体的策略对整体的贡献。作者认为，由于每个智能体都是局部观测，那么对其中一个智能体来说，其获得的团队奖励很有可能是其队友的行为导致的。也就是说该奖励值对该智能体来说，是“<strong>虚假奖励 (spurious reward signals)</strong>”。因此，每个智能体独立使用强化学习算法学习 (即independent RL) 往往效果很差。</p>
+<p>这种虚假奖励还会伴随一种现象，作者称作 “<strong>lazy agent (惰性智能体)</strong>”。当团队中的部分智能体学习到了比较好的策略并且能够完成任务时，其它智能体不需要做什么也能获得不错的团队奖励，这些智能体就被称作“惰性智能体”。</p>
+<p>其实不管是“虚假奖励”还是“惰性智能体”，本质上还是credit assignment问题。如果每个智能体都会根据自己对团队的贡献，优化各自的目标函数，就能够解决上述问题。基于这样的动机，作者提出了“值函数分解”的研究思路，将团队整体的值函数分解成<script type="math/tex">N</script>个子值函数，分别作为各智能体执行动作的依据。</p>
+<h3 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h3><p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/vdn_1.png" alt></p>
+<p>假设<script type="math/tex">Q\left ( \left ( h^{1},h^{2},...h^{d} \right ),\left ( a^{1},a^{2},...,a^{d} \right ) \right )</script>是多智能体团队的整体Q函数,<script type="math/tex">d</script>是智能体个数，<script type="math/tex">h^{i}</script>是智能体<script type="math/tex">i</script>的历史序列信息,<script type="math/tex">a^{i}</script>是其动作。该Q函数的输入集中了所有智能体的观测和动作，可通过团队奖励<script type="math/tex">r</script>来迭代拟合。为了得到各个智能体的值函数，作者提出如下假设：系统的联合动作值函数可以分解为多个代理值函数相加。<script type="math/tex">\tilde{Q}_{i}</script>只依赖于局部观察</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/vdn_7.png" alt></p>
+<p>该假设表明团队的Q函数可以通过求和的方式近似分解成<script type="math/tex">d</script>个子Q函数，分别对应<script type="math/tex">d</script>个不同的智能体，且每个子Q函数的输入为该对应智能体的局部观测序列和动作，互相不受影响。每个智能体就有了自己的值函数，它们就可以根据自己的局部值函数来进行决策。<script type="math/tex">\tilde{Q}_{i}\left ( h^{i},a^{i} \right )</script>并不是任何严格意义上的Q值函数。因为并没有理论依据表明一定存在一个reward函数，使得该<script type="math/tex">\tilde{Q}_{i}</script>满足贝尔曼方程。</p>
+<p>上面等式成立需要满足<script type="math/tex">r\left ( s,a \right )=\sum_{i=1}^{d}r\left ( o^{i},a^{i} \right )</script>,其中<script type="math/tex">s</script>表示系统全局状态,<script type="math/tex">a</script>表示智能体联合动作。<script type="math/tex">r\left ( s,a \right )=\sum_{i=1}^{d}r\left ( o^{i},a^{i} \right )</script>表明团队的整体奖励应由所有智能体各自的奖励函数求和得到。然而，即使这个条件成立，根据文章中的证明，Q函数的分解也应该写成<script type="math/tex">Q\left ( s,a \right )=\sum_{i=1}^{d}Q_{i}\left ( s,a \right )</script>,子Q函数的输入应该还是全局状态<script type="math/tex">s</script>和联合动作<script type="math/tex">a</script>，而不是上式中的形式。所以，此处的bug是VDN算法的硬伤所在，作者也因此将每个智能体历史状态、动作、奖励的序列信息作为其值函数<script type="math/tex">\tilde{Q}_{i}</script>的输入，以此弥补局部观测上的不足。</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/vdn_8.png" alt></p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/vdn_9.png" alt></p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/vdn_2.png" alt></p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/vdn_3.png" alt></p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/vdn_4.png" alt></p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/vdn_5.png" alt></p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/vdn_6.png" alt></p>
+<h2 id="QMIX"><a href="#QMIX" class="headerlink" title="QMIX"></a>QMIX</h2><p>VDN算法考虑将<script type="math/tex">Q_{tot}</script>分解成<script type="math/tex">Q_{i}</script>，以<script type="math/tex">Q_{i}</script>作为每个智能体的Q值函数来计算最优动作，并以<script type="math/tex">Q_{tot} = \sum_{i=1}^{n}Q_{i}</script>的分解形式端到端地训练网络。然而这种以简单的求和方式对整体值函数进行分解，将会导致网络的函数表达能力受到很大限制，难以拟合出真实的<script type="math/tex">Q_{tot}</script>。</p>
+<p>如果我们直接使用普通的神经网络对<script type="math/tex">Q_{tot}</script>进行分解，例如 <script type="math/tex">Q_{tot}= MLP\left ( Q_{1},...,Q_{n} \right )</script> ，倒是可以提升网络的函数表达能力，但会遇到另外一个问题：<strong>非单调性（non-monotonicity）</strong>，导致算法难以保证分布式策略的最优性。所谓<strong>单调性</strong>，就是指通过分布式策略计算出来的动作，和通过整体Q函数计算出来的动作，在“性能最优”上需要保持一致，即</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/qmix_2.png" alt></p>
+<p>值函数分解的单调性只需要满足如下条件即可:</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/qmix_3.png" alt></p>
+<p><script type="math/tex">Q_{a}</script>代表每个智能体a的值函数</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/qmix_1.png" alt></p>
+<p>​    其中<script type="math/tex">\epsilon</script>表示探索的概率,<script type="math/tex">o_{t}^{a}</script>表示t时刻智能体a的观测，<script type="math/tex">u_{t}^{a}</script>表示t时刻智能体a的动作。加粗的<script type="math/tex">u</script>表示联合行动，加粗的<script type="math/tex">\tau</script>表示联合动作-观测历史。</p>
+<p>​    混合网络的权值是由单独的hypernetworks产生的。每个hypernetwork以状态s作为输入，生成混合网络的一层的权值。每个超网络由一个线性层组成，然后是一个绝对激活函数，以确保混合网络的权值是非负的。超网络的输出是一个向量，它被重塑为一个适当大小的矩阵。这些bias也是以同样的方式产生的，但并不局限于非负的。最终的偏差是由一个具有ReLU非线性的2层超网络产生的。图2a说明了混合网络和超网络。</p>
+<p>​    由于<script type="math/tex">Q_{tot}</script>被允许以非单调的方式依赖于额外的状态信息，因此该状态被超网络使用，而不是直接传递到混合网络中。因此，将s的某些函数通过单调网络一起传递将是过度约束的。相反，超网络的使用使得以任意的方式条件s上的权值成为可能，从而将完整状态s尽可能灵活的集成到联合动作值估计中。</p>
+<h2 id="MADDPG"><a href="#MADDPG" class="headerlink" title="MADDPG"></a>MADDPG</h2><p>​    该算法针对连续动作场景，可用于竞争、合作、通信。</p>
+<p>​    如果直接使用DDPG算法来学习每个智能体的策略，只考虑自己的观测和动作，将其它智能体看作环境中的一部分，则训练过程会非常不稳定，甚至最终无法收敛。这是因为其它智能体的策略也在不断更新变化，智能体的采样数据并不服从一个稳定的概率分布。所以，作者同样采用了“集中式训练和分布式执行 (centralized training with decentralized execution)”的学习框架，允许智能体在训练的过程中获取更多其它智能体的数据，其算法结构如下图所示:</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/maddpg_1.png" alt></p>
+<p>actor更新:</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/maddpg_4.png" alt></p>
+<p>critic更新：</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/maddpg_3.png" alt></p>
+<p><script type="math/tex">\mu ^{'}= \left \{ \mu _{\theta _{1}^{'}},...,\mu _{\theta _{N}^{'}} \right \}</script>为具有延时参数的target policy set</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/maddpg_2.png" alt></p>
+<h2 id="COMA"><a href="#COMA" class="headerlink" title="COMA"></a>COMA</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/346076252">参考1</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/361648110">参考2</a></p>
+<p>VDN是一种基于值函数的方法，而COMA基于策略梯度。在介绍VDN的时候，我们提到过智能体共享团队奖励会带来“credit assignment ” 问题，即利用该团队奖励拟合出的值函数不能评价每个智能体的策略对整体的贡献。在这篇文章中，同样存在这样的问题。该算法是集中式训练，分布式执行。COMA 利用全局评价网络（critic）来评价 Q 值，利用非全局行为网络（actor）来决定 agent 的行为。由于在训练时使用的是全局网络进行评价，并且采用参数共享的方式，使得agent能够在做行为选择的时候参考其他 agent 的状态再做决定，这就加入了“协同”的功能。</p>
+<h3 id="算法-1"><a href="#算法-1" class="headerlink" title="算法"></a>算法</h3><ul>
+<li>使用一个集中式critic网络如图1c，在训练的过程中可以获取所有智能体的信息；</li>
+</ul>
+<p>critic网络的输入包括其它智能体的动作<script type="math/tex">u_{t}^{-a}</script>，全局状态<script type="math/tex">s_{t}</script>，该智能体的局部观测<script type="math/tex">o_{t}^{a}</script>，该智能体的id(one hot形式)，以及上一时刻所有智能体的动作<script type="math/tex">u_{t-1}</script>。这样在critic网络的输出端就能够直接得到该智能体各个动作的反事实Q值。</p>
+<ul>
+<li>采用反事实基线（counterfactual baseline）来解决信用分配的问题；通过以下公式计算</li>
+</ul>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/coma_2.png" alt></p>
+<p>为了解决 Individual Reward Assignment 的问题，反事实准则提出，每个agent应该拥有不同的reward，这样才能知道在这一次的全局行为决策中单个agent的action贡献是多少。而单个agent的reward通过两个值计算得来：当前情况下的全局reward和将该agent行为替换为一个默认行为后的全局reward,表示为<script type="math/tex">D^{a}=r\left ( s,u \right )-r\left ( s,\left ( u^{-a},c^{a} \right ) \right )</script>可以这样理解：该回报值其实计算的是Agent <script type="math/tex">a</script>采取行为 <script type="math/tex">u</script> 会比采取默认行为 <script type="math/tex">c_a</script> 要更好（<script type="math/tex">D^a</script> &gt; 0）还是更坏（<script type="math/tex">D^a</script> &lt; 0）。这个<strong>特定agent</strong>下<strong>特定动作</strong>的<strong>reward</strong>就被称为<strong>counterfactual baseline</strong>，COMA使得每一个agent的每一个action都有一个自身的counterfactual baseline。但是要想计算出每一个动作的<script type="math/tex">D^{a}</script>值，就需要将每个动作都替换成默认行为<script type="math/tex">c_{a}</script>去与环境互动一次得到最终结果，这样采样次数会非常多；此外，默认行为的选取也是无法预测的，到底选择哪一个行为当作默认行为才是最合适的也是比较难决定的。因此，文中提出使用”函数拟合”的方式来计算<script type="math/tex">D^{a}</script> 。</p>
+<p>前面提到，中心评价网络可以评价一个联合动作空间<script type="math/tex">u</script>在一个状态 s 下的 Q 值。由于默认行为很难定义，于是我们把<strong>采取 “默认行为” 得到的效用值近似为采取一个Agent “所有可能行为” 的效用值总和</strong>。因此， <script type="math/tex">D^{a}</script>就可以用上面等式进行计算</p>
+<p>critic网络可以输出在其它智能体动作确定的情况下，自己采取每个动作的Q值。在训练时可以根据当前状态自己采取的action得到<script type="math/tex">Q(s,u)</script>。公式后半部分是对各个动作的Q值求期望，即每个动作的概率(actor网络输出)乘对应的Q值。</p>
+<ul>
+<li>Critic网络要能够对反事实基线进行高效的计算。</li>
+</ul>
+<p>尽管baseline的方式解决了独立回报的问题，但是如果要建立一个网络，接收<script type="math/tex">s,u</script>两个输入，输出为所有 agent 的所有 action 的话，那么输出神经元的个数就等于<script type="math/tex">|U|^{n}</script>（n个agent有|U|个动作）。当agent数目很多或动作空间很大的时候就会造成输出层无法实现。为此，COMA构造了一种网络，如下图c所示。</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/coma_1.png" alt></p>
+<p>策略梯度更新公式(actor)如下：</p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/coma_3.png" alt></p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/coma_4.png" alt></p>
+<p><img src="/2022/04/15/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93/coma_5.png" alt></p>
+<p>critic更新使用TD error的方式</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/361648110">coma</a></p>
+<h2 id="QATTEN"><a href="#QATTEN" class="headerlink" title="QATTEN"></a>QATTEN</h2><h2 id="QTRAN"><a href="#QTRAN" class="headerlink" title="QTRAN"></a>QTRAN</h2><h2 id="WQMIX"><a href="#WQMIX" class="headerlink" title="WQMIX"></a>WQMIX</h2><h2 id="MAPPO"><a href="#MAPPO" class="headerlink" title="MAPPO"></a>MAPPO</h2><h2 id="MAD4PG"><a href="#MAD4PG" class="headerlink" title="MAD4PG"></a>MAD4PG</h2><h2 id="RIAL"><a href="#RIAL" class="headerlink" title="RIAL"></a>RIAL</h2><p>关闭经验回放，为了避免不稳定环境下带来的经验失效或误导</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/11/Trust-Region-Policy-Optimization/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -977,81 +1131,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/10/Dueling-Network-Architectures-for-Deep-Reinforcement-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/10/Dueling-Network-Architectures-for-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Dueling Network Architectures for Deep Reinforcement Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-08-10 21:29:19 / Modified: 22:17:04" itemprop="dateCreated datePublished" datetime="2021-08-10T21:29:19+08:00">2021-08-10</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/dqn%E7%B3%BB%E5%88%97/" itemprop="url" rel="index"><span itemprop="name">dqn系列</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><img src="/2021/08/10/Dueling-Network-Architectures-for-Deep-Reinforcement-Learning/architecture.png" alt></p>
-<p><img src="/2021/08/10/Dueling-Network-Architectures-for-Deep-Reinforcement-Learning/formula7.png" alt></p>
-<p><img src="/2021/08/10/Dueling-Network-Architectures-for-Deep-Reinforcement-Learning/formula8.png" alt></p>
-<p><img src="/2021/08/10/Dueling-Network-Architectures-for-Deep-Reinforcement-Learning/formula9.png" alt></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1121,7 +1200,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-count">49</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
