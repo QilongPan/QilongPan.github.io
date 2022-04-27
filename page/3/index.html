@@ -252,10 +252,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-07-13 20:49:57 / Modified: 22:31:39" itemprop="dateCreated datePublished" datetime="2021-07-13T20:49:57+08:00">2021-07-13</time>
+              <time title="Created: 2021-07-13 20:49:57" itemprop="dateCreated datePublished" datetime="2021-07-13T20:49:57+08:00">2021-07-13</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-27 22:16:10" itemprop="dateModified" datetime="2022-04-27T22:16:10+08:00">2022-04-27</time>
+              </span>
 
           
 
@@ -383,7 +389,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-11 14:03:13" itemprop="dateModified" datetime="2021-07-11T14:03:13+08:00">2021-07-11</time>
+                <time title="Modified: 2022-04-27 22:15:19" itemprop="dateModified" datetime="2022-04-27T22:15:19+08:00">2022-04-27</time>
               </span>
 
           
@@ -766,182 +772,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">DouZero:Mastering DouDizhu with Self-Play Deep Reinforcement Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-06-22 21:51:20" itemprop="dateCreated datePublished" datetime="2021-06-22T21:51:20+08:00">2021-06-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-04-14 21:16:42" itemprop="dateModified" datetime="2022-04-14T21:16:42+08:00">2022-04-14</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/%E6%A3%8B%E7%89%8C%E6%B8%B8%E6%88%8FAI/" itemprop="url" rel="index"><span itemprop="name">棋牌游戏AI</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    本文提出了一个概念上简单但有效的斗地主 AI 系统DouZero，它通过将深度神经网络、动作编码和并行actor相结合加强了传统的蒙特卡洛方法。从零开始在一台具有4个GPU的服务器上，训练几天就超过了所有现有的斗地主AI程序，在Botzone的344个AI代理中排名第一。通过构建 DouZero，展示了经典的 Monte-Carlo 方法可以在具有复杂动作空间的领域中得到强大的结果。代码和在线演示在<a target="_blank" rel="noopener" href="https://github.com/kwai/DouZero">repo</a>。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><ul>
-<li><strong>Combination Q-Network (CQN)</strong>：先利用一个网络找到最好的组合，将最好的组合输入到下一网络找到最好的动作。</li>
-<li><strong>DeltaDou</strong>：第一个与顶级人类玩家相比达到人类水平表现的人工智能程序。它通过使用贝叶斯方法来推断隐藏信息并根据它们自己的策略网络对其他玩家的行为进行采样，从而实现了类似于 AlphaZero 的算法。为了抽象动作空间，DeltaDou 基于启发式规则预训练了一个kicker network(选择带牌，三带一，四带二等)。然而，kicker在斗地主中扮演着重要的角色，不能轻易抽象。kicker的错误选择可能会直接导致输掉比赛，因为它可能会破坏其他一些牌的类别，例如单顺。此外贝叶斯推理和搜索在计算上是昂贵的。即使在使用监督回归启发式算法初始化网络时，训练 DeltaDou 也需要两个多月的时间。因此现有的斗地主 AI 程序在计算上很昂贵，并且可能是次优的，因为它们高度依赖于人类知识的抽象。</li>
-</ul>
-<p>​    DouZero有两个可取的特性。首先与DQN不同，它不容易受到高估偏差的影响。其次通过将动作编码到 card matrices（卡片矩阵）中，它可以自然地泛化在整个训练过程中不常见的动作。这两个特性对于处理斗地主庞大而复杂的动作空间都至关重要。与之前许多依赖特定领域抽象的扑克 AI 研究不同，DouZero 不需要任何领域知识或底层动态知识。在只有 48 个内核和 4 个 1080Ti GPU 的单台服务器上从头开始训练，DouZero 在半天之内就超过了 CQN 和启发式规则，在两天内击败了我们的内部监督学习代理，并在10天内超越了 DeltaDou。大量的评估表明，DouZero是迄今为止最强的斗地主人工智能系统。</p>
-<h1 id="Deep-Monte-Carlo"><a href="#Deep-Monte-Carlo" class="headerlink" title="Deep Monte-Carlo"></a>Deep Monte-Carlo</h1><h2 id="Monte-Carlo-Methods-with-Deep-Neural-Networks"><a href="#Monte-Carlo-Methods-with-Deep-Neural-Networks" class="headerlink" title="Monte-Carlo Methods with Deep Neural Networks"></a>Monte-Carlo Methods with Deep Neural Networks</h2><p>​    优化策略<script type="math/tex">\pi</script>过程如下：</p>
-<ol>
-<li>使用<script type="math/tex">\pi</script>生成episode。</li>
-<li>对于每个<script type="math/tex">s,a</script>出现在episode中，计算并更新<script type="math/tex">Q(s, a)</script>，并使用关于<script type="math/tex">s,a</script>的所有样本的平均回报。</li>
-<li>对episode中的每个<script type="math/tex">s</script>，<script type="math/tex">\pi \left ( s \right )\leftarrow arg max_{a}Q\left ( s,a \right )</script>。</li>
-</ol>
-<p>​    Step 2 中的平均回报通常是通过折现累积奖励获得的。 与依赖bootstrapping的 Q-learning 不同，MC 方法直接逼近目标 Q 值。 在步骤 1 中，我们可以使用 epsilon-greedy 来平衡探索和利用。 可以用神经网络替换 Q-table，称为Deep Monte-Carlo (DMC)，并在步骤 2 中使用均方误差 (MSE) 更新 Q 网络。</p>
-<p>​    虽然 MC 方法被评论不能处理非完全信息的episode，并且由于高方差而被认为效率低下，但 DMC 非常适合斗地主。 首先斗地主是一个episode任务，所以我们不需要处理不完整的episode。 其次DMC 可以很容易地并行化，以每秒有效地生成许多样本，以缓解高方差问题。</p>
-<h1 id="DouZero-System"><a href="#DouZero-System" class="headerlink" title="DouZero System"></a>DouZero System</h1><h2 id="Card-Representation-and-Neural-Architecture"><a href="#Card-Representation-and-Neural-Architecture" class="headerlink" title="Card Representation and Neural Architecture"></a>Card Representation and Neural Architecture</h2><p>​    我们使用one-hot <script type="math/tex">4\times 15</script> 矩阵对每个卡牌组合进行编码（图 2）。 用行表示15种牌值，对应的列表示对应牌值的数量。 图 3 显示了 Q-network的架构。 对于状态，我们提取几个<script type="math/tex">4\times 15</script>卡牌矩阵来表示手牌、其他玩家手牌的并集和最近的动作，以及一些one-hot向量来表示其他玩家的手牌数量和到目前为止炸弹的数量。 使用一个<script type="math/tex">4\times 15</script>卡牌矩阵来编码动作。 对于神经架构，LSTM 用于对历史动作进行编码，并将输出与其他 state/action特征连接起来。 最后我们使用隐藏大小为 512 的六层 MLP 来生成Q-values。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure2.png" alt></p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure3.png" alt></p>
-<h2 id="动作和状态表示"><a href="#动作和状态表示" class="headerlink" title="动作和状态表示"></a>动作和状态表示</h2><p>​    神经网络的输入是状态和动作的串联表示。将每个<script type="math/tex">4\times 15</script>卡牌矩阵转为一个大小为60的一维向量。然后我们删除6个总是为零的条目，因为大小王的数量分别最多为1，数量2,3,4对应的位置可以删除。使用一个one-hot来表示其他两个玩家当前的手牌数量。例如对于农民使用一个大小为17的向量，其中每个条目对应于当前状态下卡牌的数量。对于地主向量的大小是20，因为地主手上最多可以有20张牌。类似的使用一个15维向量来表示当前状态下的炸弹数量。对于历史移动考虑最近的15个动作，并将每三个连续动作的表示连接起来；也就是说历史动作被编码到一个<script type="math/tex">5\times 162</script>矩阵中。历史动作被输入到一个LSTM中，我们使用最后一个隐藏单元来表示历史动作。如果历史动作少于15步，我们使用零矩阵表示缺失的动作。如表table4和table5所示。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/table4.png" alt></p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/table5.png" alt></p>
-<h2 id="Parallel-Actors"><a href="#Parallel-Actors" class="headerlink" title="Parallel Actors"></a>Parallel Actors</h2><p>​    我们将 Landlord(地主)表示为 L，将在 Landlord 之前移动的玩家（上家）表示为 U，将在 Landlord 之后移动的玩家（下家）表示为 D。我们将 DMC 与多个actor进程和一个learner进程并行化，分别在<strong>Algorithm1</strong>和<strong>Algorithm2</strong>中进行了总结。 学习器为三个位置维护三个全局Q-network，并使用 MSE 损失更新网络，以根据actor进程提供的数据来近似目标值。 每个参与者维护三个本地Q-network，它们定期与全局网络同步。 actor将重复从游戏引擎中采样轨迹并计算每个state-action对的累积奖励。 learner和actor的交流是通过三个共享缓冲区实现的。 每个缓冲区被分成几个条目，其中每个条目由几个数据实例组成。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/algorithm1.png" alt></p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/algorithm2.png" alt></p>
-<h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><p>​    这些实验旨在回答以下研究问题。 RQ1：DouZero 与现有的 DouDizhu 程序相比如何，例如基于规则的策略、监督学习、基于 RL 的方法和基于 MCTS 的解决方案（第 5.2 节）？ RQ2：如果我们考虑叫分阶段（第 5.3 节），DouZero 的表现如何？ RQ3：DouZero 的训练效率如何（第 5.4 节）？ RQ4：DouZero 与bootstrapping和actor critic方法（第 5.5 节）相比如何？ RQ5：DouZero 学习的打牌策略是否符合人类知识（第 5.6 节）？ RQ6：与现有程序（第 5.7 节）相比，DouZero 在推理方面是否具有计算效率？ RQ7：DouZero的两个农民能学会互相合作吗（5.8节）？</p>
-<h2 id="实验装置"><a href="#实验装置" class="headerlink" title="实验装置"></a>实验装置</h2><p>​    扑克游戏中常用的策略强度衡量标准是可利用性(Johanson et al., 2011)。 但是在斗地主中，由于斗地主拥有巨大的状态/动作空间，并且有三个玩家，因此计算可利用性本身就很棘手。 为了评估性能，在 (Jiang et al., 2019)之后，我们发起了包括地主和农民两个对手的锦标赛。 我们通过对每一副牌打两次来减少差异。 具体来说，对于两个相互竞争的算法 A 和 B，对于给定的牌组，它们将首先分别扮演地主和农民的位置。 然后他们换边，即A占农民位置，B占地主位置，再次玩同一副牌。 为了模拟真实环境，在第 5.3 节中，我们进一步训练了一个带有监督学习的 bidding network（叫分网络），代理将根据手牌的强度在每场比赛中对地主进行叫分（更多细节见附录 C.2）。 我们考虑以下竞争算法。</p>
-<ul>
-<li><p><strong>DeltaDou:</strong>一个强大的人工智能程序，它使用贝叶斯方法来推断隐藏信息并使用 MCTS 搜索动作（Jiang 等，2019）。 我们使用作者提供的代码和预训练模型。 该模型经过两个月的训练，并显示出与顶级人类玩家相当的表现。</p>
-</li>
-<li><p><strong>CQN:</strong>Combinational Q-Learning (You et al., 2019) 是一个基于卡片分解和 Deep Q-Learning的程序。 我们使用开源代码和作者提供的预训练模型<a target="_blank" rel="noopener" href="https://github.com/qq456cvb/doudizhu-C">github</a>。</p>
-</li>
-<li><p><strong>SL:</strong> 监督学习基线。 我们在我们的斗地主游戏手机应用程序中内部收集了 226230 场来自联赛最高级别玩家的人类行家比赛。 然后我们使用与 DouZero 相同的状态表示和神经架构来训练监督代理，其中包含从这些数据生成的 49990075 个样本。 有关详细信息，请参阅附录 C.2。</p>
-</li>
-<li><p><strong>Rule-Based Programs:</strong>我们收集了一些基于启发式的开源程序，包括 RHCP4<a target="_blank" rel="noopener" href="https://blog.csdn.net/sm9sun/article/ details/70787814">link</a>，一个称为 RHCP-v2<a target="_blank" rel="noopener" href="https://github.com/deecamp2019-group20/">link</a></p>
-<p>的改进版本，以及 RLCard 包中的规则模型<a target="_blank" rel="noopener" href="https://github.com/datamllab/rlcard">link</a> (Zha et al., 2019a)。 此外我们考虑了一个 Random 程序，它可以均匀地采样合法的移动。</p>
-</li>
-</ul>
-<p><strong>Metrics</strong>下面 (Jiang et al., 2019)，给定算法 A 和对手 B，我们使用两个指标来比较 A 和 B 的性能：</p>
-<ul>
-<li><strong>WP</strong> (Winning Percentage):A赢的局数除以总局数。</li>
-<li><strong>ADP</strong> (Average Difference in Points):A 和 B 之间每场比赛得分的平均差异。基础分数为 1。每个炸弹将使得分翻倍。</li>
-</ul>
-<p>我们在实践中发现这两个指标鼓励不同风格的策略。 例如如果使用 ADP 作为奖励，agent 往往会非常谨慎地出炸弹，因为出炸弹是有风险的，可能会导致更大的 ADP 损失。 相比之下，以 WP 为目标，agent 往往会积极地出炸弹，即使它会失败，因为炸弹不会影响 WP。 我们观察到，就 ADP 而言，使用 ADP 训练的代理的性能略好于使用 WP 训练的代理，反之亦然。 接下来，我们分别以 ADP 和 WP 为目标来训练和报告两个 DouZero 代理的结果（对于 WP，我们根据智能体是赢了还是输了游戏，对最后的时间步长给出了 +1 或 -1 的奖励。 对于 ADP，我们直接使用 ADP 作为奖励。 DeltaDou 和 CQN 分别以 ADP 和 WP 为目标进行训练）。 附录 D.2 中提供了对这两个目标的更多讨论。</p>
-<p>​    我们首先通过让每对算法玩 10,000 副套牌来启动预赛。 然后，我们通过玩 100,000 副套牌来计算前 3 种算法的 Elo 评分，以进行更可靠的比较，即 DouZero、DeltaDou 和 SL。 如果算法在该套牌上进行的两场比赛中获得更高的 WP 或 ADP，则该算法将赢得该套牌。 我们用不同的随机采样套牌重复这个过程五次，并报告 Elo 分数的平均值和标准差。 对于叫分阶段的评估，每副牌打六次，不同位置的 DouZero、DeltaDou 和 SL 有不同的扰动。 我们用 100,000 副牌报告结果。</p>
-<p><strong>Implementation Details.</strong>我们在具有 48 个 Intel(R) Xeon(R) Silver 4214R CPU @ 2.40GHz 处理器和四个 1080 Ti GPU 的服务器上运行所有实验。 我们使用 45个actor，这些actor分布在三个 GPU 上。 我们在剩余的 GPU 中运行一个学习器来训练Q-networks。 我们的实现基于TorchBeast framework (Kuttler et al., 2019)。 详细的训练曲线在附录 D.5 中提供。 每个共享缓冲区有 <script type="math/tex">B = 50</script>个条目，大小 <script type="math/tex">S = 100</script>，批量大小<script type="math/tex">M = 32</script> ，并且 <script type="math/tex">\epsilon= 0.01</script>。 我们设置折扣因子 <script type="math/tex">\gamma = 1</script>，因为斗地主只有一个非零的奖励在最后一个时间步，并且早期的动作非常重要。 我们使用 ReLU 作为 MLP 每一层的激活函数。 我们采用 RMSprop 优化器，其学习率 <script type="math/tex">\psi = 0.0001</script>，平滑常数为 0.99 且 <script type="math/tex">\epsilon = 10−5</script>。 我们训练 DouZero 30 天。</p>
-<h2 id="Performance-against-Existing-Programs"><a href="#Performance-against-Existing-Programs" class="headerlink" title="Performance against Existing Programs"></a>Performance against Existing Programs</h2><p>​    为了回答 RQ1，我们将 DouZero 与离线基线进行比较，并在Botzone (Zhou et al., 2018)上报告其结果，这是一个 DouDizhu 比赛的在线平台（更多细节在附录 E 中提供）。</p>
-<p>​    表 1 总结了 DouZero 和所有基线之间头对头完成的 WP 和 ADP。我们提出三点意见。首先，DouZero 主导了所有基于规则的策略和监督学习，这证明了在 DouDizhu 中采用强化学习的有效性。其次，DouZero 的性能明显优于 CQN。回想一下，CQN 类似地使用动作分解和 DQN 训练 Q 网络。 DouZero 的优越性表明 DMC 确实是在 DouDizhu 中训练 Q-networks 的有效方法。第三，DouZero优于DeltaDou，这是文献中最强的Doudizhu AI。我们注意到斗地主有很高的方差，即赢得一场比赛依赖于初始手牌的强度，这高度依赖于运气。因此，0.586 的 WP 和 0.258 的 ADP 表明对 DeltaDou 的显着改进。此外，DeltaDou 需要在训练和测试时进行搜索。而 DouZero 不做搜索，这验证了 DouZero 学习的 Q-networks 非常强大。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/table1.png" alt></p>
-<p>​    图 4 的左侧显示了 DouZero、DeltaDou 和 SL 在玩 100, 000 副套牌时的 Elo 评分。 我们观察到 DouZero 在 WP 和 ADP 方面都明显优于 DeltaDou 和 SL。 这再次证明了DouZero的强劲表现。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure4.png" alt></p>
-<p>​    图 4 的右侧说明了 DouZero 在 Botzone 排行榜上的表现。 我们注意到 Botzone 采用了不同的评分机制。 除了 WP 之外，它还为一些特定的卡片类别提供了额外的奖励，例如 Chain of Pair 和 Rocket（详见附录 E）。 如果以 Botzone 的评分机制为目标，DouZero 很有可能获得更好的性能，但我们直接上传了以 WP 为目标训练的 DouZero 的预训练模型。 我们观察到这个模型足够强大，可以击败其他机器人。</p>
-<h2 id="Comparison-with-Bidding-Phase"><a href="#Comparison-with-Bidding-Phase" class="headerlink" title="Comparison with Bidding Phase"></a>Comparison with Bidding Phase</h2><p>​    为了研究 RQ2，我们使用人类专家数据训练一个具有监督学习的叫分网络。 我们将排名前 3 的算法，即 DouZero、DeltaDou 和 SL，放入 DouDizhu 游戏的三个席位。 在每场比赛中，我们随机选择第一个叫分者，并使用预先训练的叫分网络模拟叫分阶段。 为了公平比较，所有三种算法都使用相同的出价网络。 结果总结在表 2 中。虽然 DouZero 是在没有叫分网络的情况下在随机生成的牌组上训练的，但我们观察到 DouZero 在 WP 和 ADP 中都主导其他两种算法。 这证明了 DouZero 在需要考虑投标阶段的现实世界比赛中的适用性。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/table2.png" alt></p>
-<h2 id="Analysis-of-Learning-Progress"><a href="#Analysis-of-Learning-Progress" class="headerlink" title="Analysis of Learning Progress"></a>Analysis of Learning Progress</h2><p>​    为了研究 RQ3，我们在图 5 中可视化了 DouZero 的学习进度。我们使用 SL 和 DeltaDou 作为对手来绘制 WP 和 ADP随着训练天数的变化。我们做出以下两点观察。首先，DouZero 在 WP 和 ADP 方面分别在一天和两天的训练中优于 SL。我们注意到 DouZero 和 SL 使用完全相同的神经架构进行训练。因此，我们将 DouZero 的优越性归功于自我对弈强化学习。虽然 SL 也表现良好，但它依赖于大量数据，不灵活并且可能限制其性能。其次，DouZero 在 WP 和 ADP 方面分别在 3 天和 10 天的训练中优于 DeltaDou。我们注意到 DeltaDou 是用启发式的监督学习初始化的，并且训练了两个多月。而 DouZero 从零开始，只需要几天的训练就可以击败 DeltaDou。这表明没有搜索的无模型强化学习在斗地主中确实有效。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure5.png" alt></p>
-<p>​    我们进一步分析了使用不同数量的actor时的学习速度。 图 6 报告了使用 15、30 和 45 个 actor 时针对 SL 的性能。 我们观察到，使用更多的 actor 可以加速wall-clock time的训练。 我们还发现所有三种设置都显示出相似的样本效率。 未来，我们将探索在多台服务器上使用更多actor的可能性，以进一步提高训练效率。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure6.png" alt></p>
-<h2 id="Comparison-with-SARSA-and-Actor-Critic"><a href="#Comparison-with-SARSA-and-Actor-Critic" class="headerlink" title="Comparison with SARSA and Actor-Critic"></a>Comparison with SARSA and Actor-Critic</h2><p>​    为了回答 RQ4，我们实现了两个基于 DouZero 的变体。 首先，我们用Temporal-Difference (TD)  目标替换 DMC 目标。 这导致了SARSA的深度版本。 其次，我们实现了一个具有动作特征的 Actor-Critic 变体。 具体来说，我们使用 Q-network 作为具有动作特征的critic，并训练策略作为具有动作掩码的演员来消除非法动作。</p>
-<p>​    图 7 显示了 SARSA 和 Actor-Critic 单次运行的结果。 首先，我们没有观察到使用 TD 学习的明显好处。 我们观察到 DMC 在wall-clock time和样本效率方面的学习速度略快于 SARSA。 可能的原因是 TD 学习在稀疏奖励设置中不会有太大帮助。 我们相信需要更多的研究来了解 TD 学习何时会有所帮助。 其次，我们观察到 Actor-Critic 失败了。 这表明简单地向评论家添加动作特征可能不足以解决复杂的动作空间问题。 未来，我们将研究是否可以将动作特征有效地融入到Actor-Critic框架中。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure7.png" alt></p>
-<h2 id="Analysis-of-DouZero-on-Expert-Data"><a href="#Analysis-of-DouZero-on-Expert-Data" class="headerlink" title="Analysis of DouZero on Expert Data"></a>Analysis of <strong>DouZero</strong> on Expert Data</h2><p>​    对于 RQ5，我们在整个训练过程中计算 DouZero 在人类数据上的准确性。 我们将使用 ADP 训练的模型报告为客观模型，因为收集人类数据的游戏应用程序也采用 ADP。 图 8 显示了结果。 我们做了以下两个有趣的观察。 首先，在早期阶段，即训练的前五天，准确率不断提高。 这表明智能体可能已经学会了一些与人类专业知识相一致的策略，纯粹是自我游戏。 其次，经过五天的训练，准确率急剧下降。 我们注意到 ADP 对 SL 的影响在五天后仍在改善。 这表明智能体可能已经发现了一些人类无法轻易发现的新颖更强的策略，这再次验证了自我对弈强化学习的有效性。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure8.png" alt></p>
-<h2 id="Comparison-of-Inference-Time"><a href="#Comparison-of-Inference-Time" class="headerlink" title="Comparison of Inference Time"></a>Comparison of Inference Time</h2><p>​    为了回答 RQ6，我们在图 9 中报告了每一步的平均推理时间。为了公平比较，我们在 CPU上评估了所有算法。 我们观察到 DouZero 比 DeltaDou、CQN、RHCP 和 RHCP-v2 快几个数量级。 这是意料之中的，因为 DeltaDou 需要执行大量的蒙特卡罗模拟，而 CQN、RHCP 和 RHCP-v2 需要昂贵的卡片分解。 而 DouZero 在每一步只执行一次神经网络的前向传递。 DouZero 的高效推理使我们能够每秒生成大量样本用于强化学习。 它还使得在实际应用程序中部署模型变得经济实惠。</p>
-<h2 id="Case-Study"><a href="#Case-Study" class="headerlink" title="Case Study"></a>Case Study</h2><p>​    为了调查 RQ7，我们进行了案例研究以了解 DouZero 所做的决定。 我们从 Botzone 转储比赛日志，并用预测的 Q 值可视化最重要的动作。 我们在附录 F 中提供了大部分案例研究，包括好的和坏的案例。</p>
-<p>​    图 10 显示了两个农民合作击败地主的典型案例。 右边的农民只剩下一张牌了。 在这里，最底层的农民可以玩一个小Solo来帮助其他农民获胜。 在研究 DouZero 预测的前三个动作时，我们进行了两个有趣的观察。 首先，我们发现DouZero 输出的所有top动作都是小Solo，有很高的取胜信心，说明DouZero 的两个Peasant可能已经学会了合作。 其次，动作 4 的预测 Q 值 (0.808) 远低于动作 3 (0.971) 的 Q 值。 一个可能的解释是仍然有一个 4，所以玩 4 可能不一定有助于农民获胜。 在实践中，在这种特定情况下，其他农民的唯一牌的等级不高于 4。 总的来说，在这种情况下，行动 3 确实是最好的举措。</p>
-<p><img src="/2021/06/22/DouZero-Mastering-DouDizhu-with-Self-Play-Deep-Reinforcement-Learning/figure10.png" alt></p>
-<h1 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h1><p>​    <strong>Search for Imperfect-Information Games.</strong>Counterfactual Regret Minimization (CFR) (Zinkevich et al., 2008)是一种领先的扑克游戏迭代算法，有许多变体 (Lanctot et al., 2009; Gibson et al., 2012; Bowling et al., 2015; Moravcık et al., 2017; Brown &amp; Sandholm, 2018; 2019a; Brown et al., 2019; Lanctot et al., 2019; Li et al., 2020b)。 然而，遍历斗地主的博弈树是计算密集型的，因为它有一棵巨大的树，有很大的分支因子。 此外，大多数先前的研究都集中在零和设置上。 虽然已经做出了一些努力来解决合作环境，例如blueprint policy (Lerer et al., 2020)，但对竞争和合作的推理仍然具有挑战性。 因此，斗地主还没有看到有效的类似 CFR 的解决方案。</p>
-<p>​    <strong>RL for Imperfect-Information Games.</strong>最近的研究表明，强化学习 (RL) 可以在扑克游戏中获得有竞争力的表现 (Heinrich et al., 2015; Heinrich &amp; Silver, 2016; Lanctot et al., 2017)。 与 CFR 不同，强化学习基于采样，因此可以轻松推广到大型游戏。 RL 已成功应用于一些复杂的不完美信息游戏，例如Starcraft (Vinyals et al., 2019), DOTA (Berner et al., 2019) and Mahjong (Li et al., 2020a)）。 最近，RL+search 被探索并证明在扑克游戏中是有效的 (Brown et al., 2020)。 DeltaDou 采用了类似的思路，首先推断隐藏信息，然后使用 MCTS 将 RL 与n DouDizhu中的搜索结合起来（Jiang et al., 2019）。 然而，DeltaDou 的计算成本很高，并且严重依赖于人类的专业知识。 在实践中，即使没有搜索，我们的 DouZero 在几天的训练中也优于 DeltaDou。</p>
-<h1 id="总结和未来工作"><a href="#总结和未来工作" class="headerlink" title="总结和未来工作"></a>总结和未来工作</h1><p>​    这项工作为斗地主提供了一个强大的人工智能系统。 一些独特的特性使得斗地主特别难以解决，例如，巨大的状态/动作空间以及关于竞争和合作的推理。 为了应对这些挑战，我们通过深度神经网络、动作编码和并行actor增强了经典的蒙特卡洛方法。 这导致了一个纯 RL 解决方案，即 DouZero，它在概念上简单但有效且高效。 广泛的评估表明，DouZero是迄今为止斗地主最强的人工智能程序。 我们希望简单的蒙特卡洛方法可以在如此困难的领域产生强大的策略的见解将激励未来的研究。</p>
-<p>​    对于未来的工作，我们将探索以下方向。 首先，我们计划尝试其他神经架构，例如卷积神经网络和 ResNet (He et al., 2016)。 其次，我们将在强化学习的循环中参与叫分。 第三，我们将在训练和/或测试时将 DouZero 与搜索相结合 (Brown et al., 2020)，并研究如何平衡 RL 和搜索。 第四，探索off-policy学习，提高训练效率。 具体来说，我们将研究是否以及如何通过经验回放来提高wall-clock time和样本效率(Lin, 1992; Zhang &amp; Sutton, 2017; Zha et al., 2019b; Fedus et al., 2020)。 第五，我们将尝试对农民的合作进行明确建模（ (Panait &amp; Luke, 2005; Foerster et al., 2016; Raileanu et al., 2018; Lai et al., 2020)。 第六，我们计划尝试可扩展的框架，例如 SEED RL (Espeholt et al., 2019)。 最后但并非最不重要的一点是，我们将测试 Monte-Carlo 方法在其他任务上的适用性。</p>
-<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h1 id="CQN-代码阅读记录doudizhu-c"><a href="#CQN-代码阅读记录doudizhu-c" class="headerlink" title="CQN 代码阅读记录doudizhu-c"></a>CQN 代码阅读记录doudizhu-c</h1><h2 id="TensorPack"><a href="#TensorPack" class="headerlink" title="TensorPack"></a>TensorPack</h2><h3 id="AutoEncoder"><a href="#AutoEncoder" class="headerlink" title="AutoEncoder"></a>AutoEncoder</h3><h4 id="main-py"><a href="#main-py" class="headerlink" title="main.py"></a>main.py</h4><p>训练编码解码器，将onehot60的走步编码为</p>
-<h3 id="MA-Hierachical-Q"><a href="#MA-Hierachical-Q" class="headerlink" title="MA_Hierachical_Q"></a>MA_Hierachical_Q</h3><h4 id="env-py"><a href="#env-py" class="headerlink" title="env.py"></a>env.py</h4><h5 id="Env"><a href="#Env" class="headerlink" title="Env"></a>Env</h5><p>包含所有只能体的历史出牌，手牌，地主，地主牌，当前玩家等信息。</p>
-<ul>
-<li>get_state_prob：返回剩余牌分别属于另外两个玩家的概率</li>
-</ul>
-<h4 id="expreplay-py"><a href="#expreplay-py" class="headerlink" title="expreplay.py"></a>expreplay.py</h4><p>产生数据放入缓冲区中，进行经验回放。</p>
-<p><strong>ReplayMemory</strong></p>
-<p>缓冲区，用于存储训练数据。具有添加数据、取数据等方法。</p>
-<p><strong>ExpReplay</strong></p>
-<ul>
-<li>get_combinations：手牌大于10张时：1 通过舞蹈链算法得到手中牌能组成的所有组合。2 找出手中牌能得到的所有合法走步（大过上家牌） 3 从所有组合中挑选出具有第二步中合法走步的组合。被动出牌时，_fine_mask是一个长度为一个组合的最大走步数量的值（MAX_NUM_GROUPS = 21）,如果组合中对应下标的走步能管上上家牌则为True，否则为False。主动出牌时fine_mask为空。当手牌小于等于10张时，采取另一种方式，详情见代码。fine_mask的大小为(comb数量，MAX_NUM_GROUPS )</li>
-<li>get_state_and_action_spaces：首先通过get_combinations得到所有的组合情况。当组合情况数量大于指定的数量时（MAX_NUM_COMBS = 100），进行采样出最大数量组合。然后得到所有组合情况中的走步，然后通过encoding进行编码为state。当得到的组合情况下于MAX_NUM_COMBS 时，需要将最后一个组合重复多次，达到MAX_NUM_COMBS 。最后的state的大小为(MAX_NUM_COMBS ,MAX_NUM_GROUPS ,)</li>
-<li>_populate_exp:返回值old_s表示状态,get_state_and_action_spaces的结果，act表示动作下标，reward表示奖励，isOver表示游戏是否结束，_comb_mask游戏结束为True，未结束为False。fine_mask表示与get_combinations解释一样。</li>
-</ul>
-<h4 id="DQNModel-py"><a href="#DQNModel-py" class="headerlink" title="DQNModel.py"></a>DQNModel.py</h4><p>总共分为两层模型。</p>
-<p>第一层模型输入：手牌、上家牌、下家牌、其它两家每张牌的概率prob_state、当前手牌的所有组合、当前手牌所有组合中合法走步对应的fine_mask，输出最好的组合下标。</p>
-<p>第二层模型输入：输入第一层模型输出的最好组合下标所对应的state，重复很多次作为输入。输出为最好的action所对应的下标。</p>
-<h4 id="predictor-py"><a href="#predictor-py" class="headerlink" title="predictor.py"></a>predictor.py</h4><ul>
-<li>predict通过模型输出最好走步，预测步骤同上DQNModel.py。</li>
-</ul>
-<h2 id="模型设计"><a href="#模型设计" class="headerlink" title="模型设计"></a>模型设计</h2><ul>
-<li>经验回放采用prioritized replay dqn的方式</li>
-</ul>
-<h2 id="重点"><a href="#重点" class="headerlink" title="重点"></a>重点</h2><ul>
-<li>模拟采取的方式是把其它两个玩家的牌混合在一起，然后提前发好牌，然后当作明牌进行模拟。上面这个过程会进行指定次数，而不是只进行一次。并且在模拟的过程中会设置一个提前结束的阈值，即达到该阈值后提前退出。在探索利用的过程使用的是UCT公式。</li>
-<li>将doudizhu_base所得到得.so动态库放入每个项目build文件夹中</li>
-<li>第一个模型传入所有的组合（一个组合有很多走步），通过模型选择出最好的拆分方式。通过手牌等历史信息再通过第二个模型选择最优走步。</li>
-<li>模型配置在core/table.py里面</li>
-<li>训练：python  main.py  —gpu 0 —load /home/pc/doudizhu-C-master/TensorPack/MA_Hierarchical_Q/train_log/DQN-60-MA-SELF_PLAY/checkpoint</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/21/Bag-of-Tricks-for-Image-Classification-with-Convolutional-Neural-Networks/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -965,10 +795,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-06-21 22:28:16 / Modified: 22:49:30" itemprop="dateCreated datePublished" datetime="2021-06-21T22:28:16+08:00">2021-06-21</time>
+              <time title="Created: 2021-06-21 22:28:16" itemprop="dateCreated datePublished" datetime="2021-06-21T22:28:16+08:00">2021-06-21</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-27 22:15:36" itemprop="dateModified" datetime="2022-04-27T22:15:36+08:00">2022-04-27</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -1046,7 +882,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-10 22:14:55" itemprop="dateModified" datetime="2021-08-10T22:14:55+08:00">2021-08-10</time>
+                <time title="Modified: 2022-04-27 22:15:45" itemprop="dateModified" datetime="2022-04-27T22:15:45+08:00">2022-04-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1189,10 +1025,556 @@ g=\bigtriangledown _{\theta ^{\pi }}log\pi \left ( u|\tau _{t}^{a} \right )\left
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/06/01/deep-learning-tutorial/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/01/deep-learning-tutorial/" class="post-title-link" itemprop="url">deep_learning_tutorial</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-06-01 23:02:57" itemprop="dateCreated datePublished" datetime="2021-06-01T23:02:57+08:00">2021-06-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-15 22:31:01" itemprop="dateModified" datetime="2021-06-15T22:31:01+08:00">2021-06-15</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="深度学习笔记"><a href="#深度学习笔记" class="headerlink" title="深度学习笔记"></a>深度学习笔记</h1><p><a target="_blank" rel="noopener" href="https://www.zybuluo.com/hanbingtao/note/433855">转载至深度学习系列教程</a></p>
+<h2 id="感知器-神经元"><a href="#感知器-神经元" class="headerlink" title="感知器(神经元)"></a>感知器(神经元)</h2><p>神经元和感知器本质上是一样的，只不过我们说感知器的时候，它的激活函数是阶跃函数；而当我们说神经元时，激活函数往往选择为sigmoid函数或者tanh函数等。</p>
+<p>阶跃函数：</p>
+<script type="math/tex; mode=display">
+f(z)=\left\{\begin{matrix}
+1 &z>0 \\ 
+0 & otherwise
+\end{matrix}\right.</script><p>神经网络示意图：</p>
+<p><img src="/2021/06/01/deep-learning-tutorial/神经网络示意图.png" alt></p>
+<p>上图中每个圆圈都是一个神经元，每条线表示神经元之间的连接。我们可以看到，上面的神经元被分成了多层，层与层之间的神经元有连接，而层内之间的神经元没有连接。最左边的层叫做<strong>输入层</strong>，这层负责接收输入数据；最右边的层叫<strong>输出层</strong>，我们可以从这层获取神经网络输出数据。输入层和输出层之间的层叫做<strong>隐藏层</strong>。</p>
+<p>隐藏层比较多（大于2）的神经网络叫做深度神经网络。而深度学习，就是使用深层架构（比如，深度神经网络）的机器学习方法。</p>
+<p>那么深层网络和浅层网络相比有什么优势呢？简单来说深层网络能够表达力更强。事实上，一个仅有一个隐藏层的神经网络就能拟合任何一个函数，但是它需要很多很多的神经元。而深层网络用少得多的神经元就能拟合同样的函数。也就是为了拟合一个函数，要么使用一个浅而宽的网络，要么使用一个深而窄的网络。而后者往往更节约资源。</p>
+<p>深层网络也有劣势，就是它不太容易训练。简单的说，你需要大量的数据，很多的技巧才能训练好一个深层网络。这是个手艺活。</p>
+<h3 id="感知器定义"><a href="#感知器定义" class="headerlink" title="感知器定义"></a>感知器定义</h3><p><img src="/2021/06/01/deep-learning-tutorial/感知器.png" alt></p>
+<p>感知器组成部分：</p>
+<ul>
+<li><strong>输入权值</strong> ：一个感知器可以接收多个输入{x<sub>1</sub>,x<sub>2</sub>,…,x<sub>n</sub>|x<sub>i</sub>∈R}，每个输入上有一个<strong>权值</strong>w<sub>i</sub>∈R，此外还有一个<strong>偏置项</strong>b∈R，就是上图中的w<sub>0</sub>；</li>
+<li><strong>激活函数f(x)</strong>：感知器的激活函数可以有很多选择，比如sigmoid函数；</li>
+<li><strong>输出</strong>：感知器的输出由下面这个公式来计算。</li>
+</ul>
+<script type="math/tex; mode=display">
+y=f(w*x+b)</script><h3 id="感知器训练"><a href="#感知器训练" class="headerlink" title="感知器训练"></a>感知器训练</h3><p>假设损失函数为均方差函数(MSE Mean Square Error)</p>
+<script type="math/tex; mode=display">
+J(w,b)=\frac{1}{2m}\sum_{i=1}^{m}(a_{i}-y_{i})^{2}\\
+J(w,b)=\frac{1}{2m}\sum_{i=1}^{m}(w_{0}x_{0}+w_{1}x_{1}+...+w_{n}x_{n}-y_{i})^{2}</script><p>a<sub>i</sub>为预测值，y<sub>i</sub>为实际值。设m=1(训练样本为1条)时</p>
+<script type="math/tex; mode=display">
+\frac{\partial J(w,b)}{\partial w_{1}}=x_{1}(w_{0}x_{0}+w_{1}x_{1}+...+w_{n}x_{n}-y_{i})</script><p>其余参数导数求法相同。</p>
+<p>使用梯度下降更新：</p>
+<script type="math/tex; mode=display">
+w_{i}=w_{i}-\alpha \frac{\partial J(w_{i},b)}{\partial w_{i}}</script><p>其中α为学习率。如果损失函数内为y<sub>i</sub>-a<sub>i</sub> ，则上面的梯度下降更新负号应为正号。</p>
+<h2 id="梯度下降优化算法"><a href="#梯度下降优化算法" class="headerlink" title="梯度下降优化算法"></a>梯度下降优化算法</h2><p><img src="/2021/06/01/deep-learning-tutorial/梯度下降示例图.png" alt></p>
+<p>函数y=f(x)的极值点就是它的导数f<sup>‘</sup>(x)=0的那个点。因此我们可以通过解方程f<sup>‘</sup>(x)=0,求得函数的极值点。</p>
+<p>对于计算机来说，随便选择一个点开始，比如上图的点x<sub>0</sub>。接下来，每次迭代修改的为x<sub>1</sub>,<sub>2</sub>,…，经过数次迭代后最终达到函数最小值点。</p>
+<p>你可能要问了，为啥每次修改的值，都能往函数最小值那个方向前进呢？这里的奥秘在于，我们每次都是向函数y=f(x)的<strong>梯度</strong>的<strong>相反方向</strong>来修改。什么是<strong>梯度</strong>呢？翻开大学高数课的课本，我们会发现<strong>梯度</strong>是一个向量，它指向<strong>函数值上升最快</strong>的方向。显然，梯度的反方向当然就是函数值下降最快的方向了。我们每次沿着梯度相反方向去修改的值，当然就能走到函数的最小值附近。之所以是最小值附近而不是最小值那个点，是因为我们每次移动的步长不会那么恰到好处，有可能最后一次迭代走远了越过了最小值那个点。步长的选择是门手艺，如果选择小了，那么就会迭代很多轮才能走到最小值附近；如果选择大了，那可能就会越过最小值很远，收敛不到一个好的点上。</p>
+<p>梯度下降算法的公式</p>
+<script type="math/tex; mode=display">
+X_{new}=X_{old}-\alpha \bigtriangledown f(x)</script><p>α为学习率（步长）</p>
+<h2 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h2><h3 id="神经元"><a href="#神经元" class="headerlink" title="神经元"></a>神经元</h3><p>神经元和感知器本质上是一样的，只不过我们说感知器的时候，它的激活函数是<strong>阶跃函数</strong>；而当我们说神经元时，激活函数往往选择为sigmoid函数或tanh函数。如下图所示：</p>
+<p><img src="/2021/06/01/deep-learning-tutorial/sigmoid神经元.png" alt></p>
+<p>计算一个神经元的输出的方法和计算一个感知器的输出是一样的。假设神经元的输入是向量<script type="math/tex">\overrightarrow{x}</script></p>
+<p> ，权重向量是<script type="math/tex">\overrightarrow{w}</script>(偏置项是w<sub>0</sub>)，激活函数是sigmoid函数，则其输出y：</p>
+<script type="math/tex; mode=display">
+y=sigmoid(\vec{w}^{T}*\vec{x})\tag1</script><p>sigmoid函数定义如下：</p>
+<script type="math/tex; mode=display">
+sigmoid(x)=\frac{1}{1+e^{-x}}</script><p>将其带入前面的式子，得到</p>
+<script type="math/tex; mode=display">
+y=\frac{1}{1+e^{-\vec{w}^{T}\cdot \vec{x}}}</script><p>sigmoid函数是非线性函数，值域是(0,1)。函数图像如下图所示</p>
+<p><img src="/2021/06/01/deep-learning-tutorial/sigmoid.jpg" alt></p>
+<p>sigmoid函数的导数是：</p>
+<script type="math/tex; mode=display">
+令y=sigmoid(x)\\
+y=\frac{1}{1+e^{-x}} \\
+u(x)=1+e^{-x} \\
+g(x)=e^{-x}\\
+k(x)=-x\\
+\frac{\mathrm{d} y}{\mathrm{d} x} = \frac{\mathrm{d} y}{\mathrm{d} u}\cdot \frac{\mathrm{d} u}{\mathrm{d} g}\cdot \frac{\mathrm{d} g}{\mathrm{d} k}\cdot \frac{\mathrm{d} k}{\mathrm{d} x}=-1\cdot u^{-2}\cdot 1\cdot e^{-x}\cdot -1=u^{-2}\cdot e^{-x}=\frac{e^{-x}}{(1+e^{-x})^{2}}=\frac{1}{1+e^{-x}}-\frac{1}{(1+e^{-x})^{2}}=y(1-y)\\
+则y^{'}=y(1-y)</script><p>可以看到，sigmoid函数的导数非常有趣，它可以用sigmoid函数自身来表示。这样，一旦计算出sigmoid函数的值，计算它的导数的值就非常方便。</p>
+<h3 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h3><p><img src="/2021/06/01/deep-learning-tutorial/神经网络图2.png" alt></p>
+<p>神经网络其实就是按照<strong>一定规则</strong>连接起来的多个<strong>神经元</strong>。上图展示了一个<strong>全连接(full connected, FC)</strong>神经网络，通过观察上面的图，我们可以发现它的规则包括：</p>
+<ul>
+<li>神经元按照层来布局。最左边的层叫做<strong>输入层</strong>，负责接收输入数据；最右边的层叫<strong>输出层</strong>，我们可以从这层获取神经网络输出数据。输入层和输出层之间的层叫做<strong>隐藏层</strong>，因为它们对于外部来说是不可见的。</li>
+<li>同一层的神经元之间没有连接。</li>
+<li>第N层的每个神经元和第N-1层的<strong>所有</strong>神经元相连(这就是full connected的含义)，第N-1层神经元的输出就是第N层神经元的输入。</li>
+<li>每个连接都有一个<strong>权值</strong>。</li>
+</ul>
+<p>上面这些规则定义了全连接神经网络的结构。事实上还存在很多其它结构的神经网络，比如卷积神经网络(CNN)、循环神经网络(RNN)，他们都具有不同的连接规则。</p>
+<h3 id="计算神经网络输出"><a href="#计算神经网络输出" class="headerlink" title="计算神经网络输出"></a>计算神经网络输出</h3><p>神经网络实际上就是一个输入向量<script type="math/tex">\vec{x}</script>到输出向量<script type="math/tex">\vec{y}</script>的函数，即：</p>
+<script type="math/tex; mode=display">
+\vec{y}=f_{network}(\vec{x})</script><p>根据输入计算神经网络的输出，需要首先将输入向量<script type="math/tex">\vec{x}</script>的每个元素<script type="math/tex">x_{i}</script>的值赋给神经网络的输入层的对应神经元，然后根据<strong>式1</strong>依次向前计算每一层的每个神经元的值，直到最后一层输出层的所有神经元的值计算完毕。最后，将输出层每个神经元的值串在一起就得到了输出向量<script type="math/tex">\vec{y}</script>。</p>
+<p>接下来举一个例子来说明这个过程，我们先给神经网络的每个单元写上编号。</p>
+<p><img src="/2021/06/01/deep-learning-tutorial/神经网络过程图.png" alt></p>
+<p>如上图，输入层有三个节点，我们将其依次编号为1、2、3；隐藏层的4个节点，编号依次为4、5、6、7；最后输出层的两个节点编号为8、9。因为我们这个神经网络是<strong>全连接</strong>网络，所以可以看到每个节点都和<strong>上一层的所有节点</strong>有连接。比如，我们可以看到隐藏层的节点4，它和输入层的三个节点1、2、3之间都有连接，其连接上的权重分别为<script type="math/tex">w_{41},w_{42},w_{43}</script>。那么，我们怎样计算节点4的输出值<script type="math/tex">a_{4}</script>呢？</p>
+<p>为了计算节点4的输出值，我们必须先得到其所有上游节点（也就是节点1、2、3）的输出值。节点1、2、3是<strong>输入层</strong>的节点，所以，他们的输出值就是输入向量本身。按照上图画出的对应关系，可以看到节点1、2、3的输出值分别是<script type="math/tex">x_{1},x_{2},x_{3}</script>。我们要求<strong>输入向量的维度和输入层神经元个数相同</strong>，而输入向量的某个元素对应到哪个输入节点是可以自由决定的，你偏非要把赋值给节点2也是完全没有问题的，但这样除了把自己弄晕之外，并没有什么价值。</p>
+<p>一旦我们有了节点1、2、3的输出值，我们就可以根据<strong>式1</strong>计算节点4的输出值<script type="math/tex">a_{4}</script>：</p>
+<script type="math/tex; mode=display">
+a_{4}=sigmoid(w_{41}x_{1}+w_{42}x_{2}+w_{43}x_{3}+w_{4b})</script><p>上式的<script type="math/tex">w_{4b}</script>是节点4的<strong>偏置项</strong>，图中没有画出来。而分别为节点1、2、3到节点4连接的权重，在给权重<script type="math/tex">w_{ji}</script>编号时，我们把目标节点<script type="math/tex">j</script>的编号放在前面，把源节点<script type="math/tex">i</script>的编号放在后面。</p>
+<p>同样，我们可以继续计算出节点5、6、7的输出值<script type="math/tex">a_{5},a_{6},a_{7}</script>。这样，隐藏层的4个节点的输出值就计算完成了，我们就可以接着计算输出层的节点8的输出值<script type="math/tex">y_{1}</script>：</p>
+<script type="math/tex; mode=display">
+y_{1}=sigmoid(w_{84}a_{4}+w_{85}a_{5}+w_{86}a_{6}+w_{87}a_{7}+w_{8b})</script><p>同理，我们还可以计算出<script type="math/tex">y_{2}</script>的值。这样输出层所有节点的输出值计算完毕，我们就得到了在输入向量<script type="math/tex">\vec{x}=\begin{bmatrix}
+x_{1}\\ 
+x_{2}\\ 
+x_{3}
+\end{bmatrix}</script>时，神经网络的输出向量<script type="math/tex">\vec{y}=\begin{bmatrix}
+y_{1}\\ 
+y_{2}\\ 
+\end{bmatrix}</script>。这里我们也看到，<strong>输出向量的维度和输出层神经元个数相同</strong>。</p>
+<h3 id="神经网络的矩阵表示"><a href="#神经网络的矩阵表示" class="headerlink" title="神经网络的矩阵表示"></a>神经网络的矩阵表示</h3><p>神经网络的计算如果用矩阵来表示会很方便（当然逼格也更高），我们先来看看隐藏层的矩阵表示。</p>
+<p>首先我们把隐藏层4个节点的计算依次排列出来：</p>
+<script type="math/tex; mode=display">
+a_{4}=sigmoid(w_{41}x_{1}+w_{42}x_{2}+w_{43}x_{3}+w_{4b})\\
+a_{5}=sigmoid(w_{51}x_{1}+w_{52}x_{2}+w_{53}x_{3}+w_{5b})\\
+a_{6}=sigmoid(w_{61}x_{1}+w_{62}x_{2}+w_{63}x_{3}+w_{6b})\\
+a_{7}=sigmoid(w_{71}x_{1}+w_{72}x_{2}+w_{73}x_{3}+w_{7b})</script><p>接着，定义网络的输入向量<script type="math/tex">\vec{x}</script>和隐藏层每个节点的权重向量<script type="math/tex">\vec{w_{j}}</script>。令</p>
+<script type="math/tex; mode=display">
+\vec{x}=\begin{bmatrix}
+x_{1}\\ 
+x_{2}\\ 
+x_{3}
+\end{bmatrix}\\
+\vec{w_{4}}=\begin{bmatrix}
+w_{41}, &w_{42},  & w_{43}, & w_{4b}
+\end{bmatrix}\\
+\vec{w_{5}}=\begin{bmatrix}
+w_{51}, &w_{52},  & w_{53}, & w_{5b}
+\end{bmatrix}\\
+\vec{w_{6}}=\begin{bmatrix}
+w_{61}, &w_{62},  & w_{63}, & w_{6b}
+\end{bmatrix}\\
+\vec{w_{7}}=\begin{bmatrix}
+w_{71}, &w_{72},  & w_{73}, & w_{7b}
+\end{bmatrix}\\
+f=sigmoid</script><p>代入到前面的一组式子，得到：</p>
+<script type="math/tex; mode=display">
+a_{4}=f(\vec{w_{4}}\cdot \vec{x})\\
+a_{5}=f(\vec{w_{5}}\cdot \vec{x})\\
+a_{6}=f(\vec{w_{6}}\cdot \vec{x})\\
+a_{7}=f(\vec{w_{7}}\cdot \vec{x})\\</script><p>现在，我们把上述计算<script type="math/tex">a_{4},a_{5},a_{6},a_{7}</script>的四个式子写到一个矩阵里面，每个式子作为矩阵的一行，就可以利用矩阵来表示它们的计算了。令</p>
+<script type="math/tex; mode=display">
+\vec{a}=\begin{bmatrix}
+a_{4}\\ 
+a_{5}\\ 
+a_{6}\\ 
+a_{7}
+\end{bmatrix}\\
+W=\begin{bmatrix}
+\vec{w_{4}}\\ 
+\vec{w_{5}}\\ 
+\vec{w_{6}}\\ 
+\vec{w_{7}}
+\end{bmatrix}=\begin{bmatrix}
+w_{41} &w_{42}  & w_{43} &w_{4b} \\ 
+w_{51} &w_{52}  & w_{53} &w_{5b} \\ 
+w_{61} &w_{62}  & w_{63} &w_{6b} \\ 
+w_{71} &w_{72}  & w_{73} &w_{7b} 
+\end{bmatrix}\\
+f(\begin{bmatrix}
+x_{1}\\ 
+x_{2}\\ 
+x_{3}\\ 
+.\\ 
+.\\ 
+.
+\end{bmatrix})=\begin{bmatrix}
+f(x_{1})\\ 
+f(x_{2})\\ 
+f(x_{3})\\ 
+.\\ 
+.\\ 
+.
+\end{bmatrix}</script><p>带入前面的一组式子，得到</p>
+<script type="math/tex; mode=display">
+\vec{a}=f(W\cdot\vec{x}) \tag2</script><p>在<strong>式2</strong>中，是激活函数，在本例中是sigmoid函数；W是某一层的权重矩阵；<script type="math/tex">\vec{x}</script>是某层的输入向量；<script type="math/tex">\vec{a}</script>是某层的输出向量。<strong>式2</strong>说明神经网络的每一层的作用实际上就是先将输入向量<strong>左乘</strong>一个数组进行线性变换，得到一个新的向量，然后再对这个向量<strong>逐元素</strong>应用一个激活函数。</p>
+<p>每一层的算法都是一样的。比如，对于包含一个输入层，一个输出层和三个隐藏层的神经网络，我们假设其权重矩阵分别为<script type="math/tex">W_{1},W_{2},W_{3},W_{4}</script>，每个隐藏层的输出分别是<script type="math/tex">\vec{a_{1}},\vec{a_{2}},\vec{a_{3}}</script>，神经网络的输入为<script type="math/tex">\vec{x}</script>，神经网络的输出为<script type="math/tex">\vec{y}</script>，如下图所示：</p>
+<p><img src="/2021/06/01/deep-learning-tutorial/深层神经网络.png" alt></p>
+<p>则每一层的输出向量的计算可以表示为：</p>
+<script type="math/tex; mode=display">
+\vec{a_{1}}=f(W_{1}\cdot \vec{x})\\
+\vec{a_{2}}=f(W_{2}\cdot \vec{a_{1}})\\
+\vec{a_{3}}=f(W_{3}\cdot \vec{a_{2}})\\
+\vec{y}=f(W_{4}\cdot \vec{a_{3}})</script><p>这就是神经网络输出值的计算方法。</p>
+<h3 id="神经网络的训练"><a href="#神经网络的训练" class="headerlink" title="神经网络的训练"></a>神经网络的训练</h3><p>现在，我们需要知道一个神经网络的每个连接上的权值是如何得到的。我们可以说神经网络是一个<strong>模型</strong>，那么这些权值就是模型的<strong>参数</strong>，也就是模型要学习的东西。然而，一个神经网络的连接方式、网络的层数、每层的节点数这些参数，则不是学习出来的，而是人为事先设置的。对于这些人为设置的参数，我们称之为<strong>超参数(Hyper-Parameters)</strong>。</p>
+<p>接下来，我们将要介绍神经网络的训练算法：反向传播算法。</p>
+<h3 id="反向传播算法"><a href="#反向传播算法" class="headerlink" title="反向传播算法"></a>反向传播算法</h3><p>我们首先直观的介绍反向传播算法，最后再来介绍这个算法的推导。当然读者也可以完全跳过推导部分，因为即使不知道如何推导，也不影响你写出来一个神经网络的训练代码。事实上，现在神经网络成熟的开源实现多如牛毛，除了练手之外，你可能都没有机会需要去写一个神经网络。</p>
+<p>我们设神经元的激活函数f为函数sigmoid函数。</p>
+<p>我们假设每个训练样本为<script type="math/tex">(\vec{x},\vec{t})</script>，其中向量<script type="math/tex">\vec{x}</script>是训练样本的特征，而<script type="math/tex">\vec{t}</script>是样本的目标值。</p>
+<p><img src="/2021/06/01/deep-learning-tutorial/反向传播.png" alt></p>
+<p>首先，我们根据上一节介绍的算法，用样本的特征<script type="math/tex">\vec{x}</script>，计算出神经网络中每个隐藏层节点的输出<script type="math/tex">a_{i}</script>，以及输出层每个节点的输出<script type="math/tex">y_{i}</script>。</p>
+<p>我们取网络所有输出层节点的误差平方和作为目标函数：</p>
+<script type="math/tex; mode=display">
+E_{d}=\frac{1}{2}\sum_{i=1}^{m}(t_{i}-y_{i})^{2}</script><p>其中<script type="math/tex">m</script>表示输出节点数目，<script type="math/tex">E_{d}</script>表示样本d的误差。</p>
+<p>然后，我们用<strong>随机梯度下降</strong>算法对目标函数进行优化：</p>
+<script type="math/tex; mode=display">
+w_{ji}\leftarrow w_{ji}-\eta\frac{\partial E_{d}}{\partial w_{ji}}</script><p>随机梯度下降算法也就是需要求出误差对于每个权重的偏导数（也就是梯度），怎么求呢？</p>
+<p><img src="/2021/06/01/deep-learning-tutorial/神经网络过程图.png" alt></p>
+<p>观察上图，我们发现权重<script type="math/tex">w_{ji}</script>仅能通过影响节点<script type="math/tex">j</script>的输入值影响网络的其它部分，设<script type="math/tex">net_{j}</script>是节点<script type="math/tex">j</script>的<strong>加权输入</strong>，即</p>
+<script type="math/tex; mode=display">
+net_{j}=\vec{w_{j}}\cdot \vec{x_{j}}=\sum_{i=1}^{n}w_{ji}x_{ji}</script><script type="math/tex; mode=display">E_{d}$$是$$net_{j}$$的函数，而$$net_{j}$$是$$w_{ji}$$的函数。根据链式求导法则，可以得到：</script><p>\frac{\partial E_{d}}{\partial w_{ji}}=\frac{\partial E_{d}}{\partial net_{j}}\frac{\partial net_{j}}{\partial w_{ji}}=\frac{\partial E_{d}}{\partial net_{j}}\frac{\partial \sum _{i}w_{ji}x_{ji}}{\partial w_{ji}}=\frac{\partial E_{d}}{\partial net_{j}}x_{ji}</p>
+<script type="math/tex; mode=display">
+上式中，$$x_{ji}$$是节点$$i$$传递给节点$$j$$的输入值，也就是节点$$i$$的输出值。
+
+对于$$\frac{\partial E_{d}}{\partial net_{j}}$$的推导，需要区分**输出层**和**隐藏层**两种情况。
+
+#### 输出层权值训练
+
+对于**输出层**来说，$$net_{j}$$仅能通过节点$$j$$的输出值$$y_{j}$$来影响网络其它部分，也就是说$$E_{d}$$是$$y_{j}$$的函数，而$$y_{j}$$是$$net_{j}$$的函数，其中$$y_{j}=sigmoid(net_{j})$$。所以我们可以再次使用链式求导法则：</script><p>\frac{\partial E_{d}}{\partial net_{j}}=\frac{\partial E_{d}}{\partial y_{j}}\frac{\partial y_{j}}{\partial net_{j}}</p>
+<script type="math/tex; mode=display">
+考虑上式第一项:</script><p>\frac{\partial E_{d}}{\partial y_{j}}=\frac{\partial \frac{1}{2}\sum (t_{j}-y_{j})^{2}}{\partial y_{j}}=-(t_{j}-y_{j})</p>
+<script type="math/tex; mode=display">
+考虑上式第二项：</script><p>\frac{\partial y_{j}}{\partial net_{j}}=\frac{\partial sigmoid(net_{j})}{\partial net_{j}}=y_{j}(1-y_{j})</p>
+<script type="math/tex; mode=display">
+将第一项和第二项带入，得到：</script><p>\frac{\partial E_{d}}{\partial net_{j}}=-(t_{j}-y_{j})y_{j}(1-y_{j})</p>
+<script type="math/tex; mode=display">
+如果令$$\delta _{j}=-\frac{\partial E_{d}}{\partial net_{j}}$$，也就是一个节点的误差项是网络误差$$\delta$$对这个节点输入的偏导数的相反数。带入上式，得到：</script><p>\delta _{j}=(t_{j}-y_{j})y_{j}(1-y_{j})</p>
+<script type="math/tex; mode=display">
+将上述推导带入随机梯度下降公式，得到：</script><p>w_{ji}\leftarrow w_{ji}-\eta \frac{\partial E_{d}}{\partial w_{ji}}=w_{ji}-\eta \frac{\partial E_{d}}{\partial net_{ji}}\frac{\partial net_{ji}}{\partial w_{ji}}=w_{ji}+\eta (t_{j}-y_{j})y_{j}(1-y_{j})(1-y_{j})x_{ji}=w_{ji}+\eta \delta _{j}x_{ji}</p>
+<script type="math/tex; mode=display">
+
+#### 隐藏层权值训练
+
+现在我们要推导出隐藏层的$$\frac{\partial E_{d}}{\partial net_{j}}$$。
+
+首先，我们需要定义节点$$j$$的所有直接下游节点的集合$$Downstream(j)$$。例如，对于节点4来说，它的直接下游节点是节点8、节点9。可以看到$$net_{j}$$只能通过影响$$Downstream(j)$$再影响$$E_{d}$$。设$$net_{k}$$是节点$$j$$的下游节点的输入，则$$E_{d}$$是$$net_{k}$$的函数，而$$net_{k}$$是$$net_{j}$$的函数。因为$$net_{k}$$有多个，我们应用全导数公式，可以做出如下推导：</script><p>\frac{\partial E_{d}}{\partial net_{j}}\\<br>=\sum_{k\in Downstream(j)}\frac{\partial E_{d}}{\partial net_{k}}\frac{\partial net_{k}}{\partial net_{j}}\\<br>=\sum_{k\in Downstream(j)}-\delta _{k}\frac{\partial net_{k}}{\partial net_{j}}\\<br>=\sum_{k\in Downstream(j)}-\delta _{k}\frac{\partial net_{k}}{\partial a_{j}}\frac{\partial a_{j}}{\partial net_{j}}\\<br>=\sum_{k\in Downstream(j)}-\delta _{k}w_{kj}\frac{\partial a_{j}}{\partial net_{j}}\\<br>=\sum_{k\in Downstream(j)}-\delta _{k}w_{kj}a_{j}(1-a_{j})\\<br>=-a_{j}(1-a_{j})\sum_{k\in Downstream(j)}\delta _{k}w_{kj}</p>
+<script type="math/tex; mode=display">
+因为$$\delta _{j}=-\frac{\partial E_{d}}{\partial net_{j}}$$带入上式得到：</script><p>\delta _{j}=a_{j}(1-a_{j})\sum_{k\in Downstream(j)}\delta _{k}w_{kj}</p>
+<script type="math/tex; mode=display">
+其中$$a_{j}$$为激活函数。
+
+## 卷积神经网络
+
+### 全连接网络VS卷积网络
+
+全连接神经网络之所以不太适合图像识别任务，主要有以下几个方面的问题：
+
+- **参数数量太多** 考虑一个输入$$1000*1000$$像素的图片(一百万像素，现在已经不能算大图了)，输入层有$$1000*1000=100$$万节点。假设第一个隐藏层有100个节点(这个数量并不多)，那么仅这一层就有$$(1000*1000+1)*100=1$$亿​参数，这实在是太多了！我们看到图像只扩大一点，参数数量就会多很多，因此它的扩展性很差。
+- **没有利用像素之间的位置信息** 对于图像识别任务来说，每个像素和其周围像素的联系是比较紧密的，和离得很远的像素的联系可能就很小了。如果一个神经元和上一层所有神经元相连，那么就相当于对于一个像素来说，把图像的所有像素都等同看待，这不符合前面的假设。当我们完成每个连接权重的学习之后，最终可能会发现，有大量的权重，它们的值都是很小的(也就是这些连接其实无关紧要)。努力学习大量并不重要的权重，这样的学习必将是非常低效的。
+- **网络层数限制** 我们知道网络层数越多其表达能力越强，但是通过梯度下降方法训练深度全连接神经网络很困难，因为全连接神经网络的梯度很难传递超过3层。因此，我们不可能得到一个很深的全连接神经网络，也就限制了它的能力。
+
+那么，卷积神经网络又是怎样解决这个问题的呢？主要有三个思路：
+
+- **局部连接** 这个是最容易想到的，每个神经元不再和上一层的所有神经元相连，而只和一小部分神经元相连。这样就减少了很多参数。
+- **权值共享** 一组连接可以共享同一个权重，而不是每个连接有一个不同的权重，这样又减少了很多参数。
+- **下采样** 可以使用Pooling来减少每层的样本数，进一步减少参数数量，同时还可以提升模型的鲁棒性。
+
+对于图像识别任务来说，卷积神经网络通过尽可能保留重要的参数，去掉大量不重要的参数，来达到更好的学习效果。
+
+### 卷积神经网络结构
+
+![](./deep-learning-tutorial/卷积神经网络案例图.png)
+
+三维的层结构
+
+从**图中**我们可以发现**卷积神经网络**的层结构和**全连接神经网络**的层结构有很大不同。**全连接神经网络**每层的神经元是按照**一维**排列的，也就是排成一条线的样子；而**卷积神经网络**每层的神经元是按照**三维**排列的，也就是排成一个长方体的样子，有**宽度**、**高度**和**深度**。
+
+对于**图中**展示的神经网络，我们看到输入层的宽度和高度对应于输入图像的宽度和高度，而它的深度为1。接着，第一个卷积层对这幅图像进行了卷积操作(后面我们会讲如何计算卷积)，得到了三个Feature Map。这里的"3"可能是让很多初学者迷惑的地方，实际上，就是这个卷积层包含三个Filter，也就是三套参数，每个Filter都可以把原始输入图像卷积得到一个Feature Map，三个Filter就可以得到三个Feature Map。至于一个卷积层可以有多少个Filter，那是可以自由设定的。也就是说，卷积层的Filter个数也是一个**超参数**。我们可以把Feature Map可以看做是通过卷积变换提取到的图像特征，三个Filter就对原始图像提取出三组不同的特征，也就是得到了三个Feature Map，也称做三个**通道(channel)**。
+
+继续观察**图**，在第一个卷积层之后，Pooling层对三个Feature Map做了**下采样**(后面我们会讲如何计算下采样)，得到了三个更小的Feature Map。接着，是第二个**卷积层**，它有5个Filter。每个Fitler都把前面**下采样**之后的**3个\**Feature Map**卷积**在一起，得到一个新的Feature Map。这样，5个Filter就得到了5个Feature Map。接着，是第二个Pooling，继续对5个Feature Map进行**下采样**，得到了5个更小的Feature Map。
+
+如图所示网络的最后两层是全连接层。第一个全连接层的每个神经元，和上一层5个Feature Map中的每个神经元相连，第二个全连接层(也就是输出层)的每个神经元，则和第一个全连接层的每个神经元相连，这样得到了整个网络的输出。
+
+至此，我们对**卷积神经网络**有了最基本的感性认识。接下来，我们将介绍**卷积神经网络**中各种层的计算和训练。
+
+### 卷积神经网络输出值的计算
+
+#### 卷积层输出值的计算
+
+我们用一个简单的例子来讲述如何计算**卷积**，然后，我们抽象出**卷积层**的一些重要概念和计算方法。
+
+假设有一个5*5的图像，使用一个3*3的filter进行卷积，想得到一个3*3的Feature Map，如下所示：
+
+![](./deep-learning-tutorial/卷积神经网络案例.png)
+
+为了清楚的描述**卷积**计算过程，我们首先对图像的每个像素进行编号，用$$x_{i,j}$$表示图像的第行第列元素；对filter的每个权重进行编号，用$$w_{m,n}$$表示第$$m$$行第$$n$$列权重，用$$w_{b}$$表示filter的**偏置项**；对Feature Map的每个元素进行编号，用$$a_{i,j}$$表示Feature Map的第$$i$$行第$$j$$列元素；用$$f$$表示**激活函数**(这个例子选择**relu函数**作为激活函数)。然后，使用下列公式计算卷积：</script><p>a_{i,j}=f(\sum_{m=0}^{2}\sum_{n=0}^{2}w_{m,n}x_{i+m,j+n}+w_{b})</p>
+<script type="math/tex; mode=display">
+例如，对于Feature Map左上角元素来说，其卷积计算方法为：</script><p>a_{0,0}=f(\sum_{m=0}^{2}\sum_{n=0}^{2}w_{m,n}x_{m+0,n+0}+w_{b})\\<br>=relu(w_{0,0}x_{0,0}+w_{0,1}x_{0,1}+w_{0,2}x_{0,2}+w_{1,0}x_{1,0}+w_{1,1}x_{1,1}+w_{1,2}x_{1,2}+w_{2,0}x_{2,0}+w_{2,1}x_{2,1}+w_{2})\\<br>=relu(1+0+1+0+1+0+0+0+1+0)=relu(4)=4</p>
+<script type="math/tex; mode=display">
+计算结果如下图所示：
+
+![](./deep-learning-tutorial/卷积过程.png)
+
+###  权值共享
+
+神经元的偏置部分也是同一种滤波器共享的。 比如卷积核是三层，每一层使用的偏置项都是相等的。
+
+## 对抗生成网络(GAN)
+
+
+
+## 优化器
+
+### Batch Gradient Descent(BGD，批量梯度下降)
+
+BGD训练过程中每次迭代使用所有样本来进行梯度的更新。
+
+#### 优点
+
+- 一次迭代是对所有样本进行计算，此时利用矩阵进行操作，实现了并行；
+- 由全数据集确定的方向能够更好地代表样本总体，从而更准确地朝向极值所在的方向。当目标函数为凸函数时，BGD一定能够得到全局最优。
+
+#### 缺点
+
+- 当样本数目很大时，每迭代一步都需要对所有样本计算，训练过程会很慢。
+
+### Stochastic Gradient Descent(SGD,随机梯度下降)
+
+SGD训练过程中每次迭代使用一个样本来对参数进行更新。
+
+#### 优点
+
+- 由于不是在全部训练数据上的损失函数，而是在每轮迭代中，随机优化某一条训练数据上的损失函数，这样每一轮参数的更新速度大大加快。
+
+#### 缺点
+
+- 准确度下降。由于即使在目标函数为强凸函数的情况下，SGD仍旧无法做到线性收敛；
+- 可能会收敛到局部最优，由于单个样本并不能代表全体样本的趋势；
+- 不易于并行实现。
+
+### Mini-Batch Gradient Descent(MBGD,小批量梯度下降)
+
+MBGD训练过程中每次迭代使用**batch size**个样本来对参数进行更新。它是对BGD以及SGD的一个折中办法。
+
+#### 优点
+
+- 通过矩阵运算，每次在一个batch上优化神经网络参数并不会比单个数据慢太多；
+- 每次使用一个batch可以大大减小收敛所需要的迭代次数，同时可以使收敛到的结果更加接近梯度下降的效果；
+- 可实现并行化。
+
+#### 缺点
+
+- batch size的不当选择可能会带来一些问题。
+
+  batcha size的选择带来的影响：
+
+  - 在合理的范围内，增大batch_size的好处：
+
+    - 内存利用率提高了，大矩阵乘法的并行化效率提高。
+
+    - 跑完一次 epoch（全数据集）所需的迭代次数减少，对于相同数据量的处理速度进一步加快。
+
+    - 在一定范围内，一般来说 batch size 越大，其确定的下降方向越准，引起训练震荡越小。
+
+  - 盲目增大batch size的坏处
+
+    - 内存利用率提高了，但是内存容量可能撑不住了。
+    - 跑完一次 epoch（全数据集）所需的迭代次数减少，要想达到相同的精度，其所花费的时间大大增加了，从而对参数的修正也就显得更加缓慢。
+    - batch size 增大到一定程度，其确定的下降方向已经基本不再变化
+
+
+
+### Momentum
+
+[]: https://blog.csdn.net/willduan1/article/details/78070086
+
+SGD参数更新公式为：</script><p>W:=W-\alpha d_{w}\\<br>b:=b-\alpha d_{b}</p>
+<script type="math/tex; mode=display">
+它的梯度更新路线上下波动很大，收敛速度很慢。因此根据这些原因，有人提出了Momentum优化算法，这个是基于SGD的，简单理解就是为了防止波动，它主要是基于梯度的移动指数加权平均来更新参数。引进超参数beta(一般取0.9)。
+
+在讲这个算法之前说一下移动指数加权平均。移动指数加权平均法加权就是根据同一个移动段内不同时间的数据对预测值的影响程度，分别给予不同的权数，然后再进行平均移动以预测未来值。假定给定一系列数据值$$x_{1}, x_{2},x_{3},……x_{n}$$。那么，我们根据这些数据来拟合一条曲线，所得的值$$v_{1}, v_{2}…..$$就是如下的公式：</script><p>v_{0} = 0\\<br>v_{1} = \beta v_{0}+(1-\beta )x_{0} \\<br>v_{2} = \beta v_{1}+(1-\beta )x_{1} \\</p>
+<script type="math/tex; mode=display">
+参数更新公式为：</script><p>V_{dw}=\beta V_{dw}+(1-\beta )dW\\<br>V_{db}=\beta V_{db}+(1-\beta )db\\<br>W:=W-\alpha {V_{dw}}\\<br>b:=b-\alpha {V_{db}}</p>
+<script type="math/tex; mode=display">
+
+### Nesterov Momentum
+
+Nesterov Momentum是对Momentum的改进，可以理解为nesterov动量在标准动量方法中添加了一个**校正因子**。
+
+### Root Mean Square Prop(RMSProp)
+
+RMSProp思想与Momentum相似，也用到权重超参数beta（一般取0.999）。
+
+参数更新公式为：</script><p>S_{dw}=\beta S_{dw}+(1-\beta )dW^{2}\\<br>S_{db}=\beta S_{db}+(1-\beta )db^{2}\\<br>W:=W-\alpha \frac{dW}{\sqrt{S_{dw}}}\\<br>b:=b-\alpha \frac{db}{\sqrt{S_{db}}}</p>
+<script type="math/tex; mode=display">
+为了防止分母为0，在分数下加上个特别小的值epsilon，通常选取10^-8。
+
+### Adagrad
+
+大多数优化器训练参数更新过程中都使用了相同的学习率α。Adagrad能够在训练中自动的对learning rate进行调整，对于出现频率较低的参数采用较大的α更新，相反，对于出现频率较高的参数采用较小的α更新。因此，**Adagrad非常适合处理稀疏数据**。
+
+如果是普通的SGD，那么每一时刻梯度的更新公式为：</script><p>\Theta _{t+1}=\Theta _{t,i}-\alpha *g_{t,i}</p>
+<script type="math/tex; mode=display">
+g<sub>t,i</sub>为第t轮第i个参数的梯度。θ<sub>t,i</sub> 为参数值
+
+Adagrad在每轮训练中对每个参数θ<sub>i</sub> 进行更新，参数更新公式为：</script><p>\Theta _{t+1,i}=\Theta _{t,i}-\frac{\alpha }{\sqrt{G_{t,ii}+\varepsilon }}*g_{t,i}</p>
+<script type="math/tex; mode=display">
+G<sub>t</sub>为对角矩阵，大小为D*D。每个对角线位置i,i为对应参数θ<sub>i</sub> 从第一轮到第t轮梯度的平方和。varepsilon 是平滑项，用于避免分母为0，一般取值为10^-8。Adagrad的缺点是在训练的中后期，分母上梯度平方的累加会越来越大，从而梯度趋近于0，使得训练提前结束。
+
+### Adadelta
+
+Adadelta 是 Adagrad 的一个具有更强鲁棒性的的扩展版本，它不是累积所有过去的梯度，而是根据渐变更新的移动窗口调整学习速率。 这样，即使进行了许多更新，Adadelta 仍在继续学习。   
+
+与Adagrad 相比，就是分母的 G 换成了过去的梯度平方的衰减平均值，**指数衰减平均值**。
+
+这个分母相当于**梯度的均方根 root mean squared (RMS)**，在数据统计分析中，将所有值平方求和，求其均值，再开平方，就得到均方根值 。
+
+#### 优点
+
+- 防止学习率衰减或梯度消失等问题的出现。
+
+### Adam
+
+该优化器相当于RMSprop+Momentum。
+
+参数更新公式为：</script><p>V_{dw}=\beta _{1} V_{dw}+(1-\beta _{1} )dW\\<br>V_{db}=\beta _{1} V_{db}+(1-\beta _{1} )db\\<br>S_{dw}=\beta_{2} S_{dw}+(1-\beta_{2} )dW^{2}\\<br>S_{db}=\beta_{2} S_{db}+(1-\beta_{2} )db^{2}\\<br>V_{dW}^{corrected}=\frac{V_{dW}}{1-\beta _{1}^{t}}\\<br>V_{db}^{corrected}=\frac{V_{db}}{1-\beta _{1}^{t}}\\<br>S_{dW}^{corrected}=\frac{S_{dW}}{1-\beta _{2}^{t}}\\<br>S_{db}^{corrected}=\frac{S_{db}}{1-\beta _{2}^{t}}\\<br>W:=W-\alpha \frac{V_{dW}}{\sqrt{S_{dW}^{corrected}}}\\<br>b:=b-\alpha \frac{V_{db}}{\sqrt{S_{db}^{corrected}}}</p>
+<script type="math/tex; mode=display">
+beta1一般为0.9，beta2一般为0.9999。在实际应用中，Adam方法效果良好。与其他自适应学习率算法相比，其收敛速度更快，学习效果更为有效，而且可以纠正其他优化技术中存在的问题，如学习率消失、收敛过慢或是高方差的参数更新导致损失函数波动较大等问题。
+
+## 激活函数
+
+[激活函数详解](<https://zhuanlan.zhihu.com/p/22142013>)
+
+激活函数一般用于神经网络的层与层之间，将上一层的输出转换之后输入到下一层。如果没有激活函数引入的额非线性特性，那么神经网络就只相当于原始感知机的矩阵相乘。  
+
+### Sigmoid
+
+![](./deep-learning-tutorial/sigmoid.jpg)
+
+sigmoid在定义域内处处可导，且两侧导数逐渐趋近于0。
+
+#### 缺点
+
+- 激活函数计算量大，反向传播求误差梯度时，求导涉及除法；
+- 反向传播时，很容易就会出现梯度消失的情况，从而无法完成深层网络的训练；
+- Sigmoids函数饱和且kill掉梯度；
+- Sigmoids函数收敛缓慢。
+
+### tanh
+
+![](./deep-learning-tutorial/tanh.jpg)
+
+### Relu
+
+![](./deep-learning-tutorial/relu.jpg)
+
+#### 优点
+
+- **速度快** 和sigmoid函数需要计算指数和倒数相比，relu函数其实就是一个max(0,x)，计算代价小很多。
+- **减轻梯度消失问题** relu函数的导数是1，不会导致梯度变小。当然，激活函数仅仅是导致梯度减小的一个因素，但无论如何在这方面relu的表现强于sigmoid。使用relu激活函数可以让你训练更深的网络。
+- **稀疏性** 通过对大脑的研究发现，大脑在工作的时候只有大约5%的神经元是激活的，而采用sigmoid激活函数的人工神经网络，其激活率大约是50%。有论文声称人工神经网络在15%-30%的激活率时是比较理想的。因为relu函数在输入小于0时是完全不激活的，因此可以获得一个更低的激活率。
+
+### 缺点
+
+- 训练的时候很”脆弱”，很容易就”die”了。
+
+### PRelu
+
+![](./deep-learning-tutorial/PRelu.jpg)
+
+### RReLU
+
+### Maxout
+
+### ELU
+
+![](./deep-learning-tutorial/elu.jpg)
+
+
+
+## 问题及解决方法
+
+### 梯度爆炸与梯度消失
+
+深度神经网络训练过程中，使用了反向传播的方式更新参数，该方式基于的是链式求导。计算每层梯度的时候回设计一些连乘操作，如果网络过深，当连乘的因子大部分小于1时，最后的乘积结果可能趋于0，会导致后面的网络层参数不发生变化，不能继续进行学习（梯度消失）。当连乘的因子大部分大于1，最后的乘积结果可能趋于无穷，会导致后面的网络层参数变化过大，导致Loss值出现震荡，收敛不到最低值的情况（梯度爆炸）。
+
+#### 梯度爆炸解决办法
+
+- 降低学习率
+
+- 梯度裁剪（Gradient Clipping）
+
+  如果梯度特别大，那么将其投影到一个比较小的尺度上。
+
+### 线性与非线性
+
+在数学上可理解为一阶导数为常数的函数为线性函数，一阶导数不为常数的函数为非线性函数。
+
+### 为什么RNN一般情况下为等长的
+
+为了让多条数据合并成矩阵进行运算，能够使用并行处理。如果不等长则不能合并为矩阵。tensorflow支持同一批训练数据等长的训练接口。
+
+### Padding 等于SAME和VALID
+
+Padding运算作用于输入向量的每一维，每一维的操作都是一致的，所以理解Padding的操作，只需要理解一维向量的padding过程
+
+假设一个一维向量，输入形状为input_size，经过滤波操作后的输出形状为output_size，滤波窗口为filter_size，需要padding的个数为padding_needed，滤波窗口滑动步长为stride，则之间满足关系：</script><p>output_size=(input_size+padding_needed-filter_size)/stride+1</p>
+<p>$$<br>由公式可知，指定padding_needed可以确定output_size的值，反过来，如果已知输出的形状，则进而可以确定padding的数量。</p>
+<p>这是两种处理padding的方案，pytorch采用的是第一种，即在卷积或池化时先确定padding数量，自动推导输出形状；tensorflow和caffe采用的是更为人熟知的第二种，即先根据Valid还是Same确定输出大小，再自动确定padding的数量</p>
+<p>Valid和Same是预设的两种padding模式，Valid指不padding，same指输出大小尽可能和输入大小成比例</p>
+<p>下面是tensorflow计算padding的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">作者：JamesPlur</span><br><span class="line">链接：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;73118626</span><br><span class="line">来源：知乎</span><br><span class="line">著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</span><br><span class="line"></span><br><span class="line">void GetWindowedOutputSize(int64_t input_size, int32_t filter_size, int32_t dilation_rate,</span><br><span class="line">                           int32_t stride, const std::string&amp; padding_type, </span><br><span class="line">                           int64_t* output_size,int32_t* padding_before, </span><br><span class="line">                           int32_t* padding_after) &#123;</span><br><span class="line">  CHECK_GT(stride, 0);</span><br><span class="line">  CHECK_GE(dilation_rate, 1);</span><br><span class="line"></span><br><span class="line">  int32_t effective_filter_size &#x3D; (filter_size - 1) * dilation_rate + 1;</span><br><span class="line">  if (padding_type &#x3D;&#x3D; &quot;valid&quot;) &#123;</span><br><span class="line">    if (output_size) &#123; *output_size &#x3D; (input_size - effective_filter_size + stride) &#x2F; stride; &#125;</span><br><span class="line">    if (padding_before) &#123; *padding_before &#x3D; 0; &#125;</span><br><span class="line">    if (padding_after) &#123; *padding_after &#x3D; 0; &#125;</span><br><span class="line">  &#125; else if (padding_type &#x3D;&#x3D; &quot;same&quot;) &#123;</span><br><span class="line">    int64_t tmp_output_size &#x3D; (input_size + stride - 1) &#x2F; stride;</span><br><span class="line">    if (output_size) &#123; *output_size &#x3D; tmp_output_size; &#125;</span><br><span class="line">    const int32_t padding_needed &#x3D; std::max(</span><br><span class="line">        0,</span><br><span class="line">        static_cast&lt;int32_t&gt;((tmp_output_size - 1) * stride + effective_filter_size - input_size));</span><br><span class="line">    &#x2F;&#x2F; For odd values of total padding, add more padding at the &#39;right&#39;</span><br><span class="line">    &#x2F;&#x2F; side of the given dimension.</span><br><span class="line">    if (padding_before) &#123; *padding_before &#x3D; padding_needed &#x2F; 2; &#125;</span><br><span class="line">    if (padding_after) &#123; *padding_after &#x3D; padding_needed - padding_needed &#x2F; 2; &#125;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    UNIMPLEMENTED();</span><br><span class="line">  &#125;</span><br><span class="line">  if (output_size) &#123; CHECK_GE((*output_size), 0); &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="论文阅读"><a href="#论文阅读" class="headerlink" title="论文阅读"></a>论文阅读</h2><h2 id="AlexNet深度卷积神经网络"><a href="#AlexNet深度卷积神经网络" class="headerlink" title="AlexNet深度卷积神经网络"></a>AlexNet深度卷积神经网络</h2><h3 id="深度卷积神经网络图像集分类"><a href="#深度卷积神经网络图像集分类" class="headerlink" title="深度卷积神经网络图像集分类"></a>深度卷积神经网络图像集分类</h3><h4 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h4><p>我们训练了一个庞大的深层卷积神经网络，将ImageNet LSVRC-2010比赛中的120万张高分辨率图像分为1000个不同的类别。在测试数据上，我们取得了37.5％和17.0％的前1和前5的错误率，这比以前的先进水平要好得多。具有6000万个参数和650,000个神经元的神经网络由五个卷积层组成，其中一些随后是最大池化层，三个全连接层以及最后的1000个softmax输出。为了加快训练速度，我们使用非饱和神经元和能高效进行卷积运算的GPU实现。为了减少全连接层中的过拟合，我们采用了最近开发的称为“dropout”的正则化方法，该方法证明是非常有效的。我们还在ILSVRC-2012比赛中使用了这种模式的一个变种，取得了15.3％的前五名测试失误率，而第二名的成绩是26.2％。</p>
+<h4 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h4><p>目前，机器学习方法对物体识别非常重要。为了改善他们的表现，我们可以收集更大的数据集，训练更强大的模型，并使用更好的技术来防止过拟合。直到最近，标记好图像的数据集相对还较小——大约上万的数量级（例如，NORB [16]，Caltech-101/256 [8,9]和CIFAR-10/100 [12]）。使用这种规模的数据集可以很好地解决简单的识别任务，特别是如果他们增加了保留标签转换（label-preserving transformations）。例如，目前MNIST数字识别任务的最低错误率（&lt;0.3％）基本达到了人类的识别水平[4]。但是物体在现实环境中可能表现出相当大的变化性，所以要学会识别它们，就必须使用更大的训练集。事实上，小图像数据集的缺点已是众所周知（例如，Pinto[21]），但直到最近才可以收集到数百万的标记数据集。新的大型数据集包括LabelMe [23]，其中包含数十万个完全分割的图像，以及ImageNet [6]，其中包含超过15,000万个超过22,000个类别的高分辨率图像。<br>要从数百万图像中学习数千个类别，我们需要一个具有强大学习能力的模型。然而，物体识别任务的巨大复杂性意味着即使是像ImageNet这样大的数据集也不能完美地解决这个问题，所以我们的模型也需要使用很多先验知识来弥补我们数据集不足的问题。卷积神经网络（CNN）就构成了一类这样的模型[16,11,13,18,15,22,26]。它们的容量可以通过改变它们的深度和宽度来控制，并且它们也对图像的性质（即统计量的定态假设以及像素局部依赖性假设）做出准确而且全面的假设。因此，与具有相同大小的层的标准前馈神经网络相比，CNN具有更少的连接和参数，因此它们更容易训练，而其理论最优性能可能稍微弱一些。<br>尽管CNN具有很好的质量，并且尽管其局部结构的效率相对较高，但将它们大规模应用于高分辨率图像时仍然显得非常昂贵。幸运的是，当前的GPU可以用于高度优化的二维卷积，能够加速许多大型CNN的训练，并且最近的数据集（如ImageNet）包含足够多的标记样本来训练此类模型，而不会出现严重的过度拟合。<br>本文的具体贡献如下：我们在ILSVRC-2010和ILSVRC-2012比赛中使用的ImageNet子集上训练了迄今为止最大的卷积神经网络之一[2]，并在这些数据集上取得了迄今为止最好的结果。我们编写了一个高度优化的2D卷积的GPU实现以及其他训练卷积神经网络的固有操作，并将其公开。我们的网络包含许多新的和不同寻常的功能，这些功能可以提高网络的性能并缩短训练时间，详情请参阅第3节。我们的网络规模较大，即使有120万个带标签的训练样本，仍然存在过拟合的问题，所以我们采用了几个有效的技巧来阻止过拟合，在第4节中有详细的描述。我们最终的网络包含五个卷积层和三个全连接层，并且这个深度似乎很重要：我们发现去除任何卷积层（每个卷积层只包含不超过整个模型参数的1%的参数）都会使网络的性能变差。<br>最后，网络的规模主要受限于目前GPU上可用的内存量以及我们可接受的训练时间。我们的网络需要在两块GTX 580 3GB GPU上花费五到六天的时间来训练。我们所有的实验都表明，通过等待更快的GPU和更大的数据集出现，我们的结果可以进一步完善。</p>
+<h4 id="2-数据集"><a href="#2-数据集" class="headerlink" title="2 数据集"></a>2 数据集</h4><p>ImageNet是一个拥有超过1500万个已标记高分辨率图像的数据集，大概有22,000个类别。图像都是从网上收集，并使用Amazon-Mechanical Turk群智工具人工标记。从2010年起，作为Pascal视觉对象挑战赛的一部分，这是每年举办一次的名为ImageNet大型视觉识别挑战赛（ILSVRC）的比赛。 ILSVRC使用的是ImageNet的一个子集，每1000个类别中大约有1000个图像。总共有大约120万张训练图像，50,000张验证图像和150,000张测试图像。<br>ILSVRC-2010是ILSVRC中的唯一可以使用测试集标签的版本，因此这也正是我们进行大部分实验的版本。由于我们也在ILSVRC-2012比赛中引入了我们的模型，因此在第6部分中，我们也会给出此版本数据集的结果，尽管这个版本的测试集标签不可用。在ImageNet上，习惯上使用两种错误率：top-1和top-5，其中top-5错误率是正确标签不在被模型认为最可能的五个标签之中的测试图像的百分率。<br>ImageNet由可变分辨率的图像组成，而我们的系统需要固定的输入尺寸。因此，我们将图像下采样到256×256的固定分辨率。给定一个矩形图像，我们首先重新缩放图像，使得短边长度为256，然后从结果中裁剪出中心的256×256的图片。除了将每个像素中减去训练集的像素均值之外，我们没有以任何其他方式对图像进行预处理。所以我们在像素的（中心）原始RGB值上训练了我们的网络。</p>
+<h4 id="3-结构"><a href="#3-结构" class="headerlink" title="3 结构"></a>3 结构</h4><p>图2概括了我们所提出网络的结构。它包含八个学习层——五个卷积层和三个全连接层。下面，我们将描述一些所提出网络框架中新颖或不寻常的地方。 3.1-3.4节按照我们对它们重要性的估计进行排序，其中最重要的是第一个。</p>
+<h5 id="3-1-ReLU非线性单元"><a href="#3-1-ReLU非线性单元" class="headerlink" title="3.1 ReLU非线性单元"></a>3.1 ReLU非线性单元</h5><p>对一个神经元模型的输出的常规套路是，给他接上一个激活函数：<script type="math/tex">f(x)=tanh(x)</script>或者<script type="math/tex">f(x)=(1+e^{-x})^{-1}</script>。就梯度下降法的训练时间而言，这些饱和非线性函数比非饱和非线性函数如<script type="math/tex">f(x)=max(0,x)</script>慢得多。根据Nair和Hinton的说法[20]，我们将这种非线性单元称为——修正非线性单元（Rectified Linear Units (ReLUs)）。使用ReLUs做为激活函数的卷积神经网络比起使用tanh单元作为激活函数的训练起来快了好几倍。这个结果从图1中可以看出来，该图展示了对于一个特定的四层CNN，CIFAR-10数据集训练中的误差率达到25%所需要的迭代次数。从这张图的结果可以看出，如果我们使用传统的饱和神经元模型来训练CNN，那么我们将无法为这项工作训练如此大型的神经网络。</p>
+<p><strong>饱和激活函数会压缩输入值</strong>：如<script type="math/tex">f(x)=max(0,x)</script>，当<script type="math/tex">x</script>趋于正无穷则<script type="math/tex">f(x)</script>也趋于正无穷，所以该函数是非饱和的，<script type="math/tex">sigmoid</script>函数的范围是<script type="math/tex">[0,1]</script>所以是饱和的，<script type="math/tex">tanh</script>函数也是饱和的，因为其取值范围为<script type="math/tex">[-1,1]</script>。</p>
+<h2 id="文本分类"><a href="#文本分类" class="headerlink" title="文本分类"></a>文本分类</h2><p><a target="_blank" rel="noopener" href="https://github.com/DX2048/text_classification">文本分类模型实现</a></p>
+<h3 id="FastText"><a href="#FastText" class="headerlink" title="FastText"></a>FastText</h3><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/32965521">参考</a></p>
+<h3 id="TextCNN"><a href="#TextCNN" class="headerlink" title="TextCNN"></a>TextCNN</h3><h3 id="TextRNN"><a href="#TextRNN" class="headerlink" title="TextRNN"></a>TextRNN</h3><h3 id="RCNN"><a href="#RCNN" class="headerlink" title="RCNN"></a>RCNN</h3><h3 id="Hierarchical-Attention-Network"><a href="#Hierarchical-Attention-Network" class="headerlink" title="Hierarchical Attention Network"></a>Hierarchical Attention Network</h3><h3 id="Seq2seq-With-Attention"><a href="#Seq2seq-With-Attention" class="headerlink" title="Seq2seq With Attention"></a>Seq2seq With Attention</h3><h3 id="Dynamic-Memory-Network"><a href="#Dynamic-Memory-Network" class="headerlink" title="Dynamic Memory Network"></a>Dynamic Memory Network</h3><h3 id="EntityNetwork-tracking-state-of-the-world"><a href="#EntityNetwork-tracking-state-of-the-world" class="headerlink" title="EntityNetwork:tracking state of the world"></a>EntityNetwork:tracking state of the world</h3><h3 id="Ensemble-models"><a href="#Ensemble-models" class="headerlink" title="Ensemble models"></a>Ensemble models</h3><h3 id="Transformer-“Attend-Is-All-You-Need”"><a href="#Transformer-“Attend-Is-All-You-Need”" class="headerlink" title="Transformer(“Attend Is All You Need”)"></a>Transformer(“Attend Is All You Need”)</h3><h2 id="如何选择优化算法"><a href="#如何选择优化算法" class="headerlink" title="如何选择优化算法"></a>如何选择优化算法</h2><p>如果数据是稀疏的，就用自适用方法，即 Adagrad, Adadelta, RMSprop, Adam。</p>
+<p>RMSprop, Adadelta, Adam 在很多情况下的效果是相似的。</p>
+<p>Adam 就是在 RMSprop 的基础上加了 bias-correction 和 momentum。</p>
+<p>随着梯度变的稀疏，Adam 比 RMSprop 效果会好。</p>
+<p>整体来讲，<strong>Adam 是最好的选择</strong>。</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p>[零基础入门深度学习](</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1258,7 +1640,7 @@ g=\bigtriangledown _{\theta ^{\pi }}log\pi \left ( u|\tau _{t}^{a} \right )\left
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">51</span>
+          <span class="site-state-item-count">50</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
