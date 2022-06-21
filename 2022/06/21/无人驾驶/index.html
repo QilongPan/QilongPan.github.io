@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="路径规划What is motion planning? Planning确实是无人车目前最困难也最有挑战的部分 本质是什么？   argmin^{}_{x}f(x) 搜索问题 Google:Query词，返回最优结果 无人车：当前环境和当前状态，当前路径上最优选择 什么是好规划？   “好”其实就是一个目标函数：f(x) f(x)的最优解    Motion planning的三个领域 Robo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="无人驾驶">
+<meta property="og:url" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/index.html">
+<meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="路径规划What is motion planning? Planning确实是无人车目前最困难也最有挑战的部分 本质是什么？   argmin^{}_{x}f(x) 搜索问题 Google:Query词，返回最优结果 无人车：当前环境和当前状态，当前路径上最优选择 什么是好规划？   “好”其实就是一个目标函数：f(x) f(x)的最优解    Motion planning的三个领域 Robo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img1.png">
+<meta property="og:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img2.png">
+<meta property="og:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img3.png">
+<meta property="og:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img4.png">
+<meta property="og:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img5.png">
+<meta property="og:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img6.png">
+<meta property="og:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img7.png">
+<meta property="og:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img8.png">
+<meta property="og:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img9.png">
+<meta property="og:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img10.png">
+<meta property="article:published_time" content="2022-06-21T13:30:33.000Z">
+<meta property="article:modified_time" content="2022-06-21T16:03:59.634Z">
+<meta property="article:author" content="QilongPan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img1.png">
+
+<link rel="canonical" href="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>无人驾驶 | 潘其龙</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">潘其龙</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          无人驾驶
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-06-21 21:30:33" itemprop="dateCreated datePublished" datetime="2022-06-21T21:30:33+08:00">2022-06-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-22 00:03:59" itemprop="dateModified" datetime="2022-06-22T00:03:59+08:00">2022-06-22</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="路径规划"><a href="#路径规划" class="headerlink" title="路径规划"></a>路径规划</h1><h2 id="What-is-motion-planning"><a href="#What-is-motion-planning" class="headerlink" title="What is motion planning?"></a>What is motion planning?</h2><ul>
+<li>Planning确实是无人车目前最困难也最有挑战的部分</li>
+<li>本质是什么？</li>
+</ul>
+<script type="math/tex; mode=display">
+argmin^{}_{x}f(x)</script><ul>
+<li>搜索问题<ul>
+<li>Google:Query词，返回最优结果</li>
+<li>无人车：当前环境和当前状态，当前路径上最优选择</li>
+<li>什么是好规划？</li>
+</ul>
+</li>
+<li>“好”其实就是一个目标函数：<script type="math/tex">f(x)</script><ul>
+<li><script type="math/tex">f(x)</script>的最优解</li>
+</ul>
+</li>
+</ul>
+<h2 id="Motion-planning的三个领域"><a href="#Motion-planning的三个领域" class="headerlink" title="Motion planning的三个领域"></a>Motion planning的三个领域</h2><ul>
+<li>Robotics Fileds:<ul>
+<li>生成轨迹实现目标</li>
+<li>RRT,<script type="math/tex">A^{*}</script>，<script type="math/tex">D^{*}</script>,<script type="math/tex">D^{*} Lite</script></li>
+</ul>
+</li>
+<li>Control Theory:<ul>
+<li>动态系统理论实现目标状态</li>
+<li>MPC,LQR</li>
+</ul>
+</li>
+<li>AI：生成状态和Action的一个映射<ul>
+<li>Reinforcement learning, Imitation Learning</li>
+<li>cited by motion planning by Steve Lavelle <a target="_blank" rel="noopener" href="http://planning.cs.uiuc.edu/par1.pdf">http://planning.cs.uiuc.edu/par1.pdf</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="如何解决一个Motion-Planning问题？"><a href="#如何解决一个Motion-Planning问题？" class="headerlink" title="如何解决一个Motion Planning问题？"></a>如何解决一个Motion Planning问题？</h2><ul>
+<li><p>找一个简单的突破口</p>
+<ul>
+<li><p>将问题简化成一个简单的问题：Path Finding Problem</p>
+<p>与运动规划的区别：</p>
+<ul>
+<li>不关心速度，不关心走</li>
+<li>周围固定</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>简言之就是：路径选择问题</p>
+<ul>
+<li>A simple shortest path example:</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="http://qiao.github.io/PathFinding.js/visual/">http://qiao.github.io/PathFinding.js/visual/</a></p>
+<ul>
+<li><p>什么样的Path是最好的Path?这是重点</p>
+<p>路径最短</p>
+<ul>
+<li>BFS &amp; DFS</li>
+<li>Dijkstra</li>
+</ul>
+</li>
+<li><p>刚刚看到的Search属于Non-informative search，效率比较低</p>
+</li>
+<li><p><script type="math/tex">A^{*}</script> search:基于Dijkstra的改进算法</p>
+<ul>
+<li>大概知道了终点位置</li>
+<li>Heuristic func</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>无人车中的规划和<script type="math/tex">A^{*}</script>Search 相差多远？</p>
+<ul>
+<li>部分感知</li>
+<li>动态障碍物</li>
+<li><script type="math/tex">A^{*}</script>本身是一个Global Algorithm</li>
+</ul>
+</li>
+<li><p>Partial observed situation</p>
+<ul>
+<li>贪心算法</li>
+<li><script type="math/tex; mode=display">D^{*} star</script><ul>
+<li>部分环境信息的一个Search</li>
+<li>Apollo登月小车</li>
+<li><script type="math/tex; mode=display">D^{*} Lite</script></li>
+</ul>
+</li>
+<li>这样可以求解全局最优？<ul>
+<li>有难度</li>
+<li>一定有必要全局最优</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Informative &amp; Non-informative search</p>
+<ul>
+<li>Global &amp; Partial observed</li>
+</ul>
+</li>
+<li><p>至此，我们已经有了如下几个方法：</p>
+<ul>
+<li>目标函数并结合了平滑性和目标Cost</li>
+<li>使用通用的Search方法来最小化Cost从而找到一个最优解</li>
+<li>通过Partial observed information来做局部planning</li>
+</ul>
+</li>
+<li><p>我们还缺什么？</p>
+<ul>
+<li>处理动态障碍物，动态环境<ul>
+<li>静止环境</li>
+</ul>
+</li>
+<li>处理交通规则<ul>
+<li>公共安全</li>
+</ul>
+</li>
+<li>实时计算<ul>
+<li>100ms~150ms</li>
+<li>人一般反应时间300~500ms</li>
+<li>酒驾1000ms</li>
+<li>有限时间内找到最优解</li>
+<li>C++</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>给无人车motion planning下一个定义：</p>
+<ul>
+<li>Safely</li>
+<li>Smoothly</li>
+<li>Achieve to destination</li>
+<li>X,Y,Time: 3D trajectory optimization problem</li>
+<li>无人车硬件系统<ul>
+<li>定位设备</li>
+<li>感知设备</li>
+</ul>
+</li>
+<li>无人车软件信息<ul>
+<li>动态信息</li>
+<li>静态信息<ul>
+<li>HD map<ul>
+<li>实时性保证</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如何设计出一个合理的轨迹？<ul>
+<li>路径Path</li>
+<li>速度Speed</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>经典参考书籍：</p>
+<ul>
+<li>Steve Lavelle, Motion Planning Algorithms</li>
+<li>Principles of Robot Motion:Theory,Algorithms,and Implementations</li>
+</ul>
+</li>
+<li><p>经典文献</p>
+<ul>
+<li>A Review of Motion Planning Techniques for Automated Vehicles</li>
+</ul>
+</li>
+</ul>
+<h2 id="基本Planning方法"><a href="#基本Planning方法" class="headerlink" title="基本Planning方法"></a>基本Planning方法</h2><ul>
+<li>经典基于环境建模的方法<ul>
+<li>RRT</li>
+<li>Lattice</li>
+</ul>
+</li>
+<li>现代无人车Planning方法<ul>
+<li>Darpa</li>
+<li>Lattice in Frenet Frame</li>
+<li>Spiral polynomial</li>
+<li>A Review of Motion Planning Techniques for Automated Vehicles</li>
+</ul>
+</li>
+<li>质点模型<ul>
+<li>物体看成一个质点</li>
+<li>点与点不碰撞</li>
+</ul>
+</li>
+<li>刚体问题<ul>
+<li>BycicleModel</li>
+<li>XY Heading</li>
+<li>Collision</li>
+</ul>
+</li>
+<li>Planning限制条件<ul>
+<li>避免碰撞</li>
+<li>边界阈值</li>
+</ul>
+</li>
+<li>连续空间问题怎么解？<ul>
+<li>离散化</li>
+<li>网格化</li>
+</ul>
+</li>
+</ul>
+<h2 id="传统的机器人基础"><a href="#传统的机器人基础" class="headerlink" title="传统的机器人基础"></a>传统的机器人基础</h2><ul>
+<li><p>PRM(Probabilistic RoadMap Planning)</p>
+<ul>
+<li>非常常用的一个方法</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img1.png" alt></p>
+<ul>
+<li>连续空间离散化<ul>
+<li>随机撒点</li>
+<li>Obstacle上的点删除</li>
+</ul>
+</li>
+<li>连接可行点，形成可行空间</li>
+<li><script type="math/tex; mode=display">A^{*}</script></li>
+</ul>
+</li>
+<li><p>RRT(Incremental version of PRM)</p>
+<p>不能处理动态障碍物</p>
+<ul>
+<li><p>使用增量式的方式来进行</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img2.png" alt></p>
+<ul>
+<li><p>找附近可行点的最优点</p>
+<ul>
+<li>F(x)最小，Cost最小</li>
+<li>走过程中也不能有阻碍使Cost小</li>
+</ul>
+</li>
+<li><p>走过程中，还可能碰到障碍物</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img3.png" alt></p>
+<p>上图撒点太远，点虽然可行，但是会穿过障碍物</p>
+<ul>
+<li><p>撒点搜索距离不能太远</p>
+<ul>
+<li><p>一步一步移动</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img4.png" alt></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Lattice方法</p>
+<ul>
+<li><p>改进了RRT的折现问题</p>
+</li>
+<li><p>给出Path的平滑曲线</p>
+</li>
+<li><p>网格化</p>
+<ul>
+<li>每个采样格中都是用曲线连接</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img5.png" alt></p>
+</li>
+<li><p>指数级别的一个搜索算法(NP-Hard)</p>
+</li>
+</ul>
+</li>
+<li><p>DP(动态规划)</p>
+<ul>
+<li><p>减少搜索空间</p>
+<ul>
+<li>复用已有结果</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img6.png" alt></p>
+</li>
+<li><p>Lattice DP的平滑度够吗</p>
+<ul>
+<li>曲率连续</li>
+<li>曲率的导数不一定连续</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>QP(二次规划)</p>
+<ul>
+<li>凸优化问题最优化求解</li>
+<li>公式表达</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img7.png" alt></p>
+<ul>
+<li><p>性质：在凸优化中的凸空间问题，用QP有最优解</p>
+</li>
+<li><p>QP如何找到平滑曲线</p>
+</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img8.png" alt></p>
+<ul>
+<li>其它的平滑曲线方法还有贝塞尔曲线、样条插值方法</li>
+</ul>
+</li>
+<li><p>刚体模型</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img9.png" alt></p>
+<ul>
+<li><p>前轮转向和Heading的关系</p>
+<ul>
+<li>车轮是沿着切线方向行驶</li>
+<li>前后轮是同一个旋转中心</li>
+<li>左右轮结构相同</li>
+</ul>
+</li>
+<li><p>Bicycle Model</p>
+</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img10.png" alt></p>
+</li>
+</ul>
+<p>1.05</p>
+<h1 id="Apollo"><a href="#Apollo" class="headerlink" title="Apollo"></a>Apollo</h1>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/" rel="prev" title="Deep Reinforcement Learning for Autonomous Driving: A Survey">
+      <i class="fa fa-chevron-left"></i> Deep Reinforcement Learning for Autonomous Driving: A Survey
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92"><span class="nav-number">1.</span> <span class="nav-text">路径规划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-motion-planning"><span class="nav-number">1.1.</span> <span class="nav-text">What is motion planning?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Motion-planning%E7%9A%84%E4%B8%89%E4%B8%AA%E9%A2%86%E5%9F%9F"><span class="nav-number">1.2.</span> <span class="nav-text">Motion planning的三个领域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E4%B8%80%E4%B8%AAMotion-Planning%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">1.3.</span> <span class="nav-text">如何解决一个Motion Planning问题？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%ACPlanning%E6%96%B9%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">基本Planning方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E7%9A%84%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%9F%BA%E7%A1%80"><span class="nav-number">1.5.</span> <span class="nav-text">传统的机器人基础</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apollo"><span class="nav-number">2.</span> <span class="nav-text">Apollo</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">QilongPan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">QilongPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

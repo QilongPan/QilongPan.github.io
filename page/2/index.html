@@ -160,6 +160,312 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/" class="post-title-link" itemprop="url">Mastering the Game of Go with Deep Neural Networks and Tree Search</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-26 21:58:21" itemprop="dateCreated datePublished" datetime="2021-11-26T21:58:21+08:00">2021-11-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-27 11:23:18" itemprop="dateModified" datetime="2021-11-27T11:23:18+08:00">2021-11-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/model-based/" itemprop="url" rel="index"><span itemprop="name">model based</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><a target="_blank" rel="noopener" href="https://www.nature.com/articles/nature16961?MRK_CMPG_SOURCE=sm_tw_pp">paper</a></p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>本文提出了将监督学习与self-play强化学习相结合，首次在围棋中击败职业选手。</p>
+<p>将棋盘位置作为<script type="math/tex">19\times19</script>的图像传入，使用卷积层来构建位置的表示。我们使用value network和policy network来减少搜索树的有效深度和广度：使用value network评估位置，并使用policy对动作进行采样。神经网络的训练流程和架构如Figure1所示。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure1.png" alt></p>
+<p>首先使用人类专家的走步数据通过监督学习训练policy network<script type="math/tex">(p_{\sigma })</script>,同时采用<strong>Computing Elo ratings of move patterns in the game of Go</strong>和<strong>Fuego — an open-source framework for board games and Go engine based on Monte-Carlo tree search</strong>两篇论文类似的方法训练了<script type="math/tex">p_{\pi}</script>用于rollout时快速采样动作。接下来训练RL policy network <script type="math/tex">p_{\rho }</script>，它通过优化self-play的最终结果来改进监督学习策略网络。这将调整策略，以达到赢得游戏的正确目标，而不是最大化预测的准确性。最后训练价值网络<script type="math/tex">v_{\theta}</script>用于预测RL policy network对抗自己时游戏的获胜者。</p>
+<h1 id="监督学习策略网络"><a href="#监督学习策略网络" class="headerlink" title="监督学习策略网络"></a>监督学习策略网络</h1><p>通过已有的专家数据进行训练，网络由卷积层和非线性激活函数组成，最后一层为softmax，输出合法动作的概率。训练数据为随机采样的state-action对<script type="math/tex">(s,a)</script>，网络的输入<script type="math/tex">s</script>表示如表extend data table2所示。使用随机梯度上升来最大限度地提高人类在状态s中移动a的可能性。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula1.png" alt></p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/extend_data_table2.png" alt></p>
+<p>训练结果extend data table 3所示,Symmetrics含义可以看paper的Method章节。准确度的微小提高可以使比赛强度巨大提高，如Figure2 a所示。更大的网络可以获得更好的精度，但在搜索过程中评估速度较慢。同时还训练了一个更快但更不准确的rollout policy <script type="math/tex">p_{\pi}(a|s)</script>，使用权重为<script type="math/tex">\pi</script>的一个linear softmax of small pattern features（如extend data table 4所示），达到了24.2%的准确率，只使用<script type="math/tex">\mu s</script>来选择一个动作，而不是策略网络的<script type="math/tex">3ms</script>。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/extend_data_table3.png" alt></p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/extend_data_table4.png" alt></p>
+<h1 id="强化学习策略网络"><a href="#强化学习策略网络" class="headerlink" title="强化学习策略网络"></a>强化学习策略网络</h1><p>​    使用policy gradient 强化学习方法提升策略网络。强化学习策略网络和监督学习策略网络使用相同的结构，并使用监督学习网络参数初始化强化学习网络。为了防止过拟合，训练过程中会把迭代的网络模型放入对手池中，每次从池子中随机选择一个模型与当前策略对战。使用的reward function为当游戏未结束时reward为0，如果最终胜利reward为1，最终失败为-1。在每个时间步<script type="math/tex">t</script>，通过随机梯度上升，向预期结果最大化的方向更新权重。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula2.png" alt></p>
+<p>其中<script type="math/tex">z_{t}</script>表示游戏reward。最终RL policy network对战监督学习策略网络达到了80%的胜率，对战Pachi（open-source Go program）达到了85%的胜率，以前最先进的监督学习网络只有11%的胜率。</p>
+<h1 id="强化学习值网络"><a href="#强化学习值网络" class="headerlink" title="强化学习值网络"></a>强化学习值网络</h1><p>该网络用于位置评估，估计一个值函数<script type="math/tex">v^p(s)</script>，该函数预测在位置<script type="math/tex">s</script>处开始使用策略<script type="math/tex">p</script>对战到游戏结束的结果。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula3.png" alt></p>
+<p>理想情况下，我们想知道完美对战下的最优值函数<script type="math/tex">v^{\ast }\left ( s \right )</script>；实际上使用RL策略网络<script type="math/tex">p_{\rho}</script>来估计我们最强策略的值函数<script type="math/tex">v^{p_{\rho}}</script>。我们使用一个值网络<script type="math/tex">v_{\theta}(s)</script>来近似值函数,<script type="math/tex">v_{\theta }\left ( s \right )\approx v^{p_{\rho }}\left ( s \right )\approx v^{\ast }\left ( s \right )</script>。该神经网络具有与策略网络相似的结构，但输出一个预测值，而不是一个概率分布。我们用state-outcome (s，z)作为训练集，使用随机梯度下降来最小化预测值<script type="math/tex">v_{\theta }\left ( s \right )</script>和相应的结果<script type="math/tex">z</script>之间的均方误差(MSE)。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula4.png" alt></p>
+<p>从由完整游戏组成的数据中预测游戏结果的方法会导致过拟合。问题是连续的位置是密切相关，只差一步，但回归目标是共享的。当以这种方式在数据集上进行训练时，价值网络记忆了游戏结果，而不是推广到新的位置。为了缓解这个问题，生成了一个新的self-play数据集，由3000万个不同的position组成，每个position都从一个单独的游戏中采样。每个游戏都在RL策略网络和它自身之间进行，直到游戏结束。图2b显示了值网络的位置评价精度，与MCTS使用policy <script type="math/tex">p_{\pi}</script> rollout 相比，值函数始终更准确。</p>
+<h1 id="使用策略网络和价值网络搜索"><a href="#使用策略网络和价值网络搜索" class="headerlink" title="使用策略网络和价值网络搜索"></a>使用策略网络和价值网络搜索</h1><p>AlphaGo将策略和价值网络结合在一个MCTS算法中，如Figure3所示。Mcts具有select、expansion、evaluation、bacckup四部分。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure3.png" alt></p>
+<p>从当前状态<script type="math/tex">s_{t}</script>通过公式5选择<script type="math/tex">a_{t}</script></p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula5.png" alt></p>
+<p>其中的<script type="math/tex">u\left ( s,a \right )\propto \frac{P\left ( s,a \right )}{1+N\left ( s,a \right )}</script>是为了鼓励探索，最终采用的<script type="math/tex">u(s,a)</script>见Method章节，<script type="math/tex">P(s,a)</script>为先验概率（可以由策略网络输出），<script type="math/tex">N(s,a)</script>为当前<script type="math/tex">s</script>的访问次数。</p>
+<p>​    当遍历到达step <script type="math/tex">L</script>的叶节点<script type="math/tex">S_{L}</script>时，可以expand该叶节点。叶节点<script type="math/tex">S_{L}</script>仅由SL策略网络<script type="math/tex">p_{\sigma }</script>处理一次输出每个合法动作的概率<script type="math/tex">P</script>,<script type="math/tex">P(s,a)=p_{\sigma}(a|s)</script>。叶节点以两种非常不同的方式进行评估：第一种通过值网络<script type="math/tex">v_{\theta}(S_{L})</script>输出；第二种使用rollout policy <script type="math/tex">p_{\pi}</script>对战到游戏终局获得结果。使用混合参数<script type="math/tex">\lambda</script>将这些评估组合形成新的评估方式<script type="math/tex">V(S_{L})</script></p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula6.png" alt></p>
+<p>在每次模拟结束时，更新所有遍历边的action value (<script type="math/tex">Q(s,a)</script>)和visit count (<script type="math/tex">N(s,a)</script>)。</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula7.png" alt></p>
+<p><script type="math/tex">S_{L}^{i}</script>表示第<script type="math/tex">i</script>次模拟时的叶子节点，<script type="math/tex">1(s,a,i)</script>表示第<script type="math/tex">i</script>次模拟是否经过边<script type="math/tex">(s,a)</script>。当搜索完成，算法将从root position选择访问量最多的动作。在AlphaGo中使用值函数<script type="math/tex">v_{\theta }\left ( s \right )\approx v^{p_{\rho }}\left ( s \right )</script> （RL policy network）比<script type="math/tex">v_{\theta }\left ( s \right )\approx v^{p_{\sigma  }}\left ( s \right )</script> (SL policy network 监督学习)更好。</p>
+<p>为了有效地将MCTS与深度神经网络结合起来，AlphaGo使用异步多线程搜索，在cpu上执行模拟，并在gpu上并行计算策略和值网络。AlphaGo的最终版本使用了40个搜索线程、48个cpu和8个gpu。还实现了一个AlphaGo的分布式版本，在Method章节会详细讲。</p>
+<h1 id="AlphaGo评估"><a href="#AlphaGo评估" class="headerlink" title="AlphaGo评估"></a>AlphaGo评估</h1><p>对战结果Figure4 a</p>
+<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure4.png" alt></p>
+<p>评估了AlphaGo的变体，这些变体仅使用价值网络<script type="math/tex">\lambda=0</script>或仅使用rollout（<script type="math/tex">\lambda=1</script>）来评估位置(见图4b)。即使没有rollout，AlphaGo的性能也超过了所有其他Go程序，这表明价值网络为蒙特卡罗评估提供了一个可行的替代方案。然而，混合评价（<script type="math/tex">\lambda=0.5</script>）表现最好，与其他变体对战达到了95%以上的胜率。这说明这两种位置评估机制是互补的：价值网络近似于强者<script type="math/tex">p_{\rho}</script>所玩的游戏的结果，而rollout可以精确地评分和评估较弱但较快的rollout <script type="math/tex">p_{\pi}</script>所玩游戏的结果。</p>
+<h1 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h1><p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula9.png" alt></p>
+<p>具体方法的实现细节可以看paper</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Mastering Complex Control in MOBA Games with Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-24 21:34:37" itemprop="dateCreated datePublished" datetime="2021-11-24T21:34:37+08:00">2021-11-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-25 22:28:14" itemprop="dateModified" datetime="2021-11-25T22:28:14+08:00">2021-11-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/%E6%88%98%E6%96%97%E7%B1%BB/" itemprop="url" rel="index"><span itemprop="name">战斗类</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    本文从系统和算法角度提出了一个深度强化学习框架用于解决1v1战斗场景中复杂动作控制的问题。系统具有低耦合和高可伸缩性，这使大规模的高效探索成为可能。算法包括几种新的策略，包括 control dependency decoupling, action mask, target attention, and dual-clip PPO，提出的actor-critic网络可以在系统中得到有效的训练。在王者荣耀中测试，训练的智能体可以在1v1游戏中击败顶级职业人类玩家。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    本文对构建MOBA 1v1游戏AI(需要高度复杂的动作控制)进行了系统而深入的研究。在系统方面，开发了一个深度强化学习框架，提供可扩展的off-policy训练。在算法方面，actor-critic神经网络用于动作控制。我们的网络采用多标签近端策略算法(PPO)目标进行优化，并具有控制依赖的解耦、注意机制用于目标选择、action mask用于有效探索、用于学习技能组合的LSTM，以及一个改进版本的PPO，称为dual-clip PPO，以确保训练收敛。</p>
+<p>​    在王者荣耀游戏中进行大量的测试，表明训练过的AI可以使用不同的英雄类型击败顶级职业人类玩家。</p>
+<h1 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h1><p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/figure1.png" alt></p>
+<p>系统包含如下四个模块：</p>
+<ul>
+<li><p>AI Server</p>
+<p>AI Server涵盖了游戏环境与AI模型之间的交互逻辑。AI Server通过使用镜像策略self-play生成游戏片段(Silver et al. 2017)。对手的策略采样类似于 (Bansal et al. 2017)。基于从游戏状态中提取的特征，利用玻尔兹曼探索法预测英雄动作(Cesa-Bianchi et al. 2017)，即基于softmax分布的抽样。然后将采样的动作转发到游戏核心进行执行。执行后，游戏核心连续返回相应的奖励值和下一个状态。在使用中，一台AI Server将绑定一个CPU核心。由于游戏逻辑是在cpu上运行的，所以我们也在cpu上运行模型推理，以节省IO成本。为了有效地生成片段，我们构建了一个快速推理库<a target="_blank" rel="noopener" href="https://github.com/Tencent/FeatherCNN">FeatherCNN</a>的CPU版本。FeatherCNN可以自动将从Tensorflow和Caffe等主流工具训练出来的AI模型转换为定制的推理格式。</p>
+</li>
+<li><p>Dispatch Module</p>
+<p> 每个Dispatch Module都与同一台机器上的几个AI服务器绑定。它从AI Server中收集数据样本，包括奖励、特征、行动概率等。这些样本首先被压缩和打包，然后发送到Memory Pool。</p>
+</li>
+<li><p>Memory Pool</p>
+<p>Memory Pool也是一个服务器。它的内部被实现为数据存储高效的循环队列。它支持不同长度的样本，并基于生成的时间进行数据采样。</p>
+</li>
+<li><p>RL Learner</p>
+<p>RL Learner 是一个分布式训练环境。 为了加速策略更新使用large batch size，集成多个 RL Learner 从相同数量的内存池中并行获取数据。 RL Learner 中的梯度通过 ring allreduce 算法 (Sergeev and Balso 2018)进行平均。 为了降低 IO 成本，RL Learner 使用共享内存而不是 socket 与 Memory Pools 通信，这可以提供 2-3 倍的速度提升。 来自 RL Learner的训练模型以点对点的方式快速同步到AI Servers。</p>
+</li>
+</ul>
+<p>在我们的系统中，经验的生成与参数的学习相解耦。这种灵活的机制使AI Server和RL Learner具有高吞吐量的可扩展性。为了避免learners和actors之间的通信成本瓶颈，我们训练过的模型通过我们的主RL Learner的点对点与AI Server同步。为了平滑数据的存储和传输，我们设计了两个中介服务器，即Dispatch服务器和Memory Pool服务器。在实践中，我们可以毫不费力地扩展到数百万个CPU内核和数千个gpu。请注意，这种设计不同于现有的系统设计，如IMPALA (Espeholt et al. 2018)。在IMPALA中，参数分布在整个学习者中，参与者同时从所有学习者中检索参数。</p>
+<h1 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h1><p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/figure2.png" alt></p>
+<p>creeps表示野怪，turrets表示防御塔</p>
+<p>网络将<script type="math/tex">f_{i}</script>(本地图像信息，比如2D障碍信息),<script type="math/tex">f_{8}</script>（可观测的单元属性，比如英雄类型、血量等）,<script type="math/tex">f_{g}</script>（游戏状态信息，比如游戏时长等）分别编码为<script type="math/tex">h_{i}</script>,<script type="math/tex">h_{u}</script>,<script type="math/tex">h_{g}</script>，使用的网络层如Figure2所示。<script type="math/tex">f_{u}</script>经过几层后会被分为单元的表示和target的attention keys两部分。为了处理不同数量的单元，通过max-pooling将相同类型的单元映射到固定长度的特征向量。然后将所有类型的<script type="math/tex">h_i</script>、<script type="math/tex">h_{u}</script>和 <script type="math/tex">h_{g}</script> 连接表示为一个可观察状态的编码向量。然后通过一个LSTM层将状态编码映射到最终的表示<script type="math/tex">h_{LSTM}</script>上，从而进一步考虑了时间信息。<script type="math/tex">h_{LSTM}</script>被发送到一个FC层来预测动作<script type="math/tex">a</script>。动作<script type="math/tex">a</script>的目标单元<script type="math/tex">t</script>可由每个单元上的目标注意机制进行预测。该机制将<script type="math/tex">h_{LSTM}</script>的FC输出视为query，将所有单元编码的stack视为keys <script type="math/tex">h_{keys}</script>，并计算目标注意力:</p>
+<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/formula1.png" alt></p>
+<p><script type="math/tex">p(t|a)</script>是当前状态下所有单元的注意力分布，<script type="math/tex">p(t|a)</script>的维度是当前状态下的单元数。</p>
+<p>​    其次，在multi-label policy network中，很难明确地建模不同标签之间的相互关联，例如技能方向(Offset X and Offset Y)与技能类型（Button）之间的相关性。为了解决这个问题，我们在一个操作中独立地处理每个标签，以解耦它们的相互关联，即控制依赖关系的解耦。在解耦相互互关联之前，without clipping PPO目标是：</p>
+<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/formula2.png" alt></p>
+<p>假设动作被解耦为<script type="math/tex">a=(a^{0},...,a^{N_{a}-1})</script>,目标函数变为</p>
+<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/formula3.png" alt></p>
+<p>​    这个解耦的目标带来了两个优点。首先，它简化了策略结构。具体来说，策略网络可以不考虑相互的相关性，因为这种依赖关系可以进行后处理。第二，它增加了行动的多样性。由于每个组件都有自己独立的价值输出通道，因此行动可以显著多样化，从而在训练过程中诱导更多的探索。此外，<strong>为了探索的多样性，我们在游戏开始的训练中随机两个代理的位置</strong>。</p>
+<p>​    为了提高训练效率，提出了action mask，基于经验丰富的人类玩家的先验知识，在策略的最终输出层中mask不合理的动作。</p>
+<p><strong>Dual-clip PPO</strong>  设<script type="math/tex">r_{t}(\theta)</script>表示概率比<script type="math/tex">\frac{\pi _{\theta }\left ( a_{t}|s_{t} \right )}{\pi _{\theta _{old}}\left ( a_{t}|s_{t} \right )}</script>。由于<script type="math/tex">r_{t}(\theta)</script>的比值可能非常大，因此RL目标的最大化可能会导致过大的策略偏差。为了缓解这个问题，标准的PPO算法 (Schulman et al. 2017) 包含如下ratio clip来惩罚policy的极端变化</p>
+<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/formula4.png" alt></p>
+<p>然而，在大规模off-policy训练环境中，轨迹从各种policy来源中采样，这可能与当前的policy <script type="math/tex">\pi_{\theta}</script>有很大的不同。在这种情况下，标准PPO将无法处理这些偏差，因为它最初是针对on-policy提出的 (Schulman et al. 2017)。例如，当<script type="math/tex">\pi _{\theta }\left ( a_{t}^{\left ( i \right )}|s_{t} \right )> >\pi  _{\theta _{old}}\left ( a_{t}^{\left ( i \right )} |s_{t}\right )</script>时，比率<script type="math/tex">r_{t}(\theta)</script>是一个巨大的数字。当<script type="math/tex">\hat{A}_{t}<0</script>时，如此大的比率<script type="math/tex">r_{t}(\theta)</script>将引入一个大的无界方差,因为<script type="math/tex">r_{t}\left ( \theta  \right )\hat{A}_{t}< < 0</script>。因此，即使采用PPO的目标，新policy也与旧policy有了明显的偏差，这很难确保策略可以收敛。因此我们提出了一种 dual-clipped PPO算法来支持大规模分布训练，进一步剪<script type="math/tex">r_{t}\left ( \theta  \right )\hat{A}_{t}</script>下界，如图3所示。当<script type="math/tex">\hat{A}_{t}<0</script>时，dual-clipped PPO的新目标是：</p>
+<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/formula5.png" alt></p>
+<p>其中c&gt;1是一个常数，表示下界。</p>
+<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/figure3.png" alt></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/11/Attention-Is-All-You-Need/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/11/Attention-Is-All-You-Need/" class="post-title-link" itemprop="url">Attention Is All You Need</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-08-11 21:04:01" itemprop="dateCreated datePublished" datetime="2021-08-11T21:04:01+08:00">2021-08-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-08-21 10:21:56" itemprop="dateModified" datetime="2021-08-21T10:21:56+08:00">2021-08-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​     主要的序列转换模型基于复杂的循环或卷积神经网络，包括编码器和解码器。 性能最好的模型还通过注意力机制连接编码器和解码器。 我们提出了一种新的简单网络架构，即 Transformer，它完全基于注意力机制，完全消除了递归和卷积。 在两个机器翻译任务上的实验表明，这些模型在质量上更胜一筹，同时更可并行化并且需要更少的训练时间。 我们的模型在 WMT 2014 英德翻译任务上达到了 28.4 BLEU，比现有的最佳结果（包括集成）提高了 2 BLEU。 在 WMT 2014 英语到法语翻译任务中，我们的模型在 8 个 GPU 上训练 3.5 天后建立了一个新的单模型最先进的 BLEU 分数 41.0，这是最好的训练成本的一小部分文献中的模型。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    RNN输入需要上一个隐藏状态，这种固有的顺序特性导致在训练中不能使用并行化。在除少数情况下，注意机制与循环网络一起使用。在这项工作中，我们提出了Transformer，一个避免递归的模型架构，而是完全依赖于一个注意机制来绘制输入和输出之间的全局依赖关系。Transformer允许更多的并行化，在8个P100 gpu上训练了短短12个小时后，可以达到翻译质量的新水平。</p>
+<h1 id="模型架构"><a href="#模型架构" class="headerlink" title="模型架构"></a>模型架构</h1><p>​    大多数具有竞争力的神经序列转换模型都具有encoder-decoder结构。 在这里，encoder将符号表示的输入序列 <script type="math/tex">\left ( x_{1},...,x_{n} \right )</script> 映射到连续表示的序列<script type="math/tex">z= \left ( z_{1},...,z_{n} \right )</script>。 给定<script type="math/tex">z</script>，decoder然后生成一个符号的输出序列<script type="math/tex">\left ( y_{1},...,y_{n} \right )</script>，一次一个元素。 在每一步，模型都是自回归的，在生成下一个时，将先前生成的符号作为附加输入使用。</p>
+<p>​    Transformer 遵循这种整体架构，使用堆叠的self-attention和point-wise、完全连接的encoder和decoder层，分别如图 1 的左半部分和右半部分所示。</p>
+<p><img src="/2021/08/11/Attention-Is-All-You-Need/figure1.png" alt></p>
+<h2 id="Encoder-and-Decoder-Stacks"><a href="#Encoder-and-Decoder-Stacks" class="headerlink" title="Encoder and Decoder Stacks"></a>Encoder and Decoder Stacks</h2><ul>
+<li><p>Encoder:编码器由<script type="math/tex">N=6</script>个相同层组成。每一层都有两个子层。第一个是multi-head self-attention mechanism，第二个是一个简单的position-wise全连接的前馈网络。我们在两个子层周围使用一个残差连接，然后是层归一化。即每个子层的输出都是<script type="math/tex">LayerNorm(x+Sublayer(x))</script>，其中<script type="math/tex">Sublayer(x)</script>是由子层本身实现的函数。为了方便这些残差连接，模型中的所有子层以及嵌入层都会产生了维度<script type="math/tex">d_{model}=512</script>的输出。</p>
+</li>
+<li><p>Decoder:该解码器还由<script type="math/tex">N=6</script>个相同层的堆栈组成。除了每个编码器层中的两个子层外，解码器还插入第三子层，该子层对编码器堆栈的输出执行multi-head attention。与编码器类似，我们在每个子层周围使用残差连接，然后进行层归一化。我们还修改了解码器堆栈中的self-attention 子层，以防止位置关注后续位置。这种掩蔽，再加上输出嵌入被一个位置偏移的事实，确保了对位置<script type="math/tex">i</script>的预测只能依赖于小于<script type="math/tex">i</script>的位置的已知输出。</p>
+</li>
+</ul>
+<h2 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h2><p>​    注意函数可以描述为将query和一组key-value对映射到输出，其中query、keys、values和output都是向量。输出计算为values的加权和，其中分配给每个value的权重由query与相应key的兼容性函数计算。</p>
+<h3 id="Scaled-Dot-Product-Attention"><a href="#Scaled-Dot-Product-Attention" class="headerlink" title="Scaled Dot-Product Attention"></a>Scaled Dot-Product Attention</h3><p>​    我们将我们的特别attention称为“Scaled Dot-Product Attention”（图 2）。 输入包括维度<script type="math/tex">d_{k}</script>的queries和keys，以及维度<script type="math/tex">d_{v}</script>的values。 我们使用query和所有keys的点积，将每个除以<script type="math/tex">\sqrt{d_{k}}</script>，然后应用 softmax 函数来获得value上的权重。</p>
+<p><img src="/2021/08/11/Attention-Is-All-You-Need/figure2.png" alt></p>
+<p>​    在实践中，我们同时计算一组queries上的attention function，并打包到一个矩阵<script type="math/tex">Q</script>中。keys和values也被打包在矩阵<script type="math/tex">k</script>和<script type="math/tex">V</script>中。我们计算的输出矩阵如下：</p>
+<p><img src="/2021/08/11/Attention-Is-All-You-Need/formula1.png" alt></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/10/Deep-Reinforcement-Learning-with-Double-Q-learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -745,242 +1051,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/31/Value-Decomposition-Networks-For-Cooperative-Multi-Agent-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/31/Value-Decomposition-Networks-For-Cooperative-Multi-Agent-Learning/" class="post-title-link" itemprop="url">Value-Decomposition Networks For Cooperative Multi-Agent Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-07-31 11:16:55" itemprop="dateCreated datePublished" datetime="2021-07-31T11:16:55+08:00">2021-07-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-25 23:13:43" itemprop="dateModified" datetime="2021-08-25T23:13:43+08:00">2021-08-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/" itemprop="url" rel="index"><span itemprop="name">多智能体</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    我们研究了具有单个联合奖励信号的协作多智能体强化学习问题。 这类学习问题很困难，因为通常有很大的组合动作和观察空间。 在完全中心化和去中心化的方法中，我们发现了虚假奖励的问题和一种我们称之为“lazy agent”问题的现象，这是由于部分可观察性引起的。 我们通过使用新颖的价值分解网络架构训练单个代理来解决这些问题，该架构学习将团队价值函数分解为agent-wise价值函数。 我们对一系列部分可观察的多智能体领域进行了实验评估，并表明学习这种价值分解会带来卓越的结果，尤其是在与权重共享、角色信息和信息渠道相结合时。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    我们提出了一个简单的实验，在这个实验中，集中的方法通过学习低效的策略，另一个代理是“lazy”的策略而失败。当一个代理学习了一个有用的策略时，但另一个代理不愿学习，因为它的探索会阻碍第一个代理，并导致更糟糕的团队奖励（例如，想象一个使用目标数作为球队奖励信号的RL训练2人足球队。假设一个球员成为了比另一个球员更好的得分手。当较差的玩家投篮时，结果平均要糟糕得多，而较弱的玩家学会了避免投篮）。</p>
-<p>​    另一种方法是训练独立的学习者，以优化团队奖励。一般来说，每个代理都面临一个非平稳的学习问题，因为其环境的动态随着队友改变学习的行为而有效地发生变化。</p>
-<p>​    提高独立学习者表现的一种方法是设计个体奖励函数，更直接地与个体主体观察相关。然而，即使在单代理的情况下，奖励塑造也是困难的，只有一小类形状的奖励函数被保证保持最优的w.r.t。真正的目标。本文的目标是更一般的自治解，其中学习团队值函数的分解。</p>
-<p>​    我们介绍了一种新的在单个代理<strong>learned additive value-decomposition</strong>。值分解网络的目的是通过代表单个分量值函数，通过深度神经网络，从团队奖励信号中学习最优线性值分解。这种加性值分解是通过避免在纯粹独立的学习者中出现的虚假奖励信号而特别驱动的。每个代理学习到的隐式值函数只依赖于局部观测，因此更容易学习。我们的解决方案还改善了克劳斯和布蒂尔（1998）中强调的独立学习的协调问题，因为它在训练时以集中的方式有效学习，而代理可以单独部署。</p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/66571753">Dec-POMDP</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/Louiii/ValueDecomposition">案例code</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/21/Multi-Agent-Actor-Critic-for-Mixed-Cooperative-Competitive-Environments/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/21/Multi-Agent-Actor-Critic-for-Mixed-Cooperative-Competitive-Environments/" class="post-title-link" itemprop="url">Multi-Agent Actor-Critic for Mixed Cooperative-Competitive Environments</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-07-21 20:08:57 / Modified: 20:10:41" itemprop="dateCreated datePublished" datetime="2021-07-21T20:08:57+08:00">2021-07-21</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/" class="post-title-link" itemprop="url">强化学习常用游戏模拟环境</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-07-15 21:19:45" itemprop="dateCreated datePublished" datetime="2021-07-15T21:19:45+08:00">2021-07-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-07-20 23:47:37" itemprop="dateModified" datetime="2021-07-20T23:47:37+08:00">2021-07-20</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1GN411o7uy">网易伏羲视频地址</a></p>
-<h1 id="Grid-world"><a href="#Grid-world" class="headerlink" title="Grid world"></a>Grid world</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic1.png" alt></p>
-<h1 id="Multi-agent-Grid-world"><a href="#Multi-agent-Grid-world" class="headerlink" title="Multi-agent Grid world"></a>Multi-agent Grid world</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic2.png" alt></p>
-<h1 id="Particle"><a href="#Particle" class="headerlink" title="Particle"></a>Particle</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic3.png" alt></p>
-<h1 id="Magent"><a href="#Magent" class="headerlink" title="Magent"></a>Magent</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic4.png" alt></p>
-<h1 id="OpenAI-Gym"><a href="#OpenAI-Gym" class="headerlink" title="OpenAI Gym"></a>OpenAI Gym</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic5.png" alt></p>
-<h1 id="OpenAI-Gym-Retro"><a href="#OpenAI-Gym-Retro" class="headerlink" title="OpenAI Gym Retro"></a>OpenAI Gym Retro</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic6.png" alt></p>
-<h1 id="ProGen"><a href="#ProGen" class="headerlink" title="ProGen"></a>ProGen</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic7.png" alt></p>
-<h1 id="Malmo"><a href="#Malmo" class="headerlink" title="Malmo"></a>Malmo</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic8.png" alt></p>
-<h1 id="Obstacle-Tower"><a href="#Obstacle-Tower" class="headerlink" title="Obstacle Tower"></a>Obstacle Tower</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic9.png" alt></p>
-<h1 id="Torcs赛车"><a href="#Torcs赛车" class="headerlink" title="Torcs赛车"></a>Torcs赛车</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic10.png" alt></p>
-<h1 id="DeepMind-Lab"><a href="#DeepMind-Lab" class="headerlink" title="DeepMind Lab"></a>DeepMind Lab</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic11.png" alt></p>
-<h1 id="Hard-Eight"><a href="#Hard-Eight" class="headerlink" title="Hard Eight"></a>Hard Eight</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic12.png" alt></p>
-<h1 id="DeepMind-Control"><a href="#DeepMind-Control" class="headerlink" title="DeepMind Control"></a>DeepMind Control</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic13.png" alt></p>
-<h1 id="VizDoom"><a href="#VizDoom" class="headerlink" title="VizDoom"></a>VizDoom</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic14.png" alt></p>
-<h1 id="Pommerman"><a href="#Pommerman" class="headerlink" title="Pommerman"></a>Pommerman</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic15.png" alt></p>
-<h1 id="Multiagent-emergence"><a href="#Multiagent-emergence" class="headerlink" title="Multiagent emergence"></a>Multiagent emergence</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic16.png" alt></p>
-<h1 id="Quake-III-Arena-Capture-the-Flag"><a href="#Quake-III-Arena-Capture-the-Flag" class="headerlink" title="Quake III Arena Capture the Flag"></a>Quake III Arena Capture the Flag</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic17.png" alt></p>
-<h1 id="Google-Research-Football"><a href="#Google-Research-Football" class="headerlink" title="Google Research Football"></a>Google Research Football</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic18.png" alt></p>
-<h1 id="Neural-MMOs"><a href="#Neural-MMOs" class="headerlink" title="Neural MMOs"></a>Neural MMOs</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic19.png" alt></p>
-<h1 id="StarCraft-II"><a href="#StarCraft-II" class="headerlink" title="StarCraft II"></a>StarCraft II</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic20.png" alt></p>
-<h1 id="Unity-ML-Agents-Tooklkit"><a href="#Unity-ML-Agents-Tooklkit" class="headerlink" title="Unity ML-Agents Tooklkit"></a>Unity ML-Agents Tooklkit</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic21.png" alt></p>
-<h1 id="Al2Thor"><a href="#Al2Thor" class="headerlink" title="Al2Thor"></a>Al2Thor</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic22.png" alt></p>
-<h1 id="潮人篮球"><a href="#潮人篮球" class="headerlink" title="潮人篮球"></a>潮人篮球</h1><p><img src="/2021/07/15/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%B8%B8%E6%88%8F%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83/pic23.png" alt></p>
-<h1 id="Arcade-Learning-Environment"><a href="#Arcade-Learning-Environment" class="headerlink" title="Arcade-Learning-Environment"></a>Arcade-Learning-Environment</h1><p><a target="_blank" rel="noopener" href="https://github.com/mgbellemare/Arcade-Learning-Environment">github</a></p>
-<h1 id="Fighting-ICE"><a href="#Fighting-ICE" class="headerlink" title="Fighting ICE"></a>Fighting ICE</h1><p><a target="_blank" rel="noopener" href="https://github.com/myt1996/gym-fightingice">github</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1046,14 +1120,14 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-count">53</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

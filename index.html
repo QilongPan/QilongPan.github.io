@@ -160,6 +160,631 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/" class="post-title-link" itemprop="url">无人驾驶</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-06-21 21:30:33" itemprop="dateCreated datePublished" datetime="2022-06-21T21:30:33+08:00">2022-06-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-22 00:03:59" itemprop="dateModified" datetime="2022-06-22T00:03:59+08:00">2022-06-22</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="路径规划"><a href="#路径规划" class="headerlink" title="路径规划"></a>路径规划</h1><h2 id="What-is-motion-planning"><a href="#What-is-motion-planning" class="headerlink" title="What is motion planning?"></a>What is motion planning?</h2><ul>
+<li>Planning确实是无人车目前最困难也最有挑战的部分</li>
+<li>本质是什么？</li>
+</ul>
+<script type="math/tex; mode=display">
+argmin^{}_{x}f(x)</script><ul>
+<li>搜索问题<ul>
+<li>Google:Query词，返回最优结果</li>
+<li>无人车：当前环境和当前状态，当前路径上最优选择</li>
+<li>什么是好规划？</li>
+</ul>
+</li>
+<li>“好”其实就是一个目标函数：<script type="math/tex">f(x)</script><ul>
+<li><script type="math/tex">f(x)</script>的最优解</li>
+</ul>
+</li>
+</ul>
+<h2 id="Motion-planning的三个领域"><a href="#Motion-planning的三个领域" class="headerlink" title="Motion planning的三个领域"></a>Motion planning的三个领域</h2><ul>
+<li>Robotics Fileds:<ul>
+<li>生成轨迹实现目标</li>
+<li>RRT,<script type="math/tex">A^{*}</script>，<script type="math/tex">D^{*}</script>,<script type="math/tex">D^{*} Lite</script></li>
+</ul>
+</li>
+<li>Control Theory:<ul>
+<li>动态系统理论实现目标状态</li>
+<li>MPC,LQR</li>
+</ul>
+</li>
+<li>AI：生成状态和Action的一个映射<ul>
+<li>Reinforcement learning, Imitation Learning</li>
+<li>cited by motion planning by Steve Lavelle <a target="_blank" rel="noopener" href="http://planning.cs.uiuc.edu/par1.pdf">http://planning.cs.uiuc.edu/par1.pdf</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="如何解决一个Motion-Planning问题？"><a href="#如何解决一个Motion-Planning问题？" class="headerlink" title="如何解决一个Motion Planning问题？"></a>如何解决一个Motion Planning问题？</h2><ul>
+<li><p>找一个简单的突破口</p>
+<ul>
+<li><p>将问题简化成一个简单的问题：Path Finding Problem</p>
+<p>与运动规划的区别：</p>
+<ul>
+<li>不关心速度，不关心走</li>
+<li>周围固定</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>简言之就是：路径选择问题</p>
+<ul>
+<li>A simple shortest path example:</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="http://qiao.github.io/PathFinding.js/visual/">http://qiao.github.io/PathFinding.js/visual/</a></p>
+<ul>
+<li><p>什么样的Path是最好的Path?这是重点</p>
+<p>路径最短</p>
+<ul>
+<li>BFS &amp; DFS</li>
+<li>Dijkstra</li>
+</ul>
+</li>
+<li><p>刚刚看到的Search属于Non-informative search，效率比较低</p>
+</li>
+<li><p><script type="math/tex">A^{*}</script> search:基于Dijkstra的改进算法</p>
+<ul>
+<li>大概知道了终点位置</li>
+<li>Heuristic func</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>无人车中的规划和<script type="math/tex">A^{*}</script>Search 相差多远？</p>
+<ul>
+<li>部分感知</li>
+<li>动态障碍物</li>
+<li><script type="math/tex">A^{*}</script>本身是一个Global Algorithm</li>
+</ul>
+</li>
+<li><p>Partial observed situation</p>
+<ul>
+<li>贪心算法</li>
+<li><script type="math/tex; mode=display">D^{*} star</script><ul>
+<li>部分环境信息的一个Search</li>
+<li>Apollo登月小车</li>
+<li><script type="math/tex; mode=display">D^{*} Lite</script></li>
+</ul>
+</li>
+<li>这样可以求解全局最优？<ul>
+<li>有难度</li>
+<li>一定有必要全局最优</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Informative &amp; Non-informative search</p>
+<ul>
+<li>Global &amp; Partial observed</li>
+</ul>
+</li>
+<li><p>至此，我们已经有了如下几个方法：</p>
+<ul>
+<li>目标函数并结合了平滑性和目标Cost</li>
+<li>使用通用的Search方法来最小化Cost从而找到一个最优解</li>
+<li>通过Partial observed information来做局部planning</li>
+</ul>
+</li>
+<li><p>我们还缺什么？</p>
+<ul>
+<li>处理动态障碍物，动态环境<ul>
+<li>静止环境</li>
+</ul>
+</li>
+<li>处理交通规则<ul>
+<li>公共安全</li>
+</ul>
+</li>
+<li>实时计算<ul>
+<li>100ms~150ms</li>
+<li>人一般反应时间300~500ms</li>
+<li>酒驾1000ms</li>
+<li>有限时间内找到最优解</li>
+<li>C++</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>给无人车motion planning下一个定义：</p>
+<ul>
+<li>Safely</li>
+<li>Smoothly</li>
+<li>Achieve to destination</li>
+<li>X,Y,Time: 3D trajectory optimization problem</li>
+<li>无人车硬件系统<ul>
+<li>定位设备</li>
+<li>感知设备</li>
+</ul>
+</li>
+<li>无人车软件信息<ul>
+<li>动态信息</li>
+<li>静态信息<ul>
+<li>HD map<ul>
+<li>实时性保证</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如何设计出一个合理的轨迹？<ul>
+<li>路径Path</li>
+<li>速度Speed</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>经典参考书籍：</p>
+<ul>
+<li>Steve Lavelle, Motion Planning Algorithms</li>
+<li>Principles of Robot Motion:Theory,Algorithms,and Implementations</li>
+</ul>
+</li>
+<li><p>经典文献</p>
+<ul>
+<li>A Review of Motion Planning Techniques for Automated Vehicles</li>
+</ul>
+</li>
+</ul>
+<h2 id="基本Planning方法"><a href="#基本Planning方法" class="headerlink" title="基本Planning方法"></a>基本Planning方法</h2><ul>
+<li>经典基于环境建模的方法<ul>
+<li>RRT</li>
+<li>Lattice</li>
+</ul>
+</li>
+<li>现代无人车Planning方法<ul>
+<li>Darpa</li>
+<li>Lattice in Frenet Frame</li>
+<li>Spiral polynomial</li>
+<li>A Review of Motion Planning Techniques for Automated Vehicles</li>
+</ul>
+</li>
+<li>质点模型<ul>
+<li>物体看成一个质点</li>
+<li>点与点不碰撞</li>
+</ul>
+</li>
+<li>刚体问题<ul>
+<li>BycicleModel</li>
+<li>XY Heading</li>
+<li>Collision</li>
+</ul>
+</li>
+<li>Planning限制条件<ul>
+<li>避免碰撞</li>
+<li>边界阈值</li>
+</ul>
+</li>
+<li>连续空间问题怎么解？<ul>
+<li>离散化</li>
+<li>网格化</li>
+</ul>
+</li>
+</ul>
+<h2 id="传统的机器人基础"><a href="#传统的机器人基础" class="headerlink" title="传统的机器人基础"></a>传统的机器人基础</h2><ul>
+<li><p>PRM(Probabilistic RoadMap Planning)</p>
+<ul>
+<li>非常常用的一个方法</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img1.png" alt></p>
+<ul>
+<li>连续空间离散化<ul>
+<li>随机撒点</li>
+<li>Obstacle上的点删除</li>
+</ul>
+</li>
+<li>连接可行点，形成可行空间</li>
+<li><script type="math/tex; mode=display">A^{*}</script></li>
+</ul>
+</li>
+<li><p>RRT(Incremental version of PRM)</p>
+<p>不能处理动态障碍物</p>
+<ul>
+<li><p>使用增量式的方式来进行</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img2.png" alt></p>
+<ul>
+<li><p>找附近可行点的最优点</p>
+<ul>
+<li>F(x)最小，Cost最小</li>
+<li>走过程中也不能有阻碍使Cost小</li>
+</ul>
+</li>
+<li><p>走过程中，还可能碰到障碍物</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img3.png" alt></p>
+<p>上图撒点太远，点虽然可行，但是会穿过障碍物</p>
+<ul>
+<li><p>撒点搜索距离不能太远</p>
+<ul>
+<li><p>一步一步移动</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img4.png" alt></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Lattice方法</p>
+<ul>
+<li><p>改进了RRT的折现问题</p>
+</li>
+<li><p>给出Path的平滑曲线</p>
+</li>
+<li><p>网格化</p>
+<ul>
+<li>每个采样格中都是用曲线连接</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img5.png" alt></p>
+</li>
+<li><p>指数级别的一个搜索算法(NP-Hard)</p>
+</li>
+</ul>
+</li>
+<li><p>DP(动态规划)</p>
+<ul>
+<li><p>减少搜索空间</p>
+<ul>
+<li>复用已有结果</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img6.png" alt></p>
+</li>
+<li><p>Lattice DP的平滑度够吗</p>
+<ul>
+<li>曲率连续</li>
+<li>曲率的导数不一定连续</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>QP(二次规划)</p>
+<ul>
+<li>凸优化问题最优化求解</li>
+<li>公式表达</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img7.png" alt></p>
+<ul>
+<li><p>性质：在凸优化中的凸空间问题，用QP有最优解</p>
+</li>
+<li><p>QP如何找到平滑曲线</p>
+</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img8.png" alt></p>
+<ul>
+<li>其它的平滑曲线方法还有贝塞尔曲线、样条插值方法</li>
+</ul>
+</li>
+<li><p>刚体模型</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img9.png" alt></p>
+<ul>
+<li><p>前轮转向和Heading的关系</p>
+<ul>
+<li>车轮是沿着切线方向行驶</li>
+<li>前后轮是同一个旋转中心</li>
+<li>左右轮结构相同</li>
+</ul>
+</li>
+<li><p>Bicycle Model</p>
+</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img10.png" alt></p>
+</li>
+</ul>
+<p>1.05</p>
+<h1 id="Apollo"><a href="#Apollo" class="headerlink" title="Apollo"></a>Apollo</h1>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/" class="post-title-link" itemprop="url">Deep Reinforcement Learning for Autonomous Driving: A Survey</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-05-24 22:50:21" itemprop="dateCreated datePublished" datetime="2022-05-24T22:50:21+08:00">2022-05-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-13 23:12:02" itemprop="dateModified" datetime="2022-06-13T23:12:02+08:00">2022-06-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    随着深度表示学习的发展，强化学习(RL)领域已经成为一个强大的学习框架，现在能够在高维环境中学习复杂的策略。这篇综述总结了深度强化学习(DRL)算法，并提供了自动驾驶任务的分类，其中(D)RL方法，同时解决了自动驾驶代理部署中的关键计算挑战。它还描述了相邻的领域，如行为克隆，模仿学习，反强化学习，这些领域是相关的，但不是经典的RL算法。讨论了模拟器在训练代理中的作用，验证、测试和解决RL中现有解决方案的方法。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    自动驾驶(AD)系统由多重感知水平任务组成，由于深度学习架构，现在已经实现了很高的精度。除了感知之外，自动驾驶系统还由多个任务组成，其中经典的监督学习方法已不再适用。首先，当对代理动作的预测改变从自动驾驶代理运行的环境中接收到的未来传感器观察结果时，例如在城市区域的最佳驾驶速度任务。其次，监督信号(如碰撞时间(TTC)、代理最优轨迹的横向误差w.r.t，代表了主体的动态，以及环境中的不确定性。这样的问题需要定义随机成本函数才能被最大化。第三，代理需要学习环境的新配置，并在在其环境中驾驶时的每一时刻预测最佳决策。这代表了一个高维空间，给定了所观察到的代理和环境的唯一构型的数量，这是组合上较大的。在所有这些场景中，我们的目标都是解决一个顺序决策过程，这是在强化学习(RL)的经典设置下形式化的，其中代理需要学习和表示其环境，并在每个时刻上给出最优的行动。最优行动被称为策略。</p>
+<p>​    在这篇综述中，我们涵盖了强化学习的概念，任务分类，RL是一个有前途的解决方案，特别是在驾驶策略、预测感知、路径和运动规划以及低级控制器设计等领域。我们还重点回顾了RL在自动驾驶领域的不同现实世界部署，扩展了我们的会议论文[2]，因为它们的部署还没有在学术环境中进行审查。最后，我们通过展示在应用当前RL算法如模仿学习、深度Q学习等时的关键计算挑战和风险来激励用户。我们还从图2中的出版物趋势中注意到，使用RL或深度RL应用于自动驾驶或自动驾驶领域是一个新兴领域。这是由于最近使用了RL/DRL算法域，在实现和部署中留下了多个现实世界的挑战。我没在第四节解决了开放的问题。</p>
+<p>​    这项工作的主要贡献可以总结如下：</p>
+<ul>
+<li>独立的RL背景的汽车社区概述，因为它不是广为人知的</li>
+<li>RL在不同自动驾驶任务中使用的详细文献综述。</li>
+<li>讨论了RL应用于现实世界自动驾驶的关键挑战和机遇。</li>
+</ul>
+<p>本文的其余部分组织如下。第二节概述了一个典型的自动驾驶系统的组成部分。第三节介绍了强化学习，并简要讨论了关键概念。第四节讨论了在基本RL框架之上的更复杂的扩展。第五节概述了自动驾驶问题的RL应用。第六节讨论了在现实世界的自动驾驶系统中部署RL所面临的挑战。第七节对本文作了最后的总结。</p>
+<h1 id="自动驾驶系统组成部分"><a href="#自动驾驶系统组成部分" class="headerlink" title="自动驾驶系统组成部分"></a>自动驾驶系统组成部分</h1><p>​    图1包括一个AD系统的标准块，展示了从传感器流到控制驱动的管道。现代自动驾驶系统中的传感器架构主要包括多套摄像头，雷达和激光雷达，以及用于绝对定位和惯性测量单元(IMUs)的GPS-GNSS系统，提供飞行器在空间中的三维姿态。</p>
+<p><img src="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/figure1.png" alt></p>
+<p>​    感知模块的目标是创建一个环境状态的中间水平表示（例如所有障碍和代理的鸟瞰视图），稍后将被最终产生驾驶政策的决策系统使用。这种状态将包括车道的位置、可驾驶的区域、代理的位置，如汽车和行人、交通灯的状态等。感知中的不确定性会传播到信息链的其他部分。鲁棒感知对于安全性至关重要，因此使用冗余源增加了检测的可信度。这是通过语义分割[3]、[4]、运动估计[5]、深度估计[6]、污染检测[7]等感知任务的组合来实现的，这些任务可以有效地统一成多任务模型[8]、[9]。</p>
+<h2 id="Scene-Understanding"><a href="#Scene-Understanding" class="headerlink" title="Scene Understanding"></a>Scene Understanding</h2><p>​    这个关键模块将从感知模块中获得的感知状态的抽象中层表示映射到高级行动或决策模块中。从概念上讲，这个模块分为三个任务：场景理解、决策和规划，如图1所示，模块旨在提供对场景的更高层次的理解，它建立在检测或本地化的算法任务之上。通过融合异构传感器源，它的目的是稳健地推广到随着内容变得更加抽象的情况。这种信息融合为决策组件提供了一个通用的和简化的上下文。</p>
+<p>​    融合提供了一个传感器不可知的环境表示，并模型的传感器噪声和检测不确定性跨多种模式，如激光雷达、照相机、雷达、超声波。这基本上需要以一种有原则的方式来加权预测。</p>
+<h2 id="Localization-and-Mapping"><a href="#Localization-and-Mapping" class="headerlink" title="Localization and Mapping"></a>Localization and Mapping</h2><p>​    地图是自动驾驶[10]的关键支柱之一。一旦一个区域被映射出来，就可以在地图内定位车辆的当前位置。谷歌对自动驾驶的第一个可靠演示主要依赖于对预先映射的区域的本地化。由于问题的规模，传统的映射技术通过语义对象检测来增强，以可靠地消除歧义。此外，本地化的高清晰度地图(HD地图)可以作为目标检测的先验。</p>
+<h2 id="Planning-and-Driving-policy"><a href="#Planning-and-Driving-policy" class="headerlink" title="Planning and Driving policy"></a>Planning and Driving policy</h2><p>​    轨迹规划是自动驾驶管道中的一个关键模块。给定一个来自高清地图或基于GPS的地图的路线级计划，该模块需要生成引导代理的运动级命令。</p>
+<p>​    经典的运动规划忽略了动力学和微分约束，而使用平移和旋转来移动代理从源到目的地的姿态[11]。一种能够控制6个自由度(DOF)的机器人代理被称为是完整的，而一种可控自由度低于其总DOF的代理被称为是非完整的。经典的算法，如基于Djisktra算法的<script type="math/tex">A^{*}</script>算法，在自动驾驶的非完整情况下不起作用。快速探索随机树(RRT)[12]是一种通过随机采样和无障碍路径生成来探索配置空间的非完整算法。目前有各种版本的RRT用于自动驾驶管道中的运动规划。</p>
+<h2 id="Control"><a href="#Control" class="headerlink" title="Control"></a>Control</h2><p>​    控制器定义了在路径上的每个点上的必要的速度、转向角度和制动动作，从一个预先确定的地图，如谷歌地图，或在每个路径点的相同值的专家驾驶记录中获得。相比之下，轨迹跟踪涉及一个时间模型的车辆动态查看路径点的时间。</p>
+<p>​    目前的车辆控制方法是建立在经典的最优控制理论上的，该理论可以表示为在一组状态x(t)和控制动作u(t)上定义的代价函数x˙=f(x(t)，u(t))的最小化。通常定义控制输入在有限的时间范围内，限制在可行状态空间x∈Xfree[14]。速度控制是基于经典的闭环控制方法，如PID（比例积分导数）控制器，MPC（模型预测控制）。pid的目标是最小化一个成本函数，包括三个具有比例项的项当前误差，具有积分项的过去误差的影响，以及具有导数项的未来误差的影响。而MPC方法家族的目的是稳定车辆的行为，同时跟踪指定的路径[15]。本文为感兴趣的读者提供了关于控制器、运动规划和学习方法的综述。最优控制和强化学习密切相关，其中最优控制可以被视为一个基于模型的强化学习问题，其中车辆/环境的动力学是由定义良好的微分方程建模的。强化学习方法被开发来处理随机控制问题以及具有未知奖励和状态转移概率的不适定问题。自动驾驶汽车的随机控制值为d值较大。</p>
+<h1 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h1><p>​    机器学习(ML)是计算机程序从经验中学习以提高其在指定任务[18]中的性能的一个过程。ML算法通常被分为三大类：有监督学习、无监督学习和强化学习(RL)。有监督学习算法基于归纳推理，其中模型通常使用标记数据进行训练，以执行分类或回归，而无监督学习包含了应用于未标记数据的密度估计或聚类等技术。相比之下，在RL范式中，自主代理学习通过与环境交互来提高其在分配任务中的性能。Russel和Norvig将代理定义为“任何可以通过传感器感知环境并通过执行器对环境起作用的东西”，[19]。RL代理没有被专家明确地告诉他们如何行动；相反，代理的表现是通过奖励函数R来评估的。对于每一个经历过的状态，代理会选择一个动作，并根据其决策的有用性从其环境中获得奖励。代理的目标是最大化其生命周期中获得的累积奖励。逐渐地，代理可以通过利用有关不同状态-动作对的预期效用（即预期未来奖励的贴现总和）的知识来增加其长期奖励。强化学习的主要挑战之一是管理探索和开发之间的权衡。为了最大化它所获得的奖励，一个代理必须利用它的知识，选择已知会导致高奖励的行动。另一方面，要发现这些有益的行动，它必须承担尝试新行动的风险，这些行动可能会导致比当前每个系统状态最有价值的行动更高的回报。换句话说，学习主体必须利用它已经知道的东西来获得奖励，但它也必须探索未知的事物，以便在未来做出更好的行动选择。已经提出的管理这种权衡的策略的例子包括<script type="math/tex">\varepsilon-greedy</script>和softmax。当采用<script type="math/tex">\varepsilon-greedy</script>策略时，智能体会有<script type="math/tex">\varepsilon</script>的概率进行随机选择，<script type="math/tex">1-\varepsilon</script>的概率选择最优动作。直观地说，当我们对问题环境知之甚少时，代理应该在培训过程的开始时进行更多的探索。随着培训的进行，代理可能会逐渐进行更多的开发而不是探索。RL代理的探索策略的设计是一个积极的研究领域。</p>
+<p>​    当形式化涉及单个RL代理[21]的顺序决策问题时，马尔可夫决策过程(MDPs)被认为是事实上的标准。一个MDP由一组状态S、一组动作a、一个过渡函数T和一个奖励函数R[22]组成，即一个元组。当处于任何状态s∈s时，选择一个动作a∈a将导致环境进入一个新的状态s0∈s，其转移概率为T(s，a，s0)∈（0,1），并给出一个奖励R(s，a)。这个过程如图3所示。随机策略π：S→D是从状态空间到动作集合上的概率的映射，π(a|)表示在状态s处选择动作a的概率。目标是找到最优策略π∗，从而得到折扣奖励的最高期望和[21]：</p>
+<p>​    <img src="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/figure3.png" alt></p>
+<h1 id="在自动驾驶任务中的强化学习"><a href="#在自动驾驶任务中的强化学习" class="headerlink" title="在自动驾驶任务中的强化学习"></a>在自动驾驶任务中的强化学习</h1><p>​    可以应用RL的自动驾驶任务包括：控制器优化、路径规划和轨迹优化、运动规划和动态路径规划、复杂导航任务开发高级驾驶策略、基于场景的策略学习公路、交叉口、合并和分割、奖励学习与逆强化学习从专家数据意图预测行人等交通参与者、车辆，最后学习政策，确保安全和执行风险估计。在讨论DRL在AD任务中的应用之前，我们简要回顾了自动驾驶设置中的状态空间、动作空间和奖励方案。</p>
+<h2 id="State-Spaces-Action-Spaces-and-Rewards"><a href="#State-Spaces-Action-Spaces-and-Rewards" class="headerlink" title="State Spaces, Action Spaces and Rewards"></a><em>State Spaces, Action Spaces and Rewards</em></h2><p>​    为了成功地将DRL应用于自动驾驶任务，设计适当的状态空间、动作空间和奖励函数是重要的。Leurent等人[75]对自动驾驶研究中使用的不同状态和动作表征进行了全面的综述。自动驾驶车辆常用的状态空间特征包括：自我车辆的位置、航向和速度，以及自我车辆的传感器视图范围内的其他障碍。为了避免状态空间维数的变化，经常使用自我载体周围的笛卡尔或极地占用网格。这进一步增强了车道信息，如车道数（自我车道或其他车道）、路径曲率、自我车辆的过去和未来轨迹、纵向信息，如碰撞时间(TTC)，最后是场景信息，如交通规律和信号位置。</p>
+<p>​    使用原始的传感器数据，如相机图像、激光雷达、雷达等。提供了更精细的上下文信息的好处，同时使用压缩的抽象数据降低了状态空间的复杂性。在这两者之间，一个中层表示，如二维鸟瞰视图(BEV)是传感器不可知的，但仍然接近于场景的空间组织。图4是一个自上而下的视图，显示了占用网格，过去和投影的轨迹，以及关于场景的语义信息，如交通信号灯的位置。当基于图形的表示不能保留道路时，这种中间格式保留了道路的空间布局。一些模拟器提供了这个视图，如Carla或Flow(见表V-C)。</p>
+<p><img src="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/figure4.png" alt></p>
+<p>​    车辆策略必须控制许多不同的执行器。用于车辆控制的连续值执行器包括转向角度、油门和刹车。其他的执行机构，如齿轮的变化，都是独立的。为了降低复杂性并允许应用仅使用离散动作空间(例如DQN)的DRL算法，可以通过将连续执行器如转向角、节气门和制动器的范围划分为相同大小的箱来均匀离散动作空间(见第VI-C节)。在对数空间中也被建议进行离散化，因为在实践中选择的许多转向角度都是接近中心[76]的。然而，离散权确实有缺点；如果动作之间的步长值太大，就会导致抖动或不稳定的轨迹。此外，当为执行器选择箱子的数量时，需要有足够的离散步骤来允许平稳控制，而没有太多的步骤来评估动作选择变得非常昂贵。作为离散化的一种替代方法，执行器的连续值也可以通过直接学习策略的DRL算法来处理(例如，DDPG)。时间抽象选项框架[77])也可以用于简化选择操作的过程，其中代理选择选项而不是低级操作。这些选项表示可以在多个时间步长中扩展原始操作的子策略。</p>
+<p>​    为自动驾驶的DRL代理设计奖励功能仍然是一个有待解决的问题。自动驾驶任务的标准任务的例子包括：距离前往目的地[78]，自我车辆的速度，保持自我车辆静止[81]，碰撞与其他道路用户或场景对象[78]，[79]，违反人行道[78]，保持车道，保持舒适和稳定，同时避免极端加速，刹车或转向[80]，[81]，并遵循交通规则</p>
+<h2 id="Motion-Planning-amp-Trajectory-optimization"><a href="#Motion-Planning-amp-Trajectory-optimization" class="headerlink" title="Motion Planning &amp; Trajectory optimization"></a><em>Motion Planning &amp; Trajectory optimization</em></h2><p>​    运动规划是确保在目标点和目的地之间存在一条路径的任务。这对于在之前的地图上规划车辆的轨迹是必要的，这通常增加了语义信息。动态环境和变化车辆动态下的路径规划是自动驾驶的一个关键问题，例如在[87]路口通过的权利，合并成高速公路。作者[89]最近的工作包含了不同的交通参与者在真实世界中的运动，在不同的交互式驾驶场景中观察到。作者[89]最近的工作包含了不同的交通参与者在真实世界中的运动，在不同的交互式驾驶场景中观察到。最近，作者展示了DRL(DDPG)用于AD的应用。该系统首先接受了模拟训练，然后在车载计算机上进行实时训练，并能够学会跟随一条车道，成功地完成了在一段250米长的道路上的真实世界试验。基于模型的深度RL算法已经被提出，用于直接从原始像素输入[91]，[92]中学习模型和策略。在[93]中，深度神经网络已被用于在模拟环境中生成超过数百个时间步长的预测。RL也适用于控制系统。将LQR/iLQR等经典的最优控制方法与[94]中的RL方法进行了比较。经典的RL方法用于随机环境下的最优控制，例如线性环境中的线性二次调节器(LQR)和非线性环境中的迭代LQR(iLQR)。[95]最近的一项研究表明，对策略网络的参数进行随机搜索可以和LQR一样好。</p>
+<h2 id="Simulator-amp-Scenario-generation-tools"><a href="#Simulator-amp-Scenario-generation-tools" class="headerlink" title="Simulator &amp; Scenario generation tools"></a><em>Simulator &amp; Scenario generation tools</em></h2><p>​    自动驾驶数据集解决监督学习设置与训练集包含图像，标签对的各种模式。强化学习需要一个环境，在那里状态-行动对可以恢复，同时分别建模车辆状态、环境以及环境和代理的运动和行动的随机性。各种模拟器被积极地用于训练和验证强化学习算法。表V-C总结了各种能够模拟摄像机、激光雷达和雷达的高保真感知模拟器。一些模拟器还能够提供车辆的状态和动力学。[105]提供读者对自动驾驶社区中使用的传感器和模拟器的完整回顾。学习过的驾驶政策先在模拟环境中进行压力测试，然后在现实世界中进行昂贵的评估。在[106]中提出了多保真度强化学习(MFRL)框架，其中有多个模拟器可用。在MFRL中，使用具有增加保真度的级联模拟器来表示状态动态（以及计算成本），使RL算法的训练和验证成为可能，同时使用遥控汽车为更少昂贵的真实世界样本找到接近真实世界的最优策略。卡拉挑战[107]是一个基于卡拉模拟器的AD比赛，与碰撞前的场景特征在一个国家高速公路交通安全管理局报告了[108]。这些系统是在关键的场景下进行评估的，如：自我车辆失去控制，自我车辆对看不见的障碍做出反应，变道以躲避慢速引导车辆等。代理的得分作为在不同电路中移动的总距离的函数来评估，以及由于违规而导致的总点贴现。</p>
+<h2 id="LfD-and-IRL-for-AD-applications"><a href="#LfD-and-IRL-for-AD-applications" class="headerlink" title="LfD and IRL for AD applications"></a><em>LfD and IRL for AD applications</em></h2><p>​    在[109]中驾驶汽车的行为克隆(BC)的早期工作，[110]提出了学习形式演示(LfD)的代理，试图模仿专家的行为。BC通常是作为一种监督学习来实现的，因此，BC很难适应新的、看不见的情况。在[111]，[112]中提出了一种在自动驾驶汽车领域中端到端学习卷积神经网络的体系结构。CNN被训练成将原始像素从单个前置摄像头直接映射到转向命令中。使用来自人类/专家的相对较小的训练数据集，该系统学习在有或没有车道标记的当地道路上和高速公路上驾驶车辆。该网络学习成功检测道路的图像表示，而没有经过明确的训练。[113]的作者提出了使用最大熵逆RL从人类驾驶员那里获得的专家演示来学习舒适的驾驶轨迹优化。[114]的作者使用DQN作为IRL中的细化步骤来提取奖励，以努力学习类人的变道行为。</p>
+<p><img src="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/table1.png" alt></p>
+<h2 id="Intrinsic-Reward-functions"><a href="#Intrinsic-Reward-functions" class="headerlink" title="Intrinsic Reward functions"></a><em>Intrinsic Reward functions</em></h2><p>​    在游戏等受控的模拟环境中，显式的奖励信号及其传感器流给代理。然而，在现实世界的机器人技术和自动驾驶衍生技术中，设计一个好的奖励功能是必要的，以便能够学习到所期望的行为。最常见的解决方案是奖励塑造[136]，它包括向代理提供额外的设计良好的奖励，以鼓励优化到最优策略的方向。正如本文前面已经指出的那样，奖励可以通过逆RL(IRL)[137]来估计，这依赖于专家的演示。在缺乏明确的奖励塑造和专家演示的情况下，代理可以使用内在奖励或内在动机[138]来评估他们的行为是否好。[139]的作者将好奇心定义为一个主体在通过自我监督的逆动力学模型学习的视觉特征空间中预测自身行为结果的能力上的错误。在[140]中，代理从其经验中学习下一个状态预测器模型，并使用预测的错误作为内在奖励。这使该代理能够确定什么可能是一个用途。</p>
+<h2 id="Incorporating-safety-in-DRL"><a href="#Incorporating-safety-in-DRL" class="headerlink" title="Incorporating safety in DRL*"></a>Incorporating safety in DRL*</h2><p>​    经过训练后在真实环境中部署自动驾驶车辆可能是危险的。本文介绍了将安全性纳入DRL算法的不同方法。对于基于模仿学习的系统，SafeDAgger[141]引入了一种安全策略，该策略学习预测最初使用监督学习方法训练的主策略所犯的错误，而不查询参考策略。另一个安全策略将状态和主策略的部分观察作为输入，并返回一个二进制标签，指示主策略是否可能在不查询引用策略的情况下偏离引用策略。[142]的作者讨论了自动驾驶的多智能体强化学习的安全性，即在其他司机或行人的意外行为之间保持平衡，不要过于防御，从而实现正常的交通流量。虽然保持严格的约束以保证驾驶的安全，但问题被分解为一个政策的组成，以实现舒适驾驶和轨迹规划。深度强化学习算法的控制，如DDPG和safet。利用TORCS环境，首先将DDPG应用于在稳定、熟悉的环境下学习驾驶策略，然后将策略网络和基于安全的控制结合起来，避免碰撞。结果发现，DRL和安全控制的结合在大多数情况下都表现良好。为了使DRL逃避本地最优，加快训练过程，避免危险条件或事故，面向生存的强化学习(SORL)模型在[144]提出，生存有利于最大化总奖励通过建模自动驾驶问题约束MDP和引入负回避函数从以前的失败。SORL模型对奖励功能不敏感，可以使用不同的DRL算法，如DDPG。此外，在[145]中可以为感兴趣的读者找到一个关于安全强化学习的全面调查。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>​    强化学习在现实世界的自动驾驶应用中仍然是一个活跃的新兴领域。虽然有一些成功的商业应用，但很少有文献或大规模的公共数据集可用。因此，我们有动力形式化和组织自动驾驶的RL应用程序。自动驾驶场景涉及交互代理，需要适合RL的协商和动态决策。然而，为了有成熟的解决方案，我们有许多挑战需要解决。在这项工作中，提出了一个详细的理论强化学习，以及一个全面的文献调查，关于应用RL在自动驾驶任务。</p>
+<p>​    第六节将讨论挑战和机遇、未来的研究方向和机遇。这包括：验证基于RL的系统的性能、模拟-现实差距、样本效率、设计良好的奖励功能、将安全性纳入自主代理的RL系统的决策中。</p>
+<p>​    强化学习结果通常很难重现，并且对超参数选择高度敏感，这些选择往往没有详细报告。研究人员和从业者都需要有一个可靠的起点，在那里众所周知的强化学习算法被实现、记录和良好的测试。在表VI-G中已经涵盖了这些框架。</p>
+<p>​    发展针对自动驾驶问题的明确多智能体强化学习方法也是一个重要的未来挑战，迄今尚未得到很多的关注。MARL技术有潜力使自动驾驶汽车组之间的协调和高层决策更容易，并为测试和验证自动驾驶政策的安全性提供新的机会。</p>
+<p>​    此外，RL算法的实现对研究者和从业者来说都是一项具有挑战性的任务。这项工作提供了众所周知的和活跃的开源RL框架的例子，这些框架提供了良好的文档实现，使您有机会使用、评估和扩展不同的RL算法。最后，我们希望这篇概述论文能鼓励进一步的研究和应用。</p>
+<h1 id="PPT"><a href="#PPT" class="headerlink" title="PPT"></a>PPT</h1><ul>
+<li>先给出目前强化学习的成功案例</li>
+</ul>
+<p>比如alphago、星际争霸等</p>
+<ul>
+<li>讲强化学习的基本要素</li>
+<li></li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Lane Change Decision-Making through Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-05-19 21:02:05" itemprop="dateCreated datePublished" datetime="2022-05-19T21:02:05+08:00">2022-05-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-27 23:58:20" itemprop="dateModified" datetime="2022-05-27T23:58:20+08:00">2022-05-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>本文是使用深度强化学习算法DQN结合规则在水平变道上进行决策，最终安全率达到80%。</p>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    由于交通环境的复杂性和波动性，自动驾驶的决策是一个显著的难题。在这个项目中，我们使用了一个深度q网络，以及基于规则的约束来做出变道决策。通过将高水平的横向决策与基于低级规则的轨迹监测相结合，可以获得安全有效的变道行为。在总共100集的训练后，代理预计将在一个真实世界的实用模拟器中执行适当的变道动作。结果表明基于规则的DQN方法的性能优于DQN方法。基于规则的DQN达到了0.8的安全率，平均速度为47英里/小时。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>​    自动驾驶汽车近年来越来越受欢迎，同时也已成功地部署在现实场景中。例如Waymo就推出了自动驾驶拼车服务，这是第一个向公众提供完全自动驾驶体验的服务。虽然像特斯拉和comma.ai这样的公司提供了一定程度的自主驾驶，但他们目前还不能将全自动汽车推向市场。组成自动驾驶系统的有几个。首先，这些模块可以分为四个不同的模块：感知模块、决策模块、控制模块和执行机构模块。在这些模块中，这些工作涉及到决策模块。在各种条件下做出决策是一项难以概括的任务。因此，决策者有必要对各种条件具有强大的应对能力，并能从其经验中进行归纳或学习。因此，强化学习(RL)非常方便，因为近年来在RL领域取得了一些突破。</p>
+<p>​    RL最突出的是深度RL模型已经在Go和Poker等游戏中取得了超人的表现。像这样的进展已经打开了一个广泛的潜在领域，RL可以用来实现超人的性能。自动驾驶也有几个挑战，目前还没有一个确切的解决方案。例如Waymo 经历了 10 次（总共 16 次模拟中）“同向侧滑”，其中涉及换道或车道合并操作期间的碰撞。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>​    解决自动驾驶问题的方法可分为基于规则算法和基于学习算法两类。虽然基于规则的技术在过去取得了一些成功，但基于学习的方法近年来也显示出了它们的有效性。</p>
+<p>​    许多传统的解决方案都是基于显式编写的规则，并依赖于状态机在指定的决策行为之间进行转换。例如，由<a href="Alvinn: An autonomous land vehicle in a neuralnetwork[">CMU</a>训练的“老板”讨论了一种基于规则的方法，斯坦福<a href="The stanford entry in the urban challenge">The stanford entry in the urban challenge</a>的研究团队也使用奖励设计来确定轨迹。然而，可靠的决策在基于规则的方法中具有很高的复杂性。</p>
+<p>​    基于学习的技术作为一项关键的人工智能技术，可以为自动驾驶提供更先进和更安全的决策算法。最近，NVIDIA <a href="End to end learning for self-driving cars[">End to end learning for self-driving cars</a>的研究人员训练了一个深度卷积神经网络(CNN)来直接训练图像从摄像机到聚类控制。这个训练过的模型能够处理变道和在碎石道路上驾驶的任务。</p>
+<p>​    除了监督学习之外，强化学习的结果在多年来也有了显著的改善。Wolf等人<a href="Learning how to drive in a real world simulation with deep q-networks">Learning how to drive in a real world simulation with deep q-networks</a>提出了一种利用DQN在受刺激环境下开车的方法。只有定义了5个动作，每个动作对应于不同的转向角度以及大小为<script type="math/tex">48 \times 27</script>的训练图像。奖励函数的计算方法是考虑了距离车道中心的距离以及某些辅助信息（如车辆与中心线之间的角度误差）。Hoel等人<a href="Automated speed and lane changedecision making using deep reinforcement learning[">Automated speed and lane change decision making using deep reinforcement learning</a>使用DQN解决变道随车速的问题。他们使用一维向量来定义许多组件，包括速度、周围车辆和相邻车道，而不是使用正面图像。Wang等<a href="Lane change decision making through deep reinforcement learning with rule-based constraints">Lane change decision making through deep reinforcement learning with rule-based constraints</a>使用安全率来测量模型的质量，该模型基于碰撞频率计算，对促进提供了清晰的思路。结果表明，考虑速度和其他因素的模型通常优于其他不考虑车辆平均速度的模型。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>​    本报告概述了深度 Q 学习在具有基于规则的约束的车道变更决策问题中的实施情况。本报告的结构如下。第二节讨论了与RL算法相关的方法以及基于规则的约束公式。其实现和仿真结果在第三节中进行了讨论。结果在第四节中进行了讨论。最后，在第五节中进行了总结。</p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h2 id="State-Space"><a href="#State-Space" class="headerlink" title="State Space"></a>State Space</h2><p>​    模拟器提供了关于自己和其他车辆的位置和速度的信息。它包括汽车在地图坐标中的x，y位置和在frenet坐标中的s，d位置，自动驾驶汽车在地图中的偏移角度和MPH速度（英里每小时），以及其他汽车在m/s计算中的x，y速度。使用45×3矩阵表示状态空间，对应于车辆前方60米和后方30米范围内的整个交通情况，如图1所示。每辆车长约5.5米，矩阵中的每一行跨度为2米，一辆车在极端情况下可以占据4个单元。因此，我们用汽车的标准化速度填充与单个汽车对应的4个单元格。速度与框架内车辆的最大速度和框架内车辆的最小速度相标准化。在这里，自己汽车的标准化速度是正的，而其他车是负的。与没有任何汽车的位置相对应的单元格中充满了1s。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure1.png" alt></p>
+<h2 id="Action-Space"><a href="#Action-Space" class="headerlink" title="Action Space"></a>Action Space</h2><p>​    自动驾驶车辆具有去左车道、在当前车道保持、去右车道三个动作，如table1所示。其它的所有控制操作由低级控制器完成。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/table1.png" alt></p>
+<h2 id="Reward"><a href="#Reward" class="headerlink" title="Reward"></a>Reward</h2><p>​    本项目中的自动驾驶汽车只允许在高速公路的靠右3车道上行驶。在非法改变车道的情况下，即当汽车在最左车道时选择动作2（去左车道）或者在最右车道选择动作1（去右车道）时，汽车被迫保持在同一车道，得到的奖励为<script type="math/tex">r_{ch1} = -5</script> 。当碰撞发生时奖励为<script type="math/tex">r_{co} = -10</script>，用于避免碰撞。当车辆进行无效变道时，比如车辆前面没有车时进行变道，得到的奖励为<script type="math/tex">r_{ch2} = -3</script>。</p>
+<p>​    只有在需要的时候才会换车道，自动驾驶汽车也应该尽可能快地行驶（在速度限制范围内）。为了强制执行这一点，将分配以下奖励,如公式<script type="math/tex">2</script>所示。其中<script type="math/tex">v</script>表示自动驾驶汽车的平均速度，<script type="math/tex">v_{ref}</script>表示参考速度（25英里/小时），<script type="math/tex">\lambda</script>表示归一化系数，值为<script type="math/tex">0.04</script>。每次决策的奖励如公式<script type="math/tex">3</script>所示。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula2.png" alt></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula3.png" alt></p>
+<h2 id="Rule-Based-Constraints"><a href="#Rule-Based-Constraints" class="headerlink" title="Rule-Based Constraints"></a>Rule-Based Constraints</h2><p>​    我们基于规划轨迹和其他预期轨迹，应用基于规则的限制，以确保变道行为的绝对安全性。低级控制器可以根据高层决策者所确定的动作来预测自动驾驶车辆和期望车道中相邻车辆的轨迹。</p>
+<p>​    假设相邻汽车保持当前速度并停留在当前车道上，计算相邻汽车的轨迹。 如果自动驾驶汽车的预期轨迹与周围汽车的预期轨迹之间的距离小于指定的阈值，则高层决策者做出的选择可能是有害的。 这个动作被低级控制器拒绝，汽车将继续其当前轨迹。</p>
+<h2 id="Deep-Q-Network"><a href="#Deep-Q-Network" class="headerlink" title="Deep Q Network"></a>Deep Q Network</h2><p>​    DQN用于确定给定状态下的最优动作。Q-Learing是一种off-policy TD强化学习算法。它使用state-action值函数<script type="math/tex">Q^{\pi }\left ( s,a \right )</script>来评估策略<script type="math/tex">\pi</script>，该函数定义为：</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula4.png" alt></p>
+<p>​    Q-learning算法试图找到最优的状态动作值函数：</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula5.png" alt></p>
+<p>​    <script type="math/tex">Q^{*}</script>对应于最优策略<script type="math/tex">\pi^{*}</script>。</p>
+<p>​    这个值函数<script type="math/tex">Q^{*}</script>遵循贝尔曼最优方程：</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula6.png" alt></p>
+<p>​    使用最优值函数<script type="math/tex">Q^{*}</script>，可以通过寻找在每个状态下使值函数最大化的动作来确定最优策略。</p>
+<p>​    对于一个离散的和有限的问题，找到一个Q函数是足够简单的。然而对于像我们这样具有高维和连续状态空间的问题，这种方法变得计算成本昂贵和难以处理。一个深度q网络用于近似值函数，如图2所示。以下损失函数使用Adam优化器来最小化：</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula7.png" alt></p>
+<p>​    <img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure2.png" alt></p>
+<p>​    DQN的输入是状态矩阵和一个3D向量，该向量在卷积层之后连接到网络上。向量的第一个元素对应于RL智能体的归一化速度，第二个和第三个元素分别对应于是否有左右两个车道，如果有则为1，没有为0。图2中的input1对应状态矩阵，input2对应3D向量。</p>
+<h1 id="Implementation-And-Simmulation"><a href="#Implementation-And-Simmulation" class="headerlink" title="Implementation And Simmulation"></a>Implementation And Simmulation</h1><p><a target="_blank" rel="noopener" href="https://github.com/DRL-CASIA/Autonomous-Driving">项目源码</a></p>
+<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><ul>
+<li>CMake 3.22.0 </li>
+<li>Python-3.6 </li>
+<li>ubuntu</li>
+<li>Tensorflflow-GPU </li>
+<li>keras </li>
+</ul>
+<h2 id="模拟器"><a href="#模拟器" class="headerlink" title="模拟器"></a>模拟器</h2><p>​    本项目中使用的模拟器由Udacity开发。仿真设置为一条3车道的高速公路，如图3所示。带有绿色轨迹标记的车辆是RL代理。该模拟器提供了框架中所有汽车的定位和速度。速度限制是50英里/小时，而RL代理的目标是保持速度限制。该模拟器还提供了与汽车在加速度（法向加速度、切向加速度和合成加速度）和颠簸方面的性能相关的反馈。对汽车的要求是它不应该加速超过<script type="math/tex">10m/s^{2}</script>和颠簸大于<script type="math/tex">10m/s^{3}</script>。该车道的总距离为6946米。</p>
+<p><strong>法向加速度如下图中的<script type="math/tex">a_{n}</script>, 切向加速度如下图中的<script type="math/tex">a_{t}</script>，合成加速度为<script type="math/tex">a</script>,</strong><a target="_blank" rel="noopener" href="https://sbainvent.com/dynamics/kinematics-of-a-particle/normal-and-tangential-velocity-and-accelerations/">参考链接</a></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure11.png" alt></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure3.png" alt></p>
+<h2 id="训练细节"><a href="#训练细节" class="headerlink" title="训练细节"></a>训练细节</h2><p>​    使用DQN进行了100局的训练。网络的输入由对交通状况进行编码的状态矩阵组成。 网络的输出是每个状态的3个动作值（或 Q 值）。 选择该状态下对应的最大动作值的动作。 在训练期间，代理随机或遵循贪婪策略选择动作。 这种被称为探索-开发权衡的现象是通过实施贪婪策略来处理的。网络的输出是每个动作的三个状态动作值（或Q值）。选择与最大状态操作值对应的操作。在训练过程中，代理可以随机地或遵循贪婪策略来选择动作。这种现象被称为勘探-利用权衡，是通过实现<script type="math/tex">\epsilon -greddy</script>策略来处理的。对于<script type="math/tex">\epsilon -greddy</script>策略，代理随机选择的概率为<script type="math/tex">\epsilon</script>，和选择Q值最大动作的概率为<script type="math/tex">1-\epsilon</script>。训练时会对<script type="math/tex">\epsilon</script>进行衰减，<script type="math/tex">\epsilon</script>初始值为1，衰减系数<script type="math/tex">\lambda_{decay}=0.99985</script>,最小衰减到的值为<script type="math/tex">\epsilon_{min} = 0.03</script>。训练步骤：</p>
+<ul>
+<li>下载<a target="_blank" rel="noopener" href="https://github.com/DRL-CASIA/Autonomous-Driving">源码</a></li>
+<li>检查代码中的端口和主机，并确保该端口是空闲的</li>
+<li>运行train.py文件，然后打开模拟器</li>
+<li>选择模拟窗口和图形质量，并点击开始</li>
+</ul>
+<h2 id="模拟环境"><a href="#模拟环境" class="headerlink" title="模拟环境"></a>模拟环境</h2><p>​    我们的仿真实验的实现有三个方面。模拟器是初始组件，它生成环境数据并接收预定的路径。第二个组件是控制器和规划器，它负责速度控制和航向规划。DQN算法是负责高层变道决策的第三个组成部分。</p>
+<p>​    本研究的目的是利用深度强化学习来做出横向变道决策。低级控制器包括基于规则的速度控制器和路径规划器，但不包括数据处理。基于规则的技术用于纵向速度控制，样条插值用于基于指定的路径点和与变道决策结果相匹配的预期目标点进行路径规划。同时控制器作为一个低级的修改器，允许修改高级的决策。</p>
+<p>​    当训练启动时，模拟器加载环境并等待来自RL代理的控制动作，同时跟随低级控制器。在训练开始时，赛车总是从中间车道开始。基于低级规则的控制器保持汽车的直线运动，避免向前碰撞。RL代理选择的操作（基于策略或随机）会触发变道，并将其传递给模拟器。然后模拟器会根据它接收到的动作来执行变道。其中一个训练实例如图4所示。代理执行的最后一个行动是去右车道。这个动作被传递到模拟器，汽车进入右车道，如图5所示。<a target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/1e9CaX4bE08x__5hfRL_mxWcqufk7Tjcj">训练视频</a></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure4.png" alt></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure5.png" alt></p>
+<p>​    模拟器最初面临的挑战之一是模拟器和终端必须在每一局结束时重新启动。它需要浏览模拟器菜单，如图6和图7所示。在长时间的训练时，选择选项是不可行的。我们使用PyAutoGUI软件包来自动化这个过程。我们发现除了IDE之外，关闭任何额外的窗口对包的性能都是平滑的。此外有一个双监视器设置有时会导致模拟器在屏幕上以随机坐标打开。因此我们使用单个监视器来更易于执行。该软件包可以自动进行鼠标点击和键盘敲击。对于鼠标点击，我们记录了要单击的单选按钮的坐标，并将其传递给PyAutoGUI进行执行。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure6.png" alt></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure7.png" alt></p>
+<h1 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h1><p>​    模拟器实时运行，自动驾驶车辆在模拟环境中完成一圈大约需要6分钟，这被视为我们训练过程中的一个episode。这个训练计划包括100个episode。当其中一个episode结束时，我们将重新启动下一episode的模拟器。图8显示了在训练和测试过程中变道的频率。图中只显示了前10次训练和测试的结果。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure8.png" alt></p>
+<p>​    车道的改变完全取决于在给定的时间步长下的交通状况。从图8中我们可以看出，在训练过程中，代理经常改变车道，平均约为64.1次。经过100个episode的训练和10个episode的测试，我们看到车道变化的频率显著下降，平均每episode车道变化10次。此外随着训练的进行，我们看到车道变化趋势逐渐减少。然而由于探索，我们确实看到了不稳定的行为。训练后的结果表明，代理已经学会了只在必要时改变车道。</p>
+<p>​    比较在参考文献中获得的结果<a href="Automated speed and lane change  decision making using deep reinforcement learning">Automated speed and lane change  decision making using deep reinforcement learning</a>，我们在训练中没有看到变道频率的下降。他们不比较训练和测试的结果。一种可能的理论可能是他们的探索率很低，他们的策略是总是选择动作值最大的动作。</p>
+<p>​    我们比较了训练过的基于规则的DQN代理的平均速度和基于DQN的策略的平均速度和平均变道时间。我们在仿真环境中运行代理，然后计算它的平均速度、平均车道变化次数和安全率。安全率被定义为没有崩溃的测试事件与总测试事件的比率。研究结果见table2，这里基于规则的DQN方法比传统的DQN具有更高的安全性和更少的变道次数。这意味着我们的技术可以比其他技术产生更有效、更安全的策略。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/table2.png" alt></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>​    在几次迭代中，我们注意到虽然自动驾驶车辆造成了一个“轻微”的碰撞，但它导致了自动驾驶车辆后面的一系列碰撞。在现实生活中，这是一个灾难性的事故，必须被高度惩罚。修改奖励功能可以进一步改进这种方法。未来可能的工作是进行消融研究，制定不同的奖励功能如何改变代理的表现。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -867,316 +1492,10 @@ G=\left \langle S,U,P,r,Z,O,n,\gamma  \right \rangle</script><p>其中<script ty
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/" class="post-title-link" itemprop="url">Mastering the Game of Go with Deep Neural Networks and Tree Search</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-11-26 21:58:21" itemprop="dateCreated datePublished" datetime="2021-11-26T21:58:21+08:00">2021-11-26</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-27 11:23:18" itemprop="dateModified" datetime="2021-11-27T11:23:18+08:00">2021-11-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/model-based/" itemprop="url" rel="index"><span itemprop="name">model based</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p><a target="_blank" rel="noopener" href="https://www.nature.com/articles/nature16961?MRK_CMPG_SOURCE=sm_tw_pp">paper</a></p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>本文提出了将监督学习与self-play强化学习相结合，首次在围棋中击败职业选手。</p>
-<p>将棋盘位置作为<script type="math/tex">19\times19</script>的图像传入，使用卷积层来构建位置的表示。我们使用value network和policy network来减少搜索树的有效深度和广度：使用value network评估位置，并使用policy对动作进行采样。神经网络的训练流程和架构如Figure1所示。</p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure1.png" alt></p>
-<p>首先使用人类专家的走步数据通过监督学习训练policy network<script type="math/tex">(p_{\sigma })</script>,同时采用<strong>Computing Elo ratings of move patterns in the game of Go</strong>和<strong>Fuego — an open-source framework for board games and Go engine based on Monte-Carlo tree search</strong>两篇论文类似的方法训练了<script type="math/tex">p_{\pi}</script>用于rollout时快速采样动作。接下来训练RL policy network <script type="math/tex">p_{\rho }</script>，它通过优化self-play的最终结果来改进监督学习策略网络。这将调整策略，以达到赢得游戏的正确目标，而不是最大化预测的准确性。最后训练价值网络<script type="math/tex">v_{\theta}</script>用于预测RL policy network对抗自己时游戏的获胜者。</p>
-<h1 id="监督学习策略网络"><a href="#监督学习策略网络" class="headerlink" title="监督学习策略网络"></a>监督学习策略网络</h1><p>通过已有的专家数据进行训练，网络由卷积层和非线性激活函数组成，最后一层为softmax，输出合法动作的概率。训练数据为随机采样的state-action对<script type="math/tex">(s,a)</script>，网络的输入<script type="math/tex">s</script>表示如表extend data table2所示。使用随机梯度上升来最大限度地提高人类在状态s中移动a的可能性。</p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula1.png" alt></p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/extend_data_table2.png" alt></p>
-<p>训练结果extend data table 3所示,Symmetrics含义可以看paper的Method章节。准确度的微小提高可以使比赛强度巨大提高，如Figure2 a所示。更大的网络可以获得更好的精度，但在搜索过程中评估速度较慢。同时还训练了一个更快但更不准确的rollout policy <script type="math/tex">p_{\pi}(a|s)</script>，使用权重为<script type="math/tex">\pi</script>的一个linear softmax of small pattern features（如extend data table 4所示），达到了24.2%的准确率，只使用<script type="math/tex">\mu s</script>来选择一个动作，而不是策略网络的<script type="math/tex">3ms</script>。</p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/extend_data_table3.png" alt></p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/extend_data_table4.png" alt></p>
-<h1 id="强化学习策略网络"><a href="#强化学习策略网络" class="headerlink" title="强化学习策略网络"></a>强化学习策略网络</h1><p>​    使用policy gradient 强化学习方法提升策略网络。强化学习策略网络和监督学习策略网络使用相同的结构，并使用监督学习网络参数初始化强化学习网络。为了防止过拟合，训练过程中会把迭代的网络模型放入对手池中，每次从池子中随机选择一个模型与当前策略对战。使用的reward function为当游戏未结束时reward为0，如果最终胜利reward为1，最终失败为-1。在每个时间步<script type="math/tex">t</script>，通过随机梯度上升，向预期结果最大化的方向更新权重。</p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula2.png" alt></p>
-<p>其中<script type="math/tex">z_{t}</script>表示游戏reward。最终RL policy network对战监督学习策略网络达到了80%的胜率，对战Pachi（open-source Go program）达到了85%的胜率，以前最先进的监督学习网络只有11%的胜率。</p>
-<h1 id="强化学习值网络"><a href="#强化学习值网络" class="headerlink" title="强化学习值网络"></a>强化学习值网络</h1><p>该网络用于位置评估，估计一个值函数<script type="math/tex">v^p(s)</script>，该函数预测在位置<script type="math/tex">s</script>处开始使用策略<script type="math/tex">p</script>对战到游戏结束的结果。</p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula3.png" alt></p>
-<p>理想情况下，我们想知道完美对战下的最优值函数<script type="math/tex">v^{\ast }\left ( s \right )</script>；实际上使用RL策略网络<script type="math/tex">p_{\rho}</script>来估计我们最强策略的值函数<script type="math/tex">v^{p_{\rho}}</script>。我们使用一个值网络<script type="math/tex">v_{\theta}(s)</script>来近似值函数,<script type="math/tex">v_{\theta }\left ( s \right )\approx v^{p_{\rho }}\left ( s \right )\approx v^{\ast }\left ( s \right )</script>。该神经网络具有与策略网络相似的结构，但输出一个预测值，而不是一个概率分布。我们用state-outcome (s，z)作为训练集，使用随机梯度下降来最小化预测值<script type="math/tex">v_{\theta }\left ( s \right )</script>和相应的结果<script type="math/tex">z</script>之间的均方误差(MSE)。</p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula4.png" alt></p>
-<p>从由完整游戏组成的数据中预测游戏结果的方法会导致过拟合。问题是连续的位置是密切相关，只差一步，但回归目标是共享的。当以这种方式在数据集上进行训练时，价值网络记忆了游戏结果，而不是推广到新的位置。为了缓解这个问题，生成了一个新的self-play数据集，由3000万个不同的position组成，每个position都从一个单独的游戏中采样。每个游戏都在RL策略网络和它自身之间进行，直到游戏结束。图2b显示了值网络的位置评价精度，与MCTS使用policy <script type="math/tex">p_{\pi}</script> rollout 相比，值函数始终更准确。</p>
-<h1 id="使用策略网络和价值网络搜索"><a href="#使用策略网络和价值网络搜索" class="headerlink" title="使用策略网络和价值网络搜索"></a>使用策略网络和价值网络搜索</h1><p>AlphaGo将策略和价值网络结合在一个MCTS算法中，如Figure3所示。Mcts具有select、expansion、evaluation、bacckup四部分。</p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure3.png" alt></p>
-<p>从当前状态<script type="math/tex">s_{t}</script>通过公式5选择<script type="math/tex">a_{t}</script></p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula5.png" alt></p>
-<p>其中的<script type="math/tex">u\left ( s,a \right )\propto \frac{P\left ( s,a \right )}{1+N\left ( s,a \right )}</script>是为了鼓励探索，最终采用的<script type="math/tex">u(s,a)</script>见Method章节，<script type="math/tex">P(s,a)</script>为先验概率（可以由策略网络输出），<script type="math/tex">N(s,a)</script>为当前<script type="math/tex">s</script>的访问次数。</p>
-<p>​    当遍历到达step <script type="math/tex">L</script>的叶节点<script type="math/tex">S_{L}</script>时，可以expand该叶节点。叶节点<script type="math/tex">S_{L}</script>仅由SL策略网络<script type="math/tex">p_{\sigma }</script>处理一次输出每个合法动作的概率<script type="math/tex">P</script>,<script type="math/tex">P(s,a)=p_{\sigma}(a|s)</script>。叶节点以两种非常不同的方式进行评估：第一种通过值网络<script type="math/tex">v_{\theta}(S_{L})</script>输出；第二种使用rollout policy <script type="math/tex">p_{\pi}</script>对战到游戏终局获得结果。使用混合参数<script type="math/tex">\lambda</script>将这些评估组合形成新的评估方式<script type="math/tex">V(S_{L})</script></p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula6.png" alt></p>
-<p>在每次模拟结束时，更新所有遍历边的action value (<script type="math/tex">Q(s,a)</script>)和visit count (<script type="math/tex">N(s,a)</script>)。</p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula7.png" alt></p>
-<p><script type="math/tex">S_{L}^{i}</script>表示第<script type="math/tex">i</script>次模拟时的叶子节点，<script type="math/tex">1(s,a,i)</script>表示第<script type="math/tex">i</script>次模拟是否经过边<script type="math/tex">(s,a)</script>。当搜索完成，算法将从root position选择访问量最多的动作。在AlphaGo中使用值函数<script type="math/tex">v_{\theta }\left ( s \right )\approx v^{p_{\rho }}\left ( s \right )</script> （RL policy network）比<script type="math/tex">v_{\theta }\left ( s \right )\approx v^{p_{\sigma  }}\left ( s \right )</script> (SL policy network 监督学习)更好。</p>
-<p>为了有效地将MCTS与深度神经网络结合起来，AlphaGo使用异步多线程搜索，在cpu上执行模拟，并在gpu上并行计算策略和值网络。AlphaGo的最终版本使用了40个搜索线程、48个cpu和8个gpu。还实现了一个AlphaGo的分布式版本，在Method章节会详细讲。</p>
-<h1 id="AlphaGo评估"><a href="#AlphaGo评估" class="headerlink" title="AlphaGo评估"></a>AlphaGo评估</h1><p>对战结果Figure4 a</p>
-<p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/figure4.png" alt></p>
-<p>评估了AlphaGo的变体，这些变体仅使用价值网络<script type="math/tex">\lambda=0</script>或仅使用rollout（<script type="math/tex">\lambda=1</script>）来评估位置(见图4b)。即使没有rollout，AlphaGo的性能也超过了所有其他Go程序，这表明价值网络为蒙特卡罗评估提供了一个可行的替代方案。然而，混合评价（<script type="math/tex">\lambda=0.5</script>）表现最好，与其他变体对战达到了95%以上的胜率。这说明这两种位置评估机制是互补的：价值网络近似于强者<script type="math/tex">p_{\rho}</script>所玩的游戏的结果，而rollout可以精确地评分和评估较弱但较快的rollout <script type="math/tex">p_{\pi}</script>所玩游戏的结果。</p>
-<h1 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h1><p><img src="/2021/11/26/Mastering-the-Game-of-Go-with-Deep-Neural-Networks-and-Tree-Search/formula9.png" alt></p>
-<p>具体方法的实现细节可以看paper</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Mastering Complex Control in MOBA Games with Deep Reinforcement Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-11-24 21:34:37" itemprop="dateCreated datePublished" datetime="2021-11-24T21:34:37+08:00">2021-11-24</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-25 22:28:14" itemprop="dateModified" datetime="2021-11-25T22:28:14+08:00">2021-11-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/%E6%88%98%E6%96%97%E7%B1%BB/" itemprop="url" rel="index"><span itemprop="name">战斗类</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    本文从系统和算法角度提出了一个深度强化学习框架用于解决1v1战斗场景中复杂动作控制的问题。系统具有低耦合和高可伸缩性，这使大规模的高效探索成为可能。算法包括几种新的策略，包括 control dependency decoupling, action mask, target attention, and dual-clip PPO，提出的actor-critic网络可以在系统中得到有效的训练。在王者荣耀中测试，训练的智能体可以在1v1游戏中击败顶级职业人类玩家。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    本文对构建MOBA 1v1游戏AI(需要高度复杂的动作控制)进行了系统而深入的研究。在系统方面，开发了一个深度强化学习框架，提供可扩展的off-policy训练。在算法方面，actor-critic神经网络用于动作控制。我们的网络采用多标签近端策略算法(PPO)目标进行优化，并具有控制依赖的解耦、注意机制用于目标选择、action mask用于有效探索、用于学习技能组合的LSTM，以及一个改进版本的PPO，称为dual-clip PPO，以确保训练收敛。</p>
-<p>​    在王者荣耀游戏中进行大量的测试，表明训练过的AI可以使用不同的英雄类型击败顶级职业人类玩家。</p>
-<h1 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h1><p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/figure1.png" alt></p>
-<p>系统包含如下四个模块：</p>
-<ul>
-<li><p>AI Server</p>
-<p>AI Server涵盖了游戏环境与AI模型之间的交互逻辑。AI Server通过使用镜像策略self-play生成游戏片段(Silver et al. 2017)。对手的策略采样类似于 (Bansal et al. 2017)。基于从游戏状态中提取的特征，利用玻尔兹曼探索法预测英雄动作(Cesa-Bianchi et al. 2017)，即基于softmax分布的抽样。然后将采样的动作转发到游戏核心进行执行。执行后，游戏核心连续返回相应的奖励值和下一个状态。在使用中，一台AI Server将绑定一个CPU核心。由于游戏逻辑是在cpu上运行的，所以我们也在cpu上运行模型推理，以节省IO成本。为了有效地生成片段，我们构建了一个快速推理库<a target="_blank" rel="noopener" href="https://github.com/Tencent/FeatherCNN">FeatherCNN</a>的CPU版本。FeatherCNN可以自动将从Tensorflow和Caffe等主流工具训练出来的AI模型转换为定制的推理格式。</p>
-</li>
-<li><p>Dispatch Module</p>
-<p> 每个Dispatch Module都与同一台机器上的几个AI服务器绑定。它从AI Server中收集数据样本，包括奖励、特征、行动概率等。这些样本首先被压缩和打包，然后发送到Memory Pool。</p>
-</li>
-<li><p>Memory Pool</p>
-<p>Memory Pool也是一个服务器。它的内部被实现为数据存储高效的循环队列。它支持不同长度的样本，并基于生成的时间进行数据采样。</p>
-</li>
-<li><p>RL Learner</p>
-<p>RL Learner 是一个分布式训练环境。 为了加速策略更新使用large batch size，集成多个 RL Learner 从相同数量的内存池中并行获取数据。 RL Learner 中的梯度通过 ring allreduce 算法 (Sergeev and Balso 2018)进行平均。 为了降低 IO 成本，RL Learner 使用共享内存而不是 socket 与 Memory Pools 通信，这可以提供 2-3 倍的速度提升。 来自 RL Learner的训练模型以点对点的方式快速同步到AI Servers。</p>
-</li>
-</ul>
-<p>在我们的系统中，经验的生成与参数的学习相解耦。这种灵活的机制使AI Server和RL Learner具有高吞吐量的可扩展性。为了避免learners和actors之间的通信成本瓶颈，我们训练过的模型通过我们的主RL Learner的点对点与AI Server同步。为了平滑数据的存储和传输，我们设计了两个中介服务器，即Dispatch服务器和Memory Pool服务器。在实践中，我们可以毫不费力地扩展到数百万个CPU内核和数千个gpu。请注意，这种设计不同于现有的系统设计，如IMPALA (Espeholt et al. 2018)。在IMPALA中，参数分布在整个学习者中，参与者同时从所有学习者中检索参数。</p>
-<h1 id="算法设计"><a href="#算法设计" class="headerlink" title="算法设计"></a>算法设计</h1><p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/figure2.png" alt></p>
-<p>creeps表示野怪，turrets表示防御塔</p>
-<p>网络将<script type="math/tex">f_{i}</script>(本地图像信息，比如2D障碍信息),<script type="math/tex">f_{8}</script>（可观测的单元属性，比如英雄类型、血量等）,<script type="math/tex">f_{g}</script>（游戏状态信息，比如游戏时长等）分别编码为<script type="math/tex">h_{i}</script>,<script type="math/tex">h_{u}</script>,<script type="math/tex">h_{g}</script>，使用的网络层如Figure2所示。<script type="math/tex">f_{u}</script>经过几层后会被分为单元的表示和target的attention keys两部分。为了处理不同数量的单元，通过max-pooling将相同类型的单元映射到固定长度的特征向量。然后将所有类型的<script type="math/tex">h_i</script>、<script type="math/tex">h_{u}</script>和 <script type="math/tex">h_{g}</script> 连接表示为一个可观察状态的编码向量。然后通过一个LSTM层将状态编码映射到最终的表示<script type="math/tex">h_{LSTM}</script>上，从而进一步考虑了时间信息。<script type="math/tex">h_{LSTM}</script>被发送到一个FC层来预测动作<script type="math/tex">a</script>。动作<script type="math/tex">a</script>的目标单元<script type="math/tex">t</script>可由每个单元上的目标注意机制进行预测。该机制将<script type="math/tex">h_{LSTM}</script>的FC输出视为query，将所有单元编码的stack视为keys <script type="math/tex">h_{keys}</script>，并计算目标注意力:</p>
-<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/formula1.png" alt></p>
-<p><script type="math/tex">p(t|a)</script>是当前状态下所有单元的注意力分布，<script type="math/tex">p(t|a)</script>的维度是当前状态下的单元数。</p>
-<p>​    其次，在multi-label policy network中，很难明确地建模不同标签之间的相互关联，例如技能方向(Offset X and Offset Y)与技能类型（Button）之间的相关性。为了解决这个问题，我们在一个操作中独立地处理每个标签，以解耦它们的相互关联，即控制依赖关系的解耦。在解耦相互互关联之前，without clipping PPO目标是：</p>
-<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/formula2.png" alt></p>
-<p>假设动作被解耦为<script type="math/tex">a=(a^{0},...,a^{N_{a}-1})</script>,目标函数变为</p>
-<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/formula3.png" alt></p>
-<p>​    这个解耦的目标带来了两个优点。首先，它简化了策略结构。具体来说，策略网络可以不考虑相互的相关性，因为这种依赖关系可以进行后处理。第二，它增加了行动的多样性。由于每个组件都有自己独立的价值输出通道，因此行动可以显著多样化，从而在训练过程中诱导更多的探索。此外，<strong>为了探索的多样性，我们在游戏开始的训练中随机两个代理的位置</strong>。</p>
-<p>​    为了提高训练效率，提出了action mask，基于经验丰富的人类玩家的先验知识，在策略的最终输出层中mask不合理的动作。</p>
-<p><strong>Dual-clip PPO</strong>  设<script type="math/tex">r_{t}(\theta)</script>表示概率比<script type="math/tex">\frac{\pi _{\theta }\left ( a_{t}|s_{t} \right )}{\pi _{\theta _{old}}\left ( a_{t}|s_{t} \right )}</script>。由于<script type="math/tex">r_{t}(\theta)</script>的比值可能非常大，因此RL目标的最大化可能会导致过大的策略偏差。为了缓解这个问题，标准的PPO算法 (Schulman et al. 2017) 包含如下ratio clip来惩罚policy的极端变化</p>
-<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/formula4.png" alt></p>
-<p>然而，在大规模off-policy训练环境中，轨迹从各种policy来源中采样，这可能与当前的policy <script type="math/tex">\pi_{\theta}</script>有很大的不同。在这种情况下，标准PPO将无法处理这些偏差，因为它最初是针对on-policy提出的 (Schulman et al. 2017)。例如，当<script type="math/tex">\pi _{\theta }\left ( a_{t}^{\left ( i \right )}|s_{t} \right )> >\pi  _{\theta _{old}}\left ( a_{t}^{\left ( i \right )} |s_{t}\right )</script>时，比率<script type="math/tex">r_{t}(\theta)</script>是一个巨大的数字。当<script type="math/tex">\hat{A}_{t}<0</script>时，如此大的比率<script type="math/tex">r_{t}(\theta)</script>将引入一个大的无界方差,因为<script type="math/tex">r_{t}\left ( \theta  \right )\hat{A}_{t}< < 0</script>。因此，即使采用PPO的目标，新policy也与旧policy有了明显的偏差，这很难确保策略可以收敛。因此我们提出了一种 dual-clipped PPO算法来支持大规模分布训练，进一步剪<script type="math/tex">r_{t}\left ( \theta  \right )\hat{A}_{t}</script>下界，如图3所示。当<script type="math/tex">\hat{A}_{t}<0</script>时，dual-clipped PPO的新目标是：</p>
-<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/formula5.png" alt></p>
-<p>其中c&gt;1是一个常数，表示下界。</p>
-<p><img src="/2021/11/24/Mastering-Complex-Control-in-MOBA-Games-with-Deep-Reinforcement-Learning/figure3.png" alt></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/11/Attention-Is-All-You-Need/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/11/Attention-Is-All-You-Need/" class="post-title-link" itemprop="url">Attention Is All You Need</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-11 21:04:01" itemprop="dateCreated datePublished" datetime="2021-08-11T21:04:01+08:00">2021-08-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-21 10:21:56" itemprop="dateModified" datetime="2021-08-21T10:21:56+08:00">2021-08-21</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​     主要的序列转换模型基于复杂的循环或卷积神经网络，包括编码器和解码器。 性能最好的模型还通过注意力机制连接编码器和解码器。 我们提出了一种新的简单网络架构，即 Transformer，它完全基于注意力机制，完全消除了递归和卷积。 在两个机器翻译任务上的实验表明，这些模型在质量上更胜一筹，同时更可并行化并且需要更少的训练时间。 我们的模型在 WMT 2014 英德翻译任务上达到了 28.4 BLEU，比现有的最佳结果（包括集成）提高了 2 BLEU。 在 WMT 2014 英语到法语翻译任务中，我们的模型在 8 个 GPU 上训练 3.5 天后建立了一个新的单模型最先进的 BLEU 分数 41.0，这是最好的训练成本的一小部分文献中的模型。</p>
-<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    RNN输入需要上一个隐藏状态，这种固有的顺序特性导致在训练中不能使用并行化。在除少数情况下，注意机制与循环网络一起使用。在这项工作中，我们提出了Transformer，一个避免递归的模型架构，而是完全依赖于一个注意机制来绘制输入和输出之间的全局依赖关系。Transformer允许更多的并行化，在8个P100 gpu上训练了短短12个小时后，可以达到翻译质量的新水平。</p>
-<h1 id="模型架构"><a href="#模型架构" class="headerlink" title="模型架构"></a>模型架构</h1><p>​    大多数具有竞争力的神经序列转换模型都具有encoder-decoder结构。 在这里，encoder将符号表示的输入序列 <script type="math/tex">\left ( x_{1},...,x_{n} \right )</script> 映射到连续表示的序列<script type="math/tex">z= \left ( z_{1},...,z_{n} \right )</script>。 给定<script type="math/tex">z</script>，decoder然后生成一个符号的输出序列<script type="math/tex">\left ( y_{1},...,y_{n} \right )</script>，一次一个元素。 在每一步，模型都是自回归的，在生成下一个时，将先前生成的符号作为附加输入使用。</p>
-<p>​    Transformer 遵循这种整体架构，使用堆叠的self-attention和point-wise、完全连接的encoder和decoder层，分别如图 1 的左半部分和右半部分所示。</p>
-<p><img src="/2021/08/11/Attention-Is-All-You-Need/figure1.png" alt></p>
-<h2 id="Encoder-and-Decoder-Stacks"><a href="#Encoder-and-Decoder-Stacks" class="headerlink" title="Encoder and Decoder Stacks"></a>Encoder and Decoder Stacks</h2><ul>
-<li><p>Encoder:编码器由<script type="math/tex">N=6</script>个相同层组成。每一层都有两个子层。第一个是multi-head self-attention mechanism，第二个是一个简单的position-wise全连接的前馈网络。我们在两个子层周围使用一个残差连接，然后是层归一化。即每个子层的输出都是<script type="math/tex">LayerNorm(x+Sublayer(x))</script>，其中<script type="math/tex">Sublayer(x)</script>是由子层本身实现的函数。为了方便这些残差连接，模型中的所有子层以及嵌入层都会产生了维度<script type="math/tex">d_{model}=512</script>的输出。</p>
-</li>
-<li><p>Decoder:该解码器还由<script type="math/tex">N=6</script>个相同层的堆栈组成。除了每个编码器层中的两个子层外，解码器还插入第三子层，该子层对编码器堆栈的输出执行multi-head attention。与编码器类似，我们在每个子层周围使用残差连接，然后进行层归一化。我们还修改了解码器堆栈中的self-attention 子层，以防止位置关注后续位置。这种掩蔽，再加上输出嵌入被一个位置偏移的事实，确保了对位置<script type="math/tex">i</script>的预测只能依赖于小于<script type="math/tex">i</script>的位置的已知输出。</p>
-</li>
-</ul>
-<h2 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h2><p>​    注意函数可以描述为将query和一组key-value对映射到输出，其中query、keys、values和output都是向量。输出计算为values的加权和，其中分配给每个value的权重由query与相应key的兼容性函数计算。</p>
-<h3 id="Scaled-Dot-Product-Attention"><a href="#Scaled-Dot-Product-Attention" class="headerlink" title="Scaled Dot-Product Attention"></a>Scaled Dot-Product Attention</h3><p>​    我们将我们的特别attention称为“Scaled Dot-Product Attention”（图 2）。 输入包括维度<script type="math/tex">d_{k}</script>的queries和keys，以及维度<script type="math/tex">d_{v}</script>的values。 我们使用query和所有keys的点积，将每个除以<script type="math/tex">\sqrt{d_{k}}</script>，然后应用 softmax 函数来获得value上的权重。</p>
-<p><img src="/2021/08/11/Attention-Is-All-You-Need/figure2.png" alt></p>
-<p>​    在实践中，我们同时计算一组queries上的attention function，并打包到一个矩阵<script type="math/tex">Q</script>中。keys和values也被打包在矩阵<script type="math/tex">k</script>和<script type="math/tex">V</script>中。我们计算的输出矩阵如下：</p>
-<p><img src="/2021/08/11/Attention-Is-All-You-Need/formula1.png" alt></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1242,14 +1561,14 @@ G=\left \langle S,U,P,r,Z,O,n,\gamma  \right \rangle</script><p>其中<script ty
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-count">53</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

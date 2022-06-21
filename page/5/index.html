@@ -160,6 +160,334 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/06/Asynchronous-Methods-for-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Asynchronous Methods for Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-06 20:26:41" itemprop="dateCreated datePublished" datetime="2021-05-06T20:26:41+08:00">2021-05-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-04-27 22:15:29" itemprop="dateModified" datetime="2022-04-27T22:15:29+08:00">2022-04-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Asynchronous-Methods-for-Deep-Reinforcement-Learning"><a href="#Asynchronous-Methods-for-Deep-Reinforcement-Learning" class="headerlink" title="Asynchronous Methods for Deep Reinforcement Learning"></a>Asynchronous Methods for Deep Reinforcement Learning</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>​    我们提出了一个概念上简单和轻量级的深度强化学习框架，它使用异步梯度下降来优化深度神经网络控制器。我们提出了四种标准强化学习算法的异步变体，并表明并行actor-learner对训练有稳定的效果，使所有四种方法都能够成功地训练神经网络控制器。性能最好的方法是actor-critic的异步变体，它在一个多核CPU而不是GPU上训练一半的时间，超过了Atari领域上最先进的方法。此外，我们还证明了异步actor-critic在各种连续电机控制问题以及使用视觉输入导航随机三维迷宫的新任务上取得了成功。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    深度神经网络提供了丰富的表示，可以使强化学习(RL)算法能够有效地执行。然而，以前人们认为，简单的online RL算法与深度神经网络的结合从根本上是不稳定的。相反，已经提出了各种解决方案来稳定该算法（(Riedmiller, 2005; Mnih et al., 2013; 2015; Van Hasselt et al., 2015; Schulman et al., 2015a)。这些方法有一个共同的想法：online RL代理遇到的观察数据序列是非平稳的，与online RL更新有很强的相关性。通过将代理的数据存储在经验回放内存中，数据可以从不同的时间步长进行分组 (Riedmiller, 2005; Schulman et al., 2015a) 或随机采样 (Mnih et al., 2013; 2015; Van Hasselt et al., 2015) 。以这种方式聚合内存可以减少非平稳性和去相关的更新，但同时将这些方法限制为off-policy强化学习算法。</p>
+<p>​    基于经验重放的深度RL算法在Atari2600等具有挑战性的领域中取得了前所未有的成功。然而，经验回放有几个缺点：它每次实际交互使用更多的内存和计算；它需要off-policy的学习算法，可以从旧策略生成的数据进行更新。</p>
+<p>​    在本文中，我们提供了一个非常不同的深度强化学习范式。我们在环境的多个实例上异步地并行执行多个代理，而不是经验重放。这种并行性还将代理的数据重新关联到一个更平稳的过程中，因为在任何给定的时间步长中，并行代理都将经历各种不同的状态。这个简单的想法使基本的策略RL算法，比如Sarsa,n-step方法,actor-critic方法以及off-policy的RL算法，如Q-learning,将使用深度神经网络稳健和有效地应用。</p>
+<p>​    我们的并行强化学习范式也提供了实际的好处。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/" class="post-title-link" itemprop="url">Grandmaster level in StarCraftII using multi-agent reinforcement learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-05-06 20:16:47" itemprop="dateCreated datePublished" datetime="2021-05-06T20:16:47+08:00">2021-05-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-06-09 22:45:18" itemprop="dateModified" datetime="2021-06-09T22:45:18+08:00">2021-06-09</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    许多现实世界的应用程序都需要人工代理在复杂的环境中与其他代理进行竞争和协调。作为实现这一目标的垫脚石，星际争霸领域已成为人工智能的重要挑战研究，因为它在最困难的职业电子竞技中具有标志性和持久的地位，并且在其原始复杂性和多代理挑战方面与现实世界相关。在过去的十年和无数的比赛中，最强大的代理简化了游戏的重要方面，利用了超人的能力，或者采用了手工制作的子系统。尽管有这些优势，但没有一个之前的智能体能接近顶级星际争霸玩家的全面的水平。我们选择使用原则上适用于其他复杂领域的通用学习方法来应对星际争霸的挑战：一种多智能体强化学习算法，它使用来自人类和智能体游戏的数据，并在不断调整策略和反策略的多样化联盟中 ，每个都由深度神经网络表示 。我们通过一系列和人类玩家在线对战，评估了我们在StarCraft II 的完整游戏中的智能体AlphaStar。AlphaStar在所有三场星际争霸比赛中都被评为大师级，人类玩家的排名在99.8%以上。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>《星际争霸》是一款实时的战略游戏，玩家可以平衡高水平的经济决策和个人对数百个单元的控制。这个领域提出了重要的博弈论挑战：它具有循环、非传递策略和反策略的广阔空间； 单纯的自我对弈探索方法难以发现新策略； 这些策略在当与现实世界的玩家对战时可能不会有效。 此外，星际争霸有一个组合行动空间，一个扩展了数千个实时决策的规划范围和不完善的信息。</p>
+<p>​    每局游戏由成千上万的时间步和数千计的动作组成，在大约十分钟的游戏中实时选择。在每一步<script type="math/tex">t</script>，我们的代理AlphaStar接收一个观察<script type="math/tex">o_{t}</script>，其中包括所有可观测单位及其属性的列表。这个信息是不完美的；游戏只包括玩家自己的单位所看到的对手单位，并排除了相机视图之外的一些对手单位属性。</p>
+<p>​    每个动作都是高度结构化的：它从几百个动作类型中选择（例如，move或build worker）； 从代理单元的任何子集中向谁发出该操作； 在地图上的位置或摄像机视图内的单位中定位到哪里； 以及何时观察和下一步行动（Fig.1a）。 动作的这种表示导致每一步大约有 <script type="math/tex">10^{26}</script> 种可能的选择。 与人类玩家类似，可以使用特殊动作来移动相机视图，以收集更多信息。</p>
+<p>​    人类在物理限制下玩星际争霸，限制了他们的反应时间和行动速度。游戏的设计中考虑到了这些限制，而删除这些限制则改变了游戏的性质。因此，我们选择对AlphaStar施加约束：它由于网络延迟和计算时间而遭受延迟；它的每分钟动作actions per minute (APM)是有限的，峰值统计数字大大低于人类(图2c,3g用于性能分析）。AlphaStar 在这个接口上的玩法和这些限制得到了专业玩家的认可（see ‘Professional  player statement’ in Methods）。</p>
+<p><img src="/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/fig1_a.png" alt></p>
+<p>图1a</p>
+<p>AlphaStar通过概述地图和单位列表来观察游戏。要执行操作，代理将输出要发布的操作类型（例如build）、应用对象、目标位置以及何时发布下一个操作。动作会通过限制动作速率的监控层发送到游戏中。AlphaStar主张使用来自网络延迟和处理时间的延迟。</p>
+<p><img src="/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/fig1_b_c.png" alt></p>
+<p>图1b,c</p>
+<p><strong>b.</strong>AlphaStar是通过监督学习和强化学习来训练的。在监督学习（底部）中，参数被更新以优化 Kullback–Leibler(KL)其输出和从集合回放中采样的人类行为之间的差异。在强化学习（顶部）中，使用人类数据来采样统计<script type="math/tex">z</script>，并通过强化学习<script type="math/tex">\left ( TD\left ( \lambda  \right ),V-trace,UPGO \right )</script>结合对监督代理的KL损失来更新策略和价值输出。<strong>c.</strong>三个代理池，每个池由监督学习初始化，随后通过强化学习进行训练。在训练时，这些智能体断断续续地向联盟添加自己的副本——在特定时刻被冻结的“球员”。main agent通过训练来对抗所有这些过去的player，以及他们自己。legue exploiters进行训练以对抗所有过去的球员。Main exploiters被训练起来对付main agent。Main exploiters 和 league exploiters在加入player时可以重置为supervised agent。经星际娱乐公司的许可，星际争霸的图片被复制。</p>
+<h1 id="学习算法"><a href="#学习算法" class="headerlink" title="学习算法"></a>学习算法</h1><p>​    为了解决《星际争霸》的复杂性和博弈论挑战，AlphaStar结合了新的和现有的通用技术，比如神经网络架构、模仿学习、强化学习和多智能体学习。有关这些技术的进一步详细信息详见Methods。</p>
+<p>​    AlphaStar的核心是一个策略<script type="math/tex">\pi _{\theta }\left ( a_{t}|s_{t},z \right )=\mathbb{P}[a_{t}|s_{t},z]</script>，由一个神经网络与参数<script type="math/tex">\theta</script>表示，从游戏开始接收所有观察<script type="math/tex">s_{t}=(o_{1:t},a_{1:t-1})</script>作为输入，并选择动作作为输出。该策略还基于一个统计量<script type="math/tex">z</script>，它总结了从人类数据中采样的策略（例如build order）。</p>
+<p>​    我们的代理架构由处理星际争霸的原始复杂性的通用神经网络组件组成。使用自注意力机制处理玩家和对手单位的观察。为了整合空间信息和非空间信息，我们引入了散点连接。为了处理部分可观测性，观测的时间序列由一个深度长短期记忆(LSTM)系统来处理。要管理结构化的组合动作空间，代理将使用自动回归策略（参加7,10,11）和循环使用的指针网络(参见12)。扩展数据图3总结了架构和图。Fig.3f显示每个组件的消融。</p>
+<p>​    代理参数最初是由监督学习进行训练的。游戏是从一个公开的匿名人类回放数据集中采样的。然后该策略被训练来预测每个行动<script type="math/tex">a_{t}</script>，要么基于<script type="math/tex">s_{t}</script>，也基于<script type="math/tex">z</script>。这导致了一套反映人类游戏模式的不同策略。</p>
+<p>​    代理参数随后被一种强化学习算法训练，该算法旨在最大限度地提高对混合对手的胜率（即计算最佳反应）。对手的选择由多代理程序决定，如下所述。AlphaStar的强化学习算法是基于一种类似于advantage actor-critic(参见13)的策略梯度算法。算法使用经验重放(参见15)进行异步（参见14）更新。这需要一种称为off-policy学习(参见5)的方法，即根据以前策略生成的经验更新当前策略。我们的解决方案的动机是观察到，在较大的动作空间中，当前和以前的策略不太可能在许多步骤中相匹配。因此，我们使用了在不匹配的情况下可以有效学习的技术：时间差分学习(<script type="math/tex">TD\left ( \lambda  \right )</script>（参见16）、剪切重要性采样(V-trace)（参见14）和一种新的自模仿算法(UPGO)（参见17），该算法将策略移向优于平均奖励的轨迹移动。为了减少方差，仅在训练过程中，使用玩家和对手角度的信息来估计值函数。图3i,k分析了这些组件的相对重要性。</p>
+<p>​    星际争霸的主要挑战之一是发现新的策略。考虑一个已经学习了建立和利用地面部队微观战术的策略。任何建造和单纯地使用空中单元的偏差都会降低性能。简单的探索极不可能执行一个精确的指令序列，超过数千步，构建空中单位，并有效地利用他们的微观战术。为了解决这个问题，并鼓励像人类游戏的稳健行为，我们利用了人类数据。每个代理都初始化为监督学习代理的参数。 随后，在强化学习期间，我们要么以统计量 <script type="math/tex">z</script>为条件来调节智能体，在这种情况下，智能体会因遵循与<script type="math/tex">z</script>对应的策略而获得奖励，要么无条件地训练智能体，在这种情况下，智能体可以自由选择自己的策略。 每当代理的动作概率与监督策略不同时，他们也会受到惩罚。 这种人类探索确保在整个培训过程中继续探索各种相关的游戏模式。 图 3e 显示了人类数据在 AlphaStar 中的重要性。</p>
+<p>​    为了解决博弈论上的挑战，我们引入了联盟训练，一种多智能体强化学习的算法(图 1b, c)。Self-play算法，类似于国际象棋和Go(参见18)中使用的算法，学习迅速，但可能会造成无限循环(例如，A打败B，B打败C，但A输给C)，没有取得进展（参见19）。Fictitious self-play(FSP)(参见20-22)通过计算对打之前所有策略的均匀混合物的最佳响应来避免循环；在双人零和博弈中，这种混合物收敛于纳什均衡（参见20）。我们扩展了这种方法来计算对非均匀混合的最佳反应。</p>
+<p>​    这个潜在对手的联盟包括不同种类的代理人。，以及当前和以前迭代中的策略。在每次迭代中，每个代理都会与从特定于该代理的混合策略中采样的对手玩游戏。代理的参数由上述actor-critic 强化学习程序从这些游戏的结果中更新。</p>
+<p>​    联盟由三种不同类型的代理人组成，主要区别在于他们选择对手混合物的机制。首先，main agent使用prioritized fictitious self-play(PFSP)机制，该机制根据每个对手的胜率成比例调整混合概率；这为我们的代理提供了更多的机会来克服最有问题的对手。在固定概率下，选择main agent作为对手,这恢复了自我发挥的快速学习(图3c)。第二，main exploiter代理只对抗当前迭代的main agent。其目的是查明main agent的潜在弱点；因此，鼓励main agent解决其弱点。第三，legue exploiter 代理使用与main exploiter代理类似的PFSP机制，但不是main exploiter代理的目标。他们的目的是发现整个联盟的系统性弱点。main exploiters 和league exploiter都定期重新初始化，以鼓励更多的多样性，并可能迅速发现不一定能够有效抵御利用的专业策略。。图3b分析了联盟内球员的选择。</p>
+<p>​    在星际争霸中，每个玩家从三个种族中选择一个种族：人族、神族或虫族，每个种族都有不同的机制。我们使用三个main agents（每个星际争霸种族中的一个)、三个main exploiter agents(每个种族一个)和6个league exploiter agents(每场种族两个）来训练联盟。每个代理使用32个第三代张量处理单元(TPU（参见23）)在44天内进行训练。在联盟训练中，共创造了近900名不同的玩家。</p>
+<h1 id="经验评估"><a href="#经验评估" class="headerlink" title="经验评估"></a>经验评估</h1><p>我们使用官方在线配对系统Battle.net，使用的无条件策略评估了main Alphastar 的三个代理人族，神族和虫族。在训练期间，每个agent在训练过程中以三种不同的快照进行评估：只在监督训练后(AlphaStar Supervised)、27天的联盟训练(AlphaStar Mid)和44天的联赛训练后(AlphaStar Final)。AlphaStar Supervised和AlphaStar Mid从Battle.net上的无等级评分开始，分别对每一场比赛进行30场和60场比赛的评估；AlphaStar决赛根据AlphaStar Mid的评分进行评估，每场比赛增加30场比赛。Battle.net配对程序选择了地图和对手。比赛是在盲目的条件下进行的：AlphaStar没有提供对手的身份，而是在一个匿名帐户。选择这些条件是为了估计AlphaStar在近似稳定条件下的强度，但并不直接测量其在重复播放下的易受攻击性。</p>
+<p>​    AlphaStar最终获得了6275的神族配对等级（MMR）， 人族为6048MMR，虫族为5835MMR，使它超过99.8%的人类玩家，并在大师级的所有三个种族（图 2a，扩展数据图7（分析），补充数据，回放（游戏回放）。AlphaStar的平均评分达到3699分，高于84%人类玩家并展示了监督学习的有效性。</p>
+<p>​    为了进一步分析AlphaStar，我们还运行了一些内部消融(图3)和评估(图4)。对于多智能体动力学，我们在整个联盟训练期间对所有球员进行了一次循环赛，并对训练遵循特定人类策略的持有验证代理进行了第二次main agent锦标赛。main agent性能在所有三个比赛中稳步提高。随着时间的推移，main exploiters的性能实际上有所下降，并且main agent的性能比保留的验证代理更好，这两种情况都表明main agent越来越强大。所有玩家在每个时间点上的联盟纳什均衡给先前迭代的玩家分配了很小的概率，这表明学习算法不会循环或回归。最后，在整个联赛训练过程中，单元组成发生了变化，这表明了一个多样化的战略进程。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>​    AlphaStar是第一个在星际争霸II中达到大师级的代理，并且第一个达到了人类玩家在一个广泛的职业电子竞技没有简化游戏的最高联盟。与星际争霸一样，现实世界的领域，如个人助理、自动驾驶汽车或机器人，在给定未完全观察到的信息的情况下，需要通过组合或结构化的动作空间进行实时决策。此外，与星际争霸类似，许多应用程序都有复杂的策略空间，其中包含循环或硬探索场景，代理可能会遇到意外的策略或者在现实世界中部署复杂的边缘情况。《星际争霸II》中AlphaStar的成功提出通用机器学习算法可能对复杂的现实问题有实质性的影响。</p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h2 id="游戏和接口"><a href="#游戏和接口" class="headerlink" title="游戏和接口"></a>游戏和接口</h2><h3 id="游戏环境"><a href="#游戏环境" class="headerlink" title="游戏环境"></a>游戏环境</h3><p>​    《星际争霸》是一款发生在科幻世界中的实时战略游戏。该系列来自暴雪娱乐公司，包括《星际争霸：孵化战争》和《星际争霸2》。在本文中，我们使用了《星际争霸2》。自1998年《星际争霸》上映以来，就有了一个竞争强大的社区，拥有数千万美元的奖金。《星际争霸2》最常见的竞争环境是1v1，每个玩家选择三个现有的种族中的一个——人族、神族和虫族—它们都有不同的单位和建筑，表现出不同的机制，在支持和对抗时需要不同的策略。还有一个Random比赛，游戏可以随机选择玩家的比赛。玩家从一个小基地和几个工作单位开始，他们收集资源来建造额外的单位和建筑，侦察对手，并研究新技术。如果一个玩家失去了所有的建筑，他们就会被击败。</p>
+<p>​    在实时人机比赛中并没有被普遍接受的公平概念，所以我们的匹配条件、界面、相机视图、动作速率限制和延迟都是在与专业的星际争霸2玩家和暴雪公司的员工协商中发展起来的。AlphaStar在这些条件下的比赛得到了职业玩家的批准（见下面的职业玩家声明）。在每个代理步骤中，策略接收到观察<script type="math/tex">o_{t}</script>，并通过游戏界面（扩展数据表1、2）处发出操作<script type="math/tex">a{t}</script>。每个代理可以有多个游戏时间步（每个45ms）。</p>
+<h3 id="相机视图"><a href="#相机视图" class="headerlink" title="相机视图"></a>相机视图</h3><p>​    人类玩星际争霸游戏时，屏幕上只显示部分地图以及整个地图的高级视图（例如，为了避免信息过载）。代理通过类似摄像头的界面与游戏进行交互，这自然会带来注意力的节约，因此代理可以选择它完全看到并与之交互的区域。代理可以移动相机作为一个动作。</p>
+<p>​    摄像机外的对手单位隐藏了某些信息，代理只能针对摄像机内的某些动作（例如，建筑结构）。AlphaStar在摄像机外可以比人类更精确地定位，尽管在里面的定位精度较低，因为目标位置（在<script type="math/tex">256\times 256</script>网格上选择）在相机内处理相同。代理还可以在任何地方选择单元集合，而人类使用控制组的灵活性较差。实际上，代理似乎没有利用这些额外的能力（参见 职业球员玩家声明，下面），因为人类的优先权。消融实验数据在图3h显示使用这种相机视图会降低性能。</p>
+<h3 id="APM-每分钟动作-限制"><a href="#APM-每分钟动作-限制" class="headerlink" title="APM(每分钟动作)限制"></a>APM(每分钟动作)限制</h3><p>​    人类每分钟可以执行的动作数量（APM）在物理上是有限的。我们的代理有一个监控层来执行APM限制。这引入了一种行动经济，需要优先考虑行动。每个5s窗口中，代理最多只能执行22个非重复操作。在动作和由游戏测量的APM之间的转换是不平凡的，并且代理行为很难与人类行为相比（计算机可以精确地执行不同的动作）。见图2c和扩展数据图1获取APM详细信息。</p>
+<h3 id="延时"><a href="#延时" class="headerlink" title="延时"></a>延时</h3><p>​    人类对新信息的反应速度是有限的； AlphaStar 有两个延迟来源。 首先，在实时评估（非训练）中，由于延迟、观察处理和推理，AlphaStar 在观察到帧和执行动作之间有大约 110 毫秒的延迟。 其次，因为代理在观察下一步时已经决定动作（平均 370 毫秒，但可能是多秒），他们可能对意外情况反应迟钝。 这些延迟的分布显示在扩展数据图 2 中。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>​    几十年来，游戏一直是人工智能研究的重点，作为迈向更普遍应用的垫脚石。国际象棋(参见25)和围棋(参见26)等经典棋盘游戏已使用通用强化学习和规划算法（参见18）掌握。强化学习方法在视频游戏上取得了巨大的成功，如 Atari platform(参见27), Super Mario Bros（参见28）, Quake  III Arena Capture the Flag（参见29）, and Dota 2（参见30）。</p>
+<p>​    实时战略 (RTS) 游戏因其博弈论和领域复杂性而受到认可（参见31）。RTS游戏的许多子问题，如微观管理、基础经济或构建顺序优化，已经进行了深入的研究（参见7,32-35），通常是在小规模的环境中（参见36,37）。对于组合挑战，星际争霸领域已成为共识的研究重点（参见1,7）。StarCraft: Brood War拥有一个活跃的竞争 AI 研究社区（参见38），大多数机器人将基于规则的启发式与其他 AI 技术（例如搜索（参见4,39）、数据驱动的构建顺序选择（参见40）和模拟（参见41））相结合。还研究了强化学习来控制游戏中的单位（参见7,34,42-44），并提出模仿学习来学习单位和建筑组合（参见45）。最近，深度学习已被用于预测未来的游戏状态（参见46）。自从发布公共应用程序编程接口 (API) （参见7）以来，星际争霸 II 同样拥有活跃的机器人社区（参见3）。没有星际争霸机器人打败过职业玩家，甚至是高级休闲玩家（参见47），最成功的机器人都使用了超人的能力，比如执行数万个 APM 或一次查看整个地图。这些能力使与人类的比较变得困难，并使某些策略无效。一些最新的方法使用强化学习来玩完整的游戏，使用手工制作的高级动作（参见48）或基于规则的系统，机器学习逐步替换组件（参见43）。相比之下，AlphaStar 使用无模型、端到端的学习方法来玩星际争霸 II，它避免了因模型不完善而导致的基于搜索的方法的困难，并且适用于任何共享一些挑战的领域星际争霸。</p>
+<p>​    Dota 2 是一款现代竞技团队游戏，它具有星际争霸等 RTS 游戏的一些复杂性（包括不完全信息和大时间范围）。 近日，OpenAI Five 击败了一支由职业 Dota 2 玩家和 99.4% 的在线玩家组成的团队（参见30）。 OpenAI Five 的英雄单元由一组智能体控制，并与基于手工奖励的放大版 PPO（参见49） 一起训练。 然而，与 AlphaStar 不同的是，一些游戏规则被简化了，玩家被限制在英雄的子集上，代理对游戏的某些方面使用硬编码的子系统，并且代理没有将他们的感知限制在摄像机视图中。</p>
+<p>​    AlphaStar 依靠模仿学习结合强化学习，过去曾多次使用。 与 AlphaStar 的训练管道类似，最初的 AlphaGo 通过人类游戏的监督学习初始化了一个策略网络，然后将其用作蒙特卡罗树搜索的先验（参见26）。 与我们的统计量 <script type="math/tex">z</script> 类似，其他工作试图从人类偏好中训练奖励函数，并使用它们来指导强化学习（参见50，51）或从人类干预中学习到的目标 （参见52）。</p>
+<p>​    与联盟相关，多智能体研究的最新进展 代理在Quake III Arena的夺旗团队模式中表现出人类水平的（参见29）。 这些结果是使用几个相互竞争的代理的基于群体的训练获得的，这些训练使用伪奖励进化来处理硬信用分配问题。 类似地，Policy Space Response Oracle framework（参见53）与联盟培训相关，尽管联盟培训指定了近似最佳响应的独特目标（即 PFSP 和剥削者）。</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p>​    AlphaStar的策略是一个函数<script type="math/tex">\pi _{\theta }\left ( a_{t}|s_{t},z \right )</script>，它映射以前的所有观测和操作<script type="math/tex">s_{t}=o_{1:t},a_{1:t-1}</script>（在扩展数据表1,2中定义）和 <script type="math/tex">z</script>（代表策略统计）到当前步骤的动作的概率分布。 <script type="math/tex">\pi_{\theta}</script>被实现为具有以下结构的深度神经网络。</p>
+<p>​    观察<script type="math/tex">o_{t}</script>被编码为向量表示，由深度 LSTM(参见9)组合和处理，该 LSTM9在步骤之间保持记忆。 以 LSTM 和观察编码器的输出为条件，对动作参数进行自回归采样（参见10）。 每个可能的奖励都有一个价值函数（参见强化学习）。</p>
+<p>​    架构组件是根据它们在监督学习中的性能进行选择和调整的，其中包括深度学习架构的许多最新进展 （参见7,8,12,54,55）。 扩展数据图 3 中给出了代理架构的高级概述，补充数据、详细架构中有更详细的描述。 AlphaStar 有 1.39 亿个权重，但推理时只需要 5500 万个权重。 消融图 3f 比较了scatter connections,transformer,pointer network的影响。</p>
+<h2 id="监督学习"><a href="#监督学习" class="headerlink" title="监督学习"></a>监督学习</h2><p>​    每个代理最初都通过重放的监督学习进行训练，以模仿人类行为。 监督学习既用于初始化代理，也用于维护多样化的探索（参见56）。 正因为如此，主要目标是制定一个多样化的政策来捕捉星际争霸的复杂性。</p>
+<p>​    我们使用了《星际争霸2》4.8.2到4.8.6版的数据集，玩家的MMR分数（暴雪的指标，类似于Elo）超过3500，也就是前22%的玩家。下载回放的说明可以在<a target="_blank" rel="noopener" href="https://github.com/ Blizzard/s2client-proto">here</a>上找到。游戏的原始界面返回（扩展数据表1和2）。我们为每个种族训练一个策略，其架构与强化学习中使用的架构相同。</p>
+<p>​    从每次回放中，我们提取一个统计数据<script type="math/tex">z</script>编码每个玩家的建造顺序，定义为前 20 个建造的建筑物和单位，以及累积统计，定义为游戏中出现的单位、建筑物、效果和升级。 我们在监督学习和强化学习中都对<script type="math/tex">z</script>设置策略，在监督学习中，我们10% 的时间将<script type="math/tex">z</script>设置为0。</p>
+<p>​    为了训练该策略，在每一个步骤中，我们输入当前的观察结果，并输出在每个动作参数上的概率分布（扩展数据表2）。对于这些参数，我们计算了人类行为和策略输出之间的KL差异，并使用Adam优化器(参见57)应用更新。我们也应用了L2正则化(参见58)。监督训练算法的伪代码可以在Supplementary Data, Pseudocode中找到。</p>
+<p>​    我们进一步使用只使用超过6200的MMR（16000场游戏）的获胜回放来微调该政策。在神族与神族的游戏中，微调将对内置精英机器人的胜率从87%提高到96%。微调监督代理的人族为3947MMR，神族为3607MMR，虫族为3544MMR。他们能够在游戏中构建所有单位，并且根据游戏的不同(扩展数据图4)。</p>
+<h2 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h2><p>​    我们应用强化学习来提高基于代理对代理游戏的 AlphaStar 的性能。 我们使用比赛结果（-1 输，0 平，+1 赢）作为最终奖励<script type="math/tex">r_{T}</script>，没有折扣以准确反映赢得比赛的真实目标。 遵循actor-critic范式(参见14)，训练价值函数<script type="math/tex">V_{\theta }\left ( s_{t},z \right )</script>来预测<script type="math/tex">r_{t}</script>，并用于更新策略<script type="math/tex">\pi _{\theta }\left ( a_{t}|s_{t},z \right )</script>。</p>
+<p>​    当《星际争霸》被视为强化学习问题时，就提出了几个挑战：由于领域复杂性和奖励稀疏性，探索是困难的；policies需要能够在整个训练中执行不同的策略；由于时间跨度和复杂的行动空间，off-policy的学习是困难的。</p>
+<h3 id="探索和多样性"><a href="#探索和多样性" class="headerlink" title="探索和多样性"></a>探索和多样性</h3><p>​    我们利用人类数据来帮助探索，并在整个培训过程中保持策略多样性。首先，我们将策略参数初始化为监督策略，并持续地最小化监督策略和当前策略（参见59,60）之间的KL散度。其次，我们训练具有伪奖励的main agent遵循策略统计量<script type="math/tex">z</script>，我们从人类数据中随机抽样。这些伪奖励测量采样和执行构建顺序之间的编辑距离，以及采样和执行累积统计数据之间的Hamming距离（参见 Supplementary Data,  Detailed Architecture）。每种类型的伪奖励都是活跃的（即非零的）概率为25%，并为每个伪奖励计算单独的值函数和损失。我们发现，我们对人类数据的使用对于实现强化学习的良好性能至关重要图3e)。</p>
+<h3 id="价值和策略更新"><a href="#价值和策略更新" class="headerlink" title="价值和策略更新"></a>价值和策略更新</h3><p>​    新的轨迹是由actor产生的。学习者使用存储轨迹的重放缓冲区异步更新模型参数。正因为如此，AlphaStar 受制于off-policy数据，这可能需要off-policy更正。我们发现现有的off-policy校正方法(参见14,61)在大型结构化动作空间（例如用于星际争霸的动作空间）中效率低下，因为不同的动作会导致相似（甚至相同）的行为。我们通过使用混合方法解决了这个问题，该方法将策略的off-policy校正（避免不稳定）与未校正的值函数更新（引入偏差但减少方差）相结合。具体来说，使用 V-trace 更新策略，使用<script type="math/tex">TD(\lambda)</script>（图 3i 中的消融）更新值估计。在大动作空间中将 V-trace 应用于策略时，off-policy 修正会提前截断跟踪；为了缓解这个问题，我们假设动作类型、延迟和所有其他参数之间是独立的，因此分别更新策略的组件。为了减少价值估计的方差，我们还使用对手的观察作为价值函数的输入（图3k中的消融）。请注意，这些仅在训练期间使用，因为在评估期间不需要值函数。</p>
+<p>​    除了v-trace策略更新之外，我们还引入了一个upgoing policy update(UPGO)，它沿着方向<script type="math/tex">\rho _{t}\left ( G_{t}^{U}-V_{\theta }log\pi _{\theta }\left ( a_{t}|s_{t},z \right ) \right )</script>更新策略参数。</p>
+<p><img src="/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/upgo.png" alt></p>
+<p>上图时upgoing return,<script type="math/tex">Q\left ( s_{t},a_{t},z \right )</script>是动作值估计，<script type="math/tex">\rho _{t}=min\left ( \frac{\pi _{\theta }\left ( a_{t}|s_{t},z \right )}{\pi _{\theta ^{'}}\left ( a_{t}|s_{t},z \right )},1 \right )</script>是一个裁剪的重要性比率。而<script type="math/tex">\pi_{\theta^{'}}</script>是actor产生轨迹的策略。与自我模仿学习(参见17)类似，其想法是在行为策略采取比平均水平差的行动（图 3i 中的消融）时通过引导从部分轨迹更新策略，并通过自举来获得好于预期的回报。 由于在星际争霸的大动作空间上逼近<script type="math/tex">Q\left ( s_{t},a_{t},z \right )</script>的难度，我们用一个单步目标估计动作值<script type="math/tex">Q\left ( s_{t},a_{t},z \right )=r_{t}+V_{\theta }\left ( s_{t+1},z \right )</script>。</p>
+<p>​    总体损失是上述策略和价值函数损失的加权和，对应于基于人类数据的输赢奖励<script type="math/tex">r_{t}</script>以及伪奖励、关于监督策略的 KL 散度损失和标准熵正则化损失(参见13)。 我们使用 Adam（参见57）优化整体损失。强化学习算法的伪代码可以在Supplementary  Data, Pseudocode中找到。</p>
+<h2 id="多智能体学习"><a href="#多智能体学习" class="headerlink" title="多智能体学习"></a>多智能体学习</h2><p>​    联盟训练是一种多智能体强化学习算法，它既旨在解决在自我发挥训练中通常遇到的循环，又旨在集成不同的策略。在训练过程中，我们通过定期将我们的代理(由RL算法训练)的参数保存为新玩家（有固定的、冻结的参数）来填充联盟。我们还不断地重新评估内部回报估计，向代理提供关于他们对联盟中所有player的表现的最新信息(参见扩展数据图6中的评估者)。</p>
+<h2 id="Prioritized-fictitious-self-play"><a href="#Prioritized-fictitious-self-play" class="headerlink" title="Prioritized fictitious self-play"></a>Prioritized fictitious self-play</h2><p>​    我们的self-play算法在所有三个种族的最新代理之间进行游戏。 这种方法可能会策略空间中循环(A打败B，B打败C，C打败A)，并且在孤立的情况下效果不佳（图3d）。 FSP（参见20-22）通过与联盟中所有以前的玩家比赛来避免循环。 然而，面对几乎100%的比赛失败的玩家，很多游戏都被浪费了。 因此，我们引入了PFSP。 我们没有统一抽样联盟中的对手，而是使用匹配机制来提供良好的学习信号。 给定一个学习代理 A，我们以概率公式，如下图从候选集 C 中采样冻结的对手B</p>
+<p><img src="/2021/05/06/Grandmaster-level-in-StarCraftII-using-multi-agent-reinforcement-learning/pfsp.png" alt></p>
+<p><script type="math/tex">f:\left [ 0,1 \right ]\rightarrow [0,\infty )</script>是一些加权函数。</p>
+<p>​    选择<script type="math/tex">f_{hard}\left ( x \right )=(1-x)^{p}</script>使 PFSP 专注于最难的玩家，其中<script type="math/tex">p\in \mathbb{R}_{+}</script>控制结果分布的熵。 由于<script type="math/tex">f_{hard}(1) = 0</script>，不会与代理已经击败的对手进行任何游戏。 通过专注于最难的球员，代理必须击败联盟中的每个人，而不是最大化平均表现，这在星际争霸（扩展数据图 8）等高度非传递性游戏中更为重要，在那里追求平均胜利率可能会导致易于利用的策略。 该方案用作 PFSP 的默认权重。 因此，在理论方面，人们可以将<script type="math/tex">f_{hard}</script>视为一种max-min优化的平滑近似形式，而不是由 FSP 强加的max-avg。 特别是，这有助于整合来自漏洞利用的信息，因为这些是强大但罕见的反策略，统一的混合将能够忽略它们（扩展数据图 5）。</p>
+<p>​    只与对付的hardest对手比赛可能会浪费与更stronger对手的比赛，因此 PFSP 还使用了替代课程<script type="math/tex">f_{var}\left ( x \right )=x\left ( 1-x \right )</script>其中代理优先与自己水平相近的对手比赛。 我们将此课程用于main exploiters和奋斗中的main agents。</p>
+<h2 id="Populating-the-league"><a href="#Populating-the-league" class="headerlink" title="Populating the league"></a><strong>Populating the league</strong></h2><p>​    在训练期间，我们使用了三种代理类型，它们的区别仅在于他们训练的对手的分布、快照创建新玩家的时间以及重置为监督参数的概率。</p>
+<p>​    main agents的训练比例为 35% SP，50% PFSP 对抗联盟中所有过去的玩家，另外 15% 的 PFSP 与agent无法再击败的被遗忘的主要玩家对抗和过去的main exploiters。 如果没有被遗忘的玩家或强大的exploiters，则将 15% 用于self-play。 每<script type="math/tex">2\times 10^{9}</script>步，就会向联盟添加一个代理副本作为新玩家。 Main agents永远不会重置。</p>
+<p>​    League exploiters使用PFSP训练，当他们在70%的比赛中击败联盟所有玩家，或在<script type="math/tex">2\times 10^{9}</script>步后，他们的冻结副本被添加到联盟中。在这一点上，有25%的概率代理被重置为监督参数。直觉是league exploiters识别了联盟中的全球盲点（联盟中没有玩家能打败的策略，但这本身并不一定很强大）。<br>​    Main exploiters与main agents对战。 一半的时间，如果当前获胜的概率低于 20%，exploiters使用 PFSP，对主要代理创建的玩家使用<script type="math/tex">f_{var}</script>权重。 这形成了促进学习的课程。 否则有足够的学习信号，它会对抗当前的主要代理。 当所有三个主要代理在超过 70% 的比赛中被击败时，或者在 <script type="math/tex">4 \times 10^{9}</script>步超时后，这些代理就会被添加到联盟中。 然后将它们重置为受监督的参数。 Main exploiters 识别main agent的弱点，从而使它们更加健壮。有关更多详细信息，请参阅 Supplementary Data, Pseudocode。</p>
+<h2 id="基础设施"><a href="#基础设施" class="headerlink" title="基础设施"></a>基础设施</h2><h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1><ol>
+<li><p>Sutton, R. &amp; Barto, A. <em>Reinforcement Learning: An Introduction</em> (MIT Press, 1998).</p>
+</li>
+<li><p>Vinyals, O. et al. StarCraft II: a new challenge for reinforcement learning. Preprint at  <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1708.04782">https://arxiv.org/abs/1708.04782</a> (2017).</p>
+</li>
+<li><p>Mikolov, T., Karafiat, M., Burget, L., Cernocky, J. &amp; Khudanpur, S. Recurrent neural network  </p>
+<p>based language model. <em>INTERSPEECH-2010</em> 1045–1048 (2010)</p>
+</li>
+<li><p>Metz, L., Ibarz, J., Jaitly, N. &amp; Davidson, J. Discrete sequential prediction of continuous  </p>
+<p>actions for deep RL. Preprint at <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1705.05035v3">https://arxiv.org/abs/1705.05035v3</a> (2017).</p>
+</li>
+<li><p>Vinyals, O., Fortunato, M. &amp; Jaitly, N. Pointer networks. <em>Adv. Neural Information Process.</em>  </p>
+<p><em>Syst</em>. <strong>28</strong>, 2692–2700 (2015).</p>
+</li>
+<li><p>Mnih, V. et al. Asynchronous methods for deep reinforcement learning. <em>Proc. Machine</em>  </p>
+<p><em>Learning Res</em>. <strong>48</strong>, 1928–1937 (2016).</p>
+</li>
+<li><p>Espeholt, L. et al. IMPALA: scalable distributed deep-RL with importance  </p>
+<p>weighted actor-learner architectures. <em>Proc. Machine Learning Res</em>. <strong>80</strong>, 1407–1416  </p>
+<p>(2018).</p>
+</li>
+<li><p>Wang, Z. et al. Sample efficient actor-critic with experience replay. Preprint at https:// </p>
+<p>arxiv.org/abs/1611.01224v2 (2017).</p>
+</li>
+<li><p>Sutton, R. Learning to predict by the method of temporal differences. <em>Mach. Learn</em>. <strong>3</strong>,  </p>
+<p>9–44 (1988).</p>
+</li>
+<li><p>Oh, J., Guo, Y., Singh, S. &amp; Lee, H. Self-Imitation Learning. <em>Proc. Machine Learning Res</em>. <strong>80</strong>,  </p>
+<p>3875–3884 (2018).</p>
+</li>
+<li><p>Silver, D. et al. A general reinforcement learning algorithm that masters chess, shogi, and  </p>
+</li>
+</ol>
+<p>Go through self-play. <em>Science</em> <strong>362</strong>, 1140–1144 (2018).</p>
+<ol>
+<li>Silver, D. et al. A general reinforcement learning algorithm that masters chess, shogi, and  </li>
+</ol>
+<p>Go through self-play. <em>Science</em> <strong>362</strong>, 1140–1144 (2018).</p>
+<ol>
+<li><p>Balduzzi, D. et al. Open-ended learning in symmetric zero-sum games. <em>Proc. Machine</em>  </p>
+<p><em>Learning Res</em>. <strong>97</strong>, 434–443 (2019).</p>
+</li>
+<li><p>Brown, G. W. Iterative solution of games by fictitious play. <em>Act. Anal. Prod. Alloc</em>. <strong>13</strong>,  </p>
+<p>374–376 (1951).</p>
+</li>
+<li><p>Jouppi, N. P. et al. In-datacenter performance analysis of a tensor processing unit.  </p>
+<p>Preprint at <a target="_blank" rel="noopener" href="https://arxiv.org/abs/1704.04760v1">https://arxiv.org/abs/1704.04760v1</a> (2017).</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Genetic State-Grouping Algorithm for Deep Reinforcement Learning</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-04-26 21:10:23" itemprop="dateCreated datePublished" datetime="2021-04-26T21:10:23+08:00">2021-04-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-04-27 00:00:49" itemprop="dateModified" datetime="2021-04-27T00:00:49+08:00">2021-04-27</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning"><a href="#Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning" class="headerlink" title="Genetic State-Grouping Algorithm for Deep Reinforcement Learning"></a>Genetic State-Grouping Algorithm for Deep Reinforcement Learning</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>​    虽然强化学习已经被认为是机器学习中最重要和最著名的技术之一，但由于其较长的初始学习时间和学习不稳定，它在现实问题中的适用性仍然有限。特别是在实时约束下，大量分支因子的问题仍然无法克服，这需要一种针对下一代强化学习的新方法。本文提出了基于深度强化学习的Genetic State-Grouping Algorithm。其核心思想是将整个状态集划分为几个状态组。每一组都由相互相似的状态组成，从而代表了它们的共同特征。然后使用遗传优化器来处理状态组，从而发现杰出的操作。这些步骤有助于深度Q网络避免过度的探索，从而导致不能显著减少初始学习时间。对实时战斗电子游戏(FightingICE)的实验证明了该方法的有效性。</p>
+<p>关键词：强化学习，遗传算法，混合方法，蒙特卡罗技术</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    强化学习方法(RL)击败了世界上最好的人类围棋玩家之一，引起了专家们的认真关注。它的基于试验和错误的迭代而不是大量的预定义数据集进行培训的性质在全世界引起了热烈的讨论和兴趣。然而，除了强化学习的所有成就外，它还暴露了许多技术困难，如学习不稳定和进入局部最优。具体地说，很难定义一个找到复杂问题中的全局解的奖励函数，它比其他类型的机器学习需要更多的计算资源和初始学习时间。之前的研究提出了各种解决这些缺点的解决方案，有些是利用实时视频游戏环境与现实世界相似，表明它们适合RL对内存和时间的苛刻需求。然而，这些研究的主要贡献仅限于只有几个分支因素的问题，因为提高它们的数量会呈指数级地增加所需的计算资源数量。</p>
+<p>​    本文介绍了通过深度强化学习增强的Genetic State-Grouping Algorithm (GSGA)。它是遗传算法和State Grouping的集成，我们真正的方法，以追求提高深度强化学习在时间和资源效率方面的学习效率。我们展示了它在FightingICE中的表现，这是一个实时战斗视频游戏，由IEEE CoG完成。我们认为它是一个适当的试验场来验证我们提出的结构的有效性，因为它包含了各种类似于现实世界的环境因素。</p>
+<p>​    FightingICE由 Intelligent Computer Entertainment Lab in Ritsumeikan University, Japan开发。因为它是一个为构建通用战斗游戏ai而设计的环境，所以在属性和风格方面，它是一种相当典型的类型。在每一轮中，两个玩家代理在二维空间中相互战斗，他们之间实例化一个物理距离。游戏向每个代理提供多达56个可执行操作。此外，根据交战规则，每个玩家被允许一次只使用一个线程，以复制真实世界的问题条件，这需要大量使用计算资源。总的来说,FightingICE玩家只利用单个线程在16.67ms的每个时间帧内必须考虑多达3136个动作状态。游戏中的物理空间由<script type="math/tex">960\times 640</script>像素组成，分为5像素大小的房间，每个代理都可以放置在里面。因此，每个代理总共有<script type="math/tex">192\times128</script>的状态空间来重新定位。</p>
+<p>​    本文的排列格式如下：第二章我们介绍了一些与本文主要思想有关的研究。在第三章中，我们介绍了我们的技术的核心理论，以及关于电子游戏环境的细节。第4章介绍了我们的模型及其竞争对手的过程和实验结果，第五章提供了我们对模型整体性能的评论和关注。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>​    在强化学习过程中，人们多次尝试减少长初始学习时间，稳定整体学习的过程。Justesen等人提出一种强化学习代理，有效解决实时问题的时间划分和对抗环境，Langford提出一种有效的探索方法。一些研究选择通过增强学习稳定性来降低结构复杂性，尽管他们的方法对涉及多个分支因素的问题缺乏足够的适用性，但在这些问题中，环境高度复杂，或者为代理提供了大量的操作选择。此外，(Justesen等人，2016)提出了一个解决在线进化的巨大分支因素的解决方案，尽管它几乎不适用于实时视频游戏。在具有多变量的实时问题中，大量的分支因素特别吓人，其中分支的数量增长得非常快。尽管RL具有探索和经验学习的性质，适合于开发实时自适应AI，但在现实世界中常见的多分支因子问题中，RL的学习效率会大大降低。</p>
+<p>​    其他几项研究采用蒙特卡罗树搜索（MCTS），结合进化算法，作为强化学习的补充在开发视频游戏AI时，证明了其在足够时间内找到最佳解决方案的能力。尽管如此，在大多数方面强化学习需要大量计算资源和时间的本质仍然是不可妥协的。</p>
+<h2 id="提出的方法"><a href="#提出的方法" class="headerlink" title="提出的方法"></a>提出的方法</h2><p>​    强化学习是一种机器学习技术，它在代理与未知环境交互时为他们找到最佳的学习策略。这种过程通常被形式化为马尔可夫决策过程(MDPs)，它可以由4个元素<script type="math/tex">(S,A,P,R)</script>来定义。在每个时间戳<script type="math/tex">t</script>，agent观察一组状态<script type="math/tex">s_{t}\in S</script>，并采取一组操作<script type="math/tex">a_{t}\in A</script>。与转换函数<script type="math/tex">P</script>相关联，所有状态都为马尔可夫的环境，决定奖励<script type="math/tex">r_{t}\sim R(s_{t},a_{t})</script>和后续或以下状态<script type="math/tex">s_{t+1}\sim P(s_{t},a_{t})</script>。我们将根据一阶马尔可夫假设来解释所提出的方法。</p>
+<p>​    图1从概念上表示了我们提议的GSGA的总体结构。它由三个主体组成：1）state grouping，2） genetic optimizer，和3) deep Q network。其详细的程序描述如下。</p>
+<p><img src="/2021/04/26/Genetic-State-Grouping-Algorithm-for-Deep-Reinforcement-Learning/figure1.png" alt></p>
+<p>​        State Grouping(SG)是一种技术，通过将相似的状态结合在一起，压缩状态线的大小，包括物理距离。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/04/26/Reinforcement-Study-Notes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -934,354 +1262,10 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/" class="post-title-link" itemprop="url">Creating Pro-Level AI for a Real-Time Fighting Game Using Deep Reinforcement Learning</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-10 19:46:14" itemprop="dateCreated datePublished" datetime="2021-01-10T19:46:14+08:00">2021-01-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-06-16 23:17:39" itemprop="dateModified" datetime="2021-06-16T23:17:39+08:00">2021-06-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">强化学习</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning"><a href="#Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning" class="headerlink" title="Creating Pro-Level AI for a Real-Time Fighting Game  Using Deep Reinforcement Learning"></a><strong>Creating Pro-Level AI for a Real-Time Fighting Game</strong>  Using Deep Reinforcement Learning</h1><h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>​    强化学习与深层神经网络相结合最近在许多类型的游戏中表现得非常好。它在固定的游戏环境和基于回合制的两个玩家棋盘游戏已经超过了人类水平的表现。然而，据我们所知，目前的研究还没有在现代复杂的战斗游戏中超过人类水平的表现。这是由于实时战斗游戏固有的困难，包括巨大的动作空间、动作依赖和不完善的信息。 我们克服了这些挑战，并为商业游戏“Blade &amp; Soul”制作了1v1战斗AI代理”。 经过训练的代理与五名职业玩家竞争，取得了62%的胜率。</p>
-<p>​    本文提出了一种实用的强化学习方法，包括一种新的self-play curriculum和data  skipping技术。通过curriculum，通过奖励塑造创造了三种不同风格的代理，并相互训练。 此外本文还提出了data  skipping技术，可以提高数据效率，促进在巨大空间探索。</p>
-<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>​    强化学习(RL)正在将其边界扩展到各种游戏类型。在PVE（玩家与环境）环境中，例如在Atari2600游戏中发现的环境，使用各种方法，RL代理已经超过了人类水平的性能。 同样在PVP（玩家对玩家）环境中，神经网络与基于搜索的方法相结合在两个玩家的回合游戏中击败了最好的人类玩家，比如围棋和国际象棋。最近，游戏中的RL研究已经转移到更复杂的PVP电子游戏中，例如StarCraft2 ，Quake3 和Dota2。</p>
-<p>​    战斗游戏作为最具代表性的复杂PVP游戏之一，一直是在这一领域取得进展的多项研究的重点。例如，基于MCTS的方法已应用于游戏平台“FightingICE”,这是一个为战斗游戏AI竞争而制作的游戏平台。然而当应用于巨大的现代游戏引擎时，查询时间较长，很难满足实时条件。此外，在Little Fighter 2(LF2)中一种深度强化学习基础代理通过一个基于规则的固定对手训练。 然而由于对手的决定是未知的，通过基于规则训练的AI不能泛化到看不见的对手。我们的方法在很大程度上类似于self-play RL方法被应用在“Super Smash Bros. Melee (SSBM)”。然而与我们具有复杂游戏规则的3D环境相比，状态和动作空间的复杂性受到了显著的限制。 我们通过新颖的基于self-play  RL，为实时战斗游戏““Blade &amp; Soul (B&amp;S)  Arena Battle”创建了专业水平的人工智能代理。</p>
-<p>​    B&amp;S是一款商业化的大型多人在线角色扮演游戏，它支持两名玩家之间的决斗，称为“B&amp;S Arena Battles (BABs)”。如表1所示，与其他作品中考虑的游戏相比，BAB是一种更现代的战斗游戏；因此，它具有更复杂的游戏动力学和更大的游戏引擎。此外，大量的人玩BAB和它有更活跃的专业场景比其他战斗游戏。与专门为研究目的而设计的FightingICE相比，BAB有更多的活跃专业场景。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/tabel1.png" alt></p>
-<p>​    图1显示了一个来自BAB的场景。 BAB是一个两人零和游戏。 在BAB中，两名玩家互相对抗，以在三分钟内将对手的HP（血量）降低到零。 要掌握BAB，代理必须能够应对多种挑战。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/figure1.png" alt></p>
-<p>​    首先，代理必须管理巨大的动作和状态空间。代理必须同时进行技能、移动和目标决策，从而产生许多可能的组合。 粗略估计，每个时间步有144个潜在动作：8(avg. # of avail. skills)<script type="math/tex">*</script>9（8 directional + no  move)<script type="math/tex">*</script>2(facing opponent or moving direction）。 由于平均游戏长度为1200个时间步长(120s)，许多场景是可能的,而不是考虑对手的动作。</p>
-<p>​    此外，代理必须考虑技能之间的依赖关系：例如在使用另一种技能之后，一种技能只能在短时间内可用。 因此，在总共45种技能中（including “no-op”），技能随着时间不断的变化。 代理还必须考虑每种技能的特性，因为它们具有不同的冷却时间（重用技能所需的间隔）和SP（技能点）消耗，并服务于五种不同的功能中的一种或多种： 攻击，群体控制(功能使对手无能力；缩写CC)，抵抗(功能使玩家免疫或抵抗CC技能)，逃跑和冲刺。</p>
-<p>​    最后，代理必须处理不完善的信息设置。 因为BAB是一个实时游戏，两个玩家同时做出决定。 这表明代理人必须在不知道对手的决定或策略的情况下作出决定。 因此，BAB可以被认为是一系列石头剪刀游戏。例如当玩家使用抵抗技能，而对手同时使用群体控制技能时，玩家比对手获得优势。 因此，问题的本质是逼近纳什均衡策略，使代理能够对任何相反的策略作出适当的反应。为了应对这些挑战，我们通过多样化对手池对普通的self-play算法进行了改进和通过数据跳过技术来促进探索。 这项工作的主要贡献如下：</p>
-<ul>
-<li>我们设计了一个新的self-play 课程和不同风格的代理。 课程使这些代理人相互竞争，同时加强代理人，使代理人能够处理各种对手。 我们的经验证明，我们的课程优于普通的自我游戏方法。</li>
-<li>我们通过奖励塑造)来多样化游戏AI的战斗风格。 我们创造了三种类型的代理，具有不同的战斗风格：好斗型、防御型、平衡型。 我们预计它将应用于游戏开发，包括水平设计和自动平衡。</li>
-<li>我们引入了数据跳过技术来增强在广阔空间中的探索。 这些通常可以应用于任何两人实时战斗游戏。</li>
-<li>我们通过在2018年B&amp;S World Championship  Blind Match中与专业球员对位来评估我们的代理。 我们的人工智能代理赢得了七场比赛中的三场，而其中一个好斗的代理在现场比赛和预试中击败了所有专业玩家。</li>
-</ul>
-<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h3><h3 id="实时两人游戏"><a href="#实时两人游戏" class="headerlink" title="实时两人游戏"></a>实时两人游戏</h3><p>​    在一个实时的两个玩家游戏中，有两个玩家，即代理和对手。 两者同时向环境发送一个动作。 让我们把代理人的策略表示为<script type="math/tex">\pi ^{ag}</script>，把对手的策略表示为<script type="math/tex">\pi ^{op}</script>。 每一步都从自己的策略中采样一个动作。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/sample_action.png" alt></p>
-<p>​    然后，环境通过联合考虑这两个动作来进行状态转换。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/state_trans.png" alt></p>
-<p>​    在这里，MDP可以表示为{S,<script type="math/tex">A ^{ag}</script>,<script type="math/tex">A ^{op}</script>,P,R,<script type="math/tex">\gamma</script>}。 如果<script type="math/tex">\pi ^{op}</script>是固定的，那么我们可以通过边缘化对手的策略来将对手视为环境的一部分。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/fix_policy.png" alt></p>
-<p>​    然后，MDP表达式变成一个更简单的形式{S,<script type="math/tex">A ^{ag}</script>,<script type="math/tex">P^{'}</script>,<script type="math/tex">R^{'}</script>,<script type="math/tex">\gamma</script>}。 这个表达式与一个玩家MDP是一致的。 因此，原始MDP的任何方法也在这种形式下工作。 然而<script type="math/tex">\pi ^{op}</script>在一般情况下是不固定的，我们的代理人不知道它将面临哪些<script type="math/tex">\pi ^{op}</script>。 我们在下面的章节中提出了一种具有多样化<script type="math/tex">\pi ^{op}</script>池的self play curriculum。</p>
-<h3 id="作为MDP的BAB"><a href="#作为MDP的BAB" class="headerlink" title="作为MDP的BAB"></a>作为MDP的BAB</h3><p>​    如果我们假设<script type="math/tex">\pi ^{op}</script>或<script type="math/tex">\pi ^{op}</script>池是固定的，则BAB可以表示为MDP。图2说明了BAB中的代理-环境框架。基于LSTM的代理与作为环境的BAB模拟器交互。对于每一个具有0.1秒间隔的时间步长，状态<script type="math/tex">s_{t}</script>是从观测历史<script type="math/tex">H_{t}=</script>{<script type="math/tex">o_{1},o_{2},...,o_{t}</script>}构造的。 具体来说，<script type="math/tex">s_{t}</script>是由人类在游戏中可以访问的任何信息组成的，如HP、SP、与对手的距离、与竞技场墙的距离、当前位置、剩余的游戏时间、所有44种技能的剩余冷却时间、代理的状态信息(半空、眩晕、下跪等等。 然后，代理决定每一个时间步骤的动作<script type="math/tex">a_{t}=\left ( a_{t}^{skill},a_{t}^{move,target} \right )</script>。 请注意，目标动作空间最初是连续的。 我们将它离散为两个（面对对手或当前移动方向），并与移动的决定一起考虑它。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/agent-environment.png" alt></p>
-<p>​    在此之后，该操作将被发送到环境中，并相应地发生状态转换。 在这里，确切的奖励也应该确定。 奖励与BAB的高性能密切相关。 我们提供了<script type="math/tex">r_{t}^{WIN}</script>，这是赢得一场比赛的奖励和<script type="math/tex">r_{t}^{HP}</script>是血量变化的奖励。 这些奖励是基于这样的假设设计出来的，一个玩家赢的越多，剩下的血量越多，玩家的表现就越好。<script type="math/tex">r_{t}^{WIN}</script>在每轮的最后一步给出，胜利为10，失败为-10。 <script type="math/tex">r_{t}^{HP}</script>可能发生在每一个时间步骤时，代理人对对手造成损害，反之亦然。 由于HP被归一化为[0,10]，<script type="math/tex">r_{t}^{WIN}</script>和 <script type="math/tex">r_{t}^{HP}</script>具有相同的规模。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/reward.png" alt></p>
-<p>​    这些是基本的奖励，指导战斗风格的额外奖励将在下一节中描述。 γ的值设为0.995，接近1.0，因为BAB中的所有事件都在1800个时间步（=3分钟)后被迫终止）。</p>
-<h2 id="多风格Self-Play-Curriculum"><a href="#多风格Self-Play-Curriculum" class="headerlink" title="多风格Self-Play Curriculum"></a>多风格Self-Play Curriculum</h2><p>​    现有的自我游戏方法 通常使用对手池进行训练。 在训练期间，网络的参数定期存储，以创建一个过去的自我池。 然后从这个池中取样对手。</p>
-<p>​    虽然RL的自我游戏方法提供了一种学习纳什均衡策略的方法，但策略空间的高覆盖率对于有效地找到策略空间是必不可少的。 普通的自我游戏本身并不能保证足够的覆盖范围对于有大问题空间的游戏。 为了解决这个问题，Alphastar通过模仿不同的人类策略，引入三种不同匹配方案的代理，使对手池多样化。 扑克AI，Pluribus在基本蓝图策略之上手工调整了三种不同的策略。 这三种策略分别偏向于加注、跟进和弃牌。</p>
-<p>​    同时，我们设计了一种新颖的自我游戏课程。 我们通过引入一系列不同的战斗风格来加强代理策略的多样性，并使不同风格的代理相互竞争。</p>
-<h3 id="通过奖励塑造指导战斗风格"><a href="#通过奖励塑造指导战斗风格" class="headerlink" title="通过奖励塑造指导战斗风格"></a>通过奖励塑造指导战斗风格</h3><p>​    最值得注意的战斗风格之一是侵略性的程度。 我们使用奖励的三个维度来控制攻击性的程度。 第一个维度是“时间惩罚”。 侵略性的代理每一步都会受到更大的惩罚，这促使它在更短的时间内完成比赛。 第二个维度是代理的HP对对手的HP的相对重要性。 侵略性的代理会试图减少对手的HP，而不是保持自己的HP，而防守w玩家往往采取相反的方式。 最后一个维度是“距离惩罚”。 防守型玩家倾向于确保与对手的一定距离，以适当地应对攻击，而攻击性玩家则倾向于接近对手并无情地攻击。 为了实现这些特性，与自身与其对手之间的距离相比，攻击性代理受到了更大的惩罚。每个样式使用的具体奖励权重如表2所示。 请注意，这三个维度中的每一个都可以取连续值。 这意味着有可能创建一系列不同的战斗风格。然而，为了有效地证明这种方法的可行性，我们限制了这种方法战斗风格的数量为三种。 通过使用任何类型的附加奖励信号以及<script type="math/tex">r_{t}^{WIN}</script>和<script type="math/tex">r_{t}^{HP}</script>，该方法可以应用于一般的其他战斗游戏，以创建具有不同战斗风格的代理。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/reward_weight.png" alt></p>
-<h3 id="Our-Self-Play-Curriculum"><a href="#Our-Self-Play-Curriculum" class="headerlink" title="Our Self-Play Curriculum"></a>Our Self-Play Curriculum</h3><p>​    图3显示了三种不同类型代理的自我游戏课程的概述。 每种类型的代理都有自己的学习过程，所有三种代理类型都是以并发的方式进行训练。</p>
-<p>​    每个学习过程由一个学习者和多个模拟器组成。 学习者和模拟器异步工作。 在模拟器中，代理不断地与来自共享池的随机抽样对手进行对弈。 每种样式的最近k个模型被均匀地选择，总概率质量为p，而其他模型被均匀地选择概率1-p。随着训练的进行，p从0.8到0.1线性退火。 较高的p有助于快速适应最新的对手，而较低的p通过减轻灾难性遗忘来稳定学习过程。 每个模拟器在每次匹配结束时向学习者发送匹配日志，并使用从学习者收到的最新参数更新其代理。 同样的程序继续通过后续游戏使用。</p>
-<p>​    学习者使用从多个模拟器收集的日志以off-policy的方式训练其代理，并根据请求将最新的网络参数发送给模拟器。 此外，学习者将其网络参数发送到共享池的每一个C步(例如C=10,000)更新。 因此，池子具有不同的策略，这些策略来自不同风格的不同学习过程。 这些模型参数作为每个学习过程的对手提供。通过共享一个池，每个学习代理在训练中遇到每种风格的对手，并学习如何处理他们。 因此，通过我们的自我游戏课程培训的代理最终可以学习如何面对不同战斗风格的对手，同时保持自己的战斗风格。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/selfplay.png" alt></p>
-<h2 id="数据跳过技术"><a href="#数据跳过技术" class="headerlink" title="数据跳过技术"></a>数据跳过技术</h2><p>​    在本节中，我们详细介绍了数据跳过技术，它是指在训练和评估过程中丢弃某些数据的过程。</p>
-<h3 id="丢弃没合法动作的数据"><a href="#丢弃没合法动作的数据" class="headerlink" title="丢弃没合法动作的数据"></a>丢弃没合法动作的数据</h3><p>​    “no-op”表示不做任何行动。</p>
-<p>​    在战斗游戏中，使用技能通常消耗资源，如SP和冷却时间。 因此，如果玩家过度使用某一技能，它将无法在实际需要的时候使用。 因此，玩家应该战略性地使用和保留他们的技能，以确保他们在需要时的可用性。 为了考虑到这一点，我们将“no-op”操作连接到策略网络的输出，允许代理选择“no-op”，并在必要时在一定时期内不做任何事情。 这意味着我们的行动空间有44种技能，加上额外的“no-op”行动。 这一点很重要，因为BAB的人类游戏日志表明，“no-op”动作占人类玩家技能使用的最大比例。</p>
-<p>​    “no-op”决策可分为被动使用和主动使用。 被动使用“no-op”意味着代理选择“no-op”，因为没有可用的技能。 例如，当代理耗尽资源或被对手的CC技能击中时，代理别无选择，只能选择“no-op”。 积极使用“no-op”意味着代理从战略上选择“no-op”，即使其他技能可以使用。</p>
-<p>​    我们从训练和评估阶段丢弃了被动的“no-op”数据，因为被动的“no-op”不是由代理故意使用的。 此外，该方法使LSTM能够反映较长时间层的表示，因为数据没有提供给网络。 我们在实验部分表明，跳过被动“no-op”大大提高了学习效率。 请注意，这种方法通常适用于其他领域，其中可用的技能不断变化，“no-op”操作是一个有效的选择。</p>
-<h3 id="保持移动行动"><a href="#保持移动行动" class="headerlink" title="保持移动行动"></a>保持移动行动</h3><p>​    虽然单个技能决策可以对后续状态产生实质性影响，但单个移动决策的效果相对有限。 原因是一个角色在一个时间步长(0.1s)中移动的距离很短，考虑到它的速度。 为了使任何移动决策产生有意义的效果，代理应该做出相同连续移动的决定。 这允许代理从字面上“move”，并导致后续状态和奖励的变化。 因此，很难从初始策略中训练具有随机移动决策的移动策略。 由于一项随机政策连续作出相同决定的机会很低，探索是极其有限的。 因此我们建议维持固定时间步骤的移动决定。</p>
-<p>​    图4显示了该方法如何与示例一起工作。 如果代理选择移动操作，则会跳过以下n-1时间步骤的移动决策。 这意味着代理总共对n个步骤保持相同的移动决策。 请注意，我们的方法与帧跳过技术有不同的目的(在Atari领域。 为了提高模拟器的效率，引入了跳帧技术。 然而，我们不能仅仅跳过框架，因为技能决策仍然必须进行。 虽然我们不能享受模拟器的效率优势，但保持移动仍然有利于训练，这仅仅是因为保持移动决策会增加单个移动决策的影响，正如我们将通过实验证实的那样。 从这个意义上说，保持移动可以被看作是“放大优势”。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/move_decisions.png" alt></p>
-<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><h4 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h4><p>​    该网络由基于LSTM的体系结构组成，该体系结构有四个头部，具有共享状态表示层。 每个头由<script type="math/tex">\pi_{skill}</script>，<script type="math/tex">Q_{skill}</script>，<script type="math/tex">\pi_{move,target}</script>和<script type="math/tex">Q_{move,target}</script>组成。 <script type="math/tex">Q_{skill}</script>和<script type="math/tex">Q_{move,target}</script>分别用于<script type="math/tex">\pi_{skill}</script>和<script type="math/tex">\pi_{move,target}</script>的梯度更新。 在网络输出进入Softmax层之前，一个布尔向量表示技能是否可用，使不可用技能的输出变为负无穷大。</p>
-<h4 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h4><p>​    我们使用了actor-critic 离线策略学习算法。 它使我们能够通过截断重要性抽样处理模拟器和学习器之间的policy lag。此外，我们还可以利用随机策略的优点，它由于平稳的策略更新而更稳定地响应环境的变化，并且在诸如石头剪刀布这样的游戏领域中工作得很好，因为确定性策略很容易被找到漏洞。 对于这种特定的算法，无论是<script type="math/tex">\pi_{skill}</script>的还是<script type="math/tex">\pi_{move,target}</script>都是以以下梯度交替更新的：</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/update_gradient.png" alt></p>
-<h4 id="学习系统"><a href="#学习系统" class="headerlink" title="学习系统"></a>学习系统</h4><p>​    总共有三个学习过程，每个学习过程由一个学习者和100个模拟器组成。 每个学习过程在很大程度上类似于Horgan等人提出的学习过程。(Horgan <em>et al</em>. (2018). ）。 最后的代理训练两周，相当于四年的游戏。</p>
-<h3 id="三种风格的Self-Play-Curriculum的效果"><a href="#三种风格的Self-Play-Curriculum的效果" class="headerlink" title="三种风格的Self-Play Curriculum的效果"></a>三种风格的Self-Play Curriculum的效果</h3><p>​    为了证明所提出的自我游戏课程的效果，我们训练了有和没有self-play curriculum的代理。 一个基线代理使用普通的self-play训练，没有任何风格相关的奖励（只包括win reward和HP reward），并使用了一个过去的自我池。 同时利用我们提出的共享池，对三个不同风格的代理进行了Self-Play Curriculum的训练。 我们的侵略性，平衡和防御的代理分别和基线代理打了1000场比赛，以衡量表现。 如表3所示，证明我们的self-play curriculum的代理的表现优于基线代理。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/table3.png" alt></p>
-<p>​    接下来，我们进行了一项消融研究（类似于控制变量法），以观察共享池如何帮助泛化。 我们想确认一个代理是否能够对付没有见过的风格的对手，当他在训练中只经历了有限范围的对手。 因此，我们创建了三种风格的代理，以完全相同的方式训练，除了他们有自己的独立对手池。 我们表示使用共享池作为<script type="math/tex">\pi_{sh}^{agg}</script>,<script type="math/tex">\pi_{sh}^{bal}</script>,<script type="math/tex">\pi_{sh}^{def}</script>的三种类型的代理，以及使用独立池作为<script type="math/tex">\pi_{ind}^{agg}</script>,<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>的三种类型的代理。 所有6个代理都接受了5M步的训练(相当于6天）。</p>
-<p>​    我们的假设是使用共享池训练的代理在面对从未遇到的对手时更健壮。 因此，我们比较了<script type="math/tex">\pi_{sh}^{agg}</script>和{<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>}的胜率与<script type="math/tex">\pi_{ind}^{agg}</script>和{<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>}的胜率。 这个实验设置是基于三个关键的想法。 首先，<script type="math/tex">\pi_{sh}^{agg}</script>和<script type="math/tex">\pi_{ind}^{agg}</script>有相同的训练设置，除了共享池。 第二，<script type="math/tex">\pi_{sh}^{agg}</script>和<script type="math/tex">\pi_{ind}^{agg}</script>是针对相同的对手进行评价的。 最后，虽然<script type="math/tex">\pi_{sh}^{agg}</script>从其池中遇到了其他样式，但它没有遇到{<script type="math/tex">\pi_{ind}^{bal}</script>,<script type="math/tex">\pi_{ind}^{def}</script>}，因为它们是使用独立的对手池进行训练的。 如果我们的假设是正确的，<script type="math/tex">\pi_{sh}^{agg}</script>应该有更高的获胜率。 值得注意的是，<script type="math/tex">\pi_{ind}^{bal}</script>和<script type="math/tex">\pi_{ind}^{def}</script>不是一个单一的模型，而是10个模型，每个模型从它们的池中以相同的固定间隔采样。 然后，我们对其余两种样式进行了相同的实验；结果如表4所示。 如表所示，使用共享池培训的代理的性能优于同行。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/tabel4.png" alt></p>
-<p>​    根据表4中的数据，在侵略性代理的情况下，使用共享池的效果是很小的。 它表明，无论是否提供不同的对手，进行训练的策略空间是相似的。 这与战斗游戏的性质有关，如果另一方接近并发起一场战斗，其中一方应该反击。 因此，在一个攻击性的代理人的情况下，攻击始终如一，有一点不同的经验，无论对手的战斗风格的多样性。</p>
-<h3 id="丢弃没合法动作的数据的效果"><a href="#丢弃没合法动作的数据的效果" class="headerlink" title="丢弃没合法动作的数据的效果"></a>丢弃没合法动作的数据的效果</h3><p>​    正如上一节所讨论的那样，“no-op”决定可以是主动的，也可以是被动的。 我们进行了一个实验，以研究从学习中丢弃这种被动的“no-op”数据的效果。 实验的训练伙伴是内置的BAB AI，其水平与前20%的玩家相当。 我们测量了代理学会击败它的速度，结果如图5(a)所示)。 如果从学习数据中丢弃“no-op”，则在70k步后，获胜率达到80%，而当包含“no-op”数据时，则需要170k步。 当跳过被动的“no-op”数据时，达到90%赢率所需的时间步长减少到一半。本实验证实，通过从学习数据中丢弃被动“no-op”，提高了训练性能。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/no_op_test.png" alt></p>
-<h3 id="保持移动的效果"><a href="#保持移动的效果" class="headerlink" title="保持移动的效果"></a>保持移动的效果</h3><p>​    为了研究保持移动的效果，我们开发了两个学习过程，这两个过程都涉及到self-play学习。 一个进程在每个时间步骤中做出移动决策，而另一个进程做出移动决策，并连续发送相同的决策9次。 我们测量了移动策略的熵来观察效果。 给定状态<script type="math/tex">s_{t}</script>的移动策略的熵如下。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/move_policy_entropy.png" alt></p>
-<p>​    一般来说，随着学习的进展，熵逐渐减少。 图5(B)显示，如果应用该技术，熵下降得更快。 在所学的运动质量方面也有明显的差异。 在应用该技术之前，该代理没有从随机运动中得到任何改进，但它学会了使用data skip来接近和后退。</p>
-<p>​    决策被重复的时间越长，代理的反应就越不那么直接，但代理的行动更一致。 在这种情况下，我们测试了1，3，5，10保持时间。 10（相当于1秒）的性能最好。</p>
-<h2 id="玩家评估"><a href="#玩家评估" class="headerlink" title="玩家评估"></a>玩家评估</h2><p>​    本节将讨论预赛和盲赛的结果，以及确保人类选手公平的条件。</p>
-<h3 id="公平的条件"><a href="#公平的条件" class="headerlink" title="公平的条件"></a>公平的条件</h3><h4 id="反应时间"><a href="#反应时间" class="headerlink" title="反应时间"></a>反应时间</h4><p>​    当人类在实时战斗游戏中面对人工智能时，影响结果的最重要因素是反应时间。 人类需要一些时间来识别对手使用的技能，并通过移动他的手按下按钮。一个人工智能的决定要反映在游戏中我们应用平均230毫秒的延迟，这样人工智能就没有优势了。 这一延迟量对应于BAB中职业玩家的平均反应时间。</p>
-<h4 id="种类和技能"><a href="#种类和技能" class="headerlink" title="种类和技能"></a>种类和技能</h4><p>​    在B&amp;S中有11个种类，每个种类都有独特的特点。 由于类之间存在相对优势，我们将AI和职业玩家的类固定为“Destroyer”。 “Destroyer”是一个有内讧风格的种类，并稳步出现在B&amp;S世界锦标赛。 此外，AI和职业玩家的技能被设置为相同的，以确保公平的匹配。 根据BAB用户统计数据，选择大多数用户所选择的技能。</p>
-<h3 id="评价结果"><a href="#评价结果" class="headerlink" title="评价结果"></a>评价结果</h3><p>​    我们邀请了两位著名的职业玩家，Yuntae Son (GC  Busan, Winner of 2017 B&amp;S World Championship), and  </p>
-<p>Shingyeom Kim (GC Busan, Winner of 2015 and 2016 B&amp;S  World Championship)，在盲赛前测试我们的代理。 请注意，每个样式所玩的游戏总数是不同的，因为测试人员可以为每个样式玩尽可能多的游戏。 经过预赛，我们参加了2018年世界锦标赛的盲赛。 我们的代理与三名职业玩家进行了比赛： Nicholas Parkinson  </p>
-<p>(EU), Shen Haoran (CHN), and Sungjin Choi (KOR).。 游戏精彩片段的录像可以在<a target="_blank" rel="noopener" href="https://goo.gl/7VUTzV">录像链接</a>找到。</p>
-<p>​    预测和盲赛的结果见表5。 从表格中可以看出，攻击性的代理主导了游戏，而其他两种类型的代理则有相当激烈的游戏。 根据预赛后的采访，我们发现这部分是因为人类玩家之间经常需要一些休息，但攻击代理不允许人类在战斗之间休息；相反，攻击是持续的。</p>
-<p><img src="/2021/01/10/Creating-Pro-Level-AI-for-a-Real-Time-Fighting-Game-Using-Deep-Reinforcement-Learning/final_test.png" alt></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>​    利用深度强化学习，我们创建了AI代理，在3D实时战斗游戏中与专业玩家战斗。 为了实现这一点，我们提出了一个用奖励塑造来指导战斗风格的方法。 采用三种代理风格，引入了一种新的自我游戏课程，以提高泛化性能。 我们还提出了数据跳过技术，以提高数据效率，并使有效的探索。 因此，我们的代理能够与世界上最好的BAB玩家竞争。 提出的训练方法一般适用于其他格斗游戏。</p>
-<h2 id="阅读总结"><a href="#阅读总结" class="headerlink" title="阅读总结"></a>阅读总结</h2><ul>
-<li>本文提出了一种实用的强化学习方法，包括一种新的self-play curriculum和data  skipping技术。通过curriculum，通过奖励塑造创造了三种不同风格的代理，并相互训练。</li>
-<li>通过reward shaping来创建不同风格的代理。</li>
-<li>在self-play过程中，同时训练不同风格的代理，并指定训练步数更新参数到agent pool中，用作对手训练。</li>
-<li>通过数据跳过技术来促进探索。</li>
-<li>跳过合法动作数量为0的数据，即被控制不能放出技能的数据等。通过实验证明能加速训练过程，达到90%的训练步数减少到一半。</li>
-<li>使用移动的相关动作时，同时连续做几个相同的移动动作，因为当个移动距离很短。</li>
-<li>网络结构输出mask掉不合法的动作</li>
-</ul>
-<p>​    </p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/07/github-pages/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/07/github-pages/" class="post-title-link" itemprop="url">github_pages</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-07 22:52:48" itemprop="dateCreated datePublished" datetime="2021-01-07T22:52:48+08:00">2021-01-07</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-08-10 22:05:28" itemprop="dateModified" datetime="2021-08-10T22:05:28+08:00">2021-08-10</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Github-Page搭建教程"><a href="#Github-Page搭建教程" class="headerlink" title="Github Page搭建教程"></a>Github Page搭建教程</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://github.com/">github账号注册</a></li>
-<li><a target="_blank" rel="noopener" href="https://nodejs.org/en/">nodejs安装</a> ,可通过node -v命令查看是否安装成功</li>
-<li><a target="_blank" rel="noopener" href="https://git-scm.com/">git安装</a>，可通过git version命令查看是否安装成功</li>
-<li>Hexo安装，打开git bash交互界面，输入npm install -g hexo-cli命令即可安装</li>
-</ul>
-<p>安装hexo后，执行下列命令，hexo会在当前目录下新建所需要的文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo init myBlog</span><br><span class="line">cd myBlog</span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-<ul>
-<li>输入hexo s命令可以在浏览器中预览效果</li>
-<li>git将ssh密钥拷贝到github setting中</li>
-<li>将myBlog中_config.yml更改为如下方式,<strong>注意QilongPan应该改为自己的github账号用户名</strong></li>
-</ul>
-<p><img src="/2021/01/07/github-pages/img1.png" alt></p>
-<ul>
-<li>部署到github</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save #安装部署插件</span><br><span class="line">hexo clean #部署前清除缓存文件和已生成de</span><br><span class="line">hexo g -d #部署到github </span><br></pre></td></tr></table></figure>
-<ul>
-<li>hexo new “文章标题”创建markdown</li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_33883178/article/details/94545878">更换主题、删除文章</a></li>
-</ul>
-<h2 id="解决图片不能显示问题"><a href="#解决图片不能显示问题" class="headerlink" title="解决图片不能显示问题"></a>解决图片不能显示问题</h2><p>路径不能用\，需要用/</p>
-<p><a target="_blank" rel="noopener" href="https://chiselee.cn/2020/02/04/HexoNotShowpic/">参考地址</a></p>
-<h2 id="解决设置主题"><a href="#解决设置主题" class="headerlink" title="解决设置主题"></a>解决设置主题</h2><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/33bc0a0a6e90">参考地址</a></p>
-<p>添加分类、标签等菜单</p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/mqdxiaoxiao/article/details/93644533">参考1</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/benben0729/article/details/87194682">参考2</a></p>
-<h2 id="解决Latex公式显示问题"><a href="#解决Latex公式显示问题" class="headerlink" title="解决Latex公式显示问题"></a>解决Latex公式显示问题</h2><ul>
-<li>更换hexo markdown渲染引擎</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm uninstall hexo-renderer-marked --save</span><br><span class="line">npm install hexo-renderer-kramed --save</span><br></pre></td></tr></table></figure>
-<ul>
-<li>解决语义冲突</li>
-</ul>
-<p>找到node_modules\kramed\lib\rules\inline.js，把第11行的 escape 变量的值做相应的修改： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;escape: &#x2F;^\\([\\&#96;*&#123;&#125;\[\]()#$+\-.!_&gt;])&#x2F;,</span><br><span class="line">escape: &#x2F;^\\([&#96;*\[\]()#$+\-.!_&gt;])&#x2F;,</span><br></pre></td></tr></table></figure>
-<p> 同时把第20行的em变量也要做相应的修改</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;em: &#x2F;^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)&#x2F;,</span><br><span class="line">em: &#x2F;^\*((?:\*\*|[\s\S])+?)\*(?!\*)&#x2F;,</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>打开Mathjax开关</p>
-<p>进入到主题目录，找到 _config.yml 配置问题，把 math 默认的 false 修改为true，具体如下： </p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># Math Equations Render Support</span><br><span class="line">math:</span><br><span class="line">  enable: true</span><br><span class="line"></span><br><span class="line">  # Default(true) will load mathjax&#x2F;katex script on demand</span><br><span class="line">  # That is it only render those page who has &#39;mathjax: true&#39; in Front Matter.</span><br><span class="line">  # If you set it to false, it will load mathjax&#x2F;katex srcipt EVERY PAGE.</span><br><span class="line">  per_page: true</span><br><span class="line"></span><br><span class="line">  engine: mathjax</span><br><span class="line">  #engine: katex</span><br></pre></td></tr></table></figure>
-<ul>
-<li>在markdown文档里打开mathjax开关</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">title: index.html</span><br><span class="line">date: 2018-07-05 12:01:30</span><br><span class="line">tags:</span><br><span class="line">mathjax: true</span><br><span class="line">--</span><br></pre></td></tr></table></figure>
-<p> 之所以要在文章头里设置开关，是因为考虑只有在用到公式的页面才加载 Mathjax，这样不需要渲染数学公式的页面的访问速度就不会受到影响 </p>
-<p><a target="_blank" rel="noopener" href="https://dragon-liu.github.io/2019/04/26/blog6/">参考1</a></p>
-<h2 id="解决一篇文章多个分类"><a href="#解决一篇文章多个分类" class="headerlink" title="解决一篇文章多个分类"></a>解决一篇文章多个分类</h2><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/bff1b1845ac9">参考</a></p>
-<h3 id="子分类"><a href="#子分类" class="headerlink" title="子分类"></a>子分类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">categories:</span><br><span class="line">  - Java</span><br><span class="line">  - Servlet</span><br></pre></td></tr></table></figure>
-<p>或者：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">categories: [Java, Servlet]</span><br></pre></td></tr></table></figure>
-<h3 id="多个分类"><a href="#多个分类" class="headerlink" title="多个分类"></a>多个分类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">categories:</span><br><span class="line">  -[Java]</span><br><span class="line">  -[Servlet]</span><br></pre></td></tr></table></figure>
-<p>或者</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">categories:</span><br><span class="line">  -[Java, Servlet]</span><br><span class="line">  -[Programming]</span><br></pre></td></tr></table></figure>
-<h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000017986794">参考1</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/thanksblog/p/12900165.html">参考2</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/06/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="QilongPan">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="潘其龙">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/01/06/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-01-06 23:50:44" itemprop="dateCreated datePublished" datetime="2021-01-06T23:50:44+08:00">2021-01-06</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -1347,14 +1331,14 @@ Q^{\pi }\left ( s,a \right )=E\left [ G_{t}|s_{t}=s,a_{t}=a,\pi  \right ]\tag{1}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-count">53</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">8</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">

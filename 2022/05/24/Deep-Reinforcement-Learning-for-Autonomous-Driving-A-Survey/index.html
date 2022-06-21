@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="摘要​    随着深度表示学习的发展，强化学习(RL)领域已经成为一个强大的学习框架，现在能够在高维环境中学习复杂的策略。这篇综述总结了深度强化学习(DRL)算法，并提供了自动驾驶任务的分类，其中(D)RL方法，同时解决了自动驾驶代理部署中的关键计算挑战。它还描述了相邻的领域，如行为克隆，模仿学习，反强化学习，这些领域是相关的，但不是经典的RL算法。讨论了模拟器在训练代理中的作用，验证、测试和解决">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Reinforcement Learning for Autonomous Driving: A Survey">
+<meta property="og:url" content="http://example.com/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/index.html">
+<meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="摘要​    随着深度表示学习的发展，强化学习(RL)领域已经成为一个强大的学习框架，现在能够在高维环境中学习复杂的策略。这篇综述总结了深度强化学习(DRL)算法，并提供了自动驾驶任务的分类，其中(D)RL方法，同时解决了自动驾驶代理部署中的关键计算挑战。它还描述了相邻的领域，如行为克隆，模仿学习，反强化学习，这些领域是相关的，但不是经典的RL算法。讨论了模拟器在训练代理中的作用，验证、测试和解决">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/figure1.png">
+<meta property="og:image" content="http://example.com/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/figure3.png">
+<meta property="og:image" content="http://example.com/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/figure4.png">
+<meta property="og:image" content="http://example.com/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/table1.png">
+<meta property="article:published_time" content="2022-05-24T14:50:21.000Z">
+<meta property="article:modified_time" content="2022-06-13T15:12:02.403Z">
+<meta property="article:author" content="QilongPan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/figure1.png">
+
+<link rel="canonical" href="http://example.com/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Deep Reinforcement Learning for Autonomous Driving: A Survey | 潘其龙</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">潘其龙</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Deep Reinforcement Learning for Autonomous Driving: A Survey
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-05-24 22:50:21" itemprop="dateCreated datePublished" datetime="2022-05-24T22:50:21+08:00">2022-05-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-06-13 23:12:02" itemprop="dateModified" datetime="2022-06-13T23:12:02+08:00">2022-06-13</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    随着深度表示学习的发展，强化学习(RL)领域已经成为一个强大的学习框架，现在能够在高维环境中学习复杂的策略。这篇综述总结了深度强化学习(DRL)算法，并提供了自动驾驶任务的分类，其中(D)RL方法，同时解决了自动驾驶代理部署中的关键计算挑战。它还描述了相邻的领域，如行为克隆，模仿学习，反强化学习，这些领域是相关的，但不是经典的RL算法。讨论了模拟器在训练代理中的作用，验证、测试和解决RL中现有解决方案的方法。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>​    自动驾驶(AD)系统由多重感知水平任务组成，由于深度学习架构，现在已经实现了很高的精度。除了感知之外，自动驾驶系统还由多个任务组成，其中经典的监督学习方法已不再适用。首先，当对代理动作的预测改变从自动驾驶代理运行的环境中接收到的未来传感器观察结果时，例如在城市区域的最佳驾驶速度任务。其次，监督信号(如碰撞时间(TTC)、代理最优轨迹的横向误差w.r.t，代表了主体的动态，以及环境中的不确定性。这样的问题需要定义随机成本函数才能被最大化。第三，代理需要学习环境的新配置，并在在其环境中驾驶时的每一时刻预测最佳决策。这代表了一个高维空间，给定了所观察到的代理和环境的唯一构型的数量，这是组合上较大的。在所有这些场景中，我们的目标都是解决一个顺序决策过程，这是在强化学习(RL)的经典设置下形式化的，其中代理需要学习和表示其环境，并在每个时刻上给出最优的行动。最优行动被称为策略。</p>
+<p>​    在这篇综述中，我们涵盖了强化学习的概念，任务分类，RL是一个有前途的解决方案，特别是在驾驶策略、预测感知、路径和运动规划以及低级控制器设计等领域。我们还重点回顾了RL在自动驾驶领域的不同现实世界部署，扩展了我们的会议论文[2]，因为它们的部署还没有在学术环境中进行审查。最后，我们通过展示在应用当前RL算法如模仿学习、深度Q学习等时的关键计算挑战和风险来激励用户。我们还从图2中的出版物趋势中注意到，使用RL或深度RL应用于自动驾驶或自动驾驶领域是一个新兴领域。这是由于最近使用了RL/DRL算法域，在实现和部署中留下了多个现实世界的挑战。我没在第四节解决了开放的问题。</p>
+<p>​    这项工作的主要贡献可以总结如下：</p>
+<ul>
+<li>独立的RL背景的汽车社区概述，因为它不是广为人知的</li>
+<li>RL在不同自动驾驶任务中使用的详细文献综述。</li>
+<li>讨论了RL应用于现实世界自动驾驶的关键挑战和机遇。</li>
+</ul>
+<p>本文的其余部分组织如下。第二节概述了一个典型的自动驾驶系统的组成部分。第三节介绍了强化学习，并简要讨论了关键概念。第四节讨论了在基本RL框架之上的更复杂的扩展。第五节概述了自动驾驶问题的RL应用。第六节讨论了在现实世界的自动驾驶系统中部署RL所面临的挑战。第七节对本文作了最后的总结。</p>
+<h1 id="自动驾驶系统组成部分"><a href="#自动驾驶系统组成部分" class="headerlink" title="自动驾驶系统组成部分"></a>自动驾驶系统组成部分</h1><p>​    图1包括一个AD系统的标准块，展示了从传感器流到控制驱动的管道。现代自动驾驶系统中的传感器架构主要包括多套摄像头，雷达和激光雷达，以及用于绝对定位和惯性测量单元(IMUs)的GPS-GNSS系统，提供飞行器在空间中的三维姿态。</p>
+<p><img src="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/figure1.png" alt></p>
+<p>​    感知模块的目标是创建一个环境状态的中间水平表示（例如所有障碍和代理的鸟瞰视图），稍后将被最终产生驾驶政策的决策系统使用。这种状态将包括车道的位置、可驾驶的区域、代理的位置，如汽车和行人、交通灯的状态等。感知中的不确定性会传播到信息链的其他部分。鲁棒感知对于安全性至关重要，因此使用冗余源增加了检测的可信度。这是通过语义分割[3]、[4]、运动估计[5]、深度估计[6]、污染检测[7]等感知任务的组合来实现的，这些任务可以有效地统一成多任务模型[8]、[9]。</p>
+<h2 id="Scene-Understanding"><a href="#Scene-Understanding" class="headerlink" title="Scene Understanding"></a>Scene Understanding</h2><p>​    这个关键模块将从感知模块中获得的感知状态的抽象中层表示映射到高级行动或决策模块中。从概念上讲，这个模块分为三个任务：场景理解、决策和规划，如图1所示，模块旨在提供对场景的更高层次的理解，它建立在检测或本地化的算法任务之上。通过融合异构传感器源，它的目的是稳健地推广到随着内容变得更加抽象的情况。这种信息融合为决策组件提供了一个通用的和简化的上下文。</p>
+<p>​    融合提供了一个传感器不可知的环境表示，并模型的传感器噪声和检测不确定性跨多种模式，如激光雷达、照相机、雷达、超声波。这基本上需要以一种有原则的方式来加权预测。</p>
+<h2 id="Localization-and-Mapping"><a href="#Localization-and-Mapping" class="headerlink" title="Localization and Mapping"></a>Localization and Mapping</h2><p>​    地图是自动驾驶[10]的关键支柱之一。一旦一个区域被映射出来，就可以在地图内定位车辆的当前位置。谷歌对自动驾驶的第一个可靠演示主要依赖于对预先映射的区域的本地化。由于问题的规模，传统的映射技术通过语义对象检测来增强，以可靠地消除歧义。此外，本地化的高清晰度地图(HD地图)可以作为目标检测的先验。</p>
+<h2 id="Planning-and-Driving-policy"><a href="#Planning-and-Driving-policy" class="headerlink" title="Planning and Driving policy"></a>Planning and Driving policy</h2><p>​    轨迹规划是自动驾驶管道中的一个关键模块。给定一个来自高清地图或基于GPS的地图的路线级计划，该模块需要生成引导代理的运动级命令。</p>
+<p>​    经典的运动规划忽略了动力学和微分约束，而使用平移和旋转来移动代理从源到目的地的姿态[11]。一种能够控制6个自由度(DOF)的机器人代理被称为是完整的，而一种可控自由度低于其总DOF的代理被称为是非完整的。经典的算法，如基于Djisktra算法的<script type="math/tex">A^{*}</script>算法，在自动驾驶的非完整情况下不起作用。快速探索随机树(RRT)[12]是一种通过随机采样和无障碍路径生成来探索配置空间的非完整算法。目前有各种版本的RRT用于自动驾驶管道中的运动规划。</p>
+<h2 id="Control"><a href="#Control" class="headerlink" title="Control"></a>Control</h2><p>​    控制器定义了在路径上的每个点上的必要的速度、转向角度和制动动作，从一个预先确定的地图，如谷歌地图，或在每个路径点的相同值的专家驾驶记录中获得。相比之下，轨迹跟踪涉及一个时间模型的车辆动态查看路径点的时间。</p>
+<p>​    目前的车辆控制方法是建立在经典的最优控制理论上的，该理论可以表示为在一组状态x(t)和控制动作u(t)上定义的代价函数x˙=f(x(t)，u(t))的最小化。通常定义控制输入在有限的时间范围内，限制在可行状态空间x∈Xfree[14]。速度控制是基于经典的闭环控制方法，如PID（比例积分导数）控制器，MPC（模型预测控制）。pid的目标是最小化一个成本函数，包括三个具有比例项的项当前误差，具有积分项的过去误差的影响，以及具有导数项的未来误差的影响。而MPC方法家族的目的是稳定车辆的行为，同时跟踪指定的路径[15]。本文为感兴趣的读者提供了关于控制器、运动规划和学习方法的综述。最优控制和强化学习密切相关，其中最优控制可以被视为一个基于模型的强化学习问题，其中车辆/环境的动力学是由定义良好的微分方程建模的。强化学习方法被开发来处理随机控制问题以及具有未知奖励和状态转移概率的不适定问题。自动驾驶汽车的随机控制值为d值较大。</p>
+<h1 id="强化学习"><a href="#强化学习" class="headerlink" title="强化学习"></a>强化学习</h1><p>​    机器学习(ML)是计算机程序从经验中学习以提高其在指定任务[18]中的性能的一个过程。ML算法通常被分为三大类：有监督学习、无监督学习和强化学习(RL)。有监督学习算法基于归纳推理，其中模型通常使用标记数据进行训练，以执行分类或回归，而无监督学习包含了应用于未标记数据的密度估计或聚类等技术。相比之下，在RL范式中，自主代理学习通过与环境交互来提高其在分配任务中的性能。Russel和Norvig将代理定义为“任何可以通过传感器感知环境并通过执行器对环境起作用的东西”，[19]。RL代理没有被专家明确地告诉他们如何行动；相反，代理的表现是通过奖励函数R来评估的。对于每一个经历过的状态，代理会选择一个动作，并根据其决策的有用性从其环境中获得奖励。代理的目标是最大化其生命周期中获得的累积奖励。逐渐地，代理可以通过利用有关不同状态-动作对的预期效用（即预期未来奖励的贴现总和）的知识来增加其长期奖励。强化学习的主要挑战之一是管理探索和开发之间的权衡。为了最大化它所获得的奖励，一个代理必须利用它的知识，选择已知会导致高奖励的行动。另一方面，要发现这些有益的行动，它必须承担尝试新行动的风险，这些行动可能会导致比当前每个系统状态最有价值的行动更高的回报。换句话说，学习主体必须利用它已经知道的东西来获得奖励，但它也必须探索未知的事物，以便在未来做出更好的行动选择。已经提出的管理这种权衡的策略的例子包括<script type="math/tex">\varepsilon-greedy</script>和softmax。当采用<script type="math/tex">\varepsilon-greedy</script>策略时，智能体会有<script type="math/tex">\varepsilon</script>的概率进行随机选择，<script type="math/tex">1-\varepsilon</script>的概率选择最优动作。直观地说，当我们对问题环境知之甚少时，代理应该在培训过程的开始时进行更多的探索。随着培训的进行，代理可能会逐渐进行更多的开发而不是探索。RL代理的探索策略的设计是一个积极的研究领域。</p>
+<p>​    当形式化涉及单个RL代理[21]的顺序决策问题时，马尔可夫决策过程(MDPs)被认为是事实上的标准。一个MDP由一组状态S、一组动作a、一个过渡函数T和一个奖励函数R[22]组成，即一个元组。当处于任何状态s∈s时，选择一个动作a∈a将导致环境进入一个新的状态s0∈s，其转移概率为T(s，a，s0)∈（0,1），并给出一个奖励R(s，a)。这个过程如图3所示。随机策略π：S→D是从状态空间到动作集合上的概率的映射，π(a|)表示在状态s处选择动作a的概率。目标是找到最优策略π∗，从而得到折扣奖励的最高期望和[21]：</p>
+<p>​    <img src="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/figure3.png" alt></p>
+<h1 id="在自动驾驶任务中的强化学习"><a href="#在自动驾驶任务中的强化学习" class="headerlink" title="在自动驾驶任务中的强化学习"></a>在自动驾驶任务中的强化学习</h1><p>​    可以应用RL的自动驾驶任务包括：控制器优化、路径规划和轨迹优化、运动规划和动态路径规划、复杂导航任务开发高级驾驶策略、基于场景的策略学习公路、交叉口、合并和分割、奖励学习与逆强化学习从专家数据意图预测行人等交通参与者、车辆，最后学习政策，确保安全和执行风险估计。在讨论DRL在AD任务中的应用之前，我们简要回顾了自动驾驶设置中的状态空间、动作空间和奖励方案。</p>
+<h2 id="State-Spaces-Action-Spaces-and-Rewards"><a href="#State-Spaces-Action-Spaces-and-Rewards" class="headerlink" title="State Spaces, Action Spaces and Rewards"></a><em>State Spaces, Action Spaces and Rewards</em></h2><p>​    为了成功地将DRL应用于自动驾驶任务，设计适当的状态空间、动作空间和奖励函数是重要的。Leurent等人[75]对自动驾驶研究中使用的不同状态和动作表征进行了全面的综述。自动驾驶车辆常用的状态空间特征包括：自我车辆的位置、航向和速度，以及自我车辆的传感器视图范围内的其他障碍。为了避免状态空间维数的变化，经常使用自我载体周围的笛卡尔或极地占用网格。这进一步增强了车道信息，如车道数（自我车道或其他车道）、路径曲率、自我车辆的过去和未来轨迹、纵向信息，如碰撞时间(TTC)，最后是场景信息，如交通规律和信号位置。</p>
+<p>​    使用原始的传感器数据，如相机图像、激光雷达、雷达等。提供了更精细的上下文信息的好处，同时使用压缩的抽象数据降低了状态空间的复杂性。在这两者之间，一个中层表示，如二维鸟瞰视图(BEV)是传感器不可知的，但仍然接近于场景的空间组织。图4是一个自上而下的视图，显示了占用网格，过去和投影的轨迹，以及关于场景的语义信息，如交通信号灯的位置。当基于图形的表示不能保留道路时，这种中间格式保留了道路的空间布局。一些模拟器提供了这个视图，如Carla或Flow(见表V-C)。</p>
+<p><img src="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/figure4.png" alt></p>
+<p>​    车辆策略必须控制许多不同的执行器。用于车辆控制的连续值执行器包括转向角度、油门和刹车。其他的执行机构，如齿轮的变化，都是独立的。为了降低复杂性并允许应用仅使用离散动作空间(例如DQN)的DRL算法，可以通过将连续执行器如转向角、节气门和制动器的范围划分为相同大小的箱来均匀离散动作空间(见第VI-C节)。在对数空间中也被建议进行离散化，因为在实践中选择的许多转向角度都是接近中心[76]的。然而，离散权确实有缺点；如果动作之间的步长值太大，就会导致抖动或不稳定的轨迹。此外，当为执行器选择箱子的数量时，需要有足够的离散步骤来允许平稳控制，而没有太多的步骤来评估动作选择变得非常昂贵。作为离散化的一种替代方法，执行器的连续值也可以通过直接学习策略的DRL算法来处理(例如，DDPG)。时间抽象选项框架[77])也可以用于简化选择操作的过程，其中代理选择选项而不是低级操作。这些选项表示可以在多个时间步长中扩展原始操作的子策略。</p>
+<p>​    为自动驾驶的DRL代理设计奖励功能仍然是一个有待解决的问题。自动驾驶任务的标准任务的例子包括：距离前往目的地[78]，自我车辆的速度，保持自我车辆静止[81]，碰撞与其他道路用户或场景对象[78]，[79]，违反人行道[78]，保持车道，保持舒适和稳定，同时避免极端加速，刹车或转向[80]，[81]，并遵循交通规则</p>
+<h2 id="Motion-Planning-amp-Trajectory-optimization"><a href="#Motion-Planning-amp-Trajectory-optimization" class="headerlink" title="Motion Planning &amp; Trajectory optimization"></a><em>Motion Planning &amp; Trajectory optimization</em></h2><p>​    运动规划是确保在目标点和目的地之间存在一条路径的任务。这对于在之前的地图上规划车辆的轨迹是必要的，这通常增加了语义信息。动态环境和变化车辆动态下的路径规划是自动驾驶的一个关键问题，例如在[87]路口通过的权利，合并成高速公路。作者[89]最近的工作包含了不同的交通参与者在真实世界中的运动，在不同的交互式驾驶场景中观察到。作者[89]最近的工作包含了不同的交通参与者在真实世界中的运动，在不同的交互式驾驶场景中观察到。最近，作者展示了DRL(DDPG)用于AD的应用。该系统首先接受了模拟训练，然后在车载计算机上进行实时训练，并能够学会跟随一条车道，成功地完成了在一段250米长的道路上的真实世界试验。基于模型的深度RL算法已经被提出，用于直接从原始像素输入[91]，[92]中学习模型和策略。在[93]中，深度神经网络已被用于在模拟环境中生成超过数百个时间步长的预测。RL也适用于控制系统。将LQR/iLQR等经典的最优控制方法与[94]中的RL方法进行了比较。经典的RL方法用于随机环境下的最优控制，例如线性环境中的线性二次调节器(LQR)和非线性环境中的迭代LQR(iLQR)。[95]最近的一项研究表明，对策略网络的参数进行随机搜索可以和LQR一样好。</p>
+<h2 id="Simulator-amp-Scenario-generation-tools"><a href="#Simulator-amp-Scenario-generation-tools" class="headerlink" title="Simulator &amp; Scenario generation tools"></a><em>Simulator &amp; Scenario generation tools</em></h2><p>​    自动驾驶数据集解决监督学习设置与训练集包含图像，标签对的各种模式。强化学习需要一个环境，在那里状态-行动对可以恢复，同时分别建模车辆状态、环境以及环境和代理的运动和行动的随机性。各种模拟器被积极地用于训练和验证强化学习算法。表V-C总结了各种能够模拟摄像机、激光雷达和雷达的高保真感知模拟器。一些模拟器还能够提供车辆的状态和动力学。[105]提供读者对自动驾驶社区中使用的传感器和模拟器的完整回顾。学习过的驾驶政策先在模拟环境中进行压力测试，然后在现实世界中进行昂贵的评估。在[106]中提出了多保真度强化学习(MFRL)框架，其中有多个模拟器可用。在MFRL中，使用具有增加保真度的级联模拟器来表示状态动态（以及计算成本），使RL算法的训练和验证成为可能，同时使用遥控汽车为更少昂贵的真实世界样本找到接近真实世界的最优策略。卡拉挑战[107]是一个基于卡拉模拟器的AD比赛，与碰撞前的场景特征在一个国家高速公路交通安全管理局报告了[108]。这些系统是在关键的场景下进行评估的，如：自我车辆失去控制，自我车辆对看不见的障碍做出反应，变道以躲避慢速引导车辆等。代理的得分作为在不同电路中移动的总距离的函数来评估，以及由于违规而导致的总点贴现。</p>
+<h2 id="LfD-and-IRL-for-AD-applications"><a href="#LfD-and-IRL-for-AD-applications" class="headerlink" title="LfD and IRL for AD applications"></a><em>LfD and IRL for AD applications</em></h2><p>​    在[109]中驾驶汽车的行为克隆(BC)的早期工作，[110]提出了学习形式演示(LfD)的代理，试图模仿专家的行为。BC通常是作为一种监督学习来实现的，因此，BC很难适应新的、看不见的情况。在[111]，[112]中提出了一种在自动驾驶汽车领域中端到端学习卷积神经网络的体系结构。CNN被训练成将原始像素从单个前置摄像头直接映射到转向命令中。使用来自人类/专家的相对较小的训练数据集，该系统学习在有或没有车道标记的当地道路上和高速公路上驾驶车辆。该网络学习成功检测道路的图像表示，而没有经过明确的训练。[113]的作者提出了使用最大熵逆RL从人类驾驶员那里获得的专家演示来学习舒适的驾驶轨迹优化。[114]的作者使用DQN作为IRL中的细化步骤来提取奖励，以努力学习类人的变道行为。</p>
+<p><img src="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/table1.png" alt></p>
+<h2 id="Intrinsic-Reward-functions"><a href="#Intrinsic-Reward-functions" class="headerlink" title="Intrinsic Reward functions"></a><em>Intrinsic Reward functions</em></h2><p>​    在游戏等受控的模拟环境中，显式的奖励信号及其传感器流给代理。然而，在现实世界的机器人技术和自动驾驶衍生技术中，设计一个好的奖励功能是必要的，以便能够学习到所期望的行为。最常见的解决方案是奖励塑造[136]，它包括向代理提供额外的设计良好的奖励，以鼓励优化到最优策略的方向。正如本文前面已经指出的那样，奖励可以通过逆RL(IRL)[137]来估计，这依赖于专家的演示。在缺乏明确的奖励塑造和专家演示的情况下，代理可以使用内在奖励或内在动机[138]来评估他们的行为是否好。[139]的作者将好奇心定义为一个主体在通过自我监督的逆动力学模型学习的视觉特征空间中预测自身行为结果的能力上的错误。在[140]中，代理从其经验中学习下一个状态预测器模型，并使用预测的错误作为内在奖励。这使该代理能够确定什么可能是一个用途。</p>
+<h2 id="Incorporating-safety-in-DRL"><a href="#Incorporating-safety-in-DRL" class="headerlink" title="Incorporating safety in DRL*"></a>Incorporating safety in DRL*</h2><p>​    经过训练后在真实环境中部署自动驾驶车辆可能是危险的。本文介绍了将安全性纳入DRL算法的不同方法。对于基于模仿学习的系统，SafeDAgger[141]引入了一种安全策略，该策略学习预测最初使用监督学习方法训练的主策略所犯的错误，而不查询参考策略。另一个安全策略将状态和主策略的部分观察作为输入，并返回一个二进制标签，指示主策略是否可能在不查询引用策略的情况下偏离引用策略。[142]的作者讨论了自动驾驶的多智能体强化学习的安全性，即在其他司机或行人的意外行为之间保持平衡，不要过于防御，从而实现正常的交通流量。虽然保持严格的约束以保证驾驶的安全，但问题被分解为一个政策的组成，以实现舒适驾驶和轨迹规划。深度强化学习算法的控制，如DDPG和safet。利用TORCS环境，首先将DDPG应用于在稳定、熟悉的环境下学习驾驶策略，然后将策略网络和基于安全的控制结合起来，避免碰撞。结果发现，DRL和安全控制的结合在大多数情况下都表现良好。为了使DRL逃避本地最优，加快训练过程，避免危险条件或事故，面向生存的强化学习(SORL)模型在[144]提出，生存有利于最大化总奖励通过建模自动驾驶问题约束MDP和引入负回避函数从以前的失败。SORL模型对奖励功能不敏感，可以使用不同的DRL算法，如DDPG。此外，在[145]中可以为感兴趣的读者找到一个关于安全强化学习的全面调查。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>​    强化学习在现实世界的自动驾驶应用中仍然是一个活跃的新兴领域。虽然有一些成功的商业应用，但很少有文献或大规模的公共数据集可用。因此，我们有动力形式化和组织自动驾驶的RL应用程序。自动驾驶场景涉及交互代理，需要适合RL的协商和动态决策。然而，为了有成熟的解决方案，我们有许多挑战需要解决。在这项工作中，提出了一个详细的理论强化学习，以及一个全面的文献调查，关于应用RL在自动驾驶任务。</p>
+<p>​    第六节将讨论挑战和机遇、未来的研究方向和机遇。这包括：验证基于RL的系统的性能、模拟-现实差距、样本效率、设计良好的奖励功能、将安全性纳入自主代理的RL系统的决策中。</p>
+<p>​    强化学习结果通常很难重现，并且对超参数选择高度敏感，这些选择往往没有详细报告。研究人员和从业者都需要有一个可靠的起点，在那里众所周知的强化学习算法被实现、记录和良好的测试。在表VI-G中已经涵盖了这些框架。</p>
+<p>​    发展针对自动驾驶问题的明确多智能体强化学习方法也是一个重要的未来挑战，迄今尚未得到很多的关注。MARL技术有潜力使自动驾驶汽车组之间的协调和高层决策更容易，并为测试和验证自动驾驶政策的安全性提供新的机会。</p>
+<p>​    此外，RL算法的实现对研究者和从业者来说都是一项具有挑战性的任务。这项工作提供了众所周知的和活跃的开源RL框架的例子，这些框架提供了良好的文档实现，使您有机会使用、评估和扩展不同的RL算法。最后，我们希望这篇概述论文能鼓励进一步的研究和应用。</p>
+<h1 id="PPT"><a href="#PPT" class="headerlink" title="PPT"></a>PPT</h1><ul>
+<li>先给出目前强化学习的成功案例</li>
+</ul>
+<p>比如alphago、星际争霸等</p>
+<ul>
+<li>讲强化学习的基本要素</li>
+<li></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/" rel="prev" title="Lane Change Decision-Making through Deep Reinforcement Learning">
+      <i class="fa fa-chevron-left"></i> Lane Change Decision-Making through Deep Reinforcement Learning
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/" rel="next" title="无人驾驶">
+      无人驾驶 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E7%B3%BB%E7%BB%9F%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="nav-number">3.</span> <span class="nav-text">自动驾驶系统组成部分</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scene-Understanding"><span class="nav-number">3.1.</span> <span class="nav-text">Scene Understanding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Localization-and-Mapping"><span class="nav-number">3.2.</span> <span class="nav-text">Localization and Mapping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Planning-and-Driving-policy"><span class="nav-number">3.3.</span> <span class="nav-text">Planning and Driving policy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Control"><span class="nav-number">3.4.</span> <span class="nav-text">Control</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">4.</span> <span class="nav-text">强化学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6%E4%BB%BB%E5%8A%A1%E4%B8%AD%E7%9A%84%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">5.</span> <span class="nav-text">在自动驾驶任务中的强化学习</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#State-Spaces-Action-Spaces-and-Rewards"><span class="nav-number">5.1.</span> <span class="nav-text">State Spaces, Action Spaces and Rewards</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Motion-Planning-amp-Trajectory-optimization"><span class="nav-number">5.2.</span> <span class="nav-text">Motion Planning &amp; Trajectory optimization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Simulator-amp-Scenario-generation-tools"><span class="nav-number">5.3.</span> <span class="nav-text">Simulator &amp; Scenario generation tools</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LfD-and-IRL-for-AD-applications"><span class="nav-number">5.4.</span> <span class="nav-text">LfD and IRL for AD applications</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Intrinsic-Reward-functions"><span class="nav-number">5.5.</span> <span class="nav-text">Intrinsic Reward functions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Incorporating-safety-in-DRL"><span class="nav-number">5.6.</span> <span class="nav-text">Incorporating safety in DRL*</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PPT"><span class="nav-number">7.</span> <span class="nav-text">PPT</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">QilongPan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">QilongPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

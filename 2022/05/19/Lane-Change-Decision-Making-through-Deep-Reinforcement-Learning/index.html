@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文是使用深度强化学习算法DQN结合规则在水平变道上进行决策，最终安全率达到80%。 摘要​    由于交通环境的复杂性和波动性，自动驾驶的决策是一个显著的难题。在这个项目中，我们使用了一个深度q网络，以及基于规则的约束来做出变道决策。通过将高水平的横向决策与基于低级规则的轨迹监测相结合，可以获得安全有效的变道行为。在总共100集的训练后，代理预计将在一个真实世界的实用模拟器中执行适当的变道动作。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lane Change Decision-Making through Deep Reinforcement Learning">
+<meta property="og:url" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/index.html">
+<meta property="og:site_name" content="潘其龙">
+<meta property="og:description" content="本文是使用深度强化学习算法DQN结合规则在水平变道上进行决策，最终安全率达到80%。 摘要​    由于交通环境的复杂性和波动性，自动驾驶的决策是一个显著的难题。在这个项目中，我们使用了一个深度q网络，以及基于规则的约束来做出变道决策。通过将高水平的横向决策与基于低级规则的轨迹监测相结合，可以获得安全有效的变道行为。在总共100集的训练后，代理预计将在一个真实世界的实用模拟器中执行适当的变道动作。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure1.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/table1.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula2.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula3.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula4.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula5.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula6.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula7.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure2.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure11.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure3.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure4.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure5.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure6.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure7.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure8.png">
+<meta property="og:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/table2.png">
+<meta property="article:published_time" content="2022-05-19T13:02:05.000Z">
+<meta property="article:modified_time" content="2022-05-27T15:58:20.095Z">
+<meta property="article:author" content="QilongPan">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure1.png">
+
+<link rel="canonical" href="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Lane Change Decision-Making through Deep Reinforcement Learning | 潘其龙</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">潘其龙</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="QilongPan">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="潘其龙">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Lane Change Decision-Making through Deep Reinforcement Learning
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2022-05-19 21:02:05" itemprop="dateCreated datePublished" datetime="2022-05-19T21:02:05+08:00">2022-05-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2022-05-27 23:58:20" itemprop="dateModified" datetime="2022-05-27T23:58:20+08:00">2022-05-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/" itemprop="url" rel="index"><span itemprop="name">自动驾驶</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文是使用深度强化学习算法DQN结合规则在水平变道上进行决策，最终安全率达到80%。</p>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>​    由于交通环境的复杂性和波动性，自动驾驶的决策是一个显著的难题。在这个项目中，我们使用了一个深度q网络，以及基于规则的约束来做出变道决策。通过将高水平的横向决策与基于低级规则的轨迹监测相结合，可以获得安全有效的变道行为。在总共100集的训练后，代理预计将在一个真实世界的实用模拟器中执行适当的变道动作。结果表明基于规则的DQN方法的性能优于DQN方法。基于规则的DQN达到了0.8的安全率，平均速度为47英里/小时。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>​    自动驾驶汽车近年来越来越受欢迎，同时也已成功地部署在现实场景中。例如Waymo就推出了自动驾驶拼车服务，这是第一个向公众提供完全自动驾驶体验的服务。虽然像特斯拉和comma.ai这样的公司提供了一定程度的自主驾驶，但他们目前还不能将全自动汽车推向市场。组成自动驾驶系统的有几个。首先，这些模块可以分为四个不同的模块：感知模块、决策模块、控制模块和执行机构模块。在这些模块中，这些工作涉及到决策模块。在各种条件下做出决策是一项难以概括的任务。因此，决策者有必要对各种条件具有强大的应对能力，并能从其经验中进行归纳或学习。因此，强化学习(RL)非常方便，因为近年来在RL领域取得了一些突破。</p>
+<p>​    RL最突出的是深度RL模型已经在Go和Poker等游戏中取得了超人的表现。像这样的进展已经打开了一个广泛的潜在领域，RL可以用来实现超人的性能。自动驾驶也有几个挑战，目前还没有一个确切的解决方案。例如Waymo 经历了 10 次（总共 16 次模拟中）“同向侧滑”，其中涉及换道或车道合并操作期间的碰撞。</p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>​    解决自动驾驶问题的方法可分为基于规则算法和基于学习算法两类。虽然基于规则的技术在过去取得了一些成功，但基于学习的方法近年来也显示出了它们的有效性。</p>
+<p>​    许多传统的解决方案都是基于显式编写的规则，并依赖于状态机在指定的决策行为之间进行转换。例如，由<a href="Alvinn: An autonomous land vehicle in a neuralnetwork[">CMU</a>训练的“老板”讨论了一种基于规则的方法，斯坦福<a href="The stanford entry in the urban challenge">The stanford entry in the urban challenge</a>的研究团队也使用奖励设计来确定轨迹。然而，可靠的决策在基于规则的方法中具有很高的复杂性。</p>
+<p>​    基于学习的技术作为一项关键的人工智能技术，可以为自动驾驶提供更先进和更安全的决策算法。最近，NVIDIA <a href="End to end learning for self-driving cars[">End to end learning for self-driving cars</a>的研究人员训练了一个深度卷积神经网络(CNN)来直接训练图像从摄像机到聚类控制。这个训练过的模型能够处理变道和在碎石道路上驾驶的任务。</p>
+<p>​    除了监督学习之外，强化学习的结果在多年来也有了显著的改善。Wolf等人<a href="Learning how to drive in a real world simulation with deep q-networks">Learning how to drive in a real world simulation with deep q-networks</a>提出了一种利用DQN在受刺激环境下开车的方法。只有定义了5个动作，每个动作对应于不同的转向角度以及大小为<script type="math/tex">48 \times 27</script>的训练图像。奖励函数的计算方法是考虑了距离车道中心的距离以及某些辅助信息（如车辆与中心线之间的角度误差）。Hoel等人<a href="Automated speed and lane changedecision making using deep reinforcement learning[">Automated speed and lane change decision making using deep reinforcement learning</a>使用DQN解决变道随车速的问题。他们使用一维向量来定义许多组件，包括速度、周围车辆和相邻车道，而不是使用正面图像。Wang等<a href="Lane change decision making through deep reinforcement learning with rule-based constraints">Lane change decision making through deep reinforcement learning with rule-based constraints</a>使用安全率来测量模型的质量，该模型基于碰撞频率计算，对促进提供了清晰的思路。结果表明，考虑速度和其他因素的模型通常优于其他不考虑车辆平均速度的模型。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>​    本报告概述了深度 Q 学习在具有基于规则的约束的车道变更决策问题中的实施情况。本报告的结构如下。第二节讨论了与RL算法相关的方法以及基于规则的约束公式。其实现和仿真结果在第三节中进行了讨论。结果在第四节中进行了讨论。最后，在第五节中进行了总结。</p>
+<h1 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h1><h2 id="State-Space"><a href="#State-Space" class="headerlink" title="State Space"></a>State Space</h2><p>​    模拟器提供了关于自己和其他车辆的位置和速度的信息。它包括汽车在地图坐标中的x，y位置和在frenet坐标中的s，d位置，自动驾驶汽车在地图中的偏移角度和MPH速度（英里每小时），以及其他汽车在m/s计算中的x，y速度。使用45×3矩阵表示状态空间，对应于车辆前方60米和后方30米范围内的整个交通情况，如图1所示。每辆车长约5.5米，矩阵中的每一行跨度为2米，一辆车在极端情况下可以占据4个单元。因此，我们用汽车的标准化速度填充与单个汽车对应的4个单元格。速度与框架内车辆的最大速度和框架内车辆的最小速度相标准化。在这里，自己汽车的标准化速度是正的，而其他车是负的。与没有任何汽车的位置相对应的单元格中充满了1s。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure1.png" alt></p>
+<h2 id="Action-Space"><a href="#Action-Space" class="headerlink" title="Action Space"></a>Action Space</h2><p>​    自动驾驶车辆具有去左车道、在当前车道保持、去右车道三个动作，如table1所示。其它的所有控制操作由低级控制器完成。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/table1.png" alt></p>
+<h2 id="Reward"><a href="#Reward" class="headerlink" title="Reward"></a>Reward</h2><p>​    本项目中的自动驾驶汽车只允许在高速公路的靠右3车道上行驶。在非法改变车道的情况下，即当汽车在最左车道时选择动作2（去左车道）或者在最右车道选择动作1（去右车道）时，汽车被迫保持在同一车道，得到的奖励为<script type="math/tex">r_{ch1} = -5</script> 。当碰撞发生时奖励为<script type="math/tex">r_{co} = -10</script>，用于避免碰撞。当车辆进行无效变道时，比如车辆前面没有车时进行变道，得到的奖励为<script type="math/tex">r_{ch2} = -3</script>。</p>
+<p>​    只有在需要的时候才会换车道，自动驾驶汽车也应该尽可能快地行驶（在速度限制范围内）。为了强制执行这一点，将分配以下奖励,如公式<script type="math/tex">2</script>所示。其中<script type="math/tex">v</script>表示自动驾驶汽车的平均速度，<script type="math/tex">v_{ref}</script>表示参考速度（25英里/小时），<script type="math/tex">\lambda</script>表示归一化系数，值为<script type="math/tex">0.04</script>。每次决策的奖励如公式<script type="math/tex">3</script>所示。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula2.png" alt></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula3.png" alt></p>
+<h2 id="Rule-Based-Constraints"><a href="#Rule-Based-Constraints" class="headerlink" title="Rule-Based Constraints"></a>Rule-Based Constraints</h2><p>​    我们基于规划轨迹和其他预期轨迹，应用基于规则的限制，以确保变道行为的绝对安全性。低级控制器可以根据高层决策者所确定的动作来预测自动驾驶车辆和期望车道中相邻车辆的轨迹。</p>
+<p>​    假设相邻汽车保持当前速度并停留在当前车道上，计算相邻汽车的轨迹。 如果自动驾驶汽车的预期轨迹与周围汽车的预期轨迹之间的距离小于指定的阈值，则高层决策者做出的选择可能是有害的。 这个动作被低级控制器拒绝，汽车将继续其当前轨迹。</p>
+<h2 id="Deep-Q-Network"><a href="#Deep-Q-Network" class="headerlink" title="Deep Q Network"></a>Deep Q Network</h2><p>​    DQN用于确定给定状态下的最优动作。Q-Learing是一种off-policy TD强化学习算法。它使用state-action值函数<script type="math/tex">Q^{\pi }\left ( s,a \right )</script>来评估策略<script type="math/tex">\pi</script>，该函数定义为：</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula4.png" alt></p>
+<p>​    Q-learning算法试图找到最优的状态动作值函数：</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula5.png" alt></p>
+<p>​    <script type="math/tex">Q^{*}</script>对应于最优策略<script type="math/tex">\pi^{*}</script>。</p>
+<p>​    这个值函数<script type="math/tex">Q^{*}</script>遵循贝尔曼最优方程：</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula6.png" alt></p>
+<p>​    使用最优值函数<script type="math/tex">Q^{*}</script>，可以通过寻找在每个状态下使值函数最大化的动作来确定最优策略。</p>
+<p>​    对于一个离散的和有限的问题，找到一个Q函数是足够简单的。然而对于像我们这样具有高维和连续状态空间的问题，这种方法变得计算成本昂贵和难以处理。一个深度q网络用于近似值函数，如图2所示。以下损失函数使用Adam优化器来最小化：</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/formula7.png" alt></p>
+<p>​    <img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure2.png" alt></p>
+<p>​    DQN的输入是状态矩阵和一个3D向量，该向量在卷积层之后连接到网络上。向量的第一个元素对应于RL智能体的归一化速度，第二个和第三个元素分别对应于是否有左右两个车道，如果有则为1，没有为0。图2中的input1对应状态矩阵，input2对应3D向量。</p>
+<h1 id="Implementation-And-Simmulation"><a href="#Implementation-And-Simmulation" class="headerlink" title="Implementation And Simmulation"></a>Implementation And Simmulation</h1><p><a target="_blank" rel="noopener" href="https://github.com/DRL-CASIA/Autonomous-Driving">项目源码</a></p>
+<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><ul>
+<li>CMake 3.22.0 </li>
+<li>Python-3.6 </li>
+<li>ubuntu</li>
+<li>Tensorflflow-GPU </li>
+<li>keras </li>
+</ul>
+<h2 id="模拟器"><a href="#模拟器" class="headerlink" title="模拟器"></a>模拟器</h2><p>​    本项目中使用的模拟器由Udacity开发。仿真设置为一条3车道的高速公路，如图3所示。带有绿色轨迹标记的车辆是RL代理。该模拟器提供了框架中所有汽车的定位和速度。速度限制是50英里/小时，而RL代理的目标是保持速度限制。该模拟器还提供了与汽车在加速度（法向加速度、切向加速度和合成加速度）和颠簸方面的性能相关的反馈。对汽车的要求是它不应该加速超过<script type="math/tex">10m/s^{2}</script>和颠簸大于<script type="math/tex">10m/s^{3}</script>。该车道的总距离为6946米。</p>
+<p><strong>法向加速度如下图中的<script type="math/tex">a_{n}</script>, 切向加速度如下图中的<script type="math/tex">a_{t}</script>，合成加速度为<script type="math/tex">a</script>,</strong><a target="_blank" rel="noopener" href="https://sbainvent.com/dynamics/kinematics-of-a-particle/normal-and-tangential-velocity-and-accelerations/">参考链接</a></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure11.png" alt></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure3.png" alt></p>
+<h2 id="训练细节"><a href="#训练细节" class="headerlink" title="训练细节"></a>训练细节</h2><p>​    使用DQN进行了100局的训练。网络的输入由对交通状况进行编码的状态矩阵组成。 网络的输出是每个状态的3个动作值（或 Q 值）。 选择该状态下对应的最大动作值的动作。 在训练期间，代理随机或遵循贪婪策略选择动作。 这种被称为探索-开发权衡的现象是通过实施贪婪策略来处理的。网络的输出是每个动作的三个状态动作值（或Q值）。选择与最大状态操作值对应的操作。在训练过程中，代理可以随机地或遵循贪婪策略来选择动作。这种现象被称为勘探-利用权衡，是通过实现<script type="math/tex">\epsilon -greddy</script>策略来处理的。对于<script type="math/tex">\epsilon -greddy</script>策略，代理随机选择的概率为<script type="math/tex">\epsilon</script>，和选择Q值最大动作的概率为<script type="math/tex">1-\epsilon</script>。训练时会对<script type="math/tex">\epsilon</script>进行衰减，<script type="math/tex">\epsilon</script>初始值为1，衰减系数<script type="math/tex">\lambda_{decay}=0.99985</script>,最小衰减到的值为<script type="math/tex">\epsilon_{min} = 0.03</script>。训练步骤：</p>
+<ul>
+<li>下载<a target="_blank" rel="noopener" href="https://github.com/DRL-CASIA/Autonomous-Driving">源码</a></li>
+<li>检查代码中的端口和主机，并确保该端口是空闲的</li>
+<li>运行train.py文件，然后打开模拟器</li>
+<li>选择模拟窗口和图形质量，并点击开始</li>
+</ul>
+<h2 id="模拟环境"><a href="#模拟环境" class="headerlink" title="模拟环境"></a>模拟环境</h2><p>​    我们的仿真实验的实现有三个方面。模拟器是初始组件，它生成环境数据并接收预定的路径。第二个组件是控制器和规划器，它负责速度控制和航向规划。DQN算法是负责高层变道决策的第三个组成部分。</p>
+<p>​    本研究的目的是利用深度强化学习来做出横向变道决策。低级控制器包括基于规则的速度控制器和路径规划器，但不包括数据处理。基于规则的技术用于纵向速度控制，样条插值用于基于指定的路径点和与变道决策结果相匹配的预期目标点进行路径规划。同时控制器作为一个低级的修改器，允许修改高级的决策。</p>
+<p>​    当训练启动时，模拟器加载环境并等待来自RL代理的控制动作，同时跟随低级控制器。在训练开始时，赛车总是从中间车道开始。基于低级规则的控制器保持汽车的直线运动，避免向前碰撞。RL代理选择的操作（基于策略或随机）会触发变道，并将其传递给模拟器。然后模拟器会根据它接收到的动作来执行变道。其中一个训练实例如图4所示。代理执行的最后一个行动是去右车道。这个动作被传递到模拟器，汽车进入右车道，如图5所示。<a target="_blank" rel="noopener" href="https://drive.google.com/drive/folders/1e9CaX4bE08x__5hfRL_mxWcqufk7Tjcj">训练视频</a></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure4.png" alt></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure5.png" alt></p>
+<p>​    模拟器最初面临的挑战之一是模拟器和终端必须在每一局结束时重新启动。它需要浏览模拟器菜单，如图6和图7所示。在长时间的训练时，选择选项是不可行的。我们使用PyAutoGUI软件包来自动化这个过程。我们发现除了IDE之外，关闭任何额外的窗口对包的性能都是平滑的。此外有一个双监视器设置有时会导致模拟器在屏幕上以随机坐标打开。因此我们使用单个监视器来更易于执行。该软件包可以自动进行鼠标点击和键盘敲击。对于鼠标点击，我们记录了要单击的单选按钮的坐标，并将其传递给PyAutoGUI进行执行。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure6.png" alt></p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure7.png" alt></p>
+<h1 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h1><p>​    模拟器实时运行，自动驾驶车辆在模拟环境中完成一圈大约需要6分钟，这被视为我们训练过程中的一个episode。这个训练计划包括100个episode。当其中一个episode结束时，我们将重新启动下一episode的模拟器。图8显示了在训练和测试过程中变道的频率。图中只显示了前10次训练和测试的结果。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/figure8.png" alt></p>
+<p>​    车道的改变完全取决于在给定的时间步长下的交通状况。从图8中我们可以看出，在训练过程中，代理经常改变车道，平均约为64.1次。经过100个episode的训练和10个episode的测试，我们看到车道变化的频率显著下降，平均每episode车道变化10次。此外随着训练的进行，我们看到车道变化趋势逐渐减少。然而由于探索，我们确实看到了不稳定的行为。训练后的结果表明，代理已经学会了只在必要时改变车道。</p>
+<p>​    比较在参考文献中获得的结果<a href="Automated speed and lane change  decision making using deep reinforcement learning">Automated speed and lane change  decision making using deep reinforcement learning</a>，我们在训练中没有看到变道频率的下降。他们不比较训练和测试的结果。一种可能的理论可能是他们的探索率很低，他们的策略是总是选择动作值最大的动作。</p>
+<p>​    我们比较了训练过的基于规则的DQN代理的平均速度和基于DQN的策略的平均速度和平均变道时间。我们在仿真环境中运行代理，然后计算它的平均速度、平均车道变化次数和安全率。安全率被定义为没有崩溃的测试事件与总测试事件的比率。研究结果见table2，这里基于规则的DQN方法比传统的DQN具有更高的安全性和更少的变道次数。这意味着我们的技术可以比其他技术产生更有效、更安全的策略。</p>
+<p><img src="/2022/05/19/Lane-Change-Decision-Making-through-Deep-Reinforcement-Learning/table2.png" alt></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>​    在几次迭代中，我们注意到虽然自动驾驶车辆造成了一个“轻微”的碰撞，但它导致了自动驾驶车辆后面的一系列碰撞。在现实生活中，这是一个灾难性的事故，必须被高度惩罚。修改奖励功能可以进一步改进这种方法。未来可能的工作是进行消融研究，制定不同的奖励功能如何改变代理的表现。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/04/15/Enhanced-Rolling-Horizon-Evolution-Algorithm-with-Opponent-Model-Learning-Results-for-the-Fighting-Game-AI-Competition/" rel="prev" title="Enhanced Rolling Horizon Evolution Algorithm with Opponent Model Learning Results for the Fighting Game AI Competition">
+      <i class="fa fa-chevron-left"></i> Enhanced Rolling Horizon Evolution Algorithm with Opponent Model Learning Results for the Fighting Game AI Competition
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2022/05/24/Deep-Reinforcement-Learning-for-Autonomous-Driving-A-Survey/" rel="next" title="Deep Reinforcement Learning for Autonomous Driving: A Survey">
+      Deep Reinforcement Learning for Autonomous Driving: A Survey <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">2.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.2.</span> <span class="nav-text">相关工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">2.3.</span> <span class="nav-text">概述</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#State-Space"><span class="nav-number">3.1.</span> <span class="nav-text">State Space</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Action-Space"><span class="nav-number">3.2.</span> <span class="nav-text">Action Space</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reward"><span class="nav-number">3.3.</span> <span class="nav-text">Reward</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rule-Based-Constraints"><span class="nav-number">3.4.</span> <span class="nav-text">Rule-Based Constraints</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deep-Q-Network"><span class="nav-number">3.5.</span> <span class="nav-text">Deep Q Network</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Implementation-And-Simmulation"><span class="nav-number">4.</span> <span class="nav-text">Implementation And Simmulation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="nav-number">4.1.</span> <span class="nav-text">开发环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E6%8B%9F%E5%99%A8"><span class="nav-number">4.2.</span> <span class="nav-text">模拟器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E7%BB%86%E8%8A%82"><span class="nav-number">4.3.</span> <span class="nav-text">训练细节</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="nav-number">4.4.</span> <span class="nav-text">模拟环境</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">结果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">QilongPan</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">QilongPan</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
