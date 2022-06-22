@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2022-06-22 00:03:59" itemprop="dateModified" datetime="2022-06-22T00:03:59+08:00">2022-06-22</time>
+                <time title="Modified: 2022-06-23 00:13:45" itemprop="dateModified" datetime="2022-06-23T00:13:45+08:00">2022-06-23</time>
               </span>
 
           
@@ -502,20 +502,271 @@ argmin^{}_{x}f(x)</script><ul>
 <li><p>刚体模型</p>
 <p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img9.png" alt></p>
 <ul>
-<li><p>前轮转向和Heading的关系</p>
-<ul>
+<li>前轮转向和Heading的关系<ul>
 <li>车轮是沿着切线方向行驶</li>
 <li>前后轮是同一个旋转中心</li>
 <li>左右轮结构相同</li>
 </ul>
 </li>
-<li><p>Bicycle Model</p>
+</ul>
 </li>
+<li>Bicycle Model</li>
 </ul>
 <p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img10.png" alt></p>
+<ul>
+<li><p>曲率公式</p>
+<script type="math/tex; mode=display">1/R = kappa=(tan(\omega ))/L</script></li>
+</ul>
+<h1 id="无人车Planning"><a href="#无人车Planning" class="headerlink" title="无人车Planning"></a>无人车Planning</h1><ul>
+<li><p>定义</p>
+<ul>
+<li>A点到B点，构建一个车辆运动轨迹，结合HDMap,Localization和Prediction</li>
+<li>输入</li>
+<li>输出：可行是轨迹，有一系列点组成</li>
+<li>两个层面：导航层面；运动轨迹层面</li>
+</ul>
+</li>
+<li><p>Routing</p>
+<ul>
+<li><p>导航一条A到B的全局路径</p>
+</li>
+<li><p>输入：地图（路网信息、交通状态）、当前位置、目的地（乘客）</p>
+</li>
+<li><p>输出：可行驶道路的连接线</p>
+</li>
+<li><p>搜索：地图数据转化成图网络</p>
+<ul>
+<li>节点表示道路</li>
+<li>边表示道路连接</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img11.png" alt></p>
 </li>
 </ul>
-<p>1.05</p>
+</li>
+<li><script type="math/tex; mode=display">A^{*}$$算法
+
+- 最经典的路径查找算法
+- $$F(n)=G(n)+H(n)</script></li>
+<li><p>Motion Planning</p>
+<ul>
+<li>Planning理解为高精度、低级别的一个Search,trajectory planning</li>
+<li>轨迹点：XY、Time、Velocity</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img12.png" alt></p>
+</li>
+<li><p>规划的约束条件</p>
+<ul>
+<li>Collision碰撞<ul>
+<li>躲避任何障碍物</li>
+</ul>
+</li>
+<li>Comfortable舒适<ul>
+<li>路径点必须相对平滑、速度也要平滑</li>
+</ul>
+</li>
+<li>运动学约束<ul>
+<li>高速转弯、掉头曲率角度</li>
+</ul>
+</li>
+<li>Illegal合法<ul>
+<li>交通法规</li>
+<li>人类约定俗成规则</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Cost function</p>
+<ul>
+<li>真实情况下有多条可行轨迹</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img13.png" alt></p>
+<ul>
+<li><p>Cost由许多条件组成</p>
+<ul>
+<li>道路偏离中心线距离</li>
+<li>碰撞或者靠的太近</li>
+<li>速度太快，超速</li>
+<li>Curvature太大，方向盘太急</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img14.png" alt></p>
+</li>
+<li><p>不同场景我们可能有多个不同的cost func</p>
+<ul>
+<li>高速场景</li>
+<li>停车场</li>
+<li>不同车辆</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Frenet坐标系（车道坐标系）</p>
+<ul>
+<li><p>一般我们用笛卡尔坐标系（世界坐标系）</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img15.png" alt></p>
+<ul>
+<li>xy坐标无法知道我们车开了多远</li>
+<li>有没有偏离中心线</li>
+<li>也不知道道路在哪</li>
+</ul>
+</li>
+<li><p>更好的坐标系：Frenet</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img16.png" alt></p>
+<ul>
+<li>注意和Track坐标系的区别<ul>
+<li>L方向不同</li>
+<li>Track是基于Road级别</li>
+<li>Frenet是基于Lane级别</li>
+</ul>
+</li>
+<li>S表示了走了多远</li>
+<li>L表示距离车道有多偏</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Path vs Speed解耦</p>
+<ul>
+<li>Path Planning<ul>
+<li>生成可行轨迹路径</li>
+<li>Cost<ul>
+<li>path平滑性</li>
+<li>安全性</li>
+<li>道路中心偏移距离</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>选择出成本最低的一个Path Planning</li>
+<li>Speed Planning<ul>
+<li>每个Path上选择一系列速度</li>
+<li>生成速度轨迹</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Path Planning</p>
+<ul>
+<li>先生成道路网格（GridMap）</li>
+<li>每个网格单元中随机采样（撒点）</li>
+<li>每个网格选一个点</li>
+<li>组成多条候选Path</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img17.png" alt></p>
+<ul>
+<li>Cost Function对这些轨迹进行评估<ul>
+<li>找到成本最低的一个</li>
+<li>中心线距离<script type="math/tex">l*a_{0}</script></li>
+<li>障碍物距离<script type="math/tex">d*a_{1}</script></li>
+<li>速度变化率<script type="math/tex">acc*a_{2}</script></li>
+<li>曲率<script type="math/tex">kappa*a_{3}</script><ul>
+<li>为什么是kappa</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><script type="math/tex; mode=display">F(x)=l*a_{0}+d*a_{1}+acc*a_{2}+kappa*a_{3}+a_{4}</script><ul>
+<li>可以任意构思评估函数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Speed Planning</p>
+<ul>
+<li><p>ST图</p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img18.png" alt></p>
+<ul>
+<li>S表示Path上纵向距离</li>
+<li>T表示运动时间</li>
+</ul>
+</li>
+<li><p>如何规划ST轨迹</p>
+<ul>
+<li>连续空间离散化</li>
+<li>单元格内速度保持不变</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img19.png" alt></p>
+<ul>
+<li><p>把障碍物投影进来</p>
+<ul>
+<li>挡住我们Path轨迹的部分画进ST图中</li>
+<li>因此必须要有良好的预测轨迹</li>
+<li>下图，<script type="math/tex">t_{0},t_{1}</script>时刻障碍物会在我们的path轨迹中挡住<script type="math/tex">s_{0},s_{1}</script>部分</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img20.png" alt></p>
+</li>
+<li><p>速度曲线不能碰撞这个区域</p>
+</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img21.png" alt></p>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img22.png" alt></p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>如何优化</p>
+<ul>
+<li>对不平滑的速度线优化<ul>
+<li>QP</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img23.png" alt></p>
+<ul>
+<li>我们的这个方法很大程度依赖于连续空间离散化</li>
+<li>网格、单元格方法<ul>
+<li>但是不平滑</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Lattice Planning 网格规划</p>
+<ul>
+<li>SL轨迹和ST轨迹</li>
+</ul>
+<p><img src="/2022/06/21/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6/img24.png" alt></p>
+<ul>
+<li>Lattice将两个图合并处理，同时进行Path和Speed的采样</li>
+<li>Lattice因为其采样计算量大，为了优化其采样效果，需要先进行场景化以简化计算量</li>
+</ul>
+</li>
+<li><p>Apollo如何求解规划问题</p>
+<ul>
+<li>Constrains<ul>
+<li>soft contraints &amp; hard constraints</li>
+<li>Contrains<ul>
+<li>交通规则Hard constraints</li>
+<li>用QP或者Hardcode方式精细处理</li>
+</ul>
+</li>
+<li>Decision<ul>
+<li>决策：soft constraints</li>
+<li>用DP的方式来处理一些人为设置的软约束</li>
+</ul>
+</li>
+<li>最优轨迹<ul>
+<li>QP</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如何换道<ul>
+<li>无人车想要换道怎么办</li>
+<li>换道考虑很多安全性问题<ul>
+<li>给出两种轨迹结果，让后续模块判断</li>
+</ul>
+</li>
+<li>Reference Line Decider<ul>
+<li>换道时是否安全</li>
+<li>拿到信息比Planning丰富</li>
+<li>做很多准备工作</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <h1 id="Apollo"><a href="#Apollo" class="headerlink" title="Apollo"></a>Apollo</h1>
       
     </div>
